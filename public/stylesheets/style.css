@@ -1,0 +1,30 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#mainNavbar ul > li > a{
+  font-size: 12px;
+}
+
+
+input.val-error,
+select.val-error,
+textarea.val-error {
+  border: 1px solid #D9534F;
+}
+
+
+
+.recaptchatable #recaptcha_response_field {
+  font-size: 11pt;
+  padding: 5px;
+}
+
+#recaptcha_response_field {
+  border: 1px solid #ccc;
+}
