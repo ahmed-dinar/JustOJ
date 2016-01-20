@@ -1,10 +1,29 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
+
+html{
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: #FFF none repeat scroll 0% 0%;
+  padding-top: 70px;
+  margin: 0px;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+p,h4,div{
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 500;
 }
 
 a {
   color: #00B7FF;
+}
+
+footer{
+  background: #272727;
+  color: #DDD;
+  padding: 20px 0px;
 }
 
 #mainNavbar ul > li > a{
@@ -18,8 +37,6 @@ textarea.val-error {
   border: 1px solid #D9534F;
 }
 
-
-
 .recaptchatable #recaptcha_response_field {
   font-size: 11pt;
   padding: 5px;
@@ -28,3 +45,31 @@ textarea.val-error {
 #recaptcha_response_field {
   border: 1px solid #ccc;
 }
+
+#h3{
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 500;
+}
+
+pre.prettyprint{
+  margin-bottom: 0px;
+  padding: 0px;
+}
+
+pre{
+  padding: 0px;
+}
+
+
+.preview{
+  background-color: #f5f5f5;
+  border: 1px solid #e3e3e3;
+  min-height: 400px;
+  padding: 10px;
+}
+
+.note-toolbar, .btn-toolbar{
+  background: #fff;
+  background-color: #fff;
+}
+

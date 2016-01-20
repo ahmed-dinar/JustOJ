@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+
+    <script type="text/javascript" src="../javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include templates/header.ejs %>
+<% if(!isLoggedIn){ %>
+<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+<% } else{ %>
+<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.name %> </a></li>
+<% } %>
+<% include templates/headerend.ejs %>
+
+
+<!-- Main Content -->
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h3 id="h3" ><%= problem.name %></h3>
+                    <p style="font-size: 84%; line-height: 1.1px;">
+                        Time: <%= problem.timelimit %>S, Memory: <%= problem.memorylimit %>MB
+                    </p></br>
+
+                    <p><%= problem.statement %></p></br>
+
+                    <h4>Sample</h4>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Input
+                                </th>
+                                <th>
+                                    Output
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="col-md-1">
+                                    <pre><%= problem.input %></pre>
+                                </td>
+                                <td class="col-md-1">
+                                    <pre><%= problem.output %></pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+
+<!-- footer -->
+<% include templates/footer.ejs %>
+
+</body>
+</html>

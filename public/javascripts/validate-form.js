@@ -28,6 +28,20 @@ jQuery(document).ready(function(){
                 }
             },
 
+            email : {
+                email: true,
+                remote: {
+                    url: "/ucheck",
+                    type: "post",
+                    data: {
+                        email: function() {
+                            return $( "#iEmail" ).val();
+                        }
+                    }
+                }
+            },
+
+
             password: {
                 rangelength: [6,30]
             },
@@ -41,6 +55,9 @@ jQuery(document).ready(function(){
             conpassword: "password doesnot match",
             username: {
                 remote: "username not avialable"
+            },
+            email: {
+                remote: "Email not avialable"
             }
 
         },

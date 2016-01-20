@@ -25,16 +25,12 @@
 
 
 
-
 </head>
-<body style="background: #ffffff;padding-top: 70px;">
+<body>
 
 
 <% include templates/header.ejs %>
-
-<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
-<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
-
+    <li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
 <% include templates/headerend.ejs %>
 
 
@@ -49,6 +45,17 @@
 <div class="container">
 
     <div class="row-fluid">
+
+
+        <!-- errors -->
+        <% if (errors.length > 0) { %>
+            <div class="col-md-6 col-md-offset-2">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <%= errors %>
+                </div>
+            </div>
+        <% } %>
 
         <div class="col-md-8">
             <div class="panel panel-default" style="margin-bottom: 150px;border: 0px; ">
@@ -68,7 +75,7 @@
                             <label for="iName" class="col-sm-2 control-label">Name</label>
 
                             <div class="col-sm-6">
-                                <input id="iName" type="text" name="name" class="form-control valpop" required >
+                                <input id="iName" type="text" name="name" class="form-control valpop" required />
                             </div>
                         </div>
 
@@ -76,7 +83,7 @@
                             <label for="iUsername" class="col-sm-2 control-label">Username</label>
 
                             <div class="col-sm-6">
-                                <input id="iUsername" type="username" name="username" class="form-control valpop" required >
+                                <input id="iUsername" type="username" name="username" class="form-control valpop" required />
                             </div>
                         </div>
 
@@ -84,7 +91,7 @@
                             <label for="iEmail" class="col-sm-2 control-label">Email</label>
 
                             <div class="col-sm-6">
-                                <input id="iEmail" type="email" name="email" class="form-control valpop" required >
+                                <input id="iEmail" type="email" name="email" class="form-control valpop" required />
                             </div>
                         </div>
 
@@ -92,7 +99,7 @@
                             <label for="iPassword" class="col-sm-2 control-label">Password</label>
 
                             <div class="col-sm-6">
-                                <input id="iPassword" type="password" name="password" class="form-control valpop" required >
+                                <input id="iPassword" type="password" name="password" class="form-control valpop" required />
                             </div>
                         </div>
 
@@ -100,7 +107,7 @@
                             <label for="iConPassword" class="col-sm-2 control-label">Confirm</label>
 
                             <div class="col-sm-6">
-                                <input id="iConPassword" type="password" name="conpassword" class="form-control valpop">
+                                <input id="iConPassword" type="password" name="conpassword" class="form-control valpop" />
                             </div>
                         </div>
 
@@ -135,13 +142,8 @@
 </div>
 
 
-<!-- FOOTER -->
-<footer style="height: 30px;color: #000; background: #EEE; border-top: 3px solid #DDD;">
-    <div class="container">
-        &copy; 2015 CSE,JUST
-    </div>
-</footer>
-
+<!-- footer -->
+<% include templates/footer.ejs %>
 
 </body>
 </html>

@@ -15,18 +15,18 @@
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 
 </head>
-<body style="background: #ffffff;padding-top: 70px;">
+<body>
+
 
 <!-- header and menu -->
 <% include templates/header.ejs %>
-
-    <li>
-        <a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a>
-    </li>
-    <li>
-        <a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a>
-    </li>
-
+    <% if(!isUser){ %>
+        <li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+        <li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+    <% } else{ %>
+        <li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+        <li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.username %> </a></li>
+    <% } %>
 <% include templates/headerend.ejs %>
 
 
