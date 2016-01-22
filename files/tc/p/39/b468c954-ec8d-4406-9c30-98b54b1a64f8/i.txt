@@ -1,0 +1,37 @@
+0<T≤105 
+2≤M<109, M is prime 
+0≤A<M
+
+{ public_id: 'fsrmbp49hcqshyvmygtj',
+  version: 1453131119,
+  signature: 'db03a576c082bf6159f7505d0ab9ecbccb43cb50',
+  width: 41,
+  height: 59,
+  format: 'jpg',
+  resource_type: 'image',
+  created_at: '2016-01-18T15:31:59Z',
+  tags: [],
+  bytes: 7861,
+  type: 'upload',
+  etag: '2cb1a428024da0f555dfb833ca692810',
+  url: 'http://res.cloudinary.com/justojtest/image/upload/v1453131119/fsrmbp49hcqshyvmygtj.jpg',
+  secure_url: 'https://res.cloudinary.com/justojtest/image/upload/v1453131119/fsrmbp49hcqshyvmygtj.jpg',
+  original_filename: 'file' }
+  
+  
+  
+                      <p>
+                            This is an exmaple problem description. Please put your problem description here with enough detail.
+                        </p>
+
+                        <p><b>INPUT</b></p>
+
+                        <p>This is a smaple input detail. Please put your input detail here. For example, Input starts with an integer **T (1<=20)**, denoting the number of test cases.
+                        Each case contains an integer **N (3 ? N ? 1000)** denoting the number of elements of array A. The next line will contain n integers separated by spaces, denoting the elements of the array A. Each of these integers will be in the range of 32 bit signed  integer number.
+                        </p>
+
+                        <p><b>OUTPUT</b></p>
+
+                        <p>
+                        This is a smaple output detail. Please put your output detail here. For example, For each case of input, output the index of the number for which the array is not sorted .If several solution exists then print the smallest one . Here indexes are 1 based.
+                        </p>

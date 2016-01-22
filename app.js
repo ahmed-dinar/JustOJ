@@ -21,7 +21,7 @@ var status        = require('./routes/status');
 var ranks         = require('./routes/ranks');
 var ucheck        = require('./routes/ucheck');
 var verify        = require('./routes/verify');
-var addproblem    = require('./routes/addproblem');
+var ep            = require('./routes/ep');
 var s3p           = require('./routes/s3');
 
 
@@ -78,7 +78,7 @@ app.use('/status', status);
 app.use('/ranks', ranks);
 app.use('/ucheck', ucheck);
 app.use('/verify', verify);
-app.use('/addproblem', addproblem);
+app.use('/ep', ep);
 app.use('/s3', s3p);
 
 

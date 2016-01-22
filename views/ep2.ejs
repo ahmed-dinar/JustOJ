@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+
+    <script type="text/javascript" src="../../javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+
+
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include templates/header.ejs %>
+<% if(!isLoggedIn){ %>
+<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+<% } else{ %>
+<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.name %> </a></li>
+<% } %>
+<% include templates/headerend.ejs %>
+
+
+<!-- Main Content -->
+<div class="container">
+
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+
+                    <h3>Add Test Cases</h3>
+
+
+                        <h5> <%= data.length %> Test Case Added</h5>
+
+                            <table class="table">
+                                <tbody>
+
+                                    <% for(var i=0; i<data.length; i++){ %>
+                                        <tr>
+                                            <td class="col-md-4">
+                                                <input type='button' class="btn btn-primary btn-xs remove btn-danger" value="remove" i >
+                                            </td>
+                                            <td>
+                                                Test Case:  <%= i+1 %>
+                                            </td>
+                                            <input type="hidden" value="<%= data[0].name %>" />
+                                        </tr>
+                                    <% } %>
+
+                                </tbody>
+                            </table>
+
+
+                <div class="well well-sm">
+                    <form method="post"  name="cases" enctype="multipart/form-data" >
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>
+                                    INPUT FILE
+                                </th>
+                                <th>
+                                    OUTPUT FILE
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <input type='file' id='fileinput' accept="text/plain"  name="input" class="btn btn-primary btn-sm" style="background: #87CEEE" >
+                                </td>
+                                <td>
+                                    <input type='file' id='fileinput' accept="text/plain"  name="output" class="btn btn-primary btn-xs" class="btn btn-primary btn-sm" style="background: #87CEEE" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type='submit' class="btn btn-primary btn-sm" value="ADD" >
+                                </td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <h3>Add Supported Languages</h3>
+
+                <h4>Upload Judge Solution</h4>
+                <form method="post"  name="judgesolution" enctype="multipart/form-data" >
+
+                    <input type='file'  accept="text/plain"  name="jsinput" class="btn btn-primary btn-sm" style="background: #87CEEE" />
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <script type='text/javascript'>
+
+
+        $('.remove').click(function() {
+            var a = $(this).parent().parent();
+
+            var remName = null;
+            for(var i=0; i<a[0].childNodes.length; i++){
+               if(a[0].childNodes[i].type == 'hidden'){
+                   remName = a[0].childNodes[i].value;
+                   break;
+                }
+            }
+
+            if( remName ){
+                window.location = '/ep/rtc/' + <%= pid %> + '/' + remName;
+            }
+
+        });
+
+
+
+        window.onload = function() {
+            document.cases.action = get_action();
+        }
+
+        function get_action() {
+            return '/ep/'+ <%= pid %> + '/2';
+        }
+
+
+        var count=1;
+        var approvedHTML = '';
+        var limitsize = 5;
+
+        $("#fileinput").on("change", function (e) {
+
+            var files = e.currentTarget.files; // puts all files into an array
+
+            if( files.length == 0 ){
+                $("#ddddd").html('no file selected');
+                return;
+            }
+
+            var filesize = ((files[0].size/1024)/1024).toFixed(4); // MB
+
+            if (filesize>limitsize) {
+                $("#ddddd").html('file size should less than ' + limitsize + 'MB');
+                $("#fileinput").val('');
+            }
+
+        });
+
+    </script>
+
+
+</div>
+
+
+
+<!-- footer -->
+<% include templates/footer.ejs %>
+
+</body>
+</html>

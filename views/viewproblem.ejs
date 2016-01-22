@@ -39,41 +39,53 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body">
-
-                    <h3 id="h3" ><%= problem.name %></h3>
-                    <p style="font-size: 84%; line-height: 1.1px;">
-                        Time: <%= problem.timelimit %>S, Memory: <%= problem.memorylimit %>MB
-                    </p></br>
-
-                    <p><%= problem.statement %></p></br>
-
-                    <h4>Sample</h4>
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    Input
-                                </th>
-                                <th>
-                                    Output
-                                </th>
-                            </tr>
-                            <tr>
-                                <td class="col-md-1">
-                                    <pre><%= problem.input %></pre>
-                                </td>
-                                <td class="col-md-1">
-                                    <pre><%= problem.output %></pre>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-
+                    <div id="viewp"></div>
                 </div>
             </div>
         </div>
 
+
+        <script>
+
+            $(document).ready(function() {
+                document.getElementById('viewp').innerHTML = getProblem();
+            });
+
+            function getProblem(){
+                var htmls = '<h3 id="h3">';
+                htmls += <%- problem.name %>;
+                htmls += '</h3>';
+                htmls += '<p style="font-size: 84%; line-height: 1.1px;">';
+                htmls += 'Time: ';
+                htmls += <%- problem.memorylimit %>;
+                htmls += 's , Memory: ';
+                htmls += <%- problem.timelimit %>;
+                htmls += 'MB';
+                htmls += '</p></br>';
+                htmls += '<p>';
+                htmls +=  <%- problem.statement %>;
+                htmls += '</p>';
+                htmls += '<h3 id="h3">Sample</h3>';
+                htmls += '<table class="table" style="padding: 0px; margin: 0px">';
+                htmls += '<tbody style="padding: 0px; margin: 0px">';
+                htmls += '<tr>';
+                htmls += '<th style="border: none">Input</th>';
+                htmls += '<th style="border: none">Output</th>';
+                htmls += '</tr>';
+                htmls += '<tr>';
+                htmls += '<td class="col-md-1" style="border: none"><pre>';
+                htmls += <%- problem.input %>;
+                htmls += '</td></pre>';
+                htmls += '<td class="col-md-1" style="border: none"><pre>';
+                htmls += <%- problem.output %>;
+                htmls += '</td></pre>';
+                htmls += '</tr>';
+                htmls += '</tbody>';
+                htmls += '</table>';
+                return htmls;
+            }
+
+        </script>
 
 
     </div>

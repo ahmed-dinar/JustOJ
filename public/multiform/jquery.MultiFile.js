@@ -92,6 +92,8 @@ if (window.jQuery)(function ($) {
 					clone: $(this).clone()
 				};
 
+
+
 				//===
 
 				//# USE CONFIGURATION
@@ -200,15 +202,21 @@ if (window.jQuery)(function ($) {
 					// Create a wrapper for the list
 					// * OPERA BUG: NO_MODIFICATION_ALLOWED_ERR ('list' is a read-only property)
 					// this change allows us to keep the files in the order they were selected
-					MultiFile.wrapper.append('<div class="MultiFile-list" id="' + MultiFile.wrapID + '_list"></div>');
+					MultiFile.wrapper.append('<table class="table MultiFile-list" id="' + MultiFile.wrapID + '_list"><thead><tr><th class="col-md-1">Action</th><th>Test Case</th></tr></thead></table>');
 					MultiFile.list = $('#' + MultiFile.wrapID + '_list');
 				};
 				MultiFile.list = $(MultiFile.list);
 
 				//===
 
+
+
 				// Bind a new element
 				MultiFile.addSlave = function (slave, slave_count) {
+
+
+
+
 					//if(window.console) console.log('MultiFile.addSlave',slave_count);
 					
 					// Keep track of how many elements have been displayed
@@ -245,6 +253,8 @@ if (window.jQuery)(function ($) {
 						slave.disabled = true;
 						disable_slave = true;
 					};
+
+
 
 					// Remember most recent slave
 					MultiFile.current = slave;
@@ -451,9 +461,13 @@ if (window.jQuery)(function ($) {
 					//# Trigger Event! onFileAppend
 					MultiFile.trigger('FileAppend', slave, MultiFile, files);
 					//# End Event!
+
+
 					
-					var names = $('<span/>');
+					var names = $('<td/>');
 					$.each(files, function (i, file) {
+
+
 						var v = String(file.name || '' ),
 								S = MultiFile.STRING,
 								n = S.label || S.file || S.name,
@@ -491,9 +505,9 @@ if (window.jQuery)(function ($) {
 						var v = String(file.name || '' );
 						names[names.length] =
 							(
-								'<span class="MultiFile-title" title="' + MultiFile.STRING.selected + '">'
+								'<td class="MultiFile-title" title="' + MultiFile.STRING.selected + '">'
 									+ MultiFile.STRING.file +
-								'</span>'
+								'</td>'
 							)
 							.replace(/\$(file|name)/gi, (v.match(/[^\/\\]+$/gi)||[v])[0])
 							.replace(/\$(ext|extension|type)/gi, (v.match(/[^\.]+$/gi)||[''])[0])
@@ -502,11 +516,13 @@ if (window.jQuery)(function ($) {
 						;
 					});
 
-					//$.each(files, function (i, file) {
+
+				//	$.each(files, function (i, file) {
 						// Create label elements
+
 						var
-							r = $('<div class="MultiFile-label"></div>'),
-							b = $('<a class="MultiFile-remove" href="#' + MultiFile.wrapID + '">' + MultiFile.STRING.remove + '</a>')
+							r = $('<tr class="MultiFile-label"></tr>'),
+							b = $('<td><a class="MultiFile-remove" href="#' + MultiFile.wrapID + '">' + MultiFile.STRING.remove + '</a></td>')
 								
 								// ********
 								// TODO:
@@ -576,10 +592,15 @@ if (window.jQuery)(function ($) {
 									return false;
 								});
 
-						// Insert label
+
+
+
 						MultiFile.list.append(
 							r.append(b, ' ', names)
 						);
+
+
+
 
 					//}); // each file?
 
