@@ -72,9 +72,6 @@ router.get('/:pid/2', function(req, res, next) {
         },function(err,row){
             if( err ) { return next(new Error(err)); }
 
-
-            console.log(row);
-
             res.render('ep2', {
                 title: "editproblem | JUST Online Judge",
                 locals: req.app.locals,
@@ -138,6 +135,72 @@ router.post('/new/', function(req, res, next) {
 
 
 });
+
+
+router.post('/rtc/', function(req, res, next) {
+
+    var pid=req.body.pid;
+    var casename=req.body.casename;
+
+    if( !req.body.pid || !req.body.casename ){
+        return next(new Error('No such body found'));
+    }
+
+    problems.findTC('test_cases',{
+        where:{
+            $and:{
+                pid: pid,
+                name: casename
+            }
+        }
+    },function(err,row){
+        if( err ) { return next(new Error(err)); }
+
+        if( row.length == 0 ) { return next(new Error('No such Test Case Found')); }
+
+
+        var TCDir =  path.normalize(__dirname + '/../files/tc/p/' + pid +  '/' + row[0].name);
+
+
+        fse.remove(TCDir, function (err) {
+            if (err) { return next(new Error('Problem Removing TC Folder')) ; }
+
+
+            problems.removeTC('test_cases',{
+                where:{
+                    $and: {
+                        pid: pid,
+                        name: casename
+                    }
+                }
+            },function(err,row){
+
+                if( err ) { return next(new Error('Problem Removing TC DB')) ; }
+
+
+                problems.findTC('test_cases',{
+                    where:{
+                        pid: pid
+                    }
+                },function(err,row){
+                    if( err ) { return next(new Error(err)); }
+
+                    //send back ajax
+                    res.end(JSON.stringify(row));
+                });
+
+
+                //use if not use ajax
+                // res.redirect('/ep/' + req.params.pid + '/2');
+            });
+
+        });
+
+    });
+
+
+});
+
 
 router.post('/:pid/1', function(req, res, next) {
 
@@ -218,7 +281,22 @@ router.post('/:pid/2', function(req, res, next) {
 
             if( err ) { return next(new Error('Porblem inserting TC: ' + err)); }
 
-            res.redirect('/ep/' + req.params.pid + '/2');
+
+
+            problems.findTC('test_cases',{
+                where:{
+                    pid: req.params.pid
+                }
+            },function(err,row){
+                if( err ) { return next(new Error(err)); }
+
+                //send back ajax
+                res.end(JSON.stringify(row));
+
+            });
+
+            //use if not use ajax
+           // res.redirect('/ep/' + req.params.pid + '/2');
         });
 
 
@@ -229,50 +307,36 @@ router.post('/:pid/2', function(req, res, next) {
 });
 
 
-router.get('/rtc/:pid/:name', function(req, res, next) {
+router.post('/:pid/tjs', function(req, res, next) {
 
-    console.log(req.params.pid + ' ' + req.params.name);
+    var busboy = new Busboy({ headers: req.headers });
 
-    problems.findTC('test_cases',{
-        where:{
-            $and:{
-                pid: req.params.pid,
-                name: req.params.name
-            }
-        }
-    },function(err,row){
-        if( err ) { return next(new Error(err)); }
+    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 
-        if( row.length == 0 ) { return next(new Error('No such Test Case Found')); }
+        console.log('File [' + fieldname + ']: filename: ' + filename);
 
-
-        var TCDir =  path.normalize(__dirname + '/../files/tc/p/' + req.params.pid +  '/' + row[0].name);
-
-
-        fse.remove(TCDir, function (err) {
-            if (err) { return next(new Error('Problem Removing TC Folder')) ; }
-
-
-            problems.removeTC('test_cases',{
-                where:{
-                    $and: {
-                        pid: req.params.pid,
-                        name: req.params.name
-                    }
-                }
-            },function(err,row){
-
-                if( err ) { return next(new Error('Problem Removing TC DB')) ; }
-
-                 res.redirect('/ep/' + req.params.pid + '/2');
-            });
-
+        file.on('data', function(data) {
+            console.log('File [' + fieldname + '] got ' + data.length + ' bytes');
         });
 
+        file.on('end', function() {
+            console.log('File [' + fieldname + '] Finished');
+        });
     });
 
+    busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
+        console.log('Field [' + fieldname + ']: value: ' + val);
+    });
+
+    busboy.on('finish', function() {
+        console.log('Done parsing form!');
+        res.end('Oh yes!');
+    });
+
+    req.pipe(busboy);
 
 });
+
 
 
 module.exports = router;

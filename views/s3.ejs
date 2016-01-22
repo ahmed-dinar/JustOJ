@@ -96,11 +96,66 @@
                  </div>
             </div>
         </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <h3>Ajax Test Form</h3>
+
+                <form method="post" name="ajaxform" enctype="multipart/form-data" id="ajaxform" >
+
+                    <input type="text" name="ajname" id="ajname" form="ajaxform" />
+                    <input type="file" name="ajfile" id="ajfile" form="ajaxform" />
+
+                    <input type="submit"  >
+
+                </form>
+
+            </div>
+        </div>
+
+
+
     </div>
 
 
 
+
+
     <script type='text/javascript'>
+
+
+
+        $('#ajaxform').on('submit', function (e) {
+            e.preventDefault();
+
+            var formData = new FormData($('#ajaxform')[0]);
+
+            console.log(formData);
+
+            $.ajax({
+                url: "/s3/ajaxtest",
+                type: "POST",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                complete: function() {
+                    //called when complete
+                    console.log('process complete');
+                },
+                success: function(data) {
+                    console.log('process sucess : ');
+                    console.log(data);
+                },
+                error: function(err) {
+                    console.log('process error');
+                    console.log(err);
+                }
+            });
+
+        });
 
 
         window.onload = function() {
