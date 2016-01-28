@@ -1,15 +1,11 @@
 var express     = require('express');
-var tempuser    = require('../models/tempuser');
 var router      = express.Router();
 
+var TempUser    = require('../models/tempuser');
+
 router.get('/', function(req, res, next) {
-
-    tempuser.verify(req,res,next);
-
+    TempUser.verify(req,res,next);
 });
-
-
-
 
 
 module.exports = router;

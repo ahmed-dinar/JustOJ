@@ -3,7 +3,6 @@
  * @type {exports|module.exports}
  */
 
-var db          = require('../config/database/database');
 var orm         = require('../config/database/orm');
 var bcrypt      = require('bcryptjs');
 var _           = require('lodash');

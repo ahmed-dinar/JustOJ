@@ -46,9 +46,8 @@
 <!-- Main Content -->
 <div class="container">
 
-
     <div class="col-md-12">
-        <form method="post" action="/ep/<%= data.pid %>/1" role="form" onsubmit="return submitForm()"  >
+        <form method="post" name="editForm"  role="form" onsubmit="return submitForm()"  >
 
             <div class="form-group">
                 <label for="name" >Problem Name</label>
@@ -205,6 +204,18 @@ Case 2: 5
             if( x ) return x;
             return '--';
         }
+
+
+        //add form action
+        window.onload = function() {
+            document.editForm.action = get_action('1');
+        }
+
+
+        function get_action(ac) {
+            return '/ep/'+ <%= pid %> + '/' + ac;
+        }
+
 
     </script>
 

@@ -7,6 +7,8 @@ var fse         = require('fs-extra')
 var uuid        = require('node-uuid');
 var mime        = require('mime-types');
 var path        = require("path");
+var jsdiff      = require('diff');
+var Compiler    = require('../helpers/compiler/compiler');
 
 cloudinary.config({
     cloud_name: 'justojtest',
@@ -16,6 +18,59 @@ cloudinary.config({
 
 /* GET resister page. */
 router.get('/' , function(req, res, next) {
+
+    var cname = '598a61a4-1f10-4531-825a-ca99aa623959';
+    var cpath = path.normalize(__dirname + '/../files/runs/' + cname);
+    var OS = 'windows';
+    var language = 'cpp';
+
+    console.log('cpath: ' + cpath);
+
+    var compilerConfig = {
+        language: 'cpp',
+        timeLimit: 0,
+        memoryLimit: 500
+    };
+    var compiler = new Compiler(OS,compilerConfig);
+
+    compiler.compile(cpath,function(stdErr,stdOut){
+        if( stdErr ){
+            console.log('compiler error');
+            console.log(stdErr);
+        }else{
+            console.log('compiled successfully');
+
+            var inpt = "C:\\Users\\Ahmed Dinar\\Dropbox\\IdeaProjects\\justoj\\files\\runs";
+
+            compiler.run(cpath,inpt+'\\input.txt',function(stdRunErr,stdRunOut){
+                if( stdRunErr ){
+                    console.log(stdRunErr);
+                }else{
+                    console.log('Runn successfully');
+
+
+                    fs.readFile(inpt+'\\output.txt', 'utf8', function (error,data) {
+                        if (error) {
+                            return console.log(error);
+                        }
+
+
+                        var diff = jsdiff.diffChars(stdRunOut, data);
+
+                        if( diff.length === 1 ){
+                            console.log('Accepted');
+                        }else{
+                            console.log('Wrong Answer');
+                        }
+
+                    });
+
+                }
+            });
+
+        }
+    });
+
 
 
     res.render('s3', {

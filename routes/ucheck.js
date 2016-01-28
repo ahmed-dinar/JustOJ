@@ -1,6 +1,6 @@
 var express     = require('express');
 var router      = express.Router();
-var orm         = require('../config/database/orm');
+var Orm         = require('../config/database/orm');
 
 router.get('/', function(req, res, next) {
     res.status(404).send('Page Not found');
@@ -14,14 +14,14 @@ router.post('/', function(req, res){
 
     if( username ){
 
-        orm.in('users').findAll({
+        Orm.in('users').findAll({
             attributes: ['username'],
             where:{
                 username: username
             }
         },function(err,rows){
 
-            if( err || rows.length>0 ){
+            if( err || rows.length ){
                 res.send(false);
             }else{
                 res.send(true);
@@ -32,14 +32,14 @@ router.post('/', function(req, res){
 
     }else if( email ){
 
-        orm.in('users').findAll({
+        Orm.in('users').findAll({
             attributes: ['email'],
             where:{
                 email: email
             }
         },function(err,rows){
 
-            if( err || rows.length>0 ){
+            if( err || rows.length ){
                 res.send(false);
             }else{
                 res.send(true);

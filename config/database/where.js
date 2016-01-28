@@ -12,7 +12,7 @@ var mysql      = require('mysql');
 
 /**
  *
- * This helps us to build where statements query
+ * Helps us to build where statements query
  *
  * ``example
  * where:{
@@ -23,7 +23,7 @@ var mysql      = require('mysql');
  *                  age:20
  *               },
  *               $lt:{
- *                  age:28
+ *                  age:25
  *               }
  *           }
  *      }
@@ -56,13 +56,11 @@ exports.where = function(where){
 
 /**
  *
- * @param operaotor
+ * @param opt
  * @param attributes
  * @returns {string}
  */
 function processOperator(opt,attributes){
-
-
 
     var ret = '';
 

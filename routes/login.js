@@ -1,9 +1,14 @@
+/**
+ * Login page route
+ * @type {*|exports|module.exports}
+ */
+
 var express         = require('express');
 var passport        = require('passport');
 var isLoggedIn      = require('../middlewares/isLoggedIn');
 var router          = express.Router();
 
-/* GET login page. */
+
 router.get('/' , isLoggedIn(false) ,function(req, res, next) {
 
     res.render('login',{

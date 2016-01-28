@@ -115,8 +115,8 @@
                     document.getElementById("caselist").innerHTML = (newList);
 
                 },
-                error: function(err) {
-                    alert('removing test case error');
+                error: function (xhr, status, error)  {
+                    alert(JSON.stringify(error));
                 }
             });
         }
@@ -127,9 +127,14 @@
         $('#judgesolution').on('submit', function (e) {
             e.preventDefault();
 
+            console.log($('#judgesolution')[0]);
+
             var formData = new FormData($('#judgesolution')[0]);
             formData.append("language", document.getElementById("language").value);
 
+
+
+            console.log(formData);
             $.ajax({
                 url: '/ep/' + PID + '/tjs',
                 type: "POST",
@@ -141,10 +146,14 @@
 
                 },
                 success: function (data) {
-
+                    if(data.status === 'error'){
+                        alert('Error Test Solution: ' + data.error);
+                    }else{
+                        alert('Successfully Test Solution: ' + data.success);
+                    }
                 },
-                error: function(err) {
-                    alert('removing test case error');
+                error: function (xhr, status, error)  {
+                   alert(JSON.stringify(error));
                 }
             });
 

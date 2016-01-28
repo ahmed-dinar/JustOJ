@@ -5,22 +5,515 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2efb35df-b041-49fd-bf66-80b228f9caa0" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/ajax-loader.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/ball.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/facebook.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/uploading.gif" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/javascripts/pageFunctions/ep2.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/pace/pace-bounce.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/pace/pace-corner.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/pace/pace-minimal.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/pace/pace.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/helpers/compiler/compiler.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config/config.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/edit_problem/editProblem.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/helpers/compiler/judge.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/edit_problem/removeTestCase.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/edit_problem/step1.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/edit_problem/step2.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/edit_problem/step3.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/edit_problem/testJudgeSolution.js" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\.gitattributes" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\DemoPicture.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\License.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\compilex.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\cppModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\csModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\TestSnippets.txt" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\index.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\HISTORY.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\.gitmodules" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\HISTORY.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\mime.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\types\mime.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\types\node.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\.gitattributes" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\DemoPicture.png" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\License.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\compilex.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\cppModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\csModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\TestSnippets.txt" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\index.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\HISTORY.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\bytes\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\.gitmodules" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\qs\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\node_modules\bytes\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\raw-body\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\HISTORY.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\mime.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\types\mime.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\node_modules\mime\types\node.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\node_modules\type-is\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\body-parser\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\.gitattributes" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\License.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\compilex.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\cppModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\javaModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\pyModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\application.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\express.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\middleware\init.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\middleware\query.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\request.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\response.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\router\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\router\layer.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\router\route.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\utils.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\view.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\mime.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\types\mime.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\types\node.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\charset.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\encoding.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\language.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\mediaType.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\negotiator.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\tests\crc.test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\debug\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\debug\debug.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\debug\lib\debug.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\debug\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\test\methods.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\parseurl\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\parseurl\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\parseurl\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\parseurl\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\Cakefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\ipaddr.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\lib\ipaddr.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\src\ipaddr.coffee" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\test\ipaddr.test.coffee" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\.gitmodules" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\lib\send.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\lib\utils.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\debug\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\debug\debug.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\debug\lib\debug.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\debug\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\mime.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\types\mime.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\types\node.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\HISTORY.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\mime.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\types\mime.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\types\node.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\node_modules\express\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\examples\compilex-Demo1\server.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\javaModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\pyModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\compilex\vbModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\application.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\express.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\middleware\init.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\middleware\query.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\request.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\response.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\router\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\router\layer.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\router\route.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\utils.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\lib\view.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\mime.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\types\mime.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\mime\types\node.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\charset.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\encoding.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\language.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\mediaType.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\lib\negotiator.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\node_modules\negotiator\readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\accepts\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\buffer-crc32\tests\crc.test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie-signature\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\cookie\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\debug\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\debug\debug.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\debug\lib\debug.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\debug\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\escape-html\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\fresh\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\merge-descriptors\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\methods\test\methods.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\parseurl\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\parseurl\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\parseurl\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\parseurl\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\path-to-regexp\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\Cakefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\ipaddr.min.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\lib\ipaddr.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\src\ipaddr.coffee" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\node_modules\ipaddr.js\test\ipaddr.test.coffee" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\proxy-addr\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\.gitmodules" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\qs\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\Makefile" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\range-parser\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\lib\send.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\lib\utils.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\debug\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\debug\debug.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\debug\lib\debug.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\debug\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\mime.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\types\mime.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\node_modules\mime\types\node.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\send\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\History.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\Readme.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\serve-static\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\HISTORY.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\mime.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\types\mime.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\node_modules\mime\types\node.types" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\type-is\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\README.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\index.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\node_modules\utils-merge\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\node_modules\express\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\examples\compilex-Demo1\server.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\javaModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\colors\MIT-LICENSE.txt" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\colors\ReadMe.md" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\colors\colors.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\colors\example.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\colors\example.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\colors\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\colors\test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\colors\themes\winston-dark.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\colors\themes\winston-light.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\.npmignore" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\.travis.yml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\README.markdown" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\component.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\dist\browser-cuid.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\dist\node-cuid.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\grunt.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\lib\applitude.bundle.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\lib\applitude.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\lib\jquery.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\src\browser-fingerprint.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\src\footer.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\src\head.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\src\node-fingerprint.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\test\applitude-cuid-test.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\test\applitude-cuid-test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\test\browser-cuid-test.html" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\test\browser-cuid-test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\test\node-cuid-test.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\test\qunit.css" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\test\qunit.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\node_modules\cuid\test\testling.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\package.json" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\pyModule.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\node_modules\compilex\vbModule.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/ep.js" afterPath="$PROJECT_DIR$/routes/ep.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/ep1.ejs" afterPath="$PROJECT_DIR$/views/ep1.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/ep2.ejs" afterPath="$PROJECT_DIR$/views/ep2.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/pageFunctions/ep2.js" afterPath="$PROJECT_DIR$/public/javascripts/pageFunctions/ep2.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/ep3.ejs" afterPath="$PROJECT_DIR$/views/ep3.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/login.js" afterPath="$PROJECT_DIR$/routes/login.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/logout.js" afterPath="$PROJECT_DIR$/routes/logout.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/problems.js" afterPath="$PROJECT_DIR$/models/problems.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/s3.ejs" afterPath="$PROJECT_DIR$/views/s3.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/problems.js" afterPath="$PROJECT_DIR$/routes/problems.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/resister.js" afterPath="$PROJECT_DIR$/routes/resister.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/s3.js" afterPath="$PROJECT_DIR$/routes/s3.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/style.css" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/tempuser.js" afterPath="$PROJECT_DIR$/models/tempuser.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/ucheck.js" afterPath="$PROJECT_DIR$/routes/ucheck.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/verify.js" afterPath="$PROJECT_DIR$/routes/verify.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database/where.js" afterPath="$PROJECT_DIR$/config/database/where.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="justoj.iws" />
@@ -43,56 +536,7 @@
     <favorites_list name="justoj" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="ep1.ejs" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/ep1.ejs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.8461537">
-              <caret line="69" column="1" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
-              <folding>
-                <marker date="1453484107601" expanded="true" signature="5897:5932" placeholder="..." />
-                <marker date="1453484107601" expanded="true" signature="6267:6292" placeholder="..." />
-                <marker date="1453484107601" expanded="true" signature="6333:6358" placeholder="..." />
-                <marker date="1453484107601" expanded="true" signature="6425:6437" placeholder="..." />
-                <marker date="1453484107601" expanded="true" signature="6485:6497" placeholder="..." />
-                <marker date="1453484107601" expanded="true" signature="6622:6634" placeholder="..." />
-                <marker date="1453484107601" expanded="true" signature="6781:6793" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ep2.ejs" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/ep2.ejs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.3846154">
-              <caret line="137" column="95" selection-start-line="137" selection-start-column="95" selection-end-line="137" selection-end-column="95" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ep2.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/javascripts/pageFunctions/ep2.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="143" column="0" selection-start-line="143" selection-start-column="0" selection-end-line="143" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ep.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/routes/ep.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.96213806">
-              <caret line="331" column="42" selection-start-line="331" selection-start-column="42" selection-end-line="331" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -113,28 +557,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/routes/resister.js" />
-        <option value="$PROJECT_DIR$/helpers/pagination.js" />
-        <option value="$PROJECT_DIR$/helpers/paginate.js" />
-        <option value="$PROJECT_DIR$/config/database/where.js" />
-        <option value="$PROJECT_DIR$/config/database/orm.js" />
-        <option value="$PROJECT_DIR$/routes/submit.js" />
-        <option value="$PROJECT_DIR$/models/user.js" />
-        <option value="$PROJECT_DIR$/routes/index.js" />
-        <option value="$PROJECT_DIR$/routes/viewproblem.js" />
-        <option value="$PROJECT_DIR$/views/templates/header.ejs" />
-        <option value="$PROJECT_DIR$/config/database/justojdb.sql" />
-        <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" />
-        <option value="$PROJECT_DIR$/config/database/dbConnectionPool.js" />
-        <option value="$PROJECT_DIR$/views/index.ejs" />
-        <option value="$PROJECT_DIR$/views/login.ejs" />
-        <option value="$PROJECT_DIR$/views/ranks.ejs" />
-        <option value="$PROJECT_DIR$/views/resister.ejs" />
-        <option value="$PROJECT_DIR$/views/status.ejs" />
-        <option value="$PROJECT_DIR$/helpers/bfy.js" />
-        <option value="$PROJECT_DIR$/public/bootstrap/routes/index.js" />
-        <option value="$PROJECT_DIR$/public/materialize/materialNote.css" />
-        <option value="$PROJECT_DIR$/public/materialize/materialize.css" />
         <option value="$PROJECT_DIR$/public/stylesheets/summernote.css" />
         <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap.css" />
         <option value="$PROJECT_DIR$/public/multiform/jquery.MultiFile.js" />
@@ -146,24 +568,46 @@
         <option value="$PROJECT_DIR$/routes/editproblem.js" />
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/views/templates/aceEditor.ejs" />
-        <option value="$PROJECT_DIR$/routes/problems.js" />
         <option value="$PROJECT_DIR$/views/viewproblem.ejs" />
         <option value="$PROJECT_DIR$/views/problems.ejs" />
         <option value="$PROJECT_DIR$/middlewares/isLoggedIn.js" />
         <option value="$PROJECT_DIR$/views/epN.ejs" />
-        <option value="$PROJECT_DIR$/models/problems.js" />
         <option value="$PROJECT_DIR$/public/stylesheets/style.css" />
         <option value="$PROJECT_DIR$/views/s3.ejs" />
-        <option value="$PROJECT_DIR$/routes/s3.js" />
         <option value="$PROJECT_DIR$/public/pace/pace.min.js" />
         <option value="$PROJECT_DIR$/public/pace/pace-bounce.css" />
         <option value="$PROJECT_DIR$/public/pace/pace-corner.css" />
         <option value="$PROJECT_DIR$/public/pace/pace-minimal.css" />
         <option value="$PROJECT_DIR$/public/javascripts/pageFunctions/ep1.js" />
-        <option value="$PROJECT_DIR$/views/ep1.ejs" />
-        <option value="$PROJECT_DIR$/views/ep2.ejs" />
         <option value="$PROJECT_DIR$/public/javascripts/pageFunctions/ep2.js" />
+        <option value="$PROJECT_DIR$/routes/login.js" />
+        <option value="$PROJECT_DIR$/routes/logout.js" />
+        <option value="$PROJECT_DIR$/routes/ucheck.js" />
+        <option value="$PROJECT_DIR$/routes/verify.js" />
+        <option value="$PROJECT_DIR$/routes/resister.js" />
+        <option value="$PROJECT_DIR$/models/tempuser.js" />
+        <option value="$PROJECT_DIR$/config/database/where.js" />
+        <option value="$PROJECT_DIR$/helpers/bfy.js" />
+        <option value="$PROJECT_DIR$/routes/s3.js" />
+        <option value="$PROJECT_DIR$/routes/index.js" />
+        <option value="$PROJECT_DIR$/models/problems.js" />
+        <option value="$PROJECT_DIR$/routes/problems.js" />
+        <option value="$PROJECT_DIR$/config/config.json" />
+        <option value="$PROJECT_DIR$/helpers/compiler/judge.js" />
+        <option value="$PROJECT_DIR$/helpers/compiler/compiler.js" />
+        <option value="$PROJECT_DIR$/views/ep3.ejs" />
+        <option value="$PROJECT_DIR$/views/ep2.ejs" />
+        <option value="$PROJECT_DIR$/routes/edit_problem/ep1.js" />
+        <option value="$PROJECT_DIR$/routes/edit_problem/ep3.js" />
+        <option value="$PROJECT_DIR$/routes/edit_problem/ep2.js" />
+        <option value="$PROJECT_DIR$/views/ep1.ejs" />
+        <option value="$PROJECT_DIR$/routes/edit_problem/step1.js" />
+        <option value="$PROJECT_DIR$/routes/edit_problem/step2.js" />
+        <option value="$PROJECT_DIR$/routes/edit_problem/step3.js" />
+        <option value="$PROJECT_DIR$/routes/edit_problem/testJudgeSolution.js" />
+        <option value="$PROJECT_DIR$/routes/edit_problem/editProblem.js" />
         <option value="$PROJECT_DIR$/routes/ep.js" />
+        <option value="$PROJECT_DIR$/routes/edit_problem/removeTestCase.js" />
       </list>
     </option>
   </component>
@@ -232,106 +676,10 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="routes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="javascripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="javascripts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pageFunctions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -340,7 +688,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="FullScreen" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/AppData/Local/Programs/Git/bin/git.exe" />
+    <property name="last_opened_file_path" value="C:/Program Files/Git/bin/git.exe" />
     <property name="editor.config.accepted" value="true" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
@@ -719,6 +1067,21 @@
       <workItem from="1453452453411" duration="731000" />
       <workItem from="1453455295604" duration="645000" />
       <workItem from="1453458402650" duration="23961000" />
+      <workItem from="1453544897154" duration="11924000" />
+      <workItem from="1453616067995" duration="16615000" />
+      <workItem from="1453644461906" duration="688000" />
+      <workItem from="1453645503103" duration="359000" />
+      <workItem from="1453646088691" duration="3458000" />
+      <workItem from="1453653359208" duration="4710000" />
+      <workItem from="1453666531380" duration="959000" />
+      <workItem from="1453667975467" duration="1993000" />
+      <workItem from="1453670262128" duration="664000" />
+      <workItem from="1453671083077" duration="3004000" />
+      <workItem from="1453749867388" duration="1171000" />
+      <workItem from="1453803369461" duration="22304000" />
+      <workItem from="1453878972714" duration="62000" />
+      <workItem from="1453907204021" duration="19046000" />
+      <workItem from="1453976019122" duration="8254000" />
     </task>
     <task id="LOCAL-00001" summary="big changes">
       <created>1453266267328</created>
@@ -730,7 +1093,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="490637000" />
+    <option name="totallyTimeSpent" value="585848000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -742,34 +1105,60 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="754" extended-state="7" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328152" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4868217" sideWeight="0.4675037" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.572093" sideWeight="0.4736457" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295626" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27906978" sideWeight="0.49079755" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26046512" sideWeight="0.53249633" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30387598" sideWeight="0.49394855" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28527132" sideWeight="0.5263543" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15658915" sideWeight="0.49394855" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22108346" sideWeight="0.84283245" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22181553" sideWeight="0.84283245" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25230062" sideWeight="0.15716752" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39379844" sideWeight="0.4969325" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39379844" sideWeight="0.4969325" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26976743" sideWeight="0.52349484" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22945736" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328152" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26976743" sideWeight="0.52349484" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.96899223" sideWeight="0.47071743" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295626" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27906978" sideWeight="0.49079755" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37984496" sideWeight="0.52928257" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15658915" sideWeight="0.49394855" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21888727" sideWeight="0.84283245" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22945736" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25230062" sideWeight="0.15716752" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39379844" sideWeight="0.4969325" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -799,198 +1188,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/recaptcha/lib/recaptcha.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="66" column="0" selection-start-line="66" selection-start-column="0" selection-end-line="80" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/passport/lib/authenticator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.2395834">
-          <caret line="209" column="14" selection-start-line="209" selection-start-column="14" selection-end-line="209" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/database.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="85" column="16" selection-start-line="85" selection-start-column="16" selection-end-line="85" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/paginate.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/tempuser.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.9273256">
-          <caret line="169" column="44" selection-start-line="169" selection-start-column="44" selection-end-line="169" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/pagination.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="68" column="2" selection-start-line="68" selection-start-column="2" selection-end-line="68" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justojdb.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.074074">
-          <caret line="16" column="57" selection-start-line="16" selection-start-column="57" selection-end-line="16" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/templates/header.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41098902">
-          <caret line="11" column="59" selection-start-line="11" selection-start-column="59" selection-end-line="11" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/dbConnectionPool.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5164557">
-          <caret line="12" column="2" selection-start-line="12" selection-start-column="2" selection-end-line="12" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/error.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.807693">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/ranks.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.8846154">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/resister.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6153846">
-          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/status.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.5384617">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5465313">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/bfy.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="2" selection-start-line="4" selection-start-column="2" selection-end-line="4" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/user.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32458234">
-          <caret line="8" column="18" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/stylesheets/summernote.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38573745">
-          <caret line="221" column="28" selection-start-line="221" selection-start-column="28" selection-end-line="221" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/logout.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37362638">
-          <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.6896553">
-          <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="23.241379">
-          <caret line="2505" column="14" selection-start-line="2505" selection-start-column="2" selection-end-line="2505" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/multiform/jquery.MultiFile.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.5528846">
-          <caret line="519" column="18" selection-start-line="519" selection-start-column="18" selection-end-line="519" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bin/www">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23665893">
-          <caret line="6" column="10" selection-start-line="6" selection-start-column="10" selection-end-line="6" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/where.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="195" column="10" selection-start-line="195" selection-start-column="8" selection-end-line="195" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.031746034">
-          <caret line="15" column="28" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/orm.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="175" column="31" selection-start-line="175" selection-start-column="31" selection-end-line="175" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/templates/footer.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/templates/aceEditor.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1012,57 +1209,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/ep3.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/middlewares/passport.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="10" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/middlewares/isLoggedIn.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/problems.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/epN.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.51657456">
           <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="62" selection-end-column="18" />
-          <folding>
-            <marker date="1453452995590" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453452995590" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453452995590" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453452995590" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453452995590" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453452995590" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1453452995590" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/problems.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.29123712">
-          <caret line="45" column="7" selection-start-line="45" selection-start-column="7" selection-end-line="45" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1070,7 +1220,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.7777777">
           <caret line="73" column="1" selection-start-line="73" selection-start-column="1" selection-end-line="73" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1078,17 +1227,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.9230769">
           <caret line="124" column="0" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/s3.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1096,9 +1234,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.035564855">
           <caret line="1" column="12345" selection-start-line="1" selection-start-column="12345" selection-end-line="1" selection-end-column="12345" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1106,7 +1241,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.9288703">
           <caret line="229" column="1" selection-start-line="229" selection-start-column="1" selection-end-line="229" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1114,7 +1248,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.9288703">
           <caret line="71" column="1" selection-start-line="71" selection-start-column="1" selection-end-line="71" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1122,15 +1255,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.74686193">
           <caret line="21" column="1" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/login.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1146,6 +1270,209 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.059160307">
+          <caret line="7" column="59" selection-start-line="7" selection-start-column="59" selection-end-line="7" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/logout.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.03244275">
+          <caret line="1" column="3" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/ranks.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.16221374">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/ucheck.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.75555557">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/status.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.16221374">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/verify.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0648855">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/resister.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.5839695">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.4656489">
+          <caret line="8" column="18" selection-start-line="8" selection-start-column="18" selection-end-line="8" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/database.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.8293135">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/dbConnectionPool.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37847868">
+          <caret line="12" column="2" selection-start-line="12" selection-start-column="2" selection-end-line="12" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/justojdb.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/pagination.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.4916512">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/paginate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/bfy.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.12615955">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/where.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22077923">
+          <caret line="60" column="20" selection-start-line="60" selection-start-column="20" selection-end-line="60" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5465313">
+          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.3076923">
+          <caret line="2" column="31" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/orm.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13776337">
+          <caret line="61" column="9" selection-start-line="61" selection-start-column="9" selection-end-line="61" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/s3.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/problems.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.79902756">
+          <caret line="16" column="42" selection-start-line="16" selection-start-column="42" selection-end-line="16" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/middlewares/passport.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.1458671">
+          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/middlewares/isLoggedIn.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13776337">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/tempuser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.56564">
+          <caret line="28" column="28" selection-start-line="28" selection-start-column="28" selection-end-line="28" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/compiler/compiler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="3.3065538">
+          <caret line="92" column="31" selection-start-line="92" selection-start-column="31" selection-end-line="92" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2982456">
+          <caret line="32" column="34" selection-start-line="32" selection-start-column="34" selection-end-line="32" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/ep3.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.069815196">
+          <caret line="68" column="49" selection-start-line="68" selection-start-column="49" selection-end-line="68" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/problems.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7083333">
+          <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1153,39 +1480,95 @@
     <entry file="file://$PROJECT_DIR$/public/javascripts/pageFunctions/ep2.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="143" column="0" selection-start-line="143" selection-start-column="0" selection-end-line="143" selection-end-column="0" />
+          <caret line="186" column="0" selection-start-line="186" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/ep2.ejs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.3846154">
-          <caret line="137" column="95" selection-start-line="137" selection-start-column="95" selection-end-line="137" selection-end-column="95" />
+        <state vertical-scroll-proportion="-43.692307">
+          <caret line="106" column="0" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/ep1.ejs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.8461537">
-          <caret line="69" column="1" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
+        <state vertical-scroll-proportion="-36.807693">
+          <caret line="201" column="29" selection-start-line="201" selection-start-column="29" selection-end-line="201" selection-end-column="29" />
           <folding>
-            <marker date="1453484107601" expanded="true" signature="5897:5932" placeholder="..." />
-            <marker date="1453484107601" expanded="true" signature="6267:6292" placeholder="..." />
-            <marker date="1453484107601" expanded="true" signature="6333:6358" placeholder="..." />
-            <marker date="1453484107601" expanded="true" signature="6425:6437" placeholder="..." />
-            <marker date="1453484107601" expanded="true" signature="6485:6497" placeholder="..." />
-            <marker date="1453484107601" expanded="true" signature="6622:6634" placeholder="..." />
-            <marker date="1453484107601" expanded="true" signature="6781:6793" placeholder="..." />
+            <marker date="1453983131709" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453983131709" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453983131709" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453983131709" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453983131709" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453983131709" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1453983131709" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/edit_problem/step2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="57" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/edit_problem/step3.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0053763">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/compiler/judge.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.7358185">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/ep.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.96213806">
-          <caret line="331" column="42" selection-start-line="331" selection-start-column="42" selection-end-line="331" selection-end-column="42" />
+        <state vertical-scroll-proportion="-3.1880064">
+          <caret line="20" column="2" selection-start-line="20" selection-start-column="2" selection-end-line="20" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/edit_problem/editProblem.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.38573745">
+          <caret line="20" column="44" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/edit_problem/step1.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.30307943">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/edit_problem/removeTestCase.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5899514">
+          <caret line="57" column="12" selection-start-line="57" selection-start-column="12" selection-end-line="57" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/edit_problem/testJudgeSolution.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.27552673">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="43" />
           <folding />
         </state>
       </provider>

@@ -1,14 +1,20 @@
+/**
+ *
+ * @type {*|exports|module.exports}
+ */
+
 var express     = require('express');
-var user        = require('../models/user');
-var problems    = require('../models/problems');
 var router      = express.Router();
-var paginate    = require('../helpers/paginate');
+
 var _           = require('lodash');
-var entities    = require('entities');
+
+var Paginate    = require('../helpers/paginate');
+var User        = require('../models/user');
+var Problems    = require('../models/problems');
+
 
 
 router.get('/', function(req, res, next) {
-
     var limit=5;
     var cur_page = req.query.page;
     var table = 'problems';
@@ -22,12 +28,12 @@ router.get('/', function(req, res, next) {
     if( cur_page <=0 ) { return next(new Error('what are u looking for!?')); }
 
 
-    paginate.findAll(table,cur_page,limit,function(err,rows,pagination){
+    Paginate.findAll(table,cur_page,limit,function(err,rows,pagination){
 
         if( err ){ return next(err); }
         
         if( req.isAuthenticated() ) {
-            user.solvedList(req.user.id, function (err,result) {
+            User.solvedList(req.user.id, function (err,result) {
 
                 if( err ){ return next(err); }
 
@@ -69,7 +75,7 @@ router.get('/:pid', function(req, res, next) {
     if( pid = getPID(pid) ){
         console.log('YEAH  ' + pid);
 
-        problems.findById(pid,function(err,rows){
+        Problems.findById(pid,function(err,rows){
             if( err ) { return next(err); }
 
             if( rows.length == 0 ) { return next(new Error('missing probelem?')); }
@@ -81,7 +87,7 @@ router.get('/:pid', function(req, res, next) {
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
                 user: req.user,
-                problem: problems.decodeToHTML(rows[0]),
+                problem: Problems.decodeToHTML(rows[0]),
                 _: _
             });
 
@@ -93,6 +99,7 @@ router.get('/:pid', function(req, res, next) {
     }
 
 });
+
 
 
 function getPID(pid){

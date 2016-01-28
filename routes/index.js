@@ -1,11 +1,16 @@
+/**
+ * Route for home page
+ * @type {*|exports|module.exports}
+ */
+
 var express     = require('express');
 var User        = require('../models/user');
 var router      = express.Router();
 
 
-
-/* GET home page. */
 router.get('/', function(req, res, next) {
+
+
 
     res.render('index',{
         isUser: req.isAuthenticated(),
@@ -13,15 +18,5 @@ router.get('/', function(req, res, next) {
     });
 });
 
-function showResult(err,result){
-    if(err){
-        console.log('error');
-        console.log(err);
-    }
-    else{
-        console.log(result.length);
-        console.log(result);
-    }
-}
 
 module.exports = router;
