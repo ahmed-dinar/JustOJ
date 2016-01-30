@@ -4,15 +4,10 @@
  */
 
 var express     = require('express');
-var fse         = require('fs-extra');
 var path        = require("path");
 var router      = express.Router();
-
 var _           = require('lodash');
-var Busboy      = require('busboy');
-var uuid        = require('node-uuid');
 var entities    = require("entities");
-
 var Problems    = require('../models/problems');
 var EditProblem = require('./edit_problem/editProblem');
 
@@ -21,6 +16,9 @@ var EditProblem = require('./edit_problem/editProblem');
  *
  */
 router.get('/', function(req, res, next) {
+
+
+
 
     res.render('ep', {
         title: "editproblem | JUST Online Judge",
@@ -37,6 +35,7 @@ router.get('/', function(req, res, next) {
  *
  */
 router.get('/new', function(req, res, next) {
+
 
     res.render('epN', {
         title: "editproblem | JUST Online Judge",
@@ -157,11 +156,6 @@ router.post('/:pid/tjs', function(req, res, next) {
 
 });
 
-
-//string input
-function isNumeric(num){
-    return !isNaN(num);
-}
 
 
 module.exports = router;

@@ -15,6 +15,7 @@ exports.init = function init(config){
     this.timeLimit = config.timeLimit;
     this.memoryLimit = config.memoryLimit;
     this.runPath = config.runPath;
+    this.runName = config.runName;
 };
 
 
@@ -26,6 +27,8 @@ exports.init = function init(config){
 exports.run = function (problemId,fn) {
 
     var runPath = this.runPath;
+    var runName = this.runName;
+
     var compiler = new Compiler('windows',{
         language: this.language,
         timeLimit:  parseFloat(this.timeLimit)*1000.0,
@@ -34,17 +37,19 @@ exports.run = function (problemId,fn) {
 
     async.waterfall([
         function(callback) {
-            compileCode(runPath,compiler,callback);
+            compileCode(runPath,runName,compiler,callback);
         },
         function(callback){
             findTestCases(problemId,callback);
         },
         function(testCases,callback){
-            judgeTestCases(testCases,problemId,runPath,compiler,callback);
+            judgeTestCases(testCases,problemId,runPath,runName,compiler,callback);
         }
     ], function (error, success) {
         if (error) { return fn(error); }
-        fn(success);
+        else{
+            fn(success);
+        }
     });
 
 };
@@ -52,15 +57,16 @@ exports.run = function (problemId,fn) {
 /**
  *
  * @param runPath
+ * @param runName
  * @param compiler
  * @param callback
  */
-var compileCode = function(runPath,compiler,callback){
-    compiler.compile(runPath,function(stdErr,stdOut){
+var compileCode = function(runPath,runName,compiler,callback){
+    compiler.compile(runPath,runName,function(stdErr,stdOut){
         if( stdErr ){
             console.log('Compiler errors: ');
             console.log(stdErr);
-            return callback('Compiler Error');
+            return callback(new Error('Compiler Error'));
         }
         callback(null);
     });
@@ -94,10 +100,11 @@ var findTestCases = function(problemId,callback){
  * @param testCases
  * @param problemId
  * @param runPath
+ * @param runName
  * @param compiler
  * @param callback
  */
-var judgeTestCases = function(testCases,problemId,runPath,compiler,callback){
+var judgeTestCases = function(testCases,problemId,runPath,runName,compiler,callback){
 
     async.eachSeries(testCases, function(testCase, eachCallback) {
 
@@ -105,7 +112,7 @@ var judgeTestCases = function(testCases,problemId,runPath,compiler,callback){
 
         async.waterfall([
             function(runCallback) {
-                runTestCase(runPath,testCasePath,compiler,runCallback);
+                runTestCase(runPath,runName,testCasePath,compiler,runCallback);
             },
             function(stdRunOut,runCallback){
                 compareTestCase(stdRunOut,testCasePath,runCallback);
@@ -115,6 +122,7 @@ var judgeTestCases = function(testCases,problemId,runPath,compiler,callback){
                 eachCallback(error);
             }
             else {
+                console.log(success);
                 eachCallback();
             }
         });
@@ -132,12 +140,13 @@ var judgeTestCases = function(testCases,problemId,runPath,compiler,callback){
 /**
  *
  * @param runPath
+ * @param runName
  * @param testCasePath
  * @param compiler
  * @param runCallback
  */
-var runTestCase = function(runPath,testCasePath,compiler,runCallback){
-    compiler.run(runPath,testCasePath+'\\i.txt',function(stdRunErr,stdRunOut){
+var runTestCase = function(runPath,runName,testCasePath,compiler,runCallback){
+    compiler.run(runPath,runName,testCasePath+'\\i.txt',function(stdRunErr,stdRunOut){
 
         if( stdRunErr ){  return  runCallback(stdRunErr); }
 

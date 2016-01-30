@@ -1,19 +1,38 @@
-var Problems    = require('../../models/problems');
-var _           = require('lodash');
-var Busboy      = require('busboy');
-var uuid        = require('node-uuid');
-var fse         = require('fs-extra');
 var path        = require("path");
-var entities    = require("entities");
+var fse         = require('fs-extra');
+var async       = require('async');
+var _           = require('lodash');
+var Problems    = require('../../models/problems');
 
 module.exports = function(req, res, next) {
 
-    var pid=req.body.pid;
-    var casename=req.body.casename;
-
     if( !req.body.pid || !req.body.casename ){
-        return next(new Error('No such body found'));
+        return next(new Error('No Request body found'));
     }
+
+    async.waterfall([
+        function(callback) {
+            findTestCase(req.body.pid,req.body.casename,callback);
+        },
+        function(testCase,callback){
+            removeTestCase(testCase,req.body.pid,req.body.casename,callback);
+        },
+        function(callback){
+            reloadTestCases(req.body.pid,callback);
+        }
+    ], function (error, row) {
+
+        if( error ) { return next(new Error(error)); }
+        else {
+            res.end(row);
+        }
+
+    });
+
+};
+
+
+var findTestCase = function(pid,casename,callback){
 
     Problems.findTC('test_cases',{
         where:{
@@ -23,49 +42,44 @@ module.exports = function(req, res, next) {
             }
         }
     },function(err,row){
-        if( err ) { return next(new Error(err)); }
+        if( err ) { return callback(new Error(err)); }
 
-        if( row.length == 0 ) { return next(new Error('No such Test Case Found')); }
+        if( row.length == 0 ) { return callback(new Error('No such Test Case Found')); }
 
+        callback(null,row[0]);
+    });
+};
 
-        var TCDir =  path.normalize(__dirname + '/../files/tc/p/' + pid +  '/' + row[0].name);
+var  removeTestCase = function(testCase,pid,casename,callback){
 
+    Problems.removeTC('test_cases',{
+        where:{
+            $and: {
+                pid: pid,
+                name: casename
+            }
+        }
+    },function(err,row){
+
+        if( err ) { return callback(new Error('Problem Removing TC DB')) ; }
+
+        var TCDir =  path.normalize(process.cwd() + '/files/tc/p/' + pid +  '/' + testCase.name);
 
         fse.remove(TCDir, function (err) {
-            if (err) { return next(new Error('Problem Removing TC Folder')) ; }
-
-
-            Problems.removeTC('test_cases',{
-                where:{
-                    $and: {
-                        pid: pid,
-                        name: casename
-                    }
-                }
-            },function(err,row){
-
-                if( err ) { return next(new Error('Problem Removing TC DB')) ; }
-
-
-                Problems.findTC('test_cases',{
-                    where:{
-                        pid: pid
-                    }
-                },function(err,row){
-                    if( err ) { return next(new Error(err)); }
-
-                    //send back ajax
-                    res.end(JSON.stringify(row));
-                });
-
-
-                //use if not use ajax
-                // res.redirect('/ep/' + req.params.pid + '/2');
-            });
-
+            callback(null);
         });
 
     });
+};
 
+var  reloadTestCases = function(pid,callback){
+    Problems.findTC('test_cases',{
+        where:{
+            pid: pid
+        }
+    },function(err,row){
+        if( err ) { return callback(new Error(err)); }
 
+        callback(null,JSON.stringify(row));
+    });
 };

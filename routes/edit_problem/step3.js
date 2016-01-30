@@ -15,7 +15,7 @@ module.exports = function(req,res,next){
 
                 Problems.findById(req.params.pid,function(err,row){
 
-                    if( err ) { return callback(new next(err)); }
+                    if( err ) { return next(new next(err)); }
 
                     if( row.length == 0 ) { return next(new Error('what you r looking for!')); }
                     //if( row[0].status == 'incomplete' ) { return callback(new Error('what you r looking for!!!')); }

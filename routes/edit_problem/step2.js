@@ -68,46 +68,26 @@ module.exports = function(req,res,next){
     var fname = 0;
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-
-      var saveTo = process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename + '/' + namemap[fname++] + path.extname(filename);
-
-      file.pipe(fse.createOutputStream(path.normalize(saveTo)));
-
-      //  file.pipe(fs.createWriteStream(saveTo));
-    });
-
-    busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
-      console.log('Field [' + fieldname + ']: value: ' + val);
+        var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename + '/' + namemap[fname++] + path.extname(filename));
+        file.pipe(fse.createOutputStream(saveTo));
     });
 
     busboy.on('finish', function() {
       console.log('Test Case Upload complete!');
 
-      Problems.insertTC('test_cases',{
-        name: uniquename,
-        pid: req.params.pid,
-        created: _.now()
-      },function(err,row){
-
-        if( err ) { return next(new Error('Porblem inserting TC: ' + err)); }
-
-
-        Problems.findTC('test_cases',{
-          where:{
-            pid: req.params.pid
+      async.waterfall([
+        function(callback) {
+            insertTestCase(req.params.pid,uniquename,callback);
+        },
+        function(callback){
+           reloadTestCases(req.params.pid,callback)
+        }
+      ], function (error, row) {
+          if( error ) { return next(error); }
+          else {
+              res.end(row);
           }
-        },function(err,row){
-          if( err ) { return next(new Error(err)); }
-
-          //send back ajax
-          res.end(JSON.stringify(row));
-
-        });
-
-        //use if not use ajax
-        // res.redirect('/ep/' + req.params.pid + '/2');
       });
-
 
     });
 
@@ -115,4 +95,29 @@ module.exports = function(req,res,next){
   };
 
   return module;
+};
+
+var insertTestCase = function(pid,uniquename,callback){
+  Problems.insertTC('test_cases',{
+    name: uniquename,
+    pid: pid,
+    created: _.now()
+  },function(err,row){
+      if( err ) { return callback(new Error('Porblem inserting TC: ')); }
+
+      callback(null);
+  });
+};
+
+
+var  reloadTestCases = function(pid,callback){
+  Problems.findTC('test_cases',{
+    where:{
+      pid: pid
+    }
+  },function(err,row){
+    if( err ) { return callback(new Error(err)); }
+
+    callback(null,JSON.stringify(row));
+  });
 };

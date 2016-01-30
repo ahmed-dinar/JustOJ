@@ -15,7 +15,7 @@ module.exports = function(req, res, next) {
     var limits = {};
     var error = null;
     var success = null;
-    var saveTo = path.normalize(__dirname + '/../files/runs/' + uniquename);
+    var saveTo = path.normalize(process.cwd() + '/files/runs/' + uniquename);
 
     busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
         limits[fieldname] = val;
@@ -42,11 +42,16 @@ module.exports = function(req, res, next) {
 
             Judge.init({
                 runPath: saveTo,
+                runName: uniquename,
                 language: limits['language'],
                 timeLimit: limits['tl'],
                 memoryLimit: limits['ml']
             });
             Judge.run(req.params.pid,function(Output){
+
+                console.log('ajax returns: ');
+                console.log(Output);
+
                 res.json({
                     status: 'success',
                     success: Output

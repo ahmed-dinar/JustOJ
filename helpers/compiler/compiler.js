@@ -1,9 +1,10 @@
 
-//g++ -lm -o {:basename}.exe {:mainfile}
-// .\{:basename}.exe < input.txt
-//gcc -lm -o {:basename}.exe {:mainfile}
+//g++ -O2 -fomit-frame-pointer -o input input.cpp
+//gcc -O2 -fomit-frame-pointer -o input input.cpp
+
 
 var exec  = require('child_process').exec;
+var fs    = require('fs-extra');
 
 /**
  *
@@ -23,18 +24,19 @@ function Compiler(OS,config) {
 /**
  *
  * @param codePath
+ * @param codeName
  * @param fn
  * @returns {*}
  */
-Compiler.prototype.compile = function compile(codePath,fn){
+Compiler.prototype.compile = function compile(codePath,codeName,fn){
     var command = null;
 
     switch(this.language) {
         case 'c':
-            command = 'cd ' + codePath + ' & gcc -lm -o output.exe input.c';
+            command = 'cd ' + codePath + ' & gcc -O2 -fomit-frame-pointer -o ' + codeName + ' input.c';
             break;
         case 'cpp':
-            command = 'cd ' + codePath + ' & g++ -lm -o output.exe input.cpp';
+            command = 'cd ' + codePath + ' & g++ -O2 -fomit-frame-pointer -o ' + codeName + ' input.cpp';
             break;
         case 'java':
             //command = 'cd ' + codePath + ' & gcc -lm -o output.exe input.c';
@@ -51,10 +53,12 @@ Compiler.prototype.compile = function compile(codePath,fn){
         };
         exec(command, config, function(err, stdout, stderr) {
             if (err) {
+                console.log('Error while compiling in compiler: ');
                 console.log(err);
                 return fn(String(stderr),null);
+            }else {
+                fn(null, String(stdout));
             }
-            fn(null,String(stdout));
         });
     }
 };
@@ -66,17 +70,26 @@ Compiler.prototype.compile = function compile(codePath,fn){
  * @param input
  * @param fn
  */
-Compiler.prototype.run = function run(programmPath,input,fn){
-    var runCommand = 'cd ' + programmPath + ' & .\\output.exe < "' + input + '"';
+Compiler.prototype.run = function run(programmPath,codeName,input,fn){
+
+
+    console.log( 'TLE after ' + this.timeLimit + ' MilliSecond');
+
+
+    var runCommand = 'cd ' + programmPath + ' & .\\' + codeName + '.exe < "' + input + '"';
 
    // console.log('Run Command in compile: ' + runCommand);
 
     var config = {
         env: process.env,
-        timeout: this.timeLimit,
+        timeout: 0,
         maxBuffer: parseInt(this.memoryLimit)*1024
     };
+
+
+
     exec(runCommand, config, function(err, stdout, stderr) {
+
         if (err) {
             console.error('Hei error!');
             console.error(err.killed);
@@ -93,6 +106,19 @@ Compiler.prototype.run = function run(programmPath,input,fn){
             return fn(null, stdout);
         }
     });
+
+
+
+
+    setTimeout(function(){
+
+        exec("taskkill /im "+codeName+".exe /f",function( error , stdout , stderr ){
+            console.log('hi killed ha ha ha!  :D ');
+           // fs.removeSync(programmPath);
+        });
+
+    }, this.timeLimit);
+
 };
 
 
