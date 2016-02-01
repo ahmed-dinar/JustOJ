@@ -5,132 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2efb35df-b041-49fd-bf66-80b228f9caa0" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/title.png" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\0018dc8e-d554-4e3f-a7a8-c38a9966a4ba\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\0018dc8e-d554-4e3f-a7a8-c38a9966a4ba\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\01cbcafa-d535-430e-a156-20e0a7500cd0\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\01cbcafa-d535-430e-a156-20e0a7500cd0\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\03f96c6b-b70b-4bc1-874a-6e9efb8797bf\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\03f96c6b-b70b-4bc1-874a-6e9efb8797bf\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\042fe3eb-9900-416c-8769-d687751e64f0\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\042fe3eb-9900-416c-8769-d687751e64f0\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\0bb61830-f748-490a-8044-321e290dd951\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\0bb61830-f748-490a-8044-321e290dd951\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\1354835a-f486-4da2-81c9-69f309820987\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\1354835a-f486-4da2-81c9-69f309820987\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\2308e588-503b-4693-a758-01acb453879c\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\2308e588-503b-4693-a758-01acb453879c\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\23319050-d938-4a88-b97c-20ddf2574ccf\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\23319050-d938-4a88-b97c-20ddf2574ccf\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\23fc5d97-dc8a-4749-b742-7b63248124e3\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\23fc5d97-dc8a-4749-b742-7b63248124e3\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\29feb9dd-148f-4c64-937e-4e6501ebb620\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\29feb9dd-148f-4c64-937e-4e6501ebb620\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\3a24e95b-dfae-477d-a63d-f77cfb25a4fd\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\3a24e95b-dfae-477d-a63d-f77cfb25a4fd\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\3e54e06b-60e7-4304-a515-a7b2724d8403\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\3e54e06b-60e7-4304-a515-a7b2724d8403\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\3efab72c-f88e-40bd-a1b0-f759ef6c6dcc\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\3efab72c-f88e-40bd-a1b0-f759ef6c6dcc\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\4114029b-2312-4150-882b-f986437fc249\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\4114029b-2312-4150-882b-f986437fc249\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\5c15f877-a788-4a44-8b08-dd4b19fee21c\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\5c15f877-a788-4a44-8b08-dd4b19fee21c\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\63947930-9f0b-4bf5-ac87-be695a865507\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\63947930-9f0b-4bf5-ac87-be695a865507\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\6eb7b3e8-b75a-4702-888c-89f6f4567969\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\6eb7b3e8-b75a-4702-888c-89f6f4567969\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\77ccbd39-ddd6-4a75-bbe3-7355272b5d66\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\77ccbd39-ddd6-4a75-bbe3-7355272b5d66\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\79dfb7a7-27db-4b5e-8e51-bedc5e9a7070\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\79dfb7a7-27db-4b5e-8e51-bedc5e9a7070\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\7f101315-af4c-4e61-95ed-ee36de3873ed\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\7f101315-af4c-4e61-95ed-ee36de3873ed\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\81367ed0-af1a-43f7-8680-541d0326b8ad\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\81367ed0-af1a-43f7-8680-541d0326b8ad\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\81638d7a-3ce6-41a5-bd66-ccc665f55f15\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\81638d7a-3ce6-41a5-bd66-ccc665f55f15\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\850cdbe5-7718-4ce2-9fff-d29c4370a6e8\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\850cdbe5-7718-4ce2-9fff-d29c4370a6e8\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\9607b177-50c8-4c73-972d-fb826edf335e\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\9607b177-50c8-4c73-972d-fb826edf335e\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\a152a001-eea5-4229-ba1d-260364fa18c7\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\a152a001-eea5-4229-ba1d-260364fa18c7\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\ab90429f-2afa-46db-958c-fd217b200549\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\ab90429f-2afa-46db-958c-fd217b200549\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\b0691748-04a7-4ee5-82fc-274948f5dac8\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\b0691748-04a7-4ee5-82fc-274948f5dac8\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\b14040bc-ae6c-4726-9c97-94c88a46cd16\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\b14040bc-ae6c-4726-9c97-94c88a46cd16\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\b306465e-b7d5-413b-969b-caa854c3060b\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\b306465e-b7d5-413b-969b-caa854c3060b\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\bc5e1327-17ff-4f13-9fc5-54f55c285946\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\bc5e1327-17ff-4f13-9fc5-54f55c285946\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\c7190351-84ab-47c4-aea7-0d4d1e07cf03\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\c7190351-84ab-47c4-aea7-0d4d1e07cf03\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\cda70454-c339-4a07-a3bf-974c706a48e8\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\cda70454-c339-4a07-a3bf-974c706a48e8\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\cf3e63f8-1175-40d2-a7b7-11d6486b380e\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\cf3e63f8-1175-40d2-a7b7-11d6486b380e\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\e0398217-cc41-4d3a-92dd-ab02bf0b0880\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\e0398217-cc41-4d3a-92dd-ab02bf0b0880\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\e18396ff-1b17-40a1-b8f4-434840d24723\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\e18396ff-1b17-40a1-b8f4-434840d24723\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\e7fc2695-11fd-4e28-a2ea-c4ad33ebad3e\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\e7fc2695-11fd-4e28-a2ea-c4ad33ebad3e\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\eb82bf81-546c-4b40-8ef8-088819f514d5\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\eb82bf81-546c-4b40-8ef8-088819f514d5\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\ec39e3ec-dbac-4eda-bf36-2ac2992bf074\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\ec39e3ec-dbac-4eda-bf36-2ac2992bf074\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\efe6c69f-4481-4f95-a9c7-ebe2bc08cb51\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\efe6c69f-4481-4f95-a9c7-ebe2bc08cb51\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\f1d04ad7-465d-4e3f-9317-f59ee98f963f\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\f1d04ad7-465d-4e3f-9317-f59ee98f963f\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\f67114a3-4e9d-4a72-87a5-8201db1220c0\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\f67114a3-4e9d-4a72-87a5-8201db1220c0\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\f852098c-bcad-449e-a930-7f0d92817182\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\f852098c-bcad-449e-a930-7f0d92817182\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fccacdcc-8c73-46b7-ad96-e0ec63780b14\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fccacdcc-8c73-46b7-ad96-e0ec63780b14\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fd702bec-5f2c-44a7-b4e2-2da5db54d83f\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fd702bec-5f2c-44a7-b4e2-2da5db54d83f\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fde2711c-cce1-485d-b7dc-f67f6ef626d0\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fde2711c-cce1-485d-b7dc-f67f6ef626d0\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fe82164b-6728-42a6-a4cc-01d88e11c04d\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fe82164b-6728-42a6-a4cc-01d88e11c04d\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fe954aa1-ab6a-43ab-bf44-4b3083de2749\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\runs\fe954aa1-ab6a-43ab-bf44-4b3083de2749\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\tc\p\49\414218c2-6821-436d-8859-115820171034\i.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\tc\p\49\414218c2-6821-436d-8859-115820171034\o.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\tc\p\49\d371c3f7-43dc-4e2a-b047-937870e37a80\i" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\files\tc\p\49\d371c3f7-43dc-4e2a-b047-937870e37a80\o" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\routes\files\runs\56981317-e5f9-491a-9ba4-183bca5a6c13\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\routes\files\runs\56981317-e5f9-491a-9ba4-183bca5a6c13\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\routes\files\runs\59ae9e42-8c9f-421e-8592-b5c3cd5c0d63\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\routes\files\runs\59ae9e42-8c9f-421e-8592-b5c3cd5c0d63\output.exe" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\routes\files\runs\8c5ccd43-58de-45b7-8ce6-0ca798b2a5d2\input.cpp" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\Ahmed Dinar\Dropbox\IdeaProjects\justoj\routes\files\runs\8c5ccd43-58de-45b7-8ce6-0ca798b2a5d2\output.exe" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" afterPath="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/bootstrap/css/bootstrap.css" afterPath="$PROJECT_DIR$/public/bootstrap/css/bootstrap.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers/compiler/compiler.js" afterPath="$PROJECT_DIR$/helpers/compiler/compiler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/ep.js" afterPath="$PROJECT_DIR$/routes/ep.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/ep1.ejs" afterPath="$PROJECT_DIR$/views/ep1.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/ep3.ejs" afterPath="$PROJECT_DIR$/views/ep3.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/epN.ejs" afterPath="$PROJECT_DIR$/views/epN.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/templates/footer.ejs" afterPath="$PROJECT_DIR$/views/templates/footer.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/templates/header.ejs" afterPath="$PROJECT_DIR$/views/templates/header.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers/compiler/judge.js" afterPath="$PROJECT_DIR$/helpers/compiler/judge.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/login.ejs" afterPath="$PROJECT_DIR$/views/login.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problems.ejs" afterPath="$PROJECT_DIR$/views/problems.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/ranks.ejs" afterPath="$PROJECT_DIR$/views/ranks.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/edit_problem/removeTestCase.js" afterPath="$PROJECT_DIR$/routes/edit_problem/removeTestCase.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/status.ejs" afterPath="$PROJECT_DIR$/views/status.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/edit_problem/step1.js" afterPath="$PROJECT_DIR$/routes/edit_problem/step1.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/edit_problem/step2.js" afterPath="$PROJECT_DIR$/routes/edit_problem/step2.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/edit_problem/step3.js" afterPath="$PROJECT_DIR$/routes/edit_problem/step3.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/style.css" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/edit_problem/testJudgeSolution.js" afterPath="$PROJECT_DIR$/routes/edit_problem/testJudgeSolution.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/viewproblem.ejs" afterPath="$PROJECT_DIR$/views/viewproblem.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/runConfigurations/bin_www.xml" afterPath="$PROJECT_DIR$/.idea/runConfigurations/bin_www.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="justoj.iws" />
@@ -154,21 +30,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="compiler.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/helpers/compiler/compiler.js">
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4132901">
-              <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="judge.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/helpers/compiler/judge.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.5744681">
+              <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -197,7 +63,6 @@
       <list>
         <option value="$PROJECT_DIR$/views/addproblem.ejs" />
         <option value="$PROJECT_DIR$/routes/editproblem.js" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/views/templates/aceEditor.ejs" />
         <option value="$PROJECT_DIR$/middlewares/isLoggedIn.js" />
         <option value="$PROJECT_DIR$/views/s3.ejs" />
@@ -246,6 +111,7 @@
         <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" />
         <option value="$PROJECT_DIR$/routes/edit_problem/step3.js" />
         <option value="$PROJECT_DIR$/helpers/compiler/compiler.js" />
+        <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
   </component>
@@ -267,10 +133,10 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="754" />
+    <option name="x" value="47" />
+    <option name="y" value="-4" />
+    <option name="width" value="1319" />
+    <option name="height" value="772" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -296,8 +162,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -312,12 +176,14 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
+              <option name="myItemId" value="JustOJ" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -328,7 +194,7 @@
     <property name="FullScreen" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/views" />
     <property name="editor.config.accepted" value="true" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="jsx.switch.disabled" value="true" />
@@ -726,6 +592,10 @@
       <workItem from="1454075849758" duration="3992000" />
       <workItem from="1454086082717" duration="823000" />
       <workItem from="1454089994743" duration="599000" />
+      <workItem from="1454176719084" duration="961000" />
+      <workItem from="1454183123785" duration="954000" />
+      <workItem from="1454346278662" duration="396000" />
+      <workItem from="1454347704977" duration="593000" />
     </task>
     <task id="LOCAL-00001" summary="big changes">
       <created>1453266267328</created>
@@ -737,7 +607,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="610875000" />
+    <option name="totallyTimeSpent" value="613779000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -749,8 +619,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
-    <editor active="false" />
+    <frame x="47" y="-4" width="1319" height="772" extended-state="7" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328152" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -759,23 +629,23 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295626" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27906978" sideWeight="0.49079755" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39493293" sideWeight="0.52342606" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.15658915" sideWeight="0.49394855" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22181553" sideWeight="0.84283245" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14556482" sideWeight="0.84283245" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25230062" sideWeight="0.15716752" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39379844" sideWeight="0.4969325" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26976743" sideWeight="0.52349484" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24806201" sideWeight="0.52342606" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22945736" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39379844" sideWeight="0.4969325" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -832,13 +702,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/routes/ranks.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16221374">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/ucheck.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.75555557">
@@ -1160,13 +1023,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33224756">
-          <caret line="123" column="6" selection-start-line="123" selection-start-column="6" selection-end-line="123" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/edit_problem/step3.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1182,10 +1038,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/bin/www">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.43837753">
+          <caret line="76" column="3" selection-start-line="76" selection-start-column="3" selection-end-line="76" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/helpers/compiler/compiler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4132901">
-          <caret line="89" column="0" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.7180851">
+          <caret line="15" column="21" selection-start-line="15" selection-start-column="21" selection-end-line="15" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5744681">
+          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
           <folding />
         </state>
       </provider>
