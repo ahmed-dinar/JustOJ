@@ -87,7 +87,6 @@ Compiler.prototype.run = function run(programmPath,codeName,input,fn){
     };
 
 
-
     exec(runCommand, config, function(err, stdout, stderr) {
 
         if (err) {
