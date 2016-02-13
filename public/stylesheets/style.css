@@ -1,10 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
 @import url(https://fonts.googleapis.com/css?family=Carter+One);
+@import url(https://fonts.googleapis.com/css?family=Comfortaa|Aclonica|Quando|Offside|Catamaran|Martel+Sans);
 
 #web-title{
   font-family: 'Carter One', cursive;
+  color: #000;
+  font-weight: 200;
 }
-
 
 
 html{
@@ -15,6 +17,7 @@ body {
   padding-top: 70px;
   margin: 0px;
   font-family: 'Source Sans Pro', sans-serif;
+
 }
 
 p,h4,div{

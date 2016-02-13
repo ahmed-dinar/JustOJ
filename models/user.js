@@ -1,4 +1,4 @@
-var orm             = require('../config/database/orm');
+var Query             = require('../config/database/query');
 var async           = require('async');
 var bcrypt          = require('bcryptjs');
 
@@ -18,7 +18,7 @@ User.login = function(username, password, fn) {
         //find user by username
         function (callback) {
 
-            orm.in('users').findAll({
+            Query.in('users').findAll({
                 where: {
                     username: username
                 }
@@ -67,7 +67,7 @@ User.login = function(username, password, fn) {
 
 User.solvedList = function(id,callback){
 
-    orm.in('user_solved_list').findAll({
+    Query.in('user_solved_list').findAll({
         where:{
             uid: id
         }

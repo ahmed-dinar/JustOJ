@@ -1,3 +1,5 @@
+"use strict"
+
 /**
  *
  * @author <a href="madinar.cse@gmail.com">Ahmed Dinar</a>
@@ -39,13 +41,18 @@ var mysql      = require('mysql');
 exports.where = function(where){
 
     var ret = '';
+    var counter = 0;
 
     _.forOwn(where, function(value, key) {
 
         if(isOperator(key)){
             ret += processOperator(key,value);
         }else{
+            if( counter ){
+                ret += ' AND ';
+            }
             ret += mysql.escapeId(key) + '=' + mysql.escape(value);
+            counter++;
         }
 
     });
@@ -66,15 +73,11 @@ function processOperator(opt,attributes){
 
     switch(opt) {
         case '$or':
-            ret += '(';
-            ret += processAO('OR',attributes);
-            ret += ')';
+            ret += '(' + processAO('OR',attributes) + ')';
             break;
 
         case '$and':
-            ret += '(';
-            ret += processAO('AND',attributes);
-            ret += ')';
+            ret += '(' + processAO('AND',attributes) + ')';
             break;
 
         case '$gt':
@@ -98,19 +101,19 @@ function processOperator(opt,attributes){
             break;
 
         case '$between':
-            ret += processBet('BETWEEN',attributes);
+            ret += '(' + processBet('BETWEEN',attributes) + ')';
             break;
 
         case '$notBetween':
-            ret += processBet('NOT BETWEEN',attributes);
+            ret += '(' + processBet('NOT BETWEEN',attributes) + ')';
             break;
 
         case '$like':
-            ret += processLike('LIKE ',attributes);
+            ret += '(' + processLike('LIKE ',attributes) + ')';
             break;
 
         case '$notLike':
-            ret += processLike('NOT LIKE ',attributes);
+            ret += '(' + processLike('NOT LIKE ',attributes) + ')';
             break;
 
         default:
@@ -152,6 +155,10 @@ function processAO(opt,attributes){
 
 
 /**
+ * $gt:{
+ *    age: 30
+ * }
+ * // `age`>30
  *
  * @param opt
  * @param attributes
@@ -167,6 +174,15 @@ function processThan(opt,attributes){
 
 
 /**
+ *  $between:{
+ *     age:[25,30]
+ *  }
+ *  //`age` BETWEEN 25 AND 30
+ *
+ *  $notBetween:{
+ *     age:[25,30]
+ *  }
+ *  //`age` NOT BETWEEN 25 AND 30
  *
  * @param cond
  * @param attributes
@@ -182,6 +198,13 @@ function processBet(cond,attributes){
 
 
 /**
+ *  $like:{
+ *    firstName: '%dinar'
+ *  }
+ *
+ *  $notLike:{
+ *    firstName: '%dinar'
+ *  }
  *
  * @param cond
  * @param string

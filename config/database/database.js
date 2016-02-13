@@ -1,3 +1,5 @@
+"use strict"
+
 var mysql      = require('mysql');
 var dbPoolConn = require('./dbConnectionPool.js');
 var _          = require('lodash');

@@ -1,6 +1,6 @@
 var passportLocal   = require('passport-local');
 var User            = require('../models/user');
-var orm             = require('../config/database/orm');
+var Query             = require('../config/database/query');
 
 
 module.exports = function(passport) {
@@ -39,7 +39,7 @@ module.exports = function(passport) {
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
 
-        orm.in('users').findAll({
+        Query.in('users').findAll({
             where: {
                 id: id
             }

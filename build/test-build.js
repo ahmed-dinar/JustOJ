@@ -1,4 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict"
+
 /**
  *
  * @author <a href="madinar.cse@gmail.com">Ahmed Dinar</a>
@@ -40,13 +42,18 @@ var mysql      = require('mysql');
 exports.where = function(where){
 
     var ret = '';
+    var counter = 0;
 
     _.forOwn(where, function(value, key) {
 
         if(isOperator(key)){
             ret += processOperator(key,value);
         }else{
+            if( counter ){
+                ret += ' AND ';
+            }
             ret += mysql.escapeId(key) + '=' + mysql.escape(value);
+            counter++;
         }
 
     });
@@ -67,15 +74,11 @@ function processOperator(opt,attributes){
 
     switch(opt) {
         case '$or':
-            ret += '(';
-            ret += processAO('OR',attributes);
-            ret += ')';
+            ret += '(' + processAO('OR',attributes) + ')';
             break;
 
         case '$and':
-            ret += '(';
-            ret += processAO('AND',attributes);
-            ret += ')';
+            ret += '(' + processAO('AND',attributes) + ')';
             break;
 
         case '$gt':
@@ -99,19 +102,19 @@ function processOperator(opt,attributes){
             break;
 
         case '$between':
-            ret += processBet('BETWEEN',attributes);
+            ret += '(' + processBet('BETWEEN',attributes) + ')';
             break;
 
         case '$notBetween':
-            ret += processBet('NOT BETWEEN',attributes);
+            ret += '(' + processBet('NOT BETWEEN',attributes) + ')';
             break;
 
         case '$like':
-            ret += processLike('LIKE ',attributes);
+            ret += '(' + processLike('LIKE ',attributes) + ')';
             break;
 
         case '$notLike':
-            ret += processLike('NOT LIKE ',attributes);
+            ret += '(' + processLike('NOT LIKE ',attributes) + ')';
             break;
 
         default:
@@ -153,6 +156,10 @@ function processAO(opt,attributes){
 
 
 /**
+ * $gt:{
+ *    age: 30
+ * }
+ * // `age`>30
  *
  * @param opt
  * @param attributes
@@ -168,6 +175,15 @@ function processThan(opt,attributes){
 
 
 /**
+ *  $between:{
+ *     age:[25,30]
+ *  }
+ *  //`age` BETWEEN 25 AND 30
+ *
+ *  $notBetween:{
+ *     age:[25,30]
+ *  }
+ *  //`age` NOT BETWEEN 25 AND 30
  *
  * @param cond
  * @param attributes
@@ -183,6 +199,13 @@ function processBet(cond,attributes){
 
 
 /**
+ *  $like:{
+ *    firstName: '%dinar'
+ *  }
+ *
+ *  $notLike:{
+ *    firstName: '%dinar'
+ *  }
  *
  * @param cond
  * @param string
@@ -41552,7 +41575,7 @@ Connection.prototype.connect = function connect(options, callback) {
       connection._protocol.write(data);
     });
     this._protocol.on('end', function() {
-       connection._socket.end()
+       connection._socket.end();
     });
     this._socket.on('end', function(err) {
       connection._protocol.end();
@@ -41610,7 +41633,7 @@ Connection.prototype.beginTransaction = function beginTransaction(options, callb
   options = options || {};
   options.sql = 'START TRANSACTION';
   options.values = null;
-  
+
   return this.query(options, callback);
 };
 
@@ -41623,7 +41646,7 @@ Connection.prototype.commit = function commit(options, callback) {
   options = options || {};
   options.sql = 'COMMIT';
   options.values = null;
-  
+
   return this.query(options, callback);
 };
 
@@ -41636,7 +41659,7 @@ Connection.prototype.rollback = function rollback(options, callback) {
   options = options || {};
   options.sql = 'ROLLBACK';
   options.values = null;
-  
+
   return this.query(options, callback);
 };
 
@@ -41687,7 +41710,7 @@ Connection.prototype.end = function end(options, callback) {
   }
 
   // create custom options reference
-  opts = Object.create(opts || null)
+  opts = Object.create(opts || null);
 
   if (opts.timeout === undefined) {
     // default timeout of 30 seconds
@@ -41733,6 +41756,7 @@ Connection.prototype.format = function(sql, values) {
 if (tls.TLSSocket) {
   // 0.11+ environment
   Connection.prototype._startTLS = function _startTLS(onSecure) {
+    var connection    = this;
     var secureContext = tls.createSecureContext({
       ca         : this.config.ssl.ca,
       cert       : this.config.ssl.cert,
@@ -41747,12 +41771,22 @@ if (tls.TLSSocket) {
 
     // socket <-> encrypted
     var rejectUnauthorized = this.config.ssl.rejectUnauthorized;
+    var secureEstablished  = false;
     var secureSocket       = new tls.TLSSocket(this._socket, {
       rejectUnauthorized : rejectUnauthorized,
       requestCert        : true,
       secureContext      : secureContext,
       isServer           : false
     });
+
+    // error handler for secure socket
+    secureSocket.on('_tlsError', function(err) {
+      if (secureEstablished) {
+        connection._handleNetworkError(err);
+      } else {
+        onSecure(err);
+      }
+    })
 
     // cleartext <-> protocol
     secureSocket.pipe(this._protocol);
@@ -41761,6 +41795,8 @@ if (tls.TLSSocket) {
     });
 
     secureSocket.on('secure', function() {
+      secureEstablished = true;
+
       onSecure(rejectUnauthorized ? this.ssl.verifyError() : null);
     });
 
@@ -41775,6 +41811,7 @@ if (tls.TLSSocket) {
     // after:
     //  _socket <-> securePair.encrypted <-> securePair.cleartext <-> _protocol
 
+    var connection  = this;
     var credentials = Crypto.createCredentials({
       ca         : this.config.ssl.ca,
       cert       : this.config.ssl.cert,
@@ -41784,7 +41821,17 @@ if (tls.TLSSocket) {
     });
 
     var rejectUnauthorized = this.config.ssl.rejectUnauthorized;
+    var secureEstablished  = false;
     var securePair         = tls.createSecurePair(credentials, false, true, rejectUnauthorized);
+
+    // error handler for secure pair
+    securePair.on('error', function(err) {
+      if (secureEstablished) {
+        connection._handleNetworkError(err);
+      } else {
+        onSecure(err);
+      }
+    });
 
     // "unpipe"
     this._socket.removeAllListeners('data');
@@ -41802,7 +41849,10 @@ if (tls.TLSSocket) {
       securePair.cleartext.write(data);
     });
 
+    // secure established
     securePair.on('secure', function() {
+      secureEstablished = true;
+
       if (!rejectUnauthorized) {
         onSecure();
         return;
@@ -41819,6 +41869,16 @@ if (tls.TLSSocket) {
 
       onSecure(err);
     });
+
+    // node.js 0.8 bug
+    securePair._cycle = securePair.cycle;
+    securePair.cycle  = function cycle() {
+      if (this.ssl && this.ssl.error) {
+        this.error();
+      }
+
+      return this._cycle.apply(this, arguments);
+    };
   };
 }
 
@@ -41911,7 +41971,7 @@ function ConnectionConfig(options) {
   this.ssl                = (typeof options.ssl === 'string')
     ? ConnectionConfig.getSSLProfile(options.ssl)
     : (options.ssl || false);
-  this.multipleStatements = options.multipleStatements || false; 
+  this.multipleStatements = options.multipleStatements || false;
   this.typeCast           = (options.typeCast === undefined)
     ? true
     : options.typeCast;
@@ -41935,7 +41995,7 @@ function ConnectionConfig(options) {
 
   // Set the client flags
   var defaultFlags = ConnectionConfig.getDefaultFlags(options);
-  this.clientFlags = ConnectionConfig.mergeFlags(defaultFlags, options.flags)
+  this.clientFlags = ConnectionConfig.mergeFlags(defaultFlags, options.flags);
 }
 
 ConnectionConfig.mergeFlags = function mergeFlags(defaultFlags, userFlags) {
@@ -42052,13 +42112,13 @@ ConnectionConfig.parseUrl = function(url) {
   var options = {
     host     : url.hostname,
     port     : url.port,
-    database : url.pathname.substr(1),
+    database : url.pathname.substr(1)
   };
 
   if (url.auth) {
     var auth = url.auth.split(':');
-    options.user     = auth[0];
-    options.password = auth[1];
+    options.user     = auth.shift();
+    options.password = auth.join(':');
   }
 
   if (url.query) {
@@ -42320,7 +42380,7 @@ Pool.prototype._needsChangeUser = function _needsChangeUser(connection) {
     || connConfig.database !== poolConfig.database
     || connConfig.password !== poolConfig.password
     || connConfig.charsetNumber !== poolConfig.charsetNumber;
-}
+};
 
 Pool.prototype._purgeConnection = function _purgeConnection(connection, callback) {
   var cb = callback || function () {};
@@ -42433,7 +42493,7 @@ PoolCluster.prototype.end = function end(callback) {
     : _cb;
 
   if (typeof cb !== 'function') {
-    throw TypeError('callback argument must be a function')
+    throw TypeError('callback argument must be a function');
   }
 
   if (this._closed) {
@@ -42686,7 +42746,7 @@ PoolConfig.prototype.newConnectionConfig = function newConnectionConfig() {
 
 },{"./ConnectionConfig":270}],274:[function(require,module,exports){
 var inherits = require('util').inherits;
-var Connection = require('./Connection')
+var Connection = require('./Connection');
 
 module.exports = PoolConnection;
 inherits(PoolConnection, Connection);
@@ -42730,8 +42790,8 @@ PoolConnection.prototype.end = function () {
 };
 
 PoolConnection.prototype.destroy = function () {
+  Connection.prototype.destroy.apply(this, arguments);
   this._removeFromPool(this);
-  return Connection.prototype.destroy.apply(this, arguments);
 };
 
 PoolConnection.prototype._removeFromPool = function _removeFromPool() {
@@ -42868,7 +42928,7 @@ function xor(a, b) {
     result[i] = (a[i] ^ b[i]);
   }
   return result;
-};
+}
 Auth.xor = xor;
 
 Auth.token = function(password, scramble) {
@@ -43136,10 +43196,10 @@ PacketWriter.prototype.writeLengthCodedNumber = function(value) {
   }
 
   if (value <= BIT_16) {
-    this._allocate(3)
+    this._allocate(3);
     this._buffer[this._offset++] = 252;
   } else if (value <= BIT_24) {
-    this._allocate(4)
+    this._allocate(4);
     this._buffer[this._offset++] = 253;
   } else {
     this._allocate(9);
@@ -43251,11 +43311,7 @@ function Parser(options) {
 Parser.prototype.write = function(buffer) {
   this.append(buffer);
 
-  while (true) {
-    if (this._paused) {
-      return;
-    }
-
+  while (!this._paused) {
     if (!this._packetHeader) {
       if (this._bytesRemaining() < 4) {
         break;
@@ -43305,8 +43361,7 @@ Parser.prototype.write = function(buffer) {
       hadException = false;
     } catch (err) {
       if (!err || typeof err.code !== 'string' || err.code.substr(0, 7) !== 'PARSER_') {
-        // Rethrow unknown errors
-        throw err;
+        throw err; // Rethrow non-MySQL errors
       }
 
       // Pass down parser errors
@@ -43537,7 +43592,7 @@ Parser.prototype.parseGeometryValue = function() {
   var buffer = this.parseLengthCodedBuffer();
   var offset = 4;
 
-  if (buffer === null || !buffer.length) {
+  if (buffer === null || !buffer.length) {
     return null;
   }
 
@@ -43738,7 +43793,14 @@ Protocol.prototype.quit = function quit(options, callback) {
     options = {};
   }
 
-  return this._quitSequence = this._enqueue(new Sequences.Quit(options, callback));
+  var self     = this;
+  var sequence = this._enqueue(new Sequences.Quit(options, callback));
+
+  sequence.on('end', function () {
+    self.end();
+  });
+
+  return this._quitSequence = sequence;
 };
 
 Protocol.prototype.end = function() {
@@ -43747,8 +43809,7 @@ Protocol.prototype.end = function() {
   }
   this._ended = true;
 
-  var expected = (this._quitSequence && this._queue[0] === this._quitSequence);
-  if (expected) {
+  if (this._quitSequence && (this._quitSequence._ended || this._queue[0] === this._quitSequence)) {
     this._quitSequence.end();
     this.emit('end');
     return;
@@ -43821,12 +43882,12 @@ Protocol.prototype._enqueue = function(sequence) {
           err.code  = 'HANDSHAKE_SSL_ERROR';
           err.fatal = true;
           sequence.end(err);
-          return
+          return;
         }
 
         Timers.active(sequence);
         sequence._tlsUpgradeCompleteHandler();
-      }) 
+      });
     });
 
   if (this._queue.length === 1) {
@@ -44218,7 +44279,8 @@ SqlString.dateToString = function dateToString(date, timeZone) {
     millisecond = dt.getMilliseconds();
   } else {
     var tz = convertTimezone(timeZone);
-    if (tz !== false) {
+
+    if (tz !== false && tz !== 0) {
       dt.setTime(dt.getTime() + (tz * 60000));
     }
 
@@ -44265,7 +44327,9 @@ function zeroPad(number, length) {
 }
 
 function convertTimezone(tz) {
-  if (tz == "Z") return 0;
+  if (tz === 'Z') {
+    return 0;
+  }
 
   var m = tz.match(/([\+\-\s])(\d\d):?(\d\d)?/);
   if (m) {
@@ -44574,991 +44638,1179 @@ exports.CLIENT_REMEMBER_OPTIONS       = 2147483648;
  * !! Generated by generate-error-constants.js, do not modify by hand !!
  */
 
-exports.EE_CANTCREATEFILE                                                   = 1;
-exports.EE_READ                                                             = 2;
-exports.EE_WRITE                                                            = 3;
-exports.EE_BADCLOSE                                                         = 4;
-exports.EE_OUTOFMEMORY                                                      = 5;
-exports.EE_DELETE                                                           = 6;
-exports.EE_LINK                                                             = 7;
-exports.EE_EOFERR                                                           = 9;
-exports.EE_CANTLOCK                                                         = 10;
-exports.EE_CANTUNLOCK                                                       = 11;
-exports.EE_DIR                                                              = 12;
-exports.EE_STAT                                                             = 13;
-exports.EE_CANT_CHSIZE                                                      = 14;
-exports.EE_CANT_OPEN_STREAM                                                 = 15;
-exports.EE_GETWD                                                            = 16;
-exports.EE_SETWD                                                            = 17;
-exports.EE_LINK_WARNING                                                     = 18;
-exports.EE_OPEN_WARNING                                                     = 19;
-exports.EE_DISK_FULL                                                        = 20;
-exports.EE_CANT_MKDIR                                                       = 21;
-exports.EE_UNKNOWN_CHARSET                                                  = 22;
-exports.EE_OUT_OF_FILERESOURCES                                             = 23;
-exports.EE_CANT_READLINK                                                    = 24;
-exports.EE_CANT_SYMLINK                                                     = 25;
-exports.EE_REALPATH                                                         = 26;
-exports.EE_SYNC                                                             = 27;
-exports.EE_UNKNOWN_COLLATION                                                = 28;
-exports.EE_FILENOTFOUND                                                     = 29;
-exports.EE_FILE_NOT_CLOSED                                                  = 30;
-exports.EE_CHANGE_OWNERSHIP                                                 = 31;
-exports.EE_CHANGE_PERMISSIONS                                               = 32;
-exports.EE_CANT_SEEK                                                        = 33;
-exports.HA_ERR_KEY_NOT_FOUND                                                = 120;
-exports.HA_ERR_FOUND_DUPP_KEY                                               = 121;
-exports.HA_ERR_INTERNAL_ERROR                                               = 122;
-exports.HA_ERR_RECORD_CHANGED                                               = 123;
-exports.HA_ERR_WRONG_INDEX                                                  = 124;
-exports.HA_ERR_CRASHED                                                      = 126;
-exports.HA_ERR_WRONG_IN_RECORD                                              = 127;
-exports.HA_ERR_OUT_OF_MEM                                                   = 128;
-exports.HA_ERR_NOT_A_TABLE                                                  = 130;
-exports.HA_ERR_WRONG_COMMAND                                                = 131;
-exports.HA_ERR_OLD_FILE                                                     = 132;
-exports.HA_ERR_NO_ACTIVE_RECORD                                             = 133;
-exports.HA_ERR_RECORD_DELETED                                               = 134;
-exports.HA_ERR_RECORD_FILE_FULL                                             = 135;
-exports.HA_ERR_INDEX_FILE_FULL                                              = 136;
-exports.HA_ERR_END_OF_FILE                                                  = 137;
-exports.HA_ERR_UNSUPPORTED                                                  = 138;
-exports.HA_ERR_TO_BIG_ROW                                                   = 139;
-exports.HA_WRONG_CREATE_OPTION                                              = 140;
-exports.HA_ERR_FOUND_DUPP_UNIQUE                                            = 141;
-exports.HA_ERR_UNKNOWN_CHARSET                                              = 142;
-exports.HA_ERR_WRONG_MRG_TABLE_DEF                                          = 143;
-exports.HA_ERR_CRASHED_ON_REPAIR                                            = 144;
-exports.HA_ERR_CRASHED_ON_USAGE                                             = 145;
-exports.HA_ERR_LOCK_WAIT_TIMEOUT                                            = 146;
-exports.HA_ERR_LOCK_TABLE_FULL                                              = 147;
-exports.HA_ERR_READ_ONLY_TRANSACTION                                        = 148;
-exports.HA_ERR_LOCK_DEADLOCK                                                = 149;
-exports.HA_ERR_CANNOT_ADD_FOREIGN                                           = 150;
-exports.HA_ERR_NO_REFERENCED_ROW                                            = 151;
-exports.HA_ERR_ROW_IS_REFERENCED                                            = 152;
-exports.HA_ERR_NO_SAVEPOINT                                                 = 153;
-exports.HA_ERR_NON_UNIQUE_BLOCK_SIZE                                        = 154;
-exports.HA_ERR_NO_SUCH_TABLE                                                = 155;
-exports.HA_ERR_TABLE_EXIST                                                  = 156;
-exports.HA_ERR_NO_CONNECTION                                                = 157;
-exports.HA_ERR_NULL_IN_SPATIAL                                              = 158;
-exports.HA_ERR_TABLE_DEF_CHANGED                                            = 159;
-exports.HA_ERR_NO_PARTITION_FOUND                                           = 160;
-exports.HA_ERR_RBR_LOGGING_FAILED                                           = 161;
-exports.HA_ERR_DROP_INDEX_FK                                                = 162;
-exports.HA_ERR_FOREIGN_DUPLICATE_KEY                                        = 163;
-exports.HA_ERR_TABLE_NEEDS_UPGRADE                                          = 164;
-exports.HA_ERR_TABLE_READONLY                                               = 165;
-exports.HA_ERR_AUTOINC_READ_FAILED                                          = 166;
-exports.HA_ERR_AUTOINC_ERANGE                                               = 167;
-exports.HA_ERR_GENERIC                                                      = 168;
-exports.HA_ERR_RECORD_IS_THE_SAME                                           = 169;
-exports.HA_ERR_LOGGING_IMPOSSIBLE                                           = 170;
-exports.HA_ERR_CORRUPT_EVENT                                                = 171;
-exports.HA_ERR_NEW_FILE                                                     = 172;
-exports.HA_ERR_ROWS_EVENT_APPLY                                             = 173;
-exports.HA_ERR_INITIALIZATION                                               = 174;
-exports.HA_ERR_FILE_TOO_SHORT                                               = 175;
-exports.HA_ERR_WRONG_CRC                                                    = 176;
-exports.HA_ERR_TOO_MANY_CONCURRENT_TRXS                                     = 177;
-exports.HA_ERR_NOT_IN_LOCK_PARTITIONS                                       = 178;
-exports.HA_ERR_INDEX_COL_TOO_LONG                                           = 179;
-exports.HA_ERR_INDEX_CORRUPT                                                = 180;
-exports.HA_ERR_UNDO_REC_TOO_BIG                                             = 181;
-exports.HA_FTS_INVALID_DOCID                                                = 182;
-exports.HA_ERR_TABLE_IN_FK_CHECK                                            = 183;
-exports.HA_ERR_TABLESPACE_EXISTS                                            = 184;
-exports.HA_ERR_TOO_MANY_FIELDS                                              = 185;
-exports.HA_ERR_ROW_IN_WRONG_PARTITION                                       = 186;
-exports.HA_ERR_INNODB_READ_ONLY                                             = 187;
-exports.HA_ERR_FTS_EXCEED_RESULT_CACHE_LIMIT                                = 188;
-exports.HA_ERR_TEMP_FILE_WRITE_FAILURE                                      = 189;
-exports.HA_ERR_INNODB_FORCED_RECOVERY                                       = 190;
-exports.HA_ERR_FTS_TOO_MANY_WORDS_IN_PHRASE                                 = 191;
-exports.ER_HASHCHK                                                          = 1000;
-exports.ER_NISAMCHK                                                         = 1001;
-exports.ER_NO                                                               = 1002;
-exports.ER_YES                                                              = 1003;
-exports.ER_CANT_CREATE_FILE                                                 = 1004;
-exports.ER_CANT_CREATE_TABLE                                                = 1005;
-exports.ER_CANT_CREATE_DB                                                   = 1006;
-exports.ER_DB_CREATE_EXISTS                                                 = 1007;
-exports.ER_DB_DROP_EXISTS                                                   = 1008;
-exports.ER_DB_DROP_DELETE                                                   = 1009;
-exports.ER_DB_DROP_RMDIR                                                    = 1010;
-exports.ER_CANT_DELETE_FILE                                                 = 1011;
-exports.ER_CANT_FIND_SYSTEM_REC                                             = 1012;
-exports.ER_CANT_GET_STAT                                                    = 1013;
-exports.ER_CANT_GET_WD                                                      = 1014;
-exports.ER_CANT_LOCK                                                        = 1015;
-exports.ER_CANT_OPEN_FILE                                                   = 1016;
-exports.ER_FILE_NOT_FOUND                                                   = 1017;
-exports.ER_CANT_READ_DIR                                                    = 1018;
-exports.ER_CANT_SET_WD                                                      = 1019;
-exports.ER_CHECKREAD                                                        = 1020;
-exports.ER_DISK_FULL                                                        = 1021;
-exports.ER_DUP_KEY                                                          = 1022;
-exports.ER_ERROR_ON_CLOSE                                                   = 1023;
-exports.ER_ERROR_ON_READ                                                    = 1024;
-exports.ER_ERROR_ON_RENAME                                                  = 1025;
-exports.ER_ERROR_ON_WRITE                                                   = 1026;
-exports.ER_FILE_USED                                                        = 1027;
-exports.ER_FILSORT_ABORT                                                    = 1028;
-exports.ER_FORM_NOT_FOUND                                                   = 1029;
-exports.ER_GET_ERRNO                                                        = 1030;
-exports.ER_ILLEGAL_HA                                                       = 1031;
-exports.ER_KEY_NOT_FOUND                                                    = 1032;
-exports.ER_NOT_FORM_FILE                                                    = 1033;
-exports.ER_NOT_KEYFILE                                                      = 1034;
-exports.ER_OLD_KEYFILE                                                      = 1035;
-exports.ER_OPEN_AS_READONLY                                                 = 1036;
-exports.ER_OUTOFMEMORY                                                      = 1037;
-exports.ER_OUT_OF_SORTMEMORY                                                = 1038;
-exports.ER_UNEXPECTED_EOF                                                   = 1039;
-exports.ER_CON_COUNT_ERROR                                                  = 1040;
-exports.ER_OUT_OF_RESOURCES                                                 = 1041;
-exports.ER_BAD_HOST_ERROR                                                   = 1042;
-exports.ER_HANDSHAKE_ERROR                                                  = 1043;
-exports.ER_DBACCESS_DENIED_ERROR                                            = 1044;
-exports.ER_ACCESS_DENIED_ERROR                                              = 1045;
-exports.ER_NO_DB_ERROR                                                      = 1046;
-exports.ER_UNKNOWN_COM_ERROR                                                = 1047;
-exports.ER_BAD_NULL_ERROR                                                   = 1048;
-exports.ER_BAD_DB_ERROR                                                     = 1049;
-exports.ER_TABLE_EXISTS_ERROR                                               = 1050;
-exports.ER_BAD_TABLE_ERROR                                                  = 1051;
-exports.ER_NON_UNIQ_ERROR                                                   = 1052;
-exports.ER_SERVER_SHUTDOWN                                                  = 1053;
-exports.ER_BAD_FIELD_ERROR                                                  = 1054;
-exports.ER_WRONG_FIELD_WITH_GROUP                                           = 1055;
-exports.ER_WRONG_GROUP_FIELD                                                = 1056;
-exports.ER_WRONG_SUM_SELECT                                                 = 1057;
-exports.ER_WRONG_VALUE_COUNT                                                = 1058;
-exports.ER_TOO_LONG_IDENT                                                   = 1059;
-exports.ER_DUP_FIELDNAME                                                    = 1060;
-exports.ER_DUP_KEYNAME                                                      = 1061;
-exports.ER_DUP_ENTRY                                                        = 1062;
-exports.ER_WRONG_FIELD_SPEC                                                 = 1063;
-exports.ER_PARSE_ERROR                                                      = 1064;
-exports.ER_EMPTY_QUERY                                                      = 1065;
-exports.ER_NONUNIQ_TABLE                                                    = 1066;
-exports.ER_INVALID_DEFAULT                                                  = 1067;
-exports.ER_MULTIPLE_PRI_KEY                                                 = 1068;
-exports.ER_TOO_MANY_KEYS                                                    = 1069;
-exports.ER_TOO_MANY_KEY_PARTS                                               = 1070;
-exports.ER_TOO_LONG_KEY                                                     = 1071;
-exports.ER_KEY_COLUMN_DOES_NOT_EXITS                                        = 1072;
-exports.ER_BLOB_USED_AS_KEY                                                 = 1073;
-exports.ER_TOO_BIG_FIELDLENGTH                                              = 1074;
-exports.ER_WRONG_AUTO_KEY                                                   = 1075;
-exports.ER_READY                                                            = 1076;
-exports.ER_NORMAL_SHUTDOWN                                                  = 1077;
-exports.ER_GOT_SIGNAL                                                       = 1078;
-exports.ER_SHUTDOWN_COMPLETE                                                = 1079;
-exports.ER_FORCING_CLOSE                                                    = 1080;
-exports.ER_IPSOCK_ERROR                                                     = 1081;
-exports.ER_NO_SUCH_INDEX                                                    = 1082;
-exports.ER_WRONG_FIELD_TERMINATORS                                          = 1083;
-exports.ER_BLOBS_AND_NO_TERMINATED                                          = 1084;
-exports.ER_TEXTFILE_NOT_READABLE                                            = 1085;
-exports.ER_FILE_EXISTS_ERROR                                                = 1086;
-exports.ER_LOAD_INFO                                                        = 1087;
-exports.ER_ALTER_INFO                                                       = 1088;
-exports.ER_WRONG_SUB_KEY                                                    = 1089;
-exports.ER_CANT_REMOVE_ALL_FIELDS                                           = 1090;
-exports.ER_CANT_DROP_FIELD_OR_KEY                                           = 1091;
-exports.ER_INSERT_INFO                                                      = 1092;
-exports.ER_UPDATE_TABLE_USED                                                = 1093;
-exports.ER_NO_SUCH_THREAD                                                   = 1094;
-exports.ER_KILL_DENIED_ERROR                                                = 1095;
-exports.ER_NO_TABLES_USED                                                   = 1096;
-exports.ER_TOO_BIG_SET                                                      = 1097;
-exports.ER_NO_UNIQUE_LOGFILE                                                = 1098;
-exports.ER_TABLE_NOT_LOCKED_FOR_WRITE                                       = 1099;
-exports.ER_TABLE_NOT_LOCKED                                                 = 1100;
-exports.ER_BLOB_CANT_HAVE_DEFAULT                                           = 1101;
-exports.ER_WRONG_DB_NAME                                                    = 1102;
-exports.ER_WRONG_TABLE_NAME                                                 = 1103;
-exports.ER_TOO_BIG_SELECT                                                   = 1104;
-exports.ER_UNKNOWN_ERROR                                                    = 1105;
-exports.ER_UNKNOWN_PROCEDURE                                                = 1106;
-exports.ER_WRONG_PARAMCOUNT_TO_PROCEDURE                                    = 1107;
-exports.ER_WRONG_PARAMETERS_TO_PROCEDURE                                    = 1108;
-exports.ER_UNKNOWN_TABLE                                                    = 1109;
-exports.ER_FIELD_SPECIFIED_TWICE                                            = 1110;
-exports.ER_INVALID_GROUP_FUNC_USE                                           = 1111;
-exports.ER_UNSUPPORTED_EXTENSION                                            = 1112;
-exports.ER_TABLE_MUST_HAVE_COLUMNS                                          = 1113;
-exports.ER_RECORD_FILE_FULL                                                 = 1114;
-exports.ER_UNKNOWN_CHARACTER_SET                                            = 1115;
-exports.ER_TOO_MANY_TABLES                                                  = 1116;
-exports.ER_TOO_MANY_FIELDS                                                  = 1117;
-exports.ER_TOO_BIG_ROWSIZE                                                  = 1118;
-exports.ER_STACK_OVERRUN                                                    = 1119;
-exports.ER_WRONG_OUTER_JOIN                                                 = 1120;
-exports.ER_NULL_COLUMN_IN_INDEX                                             = 1121;
-exports.ER_CANT_FIND_UDF                                                    = 1122;
-exports.ER_CANT_INITIALIZE_UDF                                              = 1123;
-exports.ER_UDF_NO_PATHS                                                     = 1124;
-exports.ER_UDF_EXISTS                                                       = 1125;
-exports.ER_CANT_OPEN_LIBRARY                                                = 1126;
-exports.ER_CANT_FIND_DL_ENTRY                                               = 1127;
-exports.ER_FUNCTION_NOT_DEFINED                                             = 1128;
-exports.ER_HOST_IS_BLOCKED                                                  = 1129;
-exports.ER_HOST_NOT_PRIVILEGED                                              = 1130;
-exports.ER_PASSWORD_ANONYMOUS_USER                                          = 1131;
-exports.ER_PASSWORD_NOT_ALLOWED                                             = 1132;
-exports.ER_PASSWORD_NO_MATCH                                                = 1133;
-exports.ER_UPDATE_INFO                                                      = 1134;
-exports.ER_CANT_CREATE_THREAD                                               = 1135;
-exports.ER_WRONG_VALUE_COUNT_ON_ROW                                         = 1136;
-exports.ER_CANT_REOPEN_TABLE                                                = 1137;
-exports.ER_INVALID_USE_OF_NULL                                              = 1138;
-exports.ER_REGEXP_ERROR                                                     = 1139;
-exports.ER_MIX_OF_GROUP_FUNC_AND_FIELDS                                     = 1140;
-exports.ER_NONEXISTING_GRANT                                                = 1141;
-exports.ER_TABLEACCESS_DENIED_ERROR                                         = 1142;
-exports.ER_COLUMNACCESS_DENIED_ERROR                                        = 1143;
-exports.ER_ILLEGAL_GRANT_FOR_TABLE                                          = 1144;
-exports.ER_GRANT_WRONG_HOST_OR_USER                                         = 1145;
-exports.ER_NO_SUCH_TABLE                                                    = 1146;
-exports.ER_NONEXISTING_TABLE_GRANT                                          = 1147;
-exports.ER_NOT_ALLOWED_COMMAND                                              = 1148;
-exports.ER_SYNTAX_ERROR                                                     = 1149;
-exports.ER_DELAYED_CANT_CHANGE_LOCK                                         = 1150;
-exports.ER_TOO_MANY_DELAYED_THREADS                                         = 1151;
-exports.ER_ABORTING_CONNECTION                                              = 1152;
-exports.ER_NET_PACKET_TOO_LARGE                                             = 1153;
-exports.ER_NET_READ_ERROR_FROM_PIPE                                         = 1154;
-exports.ER_NET_FCNTL_ERROR                                                  = 1155;
-exports.ER_NET_PACKETS_OUT_OF_ORDER                                         = 1156;
-exports.ER_NET_UNCOMPRESS_ERROR                                             = 1157;
-exports.ER_NET_READ_ERROR                                                   = 1158;
-exports.ER_NET_READ_INTERRUPTED                                             = 1159;
-exports.ER_NET_ERROR_ON_WRITE                                               = 1160;
-exports.ER_NET_WRITE_INTERRUPTED                                            = 1161;
-exports.ER_TOO_LONG_STRING                                                  = 1162;
-exports.ER_TABLE_CANT_HANDLE_BLOB                                           = 1163;
-exports.ER_TABLE_CANT_HANDLE_AUTO_INCREMENT                                 = 1164;
-exports.ER_DELAYED_INSERT_TABLE_LOCKED                                      = 1165;
-exports.ER_WRONG_COLUMN_NAME                                                = 1166;
-exports.ER_WRONG_KEY_COLUMN                                                 = 1167;
-exports.ER_WRONG_MRG_TABLE                                                  = 1168;
-exports.ER_DUP_UNIQUE                                                       = 1169;
-exports.ER_BLOB_KEY_WITHOUT_LENGTH                                          = 1170;
-exports.ER_PRIMARY_CANT_HAVE_NULL                                           = 1171;
-exports.ER_TOO_MANY_ROWS                                                    = 1172;
-exports.ER_REQUIRES_PRIMARY_KEY                                             = 1173;
-exports.ER_NO_RAID_COMPILED                                                 = 1174;
-exports.ER_UPDATE_WITHOUT_KEY_IN_SAFE_MODE                                  = 1175;
-exports.ER_KEY_DOES_NOT_EXITS                                               = 1176;
-exports.ER_CHECK_NO_SUCH_TABLE                                              = 1177;
-exports.ER_CHECK_NOT_IMPLEMENTED                                            = 1178;
-exports.ER_CANT_DO_THIS_DURING_AN_TRANSACTION                               = 1179;
-exports.ER_ERROR_DURING_COMMIT                                              = 1180;
-exports.ER_ERROR_DURING_ROLLBACK                                            = 1181;
-exports.ER_ERROR_DURING_FLUSH_LOGS                                          = 1182;
-exports.ER_ERROR_DURING_CHECKPOINT                                          = 1183;
-exports.ER_NEW_ABORTING_CONNECTION                                          = 1184;
-exports.ER_DUMP_NOT_IMPLEMENTED                                             = 1185;
-exports.ER_FLUSH_MASTER_BINLOG_CLOSED                                       = 1186;
-exports.ER_INDEX_REBUILD                                                    = 1187;
-exports.ER_MASTER                                                           = 1188;
-exports.ER_MASTER_NET_READ                                                  = 1189;
-exports.ER_MASTER_NET_WRITE                                                 = 1190;
-exports.ER_FT_MATCHING_KEY_NOT_FOUND                                        = 1191;
-exports.ER_LOCK_OR_ACTIVE_TRANSACTION                                       = 1192;
-exports.ER_UNKNOWN_SYSTEM_VARIABLE                                          = 1193;
-exports.ER_CRASHED_ON_USAGE                                                 = 1194;
-exports.ER_CRASHED_ON_REPAIR                                                = 1195;
-exports.ER_WARNING_NOT_COMPLETE_ROLLBACK                                    = 1196;
-exports.ER_TRANS_CACHE_FULL                                                 = 1197;
-exports.ER_SLAVE_MUST_STOP                                                  = 1198;
-exports.ER_SLAVE_NOT_RUNNING                                                = 1199;
-exports.ER_BAD_SLAVE                                                        = 1200;
-exports.ER_MASTER_INFO                                                      = 1201;
-exports.ER_SLAVE_THREAD                                                     = 1202;
-exports.ER_TOO_MANY_USER_CONNECTIONS                                        = 1203;
-exports.ER_SET_CONSTANTS_ONLY                                               = 1204;
-exports.ER_LOCK_WAIT_TIMEOUT                                                = 1205;
-exports.ER_LOCK_TABLE_FULL                                                  = 1206;
-exports.ER_READ_ONLY_TRANSACTION                                            = 1207;
-exports.ER_DROP_DB_WITH_READ_LOCK                                           = 1208;
-exports.ER_CREATE_DB_WITH_READ_LOCK                                         = 1209;
-exports.ER_WRONG_ARGUMENTS                                                  = 1210;
-exports.ER_NO_PERMISSION_TO_CREATE_USER                                     = 1211;
-exports.ER_UNION_TABLES_IN_DIFFERENT_DIR                                    = 1212;
-exports.ER_LOCK_DEADLOCK                                                    = 1213;
-exports.ER_TABLE_CANT_HANDLE_FT                                             = 1214;
-exports.ER_CANNOT_ADD_FOREIGN                                               = 1215;
-exports.ER_NO_REFERENCED_ROW                                                = 1216;
-exports.ER_ROW_IS_REFERENCED                                                = 1217;
-exports.ER_CONNECT_TO_MASTER                                                = 1218;
-exports.ER_QUERY_ON_MASTER                                                  = 1219;
-exports.ER_ERROR_WHEN_EXECUTING_COMMAND                                     = 1220;
-exports.ER_WRONG_USAGE                                                      = 1221;
-exports.ER_WRONG_NUMBER_OF_COLUMNS_IN_SELECT                                = 1222;
-exports.ER_CANT_UPDATE_WITH_READLOCK                                        = 1223;
-exports.ER_MIXING_NOT_ALLOWED                                               = 1224;
-exports.ER_DUP_ARGUMENT                                                     = 1225;
-exports.ER_USER_LIMIT_REACHED                                               = 1226;
-exports.ER_SPECIFIC_ACCESS_DENIED_ERROR                                     = 1227;
-exports.ER_LOCAL_VARIABLE                                                   = 1228;
-exports.ER_GLOBAL_VARIABLE                                                  = 1229;
-exports.ER_NO_DEFAULT                                                       = 1230;
-exports.ER_WRONG_VALUE_FOR_VAR                                              = 1231;
-exports.ER_WRONG_TYPE_FOR_VAR                                               = 1232;
-exports.ER_VAR_CANT_BE_READ                                                 = 1233;
-exports.ER_CANT_USE_OPTION_HERE                                             = 1234;
-exports.ER_NOT_SUPPORTED_YET                                                = 1235;
-exports.ER_MASTER_FATAL_ERROR_READING_BINLOG                                = 1236;
-exports.ER_SLAVE_IGNORED_TABLE                                              = 1237;
-exports.ER_INCORRECT_GLOBAL_LOCAL_VAR                                       = 1238;
-exports.ER_WRONG_FK_DEF                                                     = 1239;
-exports.ER_KEY_REF_DO_NOT_MATCH_TABLE_REF                                   = 1240;
-exports.ER_OPERAND_COLUMNS                                                  = 1241;
-exports.ER_SUBQUERY_NO_1_ROW                                                = 1242;
-exports.ER_UNKNOWN_STMT_HANDLER                                             = 1243;
-exports.ER_CORRUPT_HELP_DB                                                  = 1244;
-exports.ER_CYCLIC_REFERENCE                                                 = 1245;
-exports.ER_AUTO_CONVERT                                                     = 1246;
-exports.ER_ILLEGAL_REFERENCE                                                = 1247;
-exports.ER_DERIVED_MUST_HAVE_ALIAS                                          = 1248;
-exports.ER_SELECT_REDUCED                                                   = 1249;
-exports.ER_TABLENAME_NOT_ALLOWED_HERE                                       = 1250;
-exports.ER_NOT_SUPPORTED_AUTH_MODE                                          = 1251;
-exports.ER_SPATIAL_CANT_HAVE_NULL                                           = 1252;
-exports.ER_COLLATION_CHARSET_MISMATCH                                       = 1253;
-exports.ER_SLAVE_WAS_RUNNING                                                = 1254;
-exports.ER_SLAVE_WAS_NOT_RUNNING                                            = 1255;
-exports.ER_TOO_BIG_FOR_UNCOMPRESS                                           = 1256;
-exports.ER_ZLIB_Z_MEM_ERROR                                                 = 1257;
-exports.ER_ZLIB_Z_BUF_ERROR                                                 = 1258;
-exports.ER_ZLIB_Z_DATA_ERROR                                                = 1259;
-exports.ER_CUT_VALUE_GROUP_CONCAT                                           = 1260;
-exports.ER_WARN_TOO_FEW_RECORDS                                             = 1261;
-exports.ER_WARN_TOO_MANY_RECORDS                                            = 1262;
-exports.ER_WARN_NULL_TO_NOTNULL                                             = 1263;
-exports.ER_WARN_DATA_OUT_OF_RANGE                                           = 1264;
-exports.WARN_DATA_TRUNCATED                                                 = 1265;
-exports.ER_WARN_USING_OTHER_HANDLER                                         = 1266;
-exports.ER_CANT_AGGREGATE_2COLLATIONS                                       = 1267;
-exports.ER_DROP_USER                                                        = 1268;
-exports.ER_REVOKE_GRANTS                                                    = 1269;
-exports.ER_CANT_AGGREGATE_3COLLATIONS                                       = 1270;
-exports.ER_CANT_AGGREGATE_NCOLLATIONS                                       = 1271;
-exports.ER_VARIABLE_IS_NOT_STRUCT                                           = 1272;
-exports.ER_UNKNOWN_COLLATION                                                = 1273;
-exports.ER_SLAVE_IGNORED_SSL_PARAMS                                         = 1274;
-exports.ER_SERVER_IS_IN_SECURE_AUTH_MODE                                    = 1275;
-exports.ER_WARN_FIELD_RESOLVED                                              = 1276;
-exports.ER_BAD_SLAVE_UNTIL_COND                                             = 1277;
-exports.ER_MISSING_SKIP_SLAVE                                               = 1278;
-exports.ER_UNTIL_COND_IGNORED                                               = 1279;
-exports.ER_WRONG_NAME_FOR_INDEX                                             = 1280;
-exports.ER_WRONG_NAME_FOR_CATALOG                                           = 1281;
-exports.ER_WARN_QC_RESIZE                                                   = 1282;
-exports.ER_BAD_FT_COLUMN                                                    = 1283;
-exports.ER_UNKNOWN_KEY_CACHE                                                = 1284;
-exports.ER_WARN_HOSTNAME_WONT_WORK                                          = 1285;
-exports.ER_UNKNOWN_STORAGE_ENGINE                                           = 1286;
-exports.ER_WARN_DEPRECATED_SYNTAX                                           = 1287;
-exports.ER_NON_UPDATABLE_TABLE                                              = 1288;
-exports.ER_FEATURE_DISABLED                                                 = 1289;
-exports.ER_OPTION_PREVENTS_STATEMENT                                        = 1290;
-exports.ER_DUPLICATED_VALUE_IN_TYPE                                         = 1291;
-exports.ER_TRUNCATED_WRONG_VALUE                                            = 1292;
-exports.ER_TOO_MUCH_AUTO_TIMESTAMP_COLS                                     = 1293;
-exports.ER_INVALID_ON_UPDATE                                                = 1294;
-exports.ER_UNSUPPORTED_PS                                                   = 1295;
-exports.ER_GET_ERRMSG                                                       = 1296;
-exports.ER_GET_TEMPORARY_ERRMSG                                             = 1297;
-exports.ER_UNKNOWN_TIME_ZONE                                                = 1298;
-exports.ER_WARN_INVALID_TIMESTAMP                                           = 1299;
-exports.ER_INVALID_CHARACTER_STRING                                         = 1300;
-exports.ER_WARN_ALLOWED_PACKET_OVERFLOWED                                   = 1301;
-exports.ER_CONFLICTING_DECLARATIONS                                         = 1302;
-exports.ER_SP_NO_RECURSIVE_CREATE                                           = 1303;
-exports.ER_SP_ALREADY_EXISTS                                                = 1304;
-exports.ER_SP_DOES_NOT_EXIST                                                = 1305;
-exports.ER_SP_DROP_FAILED                                                   = 1306;
-exports.ER_SP_STORE_FAILED                                                  = 1307;
-exports.ER_SP_LILABEL_MISMATCH                                              = 1308;
-exports.ER_SP_LABEL_REDEFINE                                                = 1309;
-exports.ER_SP_LABEL_MISMATCH                                                = 1310;
-exports.ER_SP_UNINIT_VAR                                                    = 1311;
-exports.ER_SP_BADSELECT                                                     = 1312;
-exports.ER_SP_BADRETURN                                                     = 1313;
-exports.ER_SP_BADSTATEMENT                                                  = 1314;
-exports.ER_UPDATE_LOG_DEPRECATED_IGNORED                                    = 1315;
-exports.ER_UPDATE_LOG_DEPRECATED_TRANSLATED                                 = 1316;
-exports.ER_QUERY_INTERRUPTED                                                = 1317;
-exports.ER_SP_WRONG_NO_OF_ARGS                                              = 1318;
-exports.ER_SP_COND_MISMATCH                                                 = 1319;
-exports.ER_SP_NORETURN                                                      = 1320;
-exports.ER_SP_NORETURNEND                                                   = 1321;
-exports.ER_SP_BAD_CURSOR_QUERY                                              = 1322;
-exports.ER_SP_BAD_CURSOR_SELECT                                             = 1323;
-exports.ER_SP_CURSOR_MISMATCH                                               = 1324;
-exports.ER_SP_CURSOR_ALREADY_OPEN                                           = 1325;
-exports.ER_SP_CURSOR_NOT_OPEN                                               = 1326;
-exports.ER_SP_UNDECLARED_VAR                                                = 1327;
-exports.ER_SP_WRONG_NO_OF_FETCH_ARGS                                        = 1328;
-exports.ER_SP_FETCH_NO_DATA                                                 = 1329;
-exports.ER_SP_DUP_PARAM                                                     = 1330;
-exports.ER_SP_DUP_VAR                                                       = 1331;
-exports.ER_SP_DUP_COND                                                      = 1332;
-exports.ER_SP_DUP_CURS                                                      = 1333;
-exports.ER_SP_CANT_ALTER                                                    = 1334;
-exports.ER_SP_SUBSELECT_NYI                                                 = 1335;
-exports.ER_STMT_NOT_ALLOWED_IN_SF_OR_TRG                                    = 1336;
-exports.ER_SP_VARCOND_AFTER_CURSHNDLR                                       = 1337;
-exports.ER_SP_CURSOR_AFTER_HANDLER                                          = 1338;
-exports.ER_SP_CASE_NOT_FOUND                                                = 1339;
-exports.ER_FPARSER_TOO_BIG_FILE                                             = 1340;
-exports.ER_FPARSER_BAD_HEADER                                               = 1341;
-exports.ER_FPARSER_EOF_IN_COMMENT                                           = 1342;
-exports.ER_FPARSER_ERROR_IN_PARAMETER                                       = 1343;
-exports.ER_FPARSER_EOF_IN_UNKNOWN_PARAMETER                                 = 1344;
-exports.ER_VIEW_NO_EXPLAIN                                                  = 1345;
-exports.ER_FRM_UNKNOWN_TYPE                                                 = 1346;
-exports.ER_WRONG_OBJECT                                                     = 1347;
-exports.ER_NONUPDATEABLE_COLUMN                                             = 1348;
-exports.ER_VIEW_SELECT_DERIVED                                              = 1349;
-exports.ER_VIEW_SELECT_CLAUSE                                               = 1350;
-exports.ER_VIEW_SELECT_VARIABLE                                             = 1351;
-exports.ER_VIEW_SELECT_TMPTABLE                                             = 1352;
-exports.ER_VIEW_WRONG_LIST                                                  = 1353;
-exports.ER_WARN_VIEW_MERGE                                                  = 1354;
-exports.ER_WARN_VIEW_WITHOUT_KEY                                            = 1355;
-exports.ER_VIEW_INVALID                                                     = 1356;
-exports.ER_SP_NO_DROP_SP                                                    = 1357;
-exports.ER_SP_GOTO_IN_HNDLR                                                 = 1358;
-exports.ER_TRG_ALREADY_EXISTS                                               = 1359;
-exports.ER_TRG_DOES_NOT_EXIST                                               = 1360;
-exports.ER_TRG_ON_VIEW_OR_TEMP_TABLE                                        = 1361;
-exports.ER_TRG_CANT_CHANGE_ROW                                              = 1362;
-exports.ER_TRG_NO_SUCH_ROW_IN_TRG                                           = 1363;
-exports.ER_NO_DEFAULT_FOR_FIELD                                             = 1364;
-exports.ER_DIVISION_BY_ZERO                                                 = 1365;
-exports.ER_TRUNCATED_WRONG_VALUE_FOR_FIELD                                  = 1366;
-exports.ER_ILLEGAL_VALUE_FOR_TYPE                                           = 1367;
-exports.ER_VIEW_NONUPD_CHECK                                                = 1368;
-exports.ER_VIEW_CHECK_FAILED                                                = 1369;
-exports.ER_PROCACCESS_DENIED_ERROR                                          = 1370;
-exports.ER_RELAY_LOG_FAIL                                                   = 1371;
-exports.ER_PASSWD_LENGTH                                                    = 1372;
-exports.ER_UNKNOWN_TARGET_BINLOG                                            = 1373;
-exports.ER_IO_ERR_LOG_INDEX_READ                                            = 1374;
-exports.ER_BINLOG_PURGE_PROHIBITED                                          = 1375;
-exports.ER_FSEEK_FAIL                                                       = 1376;
-exports.ER_BINLOG_PURGE_FATAL_ERR                                           = 1377;
-exports.ER_LOG_IN_USE                                                       = 1378;
-exports.ER_LOG_PURGE_UNKNOWN_ERR                                            = 1379;
-exports.ER_RELAY_LOG_INIT                                                   = 1380;
-exports.ER_NO_BINARY_LOGGING                                                = 1381;
-exports.ER_RESERVED_SYNTAX                                                  = 1382;
-exports.ER_WSAS_FAILED                                                      = 1383;
-exports.ER_DIFF_GROUPS_PROC                                                 = 1384;
-exports.ER_NO_GROUP_FOR_PROC                                                = 1385;
-exports.ER_ORDER_WITH_PROC                                                  = 1386;
-exports.ER_LOGGING_PROHIBIT_CHANGING_OF                                     = 1387;
-exports.ER_NO_FILE_MAPPING                                                  = 1388;
-exports.ER_WRONG_MAGIC                                                      = 1389;
-exports.ER_PS_MANY_PARAM                                                    = 1390;
-exports.ER_KEY_PART_0                                                       = 1391;
-exports.ER_VIEW_CHECKSUM                                                    = 1392;
-exports.ER_VIEW_MULTIUPDATE                                                 = 1393;
-exports.ER_VIEW_NO_INSERT_FIELD_LIST                                        = 1394;
-exports.ER_VIEW_DELETE_MERGE_VIEW                                           = 1395;
-exports.ER_CANNOT_USER                                                      = 1396;
-exports.ER_XAER_NOTA                                                        = 1397;
-exports.ER_XAER_INVAL                                                       = 1398;
-exports.ER_XAER_RMFAIL                                                      = 1399;
-exports.ER_XAER_OUTSIDE                                                     = 1400;
-exports.ER_XAER_RMERR                                                       = 1401;
-exports.ER_XA_RBROLLBACK                                                    = 1402;
-exports.ER_NONEXISTING_PROC_GRANT                                           = 1403;
-exports.ER_PROC_AUTO_GRANT_FAIL                                             = 1404;
-exports.ER_PROC_AUTO_REVOKE_FAIL                                            = 1405;
-exports.ER_DATA_TOO_LONG                                                    = 1406;
-exports.ER_SP_BAD_SQLSTATE                                                  = 1407;
-exports.ER_STARTUP                                                          = 1408;
-exports.ER_LOAD_FROM_FIXED_SIZE_ROWS_TO_VAR                                 = 1409;
-exports.ER_CANT_CREATE_USER_WITH_GRANT                                      = 1410;
-exports.ER_WRONG_VALUE_FOR_TYPE                                             = 1411;
-exports.ER_TABLE_DEF_CHANGED                                                = 1412;
-exports.ER_SP_DUP_HANDLER                                                   = 1413;
-exports.ER_SP_NOT_VAR_ARG                                                   = 1414;
-exports.ER_SP_NO_RETSET                                                     = 1415;
-exports.ER_CANT_CREATE_GEOMETRY_OBJECT                                      = 1416;
-exports.ER_FAILED_ROUTINE_BREAK_BINLOG                                      = 1417;
-exports.ER_BINLOG_UNSAFE_ROUTINE                                            = 1418;
-exports.ER_BINLOG_CREATE_ROUTINE_NEED_SUPER                                 = 1419;
-exports.ER_EXEC_STMT_WITH_OPEN_CURSOR                                       = 1420;
-exports.ER_STMT_HAS_NO_OPEN_CURSOR                                          = 1421;
-exports.ER_COMMIT_NOT_ALLOWED_IN_SF_OR_TRG                                  = 1422;
-exports.ER_NO_DEFAULT_FOR_VIEW_FIELD                                        = 1423;
-exports.ER_SP_NO_RECURSION                                                  = 1424;
-exports.ER_TOO_BIG_SCALE                                                    = 1425;
-exports.ER_TOO_BIG_PRECISION                                                = 1426;
-exports.ER_M_BIGGER_THAN_D                                                  = 1427;
-exports.ER_WRONG_LOCK_OF_SYSTEM_TABLE                                       = 1428;
-exports.ER_CONNECT_TO_FOREIGN_DATA_SOURCE                                   = 1429;
-exports.ER_QUERY_ON_FOREIGN_DATA_SOURCE                                     = 1430;
-exports.ER_FOREIGN_DATA_SOURCE_DOESNT_EXIST                                 = 1431;
-exports.ER_FOREIGN_DATA_STRING_INVALID_CANT_CREATE                          = 1432;
-exports.ER_FOREIGN_DATA_STRING_INVALID                                      = 1433;
-exports.ER_CANT_CREATE_FEDERATED_TABLE                                      = 1434;
-exports.ER_TRG_IN_WRONG_SCHEMA                                              = 1435;
-exports.ER_STACK_OVERRUN_NEED_MORE                                          = 1436;
-exports.ER_TOO_LONG_BODY                                                    = 1437;
-exports.ER_WARN_CANT_DROP_DEFAULT_KEYCACHE                                  = 1438;
-exports.ER_TOO_BIG_DISPLAYWIDTH                                             = 1439;
-exports.ER_XAER_DUPID                                                       = 1440;
-exports.ER_DATETIME_FUNCTION_OVERFLOW                                       = 1441;
-exports.ER_CANT_UPDATE_USED_TABLE_IN_SF_OR_TRG                              = 1442;
-exports.ER_VIEW_PREVENT_UPDATE                                              = 1443;
-exports.ER_PS_NO_RECURSION                                                  = 1444;
-exports.ER_SP_CANT_SET_AUTOCOMMIT                                           = 1445;
-exports.ER_MALFORMED_DEFINER                                                = 1446;
-exports.ER_VIEW_FRM_NO_USER                                                 = 1447;
-exports.ER_VIEW_OTHER_USER                                                  = 1448;
-exports.ER_NO_SUCH_USER                                                     = 1449;
-exports.ER_FORBID_SCHEMA_CHANGE                                             = 1450;
-exports.ER_ROW_IS_REFERENCED_2                                              = 1451;
-exports.ER_NO_REFERENCED_ROW_2                                              = 1452;
-exports.ER_SP_BAD_VAR_SHADOW                                                = 1453;
-exports.ER_TRG_NO_DEFINER                                                   = 1454;
-exports.ER_OLD_FILE_FORMAT                                                  = 1455;
-exports.ER_SP_RECURSION_LIMIT                                               = 1456;
-exports.ER_SP_PROC_TABLE_CORRUPT                                            = 1457;
-exports.ER_SP_WRONG_NAME                                                    = 1458;
-exports.ER_TABLE_NEEDS_UPGRADE                                              = 1459;
-exports.ER_SP_NO_AGGREGATE                                                  = 1460;
-exports.ER_MAX_PREPARED_STMT_COUNT_REACHED                                  = 1461;
-exports.ER_VIEW_RECURSIVE                                                   = 1462;
-exports.ER_NON_GROUPING_FIELD_USED                                          = 1463;
-exports.ER_TABLE_CANT_HANDLE_SPKEYS                                         = 1464;
-exports.ER_NO_TRIGGERS_ON_SYSTEM_SCHEMA                                     = 1465;
-exports.ER_REMOVED_SPACES                                                   = 1466;
-exports.ER_AUTOINC_READ_FAILED                                              = 1467;
-exports.ER_USERNAME                                                         = 1468;
-exports.ER_HOSTNAME                                                         = 1469;
-exports.ER_WRONG_STRING_LENGTH                                              = 1470;
-exports.ER_NON_INSERTABLE_TABLE                                             = 1471;
-exports.ER_ADMIN_WRONG_MRG_TABLE                                            = 1472;
-exports.ER_TOO_HIGH_LEVEL_OF_NESTING_FOR_SELECT                             = 1473;
-exports.ER_NAME_BECOMES_EMPTY                                               = 1474;
-exports.ER_AMBIGUOUS_FIELD_TERM                                             = 1475;
-exports.ER_FOREIGN_SERVER_EXISTS                                            = 1476;
-exports.ER_FOREIGN_SERVER_DOESNT_EXIST                                      = 1477;
-exports.ER_ILLEGAL_HA_CREATE_OPTION                                         = 1478;
-exports.ER_PARTITION_REQUIRES_VALUES_ERROR                                  = 1479;
-exports.ER_PARTITION_WRONG_VALUES_ERROR                                     = 1480;
-exports.ER_PARTITION_MAXVALUE_ERROR                                         = 1481;
-exports.ER_PARTITION_SUBPARTITION_ERROR                                     = 1482;
-exports.ER_PARTITION_SUBPART_MIX_ERROR                                      = 1483;
-exports.ER_PARTITION_WRONG_NO_PART_ERROR                                    = 1484;
-exports.ER_PARTITION_WRONG_NO_SUBPART_ERROR                                 = 1485;
-exports.ER_WRONG_EXPR_IN_PARTITION_FUNC_ERROR                               = 1486;
-exports.ER_NO_CONST_EXPR_IN_RANGE_OR_LIST_ERROR                             = 1487;
-exports.ER_FIELD_NOT_FOUND_PART_ERROR                                       = 1488;
-exports.ER_LIST_OF_FIELDS_ONLY_IN_HASH_ERROR                                = 1489;
-exports.ER_INCONSISTENT_PARTITION_INFO_ERROR                                = 1490;
-exports.ER_PARTITION_FUNC_NOT_ALLOWED_ERROR                                 = 1491;
-exports.ER_PARTITIONS_MUST_BE_DEFINED_ERROR                                 = 1492;
-exports.ER_RANGE_NOT_INCREASING_ERROR                                       = 1493;
-exports.ER_INCONSISTENT_TYPE_OF_FUNCTIONS_ERROR                             = 1494;
-exports.ER_MULTIPLE_DEF_CONST_IN_LIST_PART_ERROR                            = 1495;
-exports.ER_PARTITION_ENTRY_ERROR                                            = 1496;
-exports.ER_MIX_HANDLER_ERROR                                                = 1497;
-exports.ER_PARTITION_NOT_DEFINED_ERROR                                      = 1498;
-exports.ER_TOO_MANY_PARTITIONS_ERROR                                        = 1499;
-exports.ER_SUBPARTITION_ERROR                                               = 1500;
-exports.ER_CANT_CREATE_HANDLER_FILE                                         = 1501;
-exports.ER_BLOB_FIELD_IN_PART_FUNC_ERROR                                    = 1502;
-exports.ER_UNIQUE_KEY_NEED_ALL_FIELDS_IN_PF                                 = 1503;
-exports.ER_NO_PARTS_ERROR                                                   = 1504;
-exports.ER_PARTITION_MGMT_ON_NONPARTITIONED                                 = 1505;
-exports.ER_FOREIGN_KEY_ON_PARTITIONED                                       = 1506;
-exports.ER_DROP_PARTITION_NON_EXISTENT                                      = 1507;
-exports.ER_DROP_LAST_PARTITION                                              = 1508;
-exports.ER_COALESCE_ONLY_ON_HASH_PARTITION                                  = 1509;
-exports.ER_REORG_HASH_ONLY_ON_SAME_NO                                       = 1510;
-exports.ER_REORG_NO_PARAM_ERROR                                             = 1511;
-exports.ER_ONLY_ON_RANGE_LIST_PARTITION                                     = 1512;
-exports.ER_ADD_PARTITION_SUBPART_ERROR                                      = 1513;
-exports.ER_ADD_PARTITION_NO_NEW_PARTITION                                   = 1514;
-exports.ER_COALESCE_PARTITION_NO_PARTITION                                  = 1515;
-exports.ER_REORG_PARTITION_NOT_EXIST                                        = 1516;
-exports.ER_SAME_NAME_PARTITION                                              = 1517;
-exports.ER_NO_BINLOG_ERROR                                                  = 1518;
-exports.ER_CONSECUTIVE_REORG_PARTITIONS                                     = 1519;
-exports.ER_REORG_OUTSIDE_RANGE                                              = 1520;
-exports.ER_PARTITION_FUNCTION_FAILURE                                       = 1521;
-exports.ER_PART_STATE_ERROR                                                 = 1522;
-exports.ER_LIMITED_PART_RANGE                                               = 1523;
-exports.ER_PLUGIN_IS_NOT_LOADED                                             = 1524;
-exports.ER_WRONG_VALUE                                                      = 1525;
-exports.ER_NO_PARTITION_FOR_GIVEN_VALUE                                     = 1526;
-exports.ER_FILEGROUP_OPTION_ONLY_ONCE                                       = 1527;
-exports.ER_CREATE_FILEGROUP_FAILED                                          = 1528;
-exports.ER_DROP_FILEGROUP_FAILED                                            = 1529;
-exports.ER_TABLESPACE_AUTO_EXTEND_ERROR                                     = 1530;
-exports.ER_WRONG_SIZE_NUMBER                                                = 1531;
-exports.ER_SIZE_OVERFLOW_ERROR                                              = 1532;
-exports.ER_ALTER_FILEGROUP_FAILED                                           = 1533;
-exports.ER_BINLOG_ROW_LOGGING_FAILED                                        = 1534;
-exports.ER_BINLOG_ROW_WRONG_TABLE_DEF                                       = 1535;
-exports.ER_BINLOG_ROW_RBR_TO_SBR                                            = 1536;
-exports.ER_EVENT_ALREADY_EXISTS                                             = 1537;
-exports.ER_EVENT_STORE_FAILED                                               = 1538;
-exports.ER_EVENT_DOES_NOT_EXIST                                             = 1539;
-exports.ER_EVENT_CANT_ALTER                                                 = 1540;
-exports.ER_EVENT_DROP_FAILED                                                = 1541;
-exports.ER_EVENT_INTERVAL_NOT_POSITIVE_OR_TOO_BIG                           = 1542;
-exports.ER_EVENT_ENDS_BEFORE_STARTS                                         = 1543;
-exports.ER_EVENT_EXEC_TIME_IN_THE_PAST                                      = 1544;
-exports.ER_EVENT_OPEN_TABLE_FAILED                                          = 1545;
-exports.ER_EVENT_NEITHER_M_EXPR_NOR_M_AT                                    = 1546;
-exports.ER_COL_COUNT_DOESNT_MATCH_CORRUPTED                                 = 1547;
-exports.ER_CANNOT_LOAD_FROM_TABLE                                           = 1548;
-exports.ER_EVENT_CANNOT_DELETE                                              = 1549;
-exports.ER_EVENT_COMPILE_ERROR                                              = 1550;
-exports.ER_EVENT_SAME_NAME                                                  = 1551;
-exports.ER_EVENT_DATA_TOO_LONG                                              = 1552;
-exports.ER_DROP_INDEX_FK                                                    = 1553;
-exports.ER_WARN_DEPRECATED_SYNTAX_WITH_VER                                  = 1554;
-exports.ER_CANT_WRITE_LOCK_LOG_TABLE                                        = 1555;
-exports.ER_CANT_LOCK_LOG_TABLE                                              = 1556;
-exports.ER_FOREIGN_DUPLICATE_KEY                                            = 1557;
-exports.ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE                             = 1558;
-exports.ER_TEMP_TABLE_PREVENTS_SWITCH_OUT_OF_RBR                            = 1559;
-exports.ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_FORMAT                    = 1560;
-exports.ER_NDB_CANT_SWITCH_BINLOG_FORMAT                                    = 1561;
-exports.ER_PARTITION_NO_TEMPORARY                                           = 1562;
-exports.ER_PARTITION_CONST_DOMAIN_ERROR                                     = 1563;
-exports.ER_PARTITION_FUNCTION_IS_NOT_ALLOWED                                = 1564;
-exports.ER_DDL_LOG_ERROR                                                    = 1565;
-exports.ER_NULL_IN_VALUES_LESS_THAN                                         = 1566;
-exports.ER_WRONG_PARTITION_NAME                                             = 1567;
-exports.ER_CANT_CHANGE_TX_CHARACTERISTICS                                   = 1568;
-exports.ER_DUP_ENTRY_AUTOINCREMENT_CASE                                     = 1569;
-exports.ER_EVENT_MODIFY_QUEUE_ERROR                                         = 1570;
-exports.ER_EVENT_SET_VAR_ERROR                                              = 1571;
-exports.ER_PARTITION_MERGE_ERROR                                            = 1572;
-exports.ER_CANT_ACTIVATE_LOG                                                = 1573;
-exports.ER_RBR_NOT_AVAILABLE                                                = 1574;
-exports.ER_BASE64_DECODE_ERROR                                              = 1575;
-exports.ER_EVENT_RECURSION_FORBIDDEN                                        = 1576;
-exports.ER_EVENTS_DB_ERROR                                                  = 1577;
-exports.ER_ONLY_INTEGERS_ALLOWED                                            = 1578;
-exports.ER_UNSUPORTED_LOG_ENGINE                                            = 1579;
-exports.ER_BAD_LOG_STATEMENT                                                = 1580;
-exports.ER_CANT_RENAME_LOG_TABLE                                            = 1581;
-exports.ER_WRONG_PARAMCOUNT_TO_NATIVE_FCT                                   = 1582;
-exports.ER_WRONG_PARAMETERS_TO_NATIVE_FCT                                   = 1583;
-exports.ER_WRONG_PARAMETERS_TO_STORED_FCT                                   = 1584;
-exports.ER_NATIVE_FCT_NAME_COLLISION                                        = 1585;
-exports.ER_DUP_ENTRY_WITH_KEY_NAME                                          = 1586;
-exports.ER_BINLOG_PURGE_EMFILE                                              = 1587;
-exports.ER_EVENT_CANNOT_CREATE_IN_THE_PAST                                  = 1588;
-exports.ER_EVENT_CANNOT_ALTER_IN_THE_PAST                                   = 1589;
-exports.ER_SLAVE_INCIDENT                                                   = 1590;
-exports.ER_NO_PARTITION_FOR_GIVEN_VALUE_SILENT                              = 1591;
-exports.ER_BINLOG_UNSAFE_STATEMENT                                          = 1592;
-exports.ER_SLAVE_FATAL_ERROR                                                = 1593;
-exports.ER_SLAVE_RELAY_LOG_READ_FAILURE                                     = 1594;
-exports.ER_SLAVE_RELAY_LOG_WRITE_FAILURE                                    = 1595;
-exports.ER_SLAVE_CREATE_EVENT_FAILURE                                       = 1596;
-exports.ER_SLAVE_MASTER_COM_FAILURE                                         = 1597;
-exports.ER_BINLOG_LOGGING_IMPOSSIBLE                                        = 1598;
-exports.ER_VIEW_NO_CREATION_CTX                                             = 1599;
-exports.ER_VIEW_INVALID_CREATION_CTX                                        = 1600;
-exports.ER_SR_INVALID_CREATION_CTX                                          = 1601;
-exports.ER_TRG_CORRUPTED_FILE                                               = 1602;
-exports.ER_TRG_NO_CREATION_CTX                                              = 1603;
-exports.ER_TRG_INVALID_CREATION_CTX                                         = 1604;
-exports.ER_EVENT_INVALID_CREATION_CTX                                       = 1605;
-exports.ER_TRG_CANT_OPEN_TABLE                                              = 1606;
-exports.ER_CANT_CREATE_SROUTINE                                             = 1607;
-exports.ER_NEVER_USED                                                       = 1608;
-exports.ER_NO_FORMAT_DESCRIPTION_EVENT_BEFORE_BINLOG_STATEMENT              = 1609;
-exports.ER_SLAVE_CORRUPT_EVENT                                              = 1610;
-exports.ER_LOAD_DATA_INVALID_COLUMN                                         = 1611;
-exports.ER_LOG_PURGE_NO_FILE                                                = 1612;
-exports.ER_XA_RBTIMEOUT                                                     = 1613;
-exports.ER_XA_RBDEADLOCK                                                    = 1614;
-exports.ER_NEED_REPREPARE                                                   = 1615;
-exports.ER_DELAYED_NOT_SUPPORTED                                            = 1616;
-exports.WARN_NO_MASTER_INFO                                                 = 1617;
-exports.WARN_OPTION_IGNORED                                                 = 1618;
-exports.WARN_PLUGIN_DELETE_BUILTIN                                          = 1619;
-exports.WARN_PLUGIN_BUSY                                                    = 1620;
-exports.ER_VARIABLE_IS_READONLY                                             = 1621;
-exports.ER_WARN_ENGINE_TRANSACTION_ROLLBACK                                 = 1622;
-exports.ER_SLAVE_HEARTBEAT_FAILURE                                          = 1623;
-exports.ER_SLAVE_HEARTBEAT_VALUE_OUT_OF_RANGE                               = 1624;
-exports.ER_NDB_REPLICATION_SCHEMA_ERROR                                     = 1625;
-exports.ER_CONFLICT_FN_PARSE_ERROR                                          = 1626;
-exports.ER_EXCEPTIONS_WRITE_ERROR                                           = 1627;
-exports.ER_TOO_LONG_TABLE_COMMENT                                           = 1628;
-exports.ER_TOO_LONG_FIELD_COMMENT                                           = 1629;
-exports.ER_FUNC_INEXISTENT_NAME_COLLISION                                   = 1630;
-exports.ER_DATABASE_NAME                                                    = 1631;
-exports.ER_TABLE_NAME                                                       = 1632;
-exports.ER_PARTITION_NAME                                                   = 1633;
-exports.ER_SUBPARTITION_NAME                                                = 1634;
-exports.ER_TEMPORARY_NAME                                                   = 1635;
-exports.ER_RENAMED_NAME                                                     = 1636;
-exports.ER_TOO_MANY_CONCURRENT_TRXS                                         = 1637;
-exports.WARN_NON_ASCII_SEPARATOR_NOT_IMPLEMENTED                            = 1638;
-exports.ER_DEBUG_SYNC_TIMEOUT                                               = 1639;
-exports.ER_DEBUG_SYNC_HIT_LIMIT                                             = 1640;
-exports.ER_DUP_SIGNAL_SET                                                   = 1641;
-exports.ER_SIGNAL_WARN                                                      = 1642;
-exports.ER_SIGNAL_NOT_FOUND                                                 = 1643;
-exports.ER_SIGNAL_EXCEPTION                                                 = 1644;
-exports.ER_RESIGNAL_WITHOUT_ACTIVE_HANDLER                                  = 1645;
-exports.ER_SIGNAL_BAD_CONDITION_TYPE                                        = 1646;
-exports.WARN_COND_ITEM_TRUNCATED                                            = 1647;
-exports.ER_COND_ITEM_TOO_LONG                                               = 1648;
-exports.ER_UNKNOWN_LOCALE                                                   = 1649;
-exports.ER_SLAVE_IGNORE_SERVER_IDS                                          = 1650;
-exports.ER_QUERY_CACHE_DISABLED                                             = 1651;
-exports.ER_SAME_NAME_PARTITION_FIELD                                        = 1652;
-exports.ER_PARTITION_COLUMN_LIST_ERROR                                      = 1653;
-exports.ER_WRONG_TYPE_COLUMN_VALUE_ERROR                                    = 1654;
-exports.ER_TOO_MANY_PARTITION_FUNC_FIELDS_ERROR                             = 1655;
-exports.ER_MAXVALUE_IN_VALUES_IN                                            = 1656;
-exports.ER_TOO_MANY_VALUES_ERROR                                            = 1657;
-exports.ER_ROW_SINGLE_PARTITION_FIELD_ERROR                                 = 1658;
-exports.ER_FIELD_TYPE_NOT_ALLOWED_AS_PARTITION_FIELD                        = 1659;
-exports.ER_PARTITION_FIELDS_TOO_LONG                                        = 1660;
-exports.ER_BINLOG_ROW_ENGINE_AND_STMT_ENGINE                                = 1661;
-exports.ER_BINLOG_ROW_MODE_AND_STMT_ENGINE                                  = 1662;
-exports.ER_BINLOG_UNSAFE_AND_STMT_ENGINE                                    = 1663;
-exports.ER_BINLOG_ROW_INJECTION_AND_STMT_ENGINE                             = 1664;
-exports.ER_BINLOG_STMT_MODE_AND_ROW_ENGINE                                  = 1665;
-exports.ER_BINLOG_ROW_INJECTION_AND_STMT_MODE                               = 1666;
-exports.ER_BINLOG_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE                  = 1667;
-exports.ER_BINLOG_UNSAFE_LIMIT                                              = 1668;
-exports.ER_BINLOG_UNSAFE_INSERT_DELAYED                                     = 1669;
-exports.ER_BINLOG_UNSAFE_SYSTEM_TABLE                                       = 1670;
-exports.ER_BINLOG_UNSAFE_AUTOINC_COLUMNS                                    = 1671;
-exports.ER_BINLOG_UNSAFE_UDF                                                = 1672;
-exports.ER_BINLOG_UNSAFE_SYSTEM_VARIABLE                                    = 1673;
-exports.ER_BINLOG_UNSAFE_SYSTEM_FUNCTION                                    = 1674;
-exports.ER_BINLOG_UNSAFE_NONTRANS_AFTER_TRANS                               = 1675;
-exports.ER_MESSAGE_AND_STATEMENT                                            = 1676;
-exports.ER_SLAVE_CONVERSION_FAILED                                          = 1677;
-exports.ER_SLAVE_CANT_CREATE_CONVERSION                                     = 1678;
-exports.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_FORMAT                 = 1679;
-exports.ER_PATH_LENGTH                                                      = 1680;
-exports.ER_WARN_DEPRECATED_SYNTAX_NO_REPLACEMENT                            = 1681;
-exports.ER_WRONG_NATIVE_TABLE_STRUCTURE                                     = 1682;
-exports.ER_WRONG_PERFSCHEMA_USAGE                                           = 1683;
-exports.ER_WARN_I_S_SKIPPED_TABLE                                           = 1684;
-exports.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_DIRECT                 = 1685;
-exports.ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_DIRECT                    = 1686;
-exports.ER_SPATIAL_MUST_HAVE_GEOM_COL                                       = 1687;
-exports.ER_TOO_LONG_INDEX_COMMENT                                           = 1688;
-exports.ER_LOCK_ABORTED                                                     = 1689;
-exports.ER_DATA_OUT_OF_RANGE                                                = 1690;
-exports.ER_WRONG_SPVAR_TYPE_IN_LIMIT                                        = 1691;
-exports.ER_BINLOG_UNSAFE_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE           = 1692;
-exports.ER_BINLOG_UNSAFE_MIXED_STATEMENT                                    = 1693;
-exports.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_SQL_LOG_BIN                   = 1694;
-exports.ER_STORED_FUNCTION_PREVENTS_SWITCH_SQL_LOG_BIN                      = 1695;
-exports.ER_FAILED_READ_FROM_PAR_FILE                                        = 1696;
-exports.ER_VALUES_IS_NOT_INT_TYPE_ERROR                                     = 1697;
-exports.ER_ACCESS_DENIED_NO_PASSWORD_ERROR                                  = 1698;
-exports.ER_SET_PASSWORD_AUTH_PLUGIN                                         = 1699;
-exports.ER_GRANT_PLUGIN_USER_EXISTS                                         = 1700;
-exports.ER_TRUNCATE_ILLEGAL_FK                                              = 1701;
-exports.ER_PLUGIN_IS_PERMANENT                                              = 1702;
-exports.ER_SLAVE_HEARTBEAT_VALUE_OUT_OF_RANGE_MIN                           = 1703;
-exports.ER_SLAVE_HEARTBEAT_VALUE_OUT_OF_RANGE_MAX                           = 1704;
-exports.ER_STMT_CACHE_FULL                                                  = 1705;
-exports.ER_MULTI_UPDATE_KEY_CONFLICT                                        = 1706;
-exports.ER_TABLE_NEEDS_REBUILD                                              = 1707;
-exports.WARN_OPTION_BELOW_LIMIT                                             = 1708;
-exports.ER_INDEX_COLUMN_TOO_LONG                                            = 1709;
-exports.ER_ERROR_IN_TRIGGER_BODY                                            = 1710;
-exports.ER_ERROR_IN_UNKNOWN_TRIGGER_BODY                                    = 1711;
-exports.ER_INDEX_CORRUPT                                                    = 1712;
-exports.ER_UNDO_RECORD_TOO_BIG                                              = 1713;
-exports.ER_BINLOG_UNSAFE_INSERT_IGNORE_SELECT                               = 1714;
-exports.ER_BINLOG_UNSAFE_INSERT_SELECT_UPDATE                               = 1715;
-exports.ER_BINLOG_UNSAFE_REPLACE_SELECT                                     = 1716;
-exports.ER_BINLOG_UNSAFE_CREATE_IGNORE_SELECT                               = 1717;
-exports.ER_BINLOG_UNSAFE_CREATE_REPLACE_SELECT                              = 1718;
-exports.ER_BINLOG_UNSAFE_UPDATE_IGNORE                                      = 1719;
-exports.ER_PLUGIN_NO_UNINSTALL                                              = 1720;
-exports.ER_PLUGIN_NO_INSTALL                                                = 1721;
-exports.ER_BINLOG_UNSAFE_WRITE_AUTOINC_SELECT                               = 1722;
-exports.ER_BINLOG_UNSAFE_CREATE_SELECT_AUTOINC                              = 1723;
-exports.ER_BINLOG_UNSAFE_INSERT_TWO_KEYS                                    = 1724;
-exports.ER_TABLE_IN_FK_CHECK                                                = 1725;
-exports.ER_UNSUPPORTED_ENGINE                                               = 1726;
-exports.ER_BINLOG_UNSAFE_AUTOINC_NOT_FIRST                                  = 1727;
-exports.ER_CANNOT_LOAD_FROM_TABLE_V2                                        = 1728;
-exports.ER_MASTER_DELAY_VALUE_OUT_OF_RANGE                                  = 1729;
-exports.ER_ONLY_FD_AND_RBR_EVENTS_ALLOWED_IN_BINLOG_STATEMENT               = 1730;
-exports.ER_PARTITION_EXCHANGE_DIFFERENT_OPTION                              = 1731;
-exports.ER_PARTITION_EXCHANGE_PART_TABLE                                    = 1732;
-exports.ER_PARTITION_EXCHANGE_TEMP_TABLE                                    = 1733;
-exports.ER_PARTITION_INSTEAD_OF_SUBPARTITION                                = 1734;
-exports.ER_UNKNOWN_PARTITION                                                = 1735;
-exports.ER_TABLES_DIFFERENT_METADATA                                        = 1736;
-exports.ER_ROW_DOES_NOT_MATCH_PARTITION                                     = 1737;
-exports.ER_BINLOG_CACHE_SIZE_GREATER_THAN_MAX                               = 1738;
-exports.ER_WARN_INDEX_NOT_APPLICABLE                                        = 1739;
-exports.ER_PARTITION_EXCHANGE_FOREIGN_KEY                                   = 1740;
-exports.ER_NO_SUCH_KEY_VALUE                                                = 1741;
-exports.ER_RPL_INFO_DATA_TOO_LONG                                           = 1742;
-exports.ER_NETWORK_READ_EVENT_CHECKSUM_FAILURE                              = 1743;
-exports.ER_BINLOG_READ_EVENT_CHECKSUM_FAILURE                               = 1744;
-exports.ER_BINLOG_STMT_CACHE_SIZE_GREATER_THAN_MAX                          = 1745;
-exports.ER_CANT_UPDATE_TABLE_IN_CREATE_TABLE_SELECT                         = 1746;
-exports.ER_PARTITION_CLAUSE_ON_NONPARTITIONED                               = 1747;
-exports.ER_ROW_DOES_NOT_MATCH_GIVEN_PARTITION_SET                           = 1748;
-exports.ER_NO_SUCH_PARTITION                                                = 1749;
-exports.ER_CHANGE_RPL_INFO_REPOSITORY_FAILURE                               = 1750;
-exports.ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_CREATED_TEMP_TABLE            = 1751;
-exports.ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_DROPPED_TEMP_TABLE            = 1752;
-exports.ER_MTS_FEATURE_IS_NOT_SUPPORTED                                     = 1753;
-exports.ER_MTS_UPDATED_DBS_GREATER_MAX                                      = 1754;
-exports.ER_MTS_CANT_PARALLEL                                                = 1755;
-exports.ER_MTS_INCONSISTENT_DATA                                            = 1756;
-exports.ER_FULLTEXT_NOT_SUPPORTED_WITH_PARTITIONING                         = 1757;
-exports.ER_DA_INVALID_CONDITION_NUMBER                                      = 1758;
-exports.ER_INSECURE_PLAIN_TEXT                                              = 1759;
-exports.ER_INSECURE_CHANGE_MASTER                                           = 1760;
-exports.ER_FOREIGN_DUPLICATE_KEY_WITH_CHILD_INFO                            = 1761;
-exports.ER_FOREIGN_DUPLICATE_KEY_WITHOUT_CHILD_INFO                         = 1762;
-exports.ER_SQLTHREAD_WITH_SECURE_SLAVE                                      = 1763;
-exports.ER_TABLE_HAS_NO_FT                                                  = 1764;
-exports.ER_VARIABLE_NOT_SETTABLE_IN_SF_OR_TRIGGER                           = 1765;
-exports.ER_VARIABLE_NOT_SETTABLE_IN_TRANSACTION                             = 1766;
-exports.ER_GTID_NEXT_IS_NOT_IN_GTID_NEXT_LIST                               = 1767;
-exports.ER_CANT_CHANGE_GTID_NEXT_IN_TRANSACTION_WHEN_GTID_NEXT_LIST_IS_NULL = 1768;
-exports.ER_SET_STATEMENT_CANNOT_INVOKE_FUNCTION                             = 1769;
-exports.ER_GTID_NEXT_CANT_BE_AUTOMATIC_IF_GTID_NEXT_LIST_IS_NON_NULL        = 1770;
-exports.ER_SKIPPING_LOGGED_TRANSACTION                                      = 1771;
-exports.ER_MALFORMED_GTID_SET_SPECIFICATION                                 = 1772;
-exports.ER_MALFORMED_GTID_SET_ENCODING                                      = 1773;
-exports.ER_MALFORMED_GTID_SPECIFICATION                                     = 1774;
-exports.ER_GNO_EXHAUSTED                                                    = 1775;
-exports.ER_BAD_SLAVE_AUTO_POSITION                                          = 1776;
-exports.ER_AUTO_POSITION_REQUIRES_GTID_MODE_ON                              = 1777;
-exports.ER_CANT_DO_IMPLICIT_COMMIT_IN_TRX_WHEN_GTID_NEXT_IS_SET             = 1778;
-exports.ER_GTID_MODE_2_OR_3_REQUIRES_ENFORCE_GTID_CONSISTENCY_ON            = 1779;
-exports.ER_GTID_MODE_REQUIRES_BINLOG                                        = 1780;
-exports.ER_CANT_SET_GTID_NEXT_TO_GTID_WHEN_GTID_MODE_IS_OFF                 = 1781;
-exports.ER_CANT_SET_GTID_NEXT_TO_ANONYMOUS_WHEN_GTID_MODE_IS_ON             = 1782;
-exports.ER_CANT_SET_GTID_NEXT_LIST_TO_NON_NULL_WHEN_GTID_MODE_IS_OFF        = 1783;
-exports.ER_FOUND_GTID_EVENT_WHEN_GTID_MODE_IS_OFF                           = 1784;
-exports.ER_GTID_UNSAFE_NON_TRANSACTIONAL_TABLE                              = 1785;
-exports.ER_GTID_UNSAFE_CREATE_SELECT                                        = 1786;
-exports.ER_GTID_UNSAFE_CREATE_DROP_TEMPORARY_TABLE_IN_TRANSACTION           = 1787;
-exports.ER_GTID_MODE_CAN_ONLY_CHANGE_ONE_STEP_AT_A_TIME                     = 1788;
-exports.ER_MASTER_HAS_PURGED_REQUIRED_GTIDS                                 = 1789;
-exports.ER_CANT_SET_GTID_NEXT_WHEN_OWNING_GTID                              = 1790;
-exports.ER_UNKNOWN_EXPLAIN_FORMAT                                           = 1791;
-exports.ER_CANT_EXECUTE_IN_READ_ONLY_TRANSACTION                            = 1792;
-exports.ER_TOO_LONG_TABLE_PARTITION_COMMENT                                 = 1793;
-exports.ER_SLAVE_CONFIGURATION                                              = 1794;
-exports.ER_INNODB_FT_LIMIT                                                  = 1795;
-exports.ER_INNODB_NO_FT_TEMP_TABLE                                          = 1796;
-exports.ER_INNODB_FT_WRONG_DOCID_COLUMN                                     = 1797;
-exports.ER_INNODB_FT_WRONG_DOCID_INDEX                                      = 1798;
-exports.ER_INNODB_ONLINE_LOG_TOO_BIG                                        = 1799;
-exports.ER_UNKNOWN_ALTER_ALGORITHM                                          = 1800;
-exports.ER_UNKNOWN_ALTER_LOCK                                               = 1801;
-exports.ER_MTS_CHANGE_MASTER_CANT_RUN_WITH_GAPS                             = 1802;
-exports.ER_MTS_RECOVERY_FAILURE                                             = 1803;
-exports.ER_MTS_RESET_WORKERS                                                = 1804;
-exports.ER_COL_COUNT_DOESNT_MATCH_CORRUPTED_V2                              = 1805;
-exports.ER_SLAVE_SILENT_RETRY_TRANSACTION                                   = 1806;
-exports.ER_DISCARD_FK_CHECKS_RUNNING                                        = 1807;
-exports.ER_TABLE_SCHEMA_MISMATCH                                            = 1808;
-exports.ER_TABLE_IN_SYSTEM_TABLESPACE                                       = 1809;
-exports.ER_IO_READ_ERROR                                                    = 1810;
-exports.ER_IO_WRITE_ERROR                                                   = 1811;
-exports.ER_TABLESPACE_MISSING                                               = 1812;
-exports.ER_TABLESPACE_EXISTS                                                = 1813;
-exports.ER_TABLESPACE_DISCARDED                                             = 1814;
-exports.ER_INTERNAL_ERROR                                                   = 1815;
-exports.ER_INNODB_IMPORT_ERROR                                              = 1816;
-exports.ER_INNODB_INDEX_CORRUPT                                             = 1817;
-exports.ER_INVALID_YEAR_COLUMN_LENGTH                                       = 1818;
-exports.ER_NOT_VALID_PASSWORD                                               = 1819;
-exports.ER_MUST_CHANGE_PASSWORD                                             = 1820;
-exports.ER_FK_NO_INDEX_CHILD                                                = 1821;
-exports.ER_FK_NO_INDEX_PARENT                                               = 1822;
-exports.ER_FK_FAIL_ADD_SYSTEM                                               = 1823;
-exports.ER_FK_CANNOT_OPEN_PARENT                                            = 1824;
-exports.ER_FK_INCORRECT_OPTION                                              = 1825;
-exports.ER_FK_DUP_NAME                                                      = 1826;
-exports.ER_PASSWORD_FORMAT                                                  = 1827;
-exports.ER_FK_COLUMN_CANNOT_DROP                                            = 1828;
-exports.ER_FK_COLUMN_CANNOT_DROP_CHILD                                      = 1829;
-exports.ER_FK_COLUMN_NOT_NULL                                               = 1830;
-exports.ER_DUP_INDEX                                                        = 1831;
-exports.ER_FK_COLUMN_CANNOT_CHANGE                                          = 1832;
-exports.ER_FK_COLUMN_CANNOT_CHANGE_CHILD                                    = 1833;
-exports.ER_FK_CANNOT_DELETE_PARENT                                          = 1834;
-exports.ER_MALFORMED_PACKET                                                 = 1835;
-exports.ER_READ_ONLY_MODE                                                   = 1836;
-exports.ER_GTID_NEXT_TYPE_UNDEFINED_GROUP                                   = 1837;
-exports.ER_VARIABLE_NOT_SETTABLE_IN_SP                                      = 1838;
-exports.ER_CANT_SET_GTID_PURGED_WHEN_GTID_MODE_IS_OFF                       = 1839;
-exports.ER_CANT_SET_GTID_PURGED_WHEN_GTID_EXECUTED_IS_NOT_EMPTY             = 1840;
-exports.ER_CANT_SET_GTID_PURGED_WHEN_OWNED_GTIDS_IS_NOT_EMPTY               = 1841;
-exports.ER_GTID_PURGED_WAS_CHANGED                                          = 1842;
-exports.ER_GTID_EXECUTED_WAS_CHANGED                                        = 1843;
-exports.ER_BINLOG_STMT_MODE_AND_NO_REPL_TABLES                              = 1844;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED                                    = 1845;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON                             = 1846;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COPY                        = 1847;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_PARTITION                   = 1848;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_RENAME                   = 1849;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE                 = 1850;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_CHECK                    = 1851;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_IGNORE                      = 1852;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOPK                        = 1853;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_AUTOINC                     = 1854;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_HIDDEN_FTS                  = 1855;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_CHANGE_FTS                  = 1856;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FTS                         = 1857;
-exports.ER_SQL_SLAVE_SKIP_COUNTER_NOT_SETTABLE_IN_GTID_MODE                 = 1858;
-exports.ER_DUP_UNKNOWN_IN_INDEX                                             = 1859;
-exports.ER_IDENT_CAUSES_TOO_LONG_PATH                                       = 1860;
-exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOT_NULL                    = 1861;
-exports.ER_MUST_CHANGE_PASSWORD_LOGIN                                       = 1862;
-exports.ER_ROW_IN_WRONG_PARTITION                                           = 1863;
-exports.ER_MTS_EVENT_BIGGER_PENDING_JOBS_SIZE_MAX                           = 1864;
-exports.ER_INNODB_NO_FT_USES_PARSER                                         = 1865;
-exports.ER_BINLOG_LOGICAL_CORRUPTION                                        = 1866;
-exports.ER_WARN_PURGE_LOG_IN_USE                                            = 1867;
-exports.ER_WARN_PURGE_LOG_IS_ACTIVE                                         = 1868;
-exports.ER_AUTO_INCREMENT_CONFLICT                                          = 1869;
-exports.WARN_ON_BLOCKHOLE_IN_RBR                                            = 1870;
-exports.ER_SLAVE_MI_INIT_REPOSITORY                                         = 1871;
-exports.ER_SLAVE_RLI_INIT_REPOSITORY                                        = 1872;
-exports.ER_ACCESS_DENIED_CHANGE_USER_ERROR                                  = 1873;
-exports.ER_INNODB_READ_ONLY                                                 = 1874;
-exports.ER_STOP_SLAVE_SQL_THREAD_TIMEOUT                                    = 1875;
-exports.ER_STOP_SLAVE_IO_THREAD_TIMEOUT                                     = 1876;
-exports.ER_TABLE_CORRUPT                                                    = 1877;
-exports.ER_TEMP_FILE_WRITE_FAILURE                                          = 1878;
-exports.ER_INNODB_FT_AUX_NOT_HEX_ID                                         = 1879;
-exports.ER_OLD_TEMPORALS_UPGRADED                                           = 1880;
-exports.ER_INNODB_FORCED_RECOVERY                                           = 1881;
-exports.ER_AES_INVALID_IV                                                   = 1882;
+exports.EE_CANTCREATEFILE                                                                = 1;
+exports.EE_READ                                                                          = 2;
+exports.EE_WRITE                                                                         = 3;
+exports.EE_BADCLOSE                                                                      = 4;
+exports.EE_OUTOFMEMORY                                                                   = 5;
+exports.EE_DELETE                                                                        = 6;
+exports.EE_LINK                                                                          = 7;
+exports.EE_EOFERR                                                                        = 9;
+exports.EE_CANTLOCK                                                                      = 10;
+exports.EE_CANTUNLOCK                                                                    = 11;
+exports.EE_DIR                                                                           = 12;
+exports.EE_STAT                                                                          = 13;
+exports.EE_CANT_CHSIZE                                                                   = 14;
+exports.EE_CANT_OPEN_STREAM                                                              = 15;
+exports.EE_GETWD                                                                         = 16;
+exports.EE_SETWD                                                                         = 17;
+exports.EE_LINK_WARNING                                                                  = 18;
+exports.EE_OPEN_WARNING                                                                  = 19;
+exports.EE_DISK_FULL                                                                     = 20;
+exports.EE_CANT_MKDIR                                                                    = 21;
+exports.EE_UNKNOWN_CHARSET                                                               = 22;
+exports.EE_OUT_OF_FILERESOURCES                                                          = 23;
+exports.EE_CANT_READLINK                                                                 = 24;
+exports.EE_CANT_SYMLINK                                                                  = 25;
+exports.EE_REALPATH                                                                      = 26;
+exports.EE_SYNC                                                                          = 27;
+exports.EE_UNKNOWN_COLLATION                                                             = 28;
+exports.EE_FILENOTFOUND                                                                  = 29;
+exports.EE_FILE_NOT_CLOSED                                                               = 30;
+exports.EE_CHANGE_OWNERSHIP                                                              = 31;
+exports.EE_CHANGE_PERMISSIONS                                                            = 32;
+exports.EE_CANT_SEEK                                                                     = 33;
+exports.EE_CAPACITY_EXCEEDED                                                             = 34;
+exports.HA_ERR_KEY_NOT_FOUND                                                             = 120;
+exports.HA_ERR_FOUND_DUPP_KEY                                                            = 121;
+exports.HA_ERR_INTERNAL_ERROR                                                            = 122;
+exports.HA_ERR_RECORD_CHANGED                                                            = 123;
+exports.HA_ERR_WRONG_INDEX                                                               = 124;
+exports.HA_ERR_CRASHED                                                                   = 126;
+exports.HA_ERR_WRONG_IN_RECORD                                                           = 127;
+exports.HA_ERR_OUT_OF_MEM                                                                = 128;
+exports.HA_ERR_NOT_A_TABLE                                                               = 130;
+exports.HA_ERR_WRONG_COMMAND                                                             = 131;
+exports.HA_ERR_OLD_FILE                                                                  = 132;
+exports.HA_ERR_NO_ACTIVE_RECORD                                                          = 133;
+exports.HA_ERR_RECORD_DELETED                                                            = 134;
+exports.HA_ERR_RECORD_FILE_FULL                                                          = 135;
+exports.HA_ERR_INDEX_FILE_FULL                                                           = 136;
+exports.HA_ERR_END_OF_FILE                                                               = 137;
+exports.HA_ERR_UNSUPPORTED                                                               = 138;
+exports.HA_ERR_TOO_BIG_ROW                                                               = 139;
+exports.HA_WRONG_CREATE_OPTION                                                           = 140;
+exports.HA_ERR_FOUND_DUPP_UNIQUE                                                         = 141;
+exports.HA_ERR_UNKNOWN_CHARSET                                                           = 142;
+exports.HA_ERR_WRONG_MRG_TABLE_DEF                                                       = 143;
+exports.HA_ERR_CRASHED_ON_REPAIR                                                         = 144;
+exports.HA_ERR_CRASHED_ON_USAGE                                                          = 145;
+exports.HA_ERR_LOCK_WAIT_TIMEOUT                                                         = 146;
+exports.HA_ERR_LOCK_TABLE_FULL                                                           = 147;
+exports.HA_ERR_READ_ONLY_TRANSACTION                                                     = 148;
+exports.HA_ERR_LOCK_DEADLOCK                                                             = 149;
+exports.HA_ERR_CANNOT_ADD_FOREIGN                                                        = 150;
+exports.HA_ERR_NO_REFERENCED_ROW                                                         = 151;
+exports.HA_ERR_ROW_IS_REFERENCED                                                         = 152;
+exports.HA_ERR_NO_SAVEPOINT                                                              = 153;
+exports.HA_ERR_NON_UNIQUE_BLOCK_SIZE                                                     = 154;
+exports.HA_ERR_NO_SUCH_TABLE                                                             = 155;
+exports.HA_ERR_TABLE_EXIST                                                               = 156;
+exports.HA_ERR_NO_CONNECTION                                                             = 157;
+exports.HA_ERR_NULL_IN_SPATIAL                                                           = 158;
+exports.HA_ERR_TABLE_DEF_CHANGED                                                         = 159;
+exports.HA_ERR_NO_PARTITION_FOUND                                                        = 160;
+exports.HA_ERR_RBR_LOGGING_FAILED                                                        = 161;
+exports.HA_ERR_DROP_INDEX_FK                                                             = 162;
+exports.HA_ERR_FOREIGN_DUPLICATE_KEY                                                     = 163;
+exports.HA_ERR_TABLE_NEEDS_UPGRADE                                                       = 164;
+exports.HA_ERR_TABLE_READONLY                                                            = 165;
+exports.HA_ERR_AUTOINC_READ_FAILED                                                       = 166;
+exports.HA_ERR_AUTOINC_ERANGE                                                            = 167;
+exports.HA_ERR_GENERIC                                                                   = 168;
+exports.HA_ERR_RECORD_IS_THE_SAME                                                        = 169;
+exports.HA_ERR_LOGGING_IMPOSSIBLE                                                        = 170;
+exports.HA_ERR_CORRUPT_EVENT                                                             = 171;
+exports.HA_ERR_NEW_FILE                                                                  = 172;
+exports.HA_ERR_ROWS_EVENT_APPLY                                                          = 173;
+exports.HA_ERR_INITIALIZATION                                                            = 174;
+exports.HA_ERR_FILE_TOO_SHORT                                                            = 175;
+exports.HA_ERR_WRONG_CRC                                                                 = 176;
+exports.HA_ERR_TOO_MANY_CONCURRENT_TRXS                                                  = 177;
+exports.HA_ERR_NOT_IN_LOCK_PARTITIONS                                                    = 178;
+exports.HA_ERR_INDEX_COL_TOO_LONG                                                        = 179;
+exports.HA_ERR_INDEX_CORRUPT                                                             = 180;
+exports.HA_ERR_UNDO_REC_TOO_BIG                                                          = 181;
+exports.HA_FTS_INVALID_DOCID                                                             = 182;
+exports.HA_ERR_TABLE_IN_FK_CHECK                                                         = 183;
+exports.HA_ERR_TABLESPACE_EXISTS                                                         = 184;
+exports.HA_ERR_TOO_MANY_FIELDS                                                           = 185;
+exports.HA_ERR_ROW_IN_WRONG_PARTITION                                                    = 186;
+exports.HA_ERR_INNODB_READ_ONLY                                                          = 187;
+exports.HA_ERR_FTS_EXCEED_RESULT_CACHE_LIMIT                                             = 188;
+exports.HA_ERR_TEMP_FILE_WRITE_FAILURE                                                   = 189;
+exports.HA_ERR_INNODB_FORCED_RECOVERY                                                    = 190;
+exports.HA_ERR_FTS_TOO_MANY_WORDS_IN_PHRASE                                              = 191;
+exports.HA_ERR_FK_DEPTH_EXCEEDED                                                         = 192;
+exports.HA_MISSING_CREATE_OPTION                                                         = 193;
+exports.HA_ERR_SE_OUT_OF_MEMORY                                                          = 194;
+exports.HA_ERR_TABLE_CORRUPT                                                             = 195;
+exports.HA_ERR_QUERY_INTERRUPTED                                                         = 196;
+exports.HA_ERR_TABLESPACE_MISSING                                                        = 197;
+exports.HA_ERR_TABLESPACE_IS_NOT_EMPTY                                                   = 198;
+exports.HA_ERR_WRONG_FILE_NAME                                                           = 199;
+exports.HA_ERR_NOT_ALLOWED_COMMAND                                                       = 200;
+exports.HA_ERR_COMPUTE_FAILED                                                            = 201;
+exports.ER_HASHCHK                                                                       = 1000;
+exports.ER_NISAMCHK                                                                      = 1001;
+exports.ER_NO                                                                            = 1002;
+exports.ER_YES                                                                           = 1003;
+exports.ER_CANT_CREATE_FILE                                                              = 1004;
+exports.ER_CANT_CREATE_TABLE                                                             = 1005;
+exports.ER_CANT_CREATE_DB                                                                = 1006;
+exports.ER_DB_CREATE_EXISTS                                                              = 1007;
+exports.ER_DB_DROP_EXISTS                                                                = 1008;
+exports.ER_DB_DROP_DELETE                                                                = 1009;
+exports.ER_DB_DROP_RMDIR                                                                 = 1010;
+exports.ER_CANT_DELETE_FILE                                                              = 1011;
+exports.ER_CANT_FIND_SYSTEM_REC                                                          = 1012;
+exports.ER_CANT_GET_STAT                                                                 = 1013;
+exports.ER_CANT_GET_WD                                                                   = 1014;
+exports.ER_CANT_LOCK                                                                     = 1015;
+exports.ER_CANT_OPEN_FILE                                                                = 1016;
+exports.ER_FILE_NOT_FOUND                                                                = 1017;
+exports.ER_CANT_READ_DIR                                                                 = 1018;
+exports.ER_CANT_SET_WD                                                                   = 1019;
+exports.ER_CHECKREAD                                                                     = 1020;
+exports.ER_DISK_FULL                                                                     = 1021;
+exports.ER_DUP_KEY                                                                       = 1022;
+exports.ER_ERROR_ON_CLOSE                                                                = 1023;
+exports.ER_ERROR_ON_READ                                                                 = 1024;
+exports.ER_ERROR_ON_RENAME                                                               = 1025;
+exports.ER_ERROR_ON_WRITE                                                                = 1026;
+exports.ER_FILE_USED                                                                     = 1027;
+exports.ER_FILSORT_ABORT                                                                 = 1028;
+exports.ER_FORM_NOT_FOUND                                                                = 1029;
+exports.ER_GET_ERRNO                                                                     = 1030;
+exports.ER_ILLEGAL_HA                                                                    = 1031;
+exports.ER_KEY_NOT_FOUND                                                                 = 1032;
+exports.ER_NOT_FORM_FILE                                                                 = 1033;
+exports.ER_NOT_KEYFILE                                                                   = 1034;
+exports.ER_OLD_KEYFILE                                                                   = 1035;
+exports.ER_OPEN_AS_READONLY                                                              = 1036;
+exports.ER_OUTOFMEMORY                                                                   = 1037;
+exports.ER_OUT_OF_SORTMEMORY                                                             = 1038;
+exports.ER_UNEXPECTED_EOF                                                                = 1039;
+exports.ER_CON_COUNT_ERROR                                                               = 1040;
+exports.ER_OUT_OF_RESOURCES                                                              = 1041;
+exports.ER_BAD_HOST_ERROR                                                                = 1042;
+exports.ER_HANDSHAKE_ERROR                                                               = 1043;
+exports.ER_DBACCESS_DENIED_ERROR                                                         = 1044;
+exports.ER_ACCESS_DENIED_ERROR                                                           = 1045;
+exports.ER_NO_DB_ERROR                                                                   = 1046;
+exports.ER_UNKNOWN_COM_ERROR                                                             = 1047;
+exports.ER_BAD_NULL_ERROR                                                                = 1048;
+exports.ER_BAD_DB_ERROR                                                                  = 1049;
+exports.ER_TABLE_EXISTS_ERROR                                                            = 1050;
+exports.ER_BAD_TABLE_ERROR                                                               = 1051;
+exports.ER_NON_UNIQ_ERROR                                                                = 1052;
+exports.ER_SERVER_SHUTDOWN                                                               = 1053;
+exports.ER_BAD_FIELD_ERROR                                                               = 1054;
+exports.ER_WRONG_FIELD_WITH_GROUP                                                        = 1055;
+exports.ER_WRONG_GROUP_FIELD                                                             = 1056;
+exports.ER_WRONG_SUM_SELECT                                                              = 1057;
+exports.ER_WRONG_VALUE_COUNT                                                             = 1058;
+exports.ER_TOO_LONG_IDENT                                                                = 1059;
+exports.ER_DUP_FIELDNAME                                                                 = 1060;
+exports.ER_DUP_KEYNAME                                                                   = 1061;
+exports.ER_DUP_ENTRY                                                                     = 1062;
+exports.ER_WRONG_FIELD_SPEC                                                              = 1063;
+exports.ER_PARSE_ERROR                                                                   = 1064;
+exports.ER_EMPTY_QUERY                                                                   = 1065;
+exports.ER_NONUNIQ_TABLE                                                                 = 1066;
+exports.ER_INVALID_DEFAULT                                                               = 1067;
+exports.ER_MULTIPLE_PRI_KEY                                                              = 1068;
+exports.ER_TOO_MANY_KEYS                                                                 = 1069;
+exports.ER_TOO_MANY_KEY_PARTS                                                            = 1070;
+exports.ER_TOO_LONG_KEY                                                                  = 1071;
+exports.ER_KEY_COLUMN_DOES_NOT_EXITS                                                     = 1072;
+exports.ER_BLOB_USED_AS_KEY                                                              = 1073;
+exports.ER_TOO_BIG_FIELDLENGTH                                                           = 1074;
+exports.ER_WRONG_AUTO_KEY                                                                = 1075;
+exports.ER_READY                                                                         = 1076;
+exports.ER_NORMAL_SHUTDOWN                                                               = 1077;
+exports.ER_GOT_SIGNAL                                                                    = 1078;
+exports.ER_SHUTDOWN_COMPLETE                                                             = 1079;
+exports.ER_FORCING_CLOSE                                                                 = 1080;
+exports.ER_IPSOCK_ERROR                                                                  = 1081;
+exports.ER_NO_SUCH_INDEX                                                                 = 1082;
+exports.ER_WRONG_FIELD_TERMINATORS                                                       = 1083;
+exports.ER_BLOBS_AND_NO_TERMINATED                                                       = 1084;
+exports.ER_TEXTFILE_NOT_READABLE                                                         = 1085;
+exports.ER_FILE_EXISTS_ERROR                                                             = 1086;
+exports.ER_LOAD_INFO                                                                     = 1087;
+exports.ER_ALTER_INFO                                                                    = 1088;
+exports.ER_WRONG_SUB_KEY                                                                 = 1089;
+exports.ER_CANT_REMOVE_ALL_FIELDS                                                        = 1090;
+exports.ER_CANT_DROP_FIELD_OR_KEY                                                        = 1091;
+exports.ER_INSERT_INFO                                                                   = 1092;
+exports.ER_UPDATE_TABLE_USED                                                             = 1093;
+exports.ER_NO_SUCH_THREAD                                                                = 1094;
+exports.ER_KILL_DENIED_ERROR                                                             = 1095;
+exports.ER_NO_TABLES_USED                                                                = 1096;
+exports.ER_TOO_BIG_SET                                                                   = 1097;
+exports.ER_NO_UNIQUE_LOGFILE                                                             = 1098;
+exports.ER_TABLE_NOT_LOCKED_FOR_WRITE                                                    = 1099;
+exports.ER_TABLE_NOT_LOCKED                                                              = 1100;
+exports.ER_BLOB_CANT_HAVE_DEFAULT                                                        = 1101;
+exports.ER_WRONG_DB_NAME                                                                 = 1102;
+exports.ER_WRONG_TABLE_NAME                                                              = 1103;
+exports.ER_TOO_BIG_SELECT                                                                = 1104;
+exports.ER_UNKNOWN_ERROR                                                                 = 1105;
+exports.ER_UNKNOWN_PROCEDURE                                                             = 1106;
+exports.ER_WRONG_PARAMCOUNT_TO_PROCEDURE                                                 = 1107;
+exports.ER_WRONG_PARAMETERS_TO_PROCEDURE                                                 = 1108;
+exports.ER_UNKNOWN_TABLE                                                                 = 1109;
+exports.ER_FIELD_SPECIFIED_TWICE                                                         = 1110;
+exports.ER_INVALID_GROUP_FUNC_USE                                                        = 1111;
+exports.ER_UNSUPPORTED_EXTENSION                                                         = 1112;
+exports.ER_TABLE_MUST_HAVE_COLUMNS                                                       = 1113;
+exports.ER_RECORD_FILE_FULL                                                              = 1114;
+exports.ER_UNKNOWN_CHARACTER_SET                                                         = 1115;
+exports.ER_TOO_MANY_TABLES                                                               = 1116;
+exports.ER_TOO_MANY_FIELDS                                                               = 1117;
+exports.ER_TOO_BIG_ROWSIZE                                                               = 1118;
+exports.ER_STACK_OVERRUN                                                                 = 1119;
+exports.ER_WRONG_OUTER_JOIN                                                              = 1120;
+exports.ER_NULL_COLUMN_IN_INDEX                                                          = 1121;
+exports.ER_CANT_FIND_UDF                                                                 = 1122;
+exports.ER_CANT_INITIALIZE_UDF                                                           = 1123;
+exports.ER_UDF_NO_PATHS                                                                  = 1124;
+exports.ER_UDF_EXISTS                                                                    = 1125;
+exports.ER_CANT_OPEN_LIBRARY                                                             = 1126;
+exports.ER_CANT_FIND_DL_ENTRY                                                            = 1127;
+exports.ER_FUNCTION_NOT_DEFINED                                                          = 1128;
+exports.ER_HOST_IS_BLOCKED                                                               = 1129;
+exports.ER_HOST_NOT_PRIVILEGED                                                           = 1130;
+exports.ER_PASSWORD_ANONYMOUS_USER                                                       = 1131;
+exports.ER_PASSWORD_NOT_ALLOWED                                                          = 1132;
+exports.ER_PASSWORD_NO_MATCH                                                             = 1133;
+exports.ER_UPDATE_INFO                                                                   = 1134;
+exports.ER_CANT_CREATE_THREAD                                                            = 1135;
+exports.ER_WRONG_VALUE_COUNT_ON_ROW                                                      = 1136;
+exports.ER_CANT_REOPEN_TABLE                                                             = 1137;
+exports.ER_INVALID_USE_OF_NULL                                                           = 1138;
+exports.ER_REGEXP_ERROR                                                                  = 1139;
+exports.ER_MIX_OF_GROUP_FUNC_AND_FIELDS                                                  = 1140;
+exports.ER_NONEXISTING_GRANT                                                             = 1141;
+exports.ER_TABLEACCESS_DENIED_ERROR                                                      = 1142;
+exports.ER_COLUMNACCESS_DENIED_ERROR                                                     = 1143;
+exports.ER_ILLEGAL_GRANT_FOR_TABLE                                                       = 1144;
+exports.ER_GRANT_WRONG_HOST_OR_USER                                                      = 1145;
+exports.ER_NO_SUCH_TABLE                                                                 = 1146;
+exports.ER_NONEXISTING_TABLE_GRANT                                                       = 1147;
+exports.ER_NOT_ALLOWED_COMMAND                                                           = 1148;
+exports.ER_SYNTAX_ERROR                                                                  = 1149;
+exports.ER_DELAYED_CANT_CHANGE_LOCK                                                      = 1150;
+exports.ER_TOO_MANY_DELAYED_THREADS                                                      = 1151;
+exports.ER_ABORTING_CONNECTION                                                           = 1152;
+exports.ER_NET_PACKET_TOO_LARGE                                                          = 1153;
+exports.ER_NET_READ_ERROR_FROM_PIPE                                                      = 1154;
+exports.ER_NET_FCNTL_ERROR                                                               = 1155;
+exports.ER_NET_PACKETS_OUT_OF_ORDER                                                      = 1156;
+exports.ER_NET_UNCOMPRESS_ERROR                                                          = 1157;
+exports.ER_NET_READ_ERROR                                                                = 1158;
+exports.ER_NET_READ_INTERRUPTED                                                          = 1159;
+exports.ER_NET_ERROR_ON_WRITE                                                            = 1160;
+exports.ER_NET_WRITE_INTERRUPTED                                                         = 1161;
+exports.ER_TOO_LONG_STRING                                                               = 1162;
+exports.ER_TABLE_CANT_HANDLE_BLOB                                                        = 1163;
+exports.ER_TABLE_CANT_HANDLE_AUTO_INCREMENT                                              = 1164;
+exports.ER_DELAYED_INSERT_TABLE_LOCKED                                                   = 1165;
+exports.ER_WRONG_COLUMN_NAME                                                             = 1166;
+exports.ER_WRONG_KEY_COLUMN                                                              = 1167;
+exports.ER_WRONG_MRG_TABLE                                                               = 1168;
+exports.ER_DUP_UNIQUE                                                                    = 1169;
+exports.ER_BLOB_KEY_WITHOUT_LENGTH                                                       = 1170;
+exports.ER_PRIMARY_CANT_HAVE_NULL                                                        = 1171;
+exports.ER_TOO_MANY_ROWS                                                                 = 1172;
+exports.ER_REQUIRES_PRIMARY_KEY                                                          = 1173;
+exports.ER_NO_RAID_COMPILED                                                              = 1174;
+exports.ER_UPDATE_WITHOUT_KEY_IN_SAFE_MODE                                               = 1175;
+exports.ER_KEY_DOES_NOT_EXITS                                                            = 1176;
+exports.ER_CHECK_NO_SUCH_TABLE                                                           = 1177;
+exports.ER_CHECK_NOT_IMPLEMENTED                                                         = 1178;
+exports.ER_CANT_DO_THIS_DURING_AN_TRANSACTION                                            = 1179;
+exports.ER_ERROR_DURING_COMMIT                                                           = 1180;
+exports.ER_ERROR_DURING_ROLLBACK                                                         = 1181;
+exports.ER_ERROR_DURING_FLUSH_LOGS                                                       = 1182;
+exports.ER_ERROR_DURING_CHECKPOINT                                                       = 1183;
+exports.ER_NEW_ABORTING_CONNECTION                                                       = 1184;
+exports.ER_DUMP_NOT_IMPLEMENTED                                                          = 1185;
+exports.ER_FLUSH_MASTER_BINLOG_CLOSED                                                    = 1186;
+exports.ER_INDEX_REBUILD                                                                 = 1187;
+exports.ER_MASTER                                                                        = 1188;
+exports.ER_MASTER_NET_READ                                                               = 1189;
+exports.ER_MASTER_NET_WRITE                                                              = 1190;
+exports.ER_FT_MATCHING_KEY_NOT_FOUND                                                     = 1191;
+exports.ER_LOCK_OR_ACTIVE_TRANSACTION                                                    = 1192;
+exports.ER_UNKNOWN_SYSTEM_VARIABLE                                                       = 1193;
+exports.ER_CRASHED_ON_USAGE                                                              = 1194;
+exports.ER_CRASHED_ON_REPAIR                                                             = 1195;
+exports.ER_WARNING_NOT_COMPLETE_ROLLBACK                                                 = 1196;
+exports.ER_TRANS_CACHE_FULL                                                              = 1197;
+exports.ER_SLAVE_MUST_STOP                                                               = 1198;
+exports.ER_SLAVE_NOT_RUNNING                                                             = 1199;
+exports.ER_BAD_SLAVE                                                                     = 1200;
+exports.ER_MASTER_INFO                                                                   = 1201;
+exports.ER_SLAVE_THREAD                                                                  = 1202;
+exports.ER_TOO_MANY_USER_CONNECTIONS                                                     = 1203;
+exports.ER_SET_CONSTANTS_ONLY                                                            = 1204;
+exports.ER_LOCK_WAIT_TIMEOUT                                                             = 1205;
+exports.ER_LOCK_TABLE_FULL                                                               = 1206;
+exports.ER_READ_ONLY_TRANSACTION                                                         = 1207;
+exports.ER_DROP_DB_WITH_READ_LOCK                                                        = 1208;
+exports.ER_CREATE_DB_WITH_READ_LOCK                                                      = 1209;
+exports.ER_WRONG_ARGUMENTS                                                               = 1210;
+exports.ER_NO_PERMISSION_TO_CREATE_USER                                                  = 1211;
+exports.ER_UNION_TABLES_IN_DIFFERENT_DIR                                                 = 1212;
+exports.ER_LOCK_DEADLOCK                                                                 = 1213;
+exports.ER_TABLE_CANT_HANDLE_FT                                                          = 1214;
+exports.ER_CANNOT_ADD_FOREIGN                                                            = 1215;
+exports.ER_NO_REFERENCED_ROW                                                             = 1216;
+exports.ER_ROW_IS_REFERENCED                                                             = 1217;
+exports.ER_CONNECT_TO_MASTER                                                             = 1218;
+exports.ER_QUERY_ON_MASTER                                                               = 1219;
+exports.ER_ERROR_WHEN_EXECUTING_COMMAND                                                  = 1220;
+exports.ER_WRONG_USAGE                                                                   = 1221;
+exports.ER_WRONG_NUMBER_OF_COLUMNS_IN_SELECT                                             = 1222;
+exports.ER_CANT_UPDATE_WITH_READLOCK                                                     = 1223;
+exports.ER_MIXING_NOT_ALLOWED                                                            = 1224;
+exports.ER_DUP_ARGUMENT                                                                  = 1225;
+exports.ER_USER_LIMIT_REACHED                                                            = 1226;
+exports.ER_SPECIFIC_ACCESS_DENIED_ERROR                                                  = 1227;
+exports.ER_LOCAL_VARIABLE                                                                = 1228;
+exports.ER_GLOBAL_VARIABLE                                                               = 1229;
+exports.ER_NO_DEFAULT                                                                    = 1230;
+exports.ER_WRONG_VALUE_FOR_VAR                                                           = 1231;
+exports.ER_WRONG_TYPE_FOR_VAR                                                            = 1232;
+exports.ER_VAR_CANT_BE_READ                                                              = 1233;
+exports.ER_CANT_USE_OPTION_HERE                                                          = 1234;
+exports.ER_NOT_SUPPORTED_YET                                                             = 1235;
+exports.ER_MASTER_FATAL_ERROR_READING_BINLOG                                             = 1236;
+exports.ER_SLAVE_IGNORED_TABLE                                                           = 1237;
+exports.ER_INCORRECT_GLOBAL_LOCAL_VAR                                                    = 1238;
+exports.ER_WRONG_FK_DEF                                                                  = 1239;
+exports.ER_KEY_REF_DO_NOT_MATCH_TABLE_REF                                                = 1240;
+exports.ER_OPERAND_COLUMNS                                                               = 1241;
+exports.ER_SUBQUERY_NO_1_ROW                                                             = 1242;
+exports.ER_UNKNOWN_STMT_HANDLER                                                          = 1243;
+exports.ER_CORRUPT_HELP_DB                                                               = 1244;
+exports.ER_CYCLIC_REFERENCE                                                              = 1245;
+exports.ER_AUTO_CONVERT                                                                  = 1246;
+exports.ER_ILLEGAL_REFERENCE                                                             = 1247;
+exports.ER_DERIVED_MUST_HAVE_ALIAS                                                       = 1248;
+exports.ER_SELECT_REDUCED                                                                = 1249;
+exports.ER_TABLENAME_NOT_ALLOWED_HERE                                                    = 1250;
+exports.ER_NOT_SUPPORTED_AUTH_MODE                                                       = 1251;
+exports.ER_SPATIAL_CANT_HAVE_NULL                                                        = 1252;
+exports.ER_COLLATION_CHARSET_MISMATCH                                                    = 1253;
+exports.ER_SLAVE_WAS_RUNNING                                                             = 1254;
+exports.ER_SLAVE_WAS_NOT_RUNNING                                                         = 1255;
+exports.ER_TOO_BIG_FOR_UNCOMPRESS                                                        = 1256;
+exports.ER_ZLIB_Z_MEM_ERROR                                                              = 1257;
+exports.ER_ZLIB_Z_BUF_ERROR                                                              = 1258;
+exports.ER_ZLIB_Z_DATA_ERROR                                                             = 1259;
+exports.ER_CUT_VALUE_GROUP_CONCAT                                                        = 1260;
+exports.ER_WARN_TOO_FEW_RECORDS                                                          = 1261;
+exports.ER_WARN_TOO_MANY_RECORDS                                                         = 1262;
+exports.ER_WARN_NULL_TO_NOTNULL                                                          = 1263;
+exports.ER_WARN_DATA_OUT_OF_RANGE                                                        = 1264;
+exports.WARN_DATA_TRUNCATED                                                              = 1265;
+exports.ER_WARN_USING_OTHER_HANDLER                                                      = 1266;
+exports.ER_CANT_AGGREGATE_2COLLATIONS                                                    = 1267;
+exports.ER_DROP_USER                                                                     = 1268;
+exports.ER_REVOKE_GRANTS                                                                 = 1269;
+exports.ER_CANT_AGGREGATE_3COLLATIONS                                                    = 1270;
+exports.ER_CANT_AGGREGATE_NCOLLATIONS                                                    = 1271;
+exports.ER_VARIABLE_IS_NOT_STRUCT                                                        = 1272;
+exports.ER_UNKNOWN_COLLATION                                                             = 1273;
+exports.ER_SLAVE_IGNORED_SSL_PARAMS                                                      = 1274;
+exports.ER_SERVER_IS_IN_SECURE_AUTH_MODE                                                 = 1275;
+exports.ER_WARN_FIELD_RESOLVED                                                           = 1276;
+exports.ER_BAD_SLAVE_UNTIL_COND                                                          = 1277;
+exports.ER_MISSING_SKIP_SLAVE                                                            = 1278;
+exports.ER_UNTIL_COND_IGNORED                                                            = 1279;
+exports.ER_WRONG_NAME_FOR_INDEX                                                          = 1280;
+exports.ER_WRONG_NAME_FOR_CATALOG                                                        = 1281;
+exports.ER_WARN_QC_RESIZE                                                                = 1282;
+exports.ER_BAD_FT_COLUMN                                                                 = 1283;
+exports.ER_UNKNOWN_KEY_CACHE                                                             = 1284;
+exports.ER_WARN_HOSTNAME_WONT_WORK                                                       = 1285;
+exports.ER_UNKNOWN_STORAGE_ENGINE                                                        = 1286;
+exports.ER_WARN_DEPRECATED_SYNTAX                                                        = 1287;
+exports.ER_NON_UPDATABLE_TABLE                                                           = 1288;
+exports.ER_FEATURE_DISABLED                                                              = 1289;
+exports.ER_OPTION_PREVENTS_STATEMENT                                                     = 1290;
+exports.ER_DUPLICATED_VALUE_IN_TYPE                                                      = 1291;
+exports.ER_TRUNCATED_WRONG_VALUE                                                         = 1292;
+exports.ER_TOO_MUCH_AUTO_TIMESTAMP_COLS                                                  = 1293;
+exports.ER_INVALID_ON_UPDATE                                                             = 1294;
+exports.ER_UNSUPPORTED_PS                                                                = 1295;
+exports.ER_GET_ERRMSG                                                                    = 1296;
+exports.ER_GET_TEMPORARY_ERRMSG                                                          = 1297;
+exports.ER_UNKNOWN_TIME_ZONE                                                             = 1298;
+exports.ER_WARN_INVALID_TIMESTAMP                                                        = 1299;
+exports.ER_INVALID_CHARACTER_STRING                                                      = 1300;
+exports.ER_WARN_ALLOWED_PACKET_OVERFLOWED                                                = 1301;
+exports.ER_CONFLICTING_DECLARATIONS                                                      = 1302;
+exports.ER_SP_NO_RECURSIVE_CREATE                                                        = 1303;
+exports.ER_SP_ALREADY_EXISTS                                                             = 1304;
+exports.ER_SP_DOES_NOT_EXIST                                                             = 1305;
+exports.ER_SP_DROP_FAILED                                                                = 1306;
+exports.ER_SP_STORE_FAILED                                                               = 1307;
+exports.ER_SP_LILABEL_MISMATCH                                                           = 1308;
+exports.ER_SP_LABEL_REDEFINE                                                             = 1309;
+exports.ER_SP_LABEL_MISMATCH                                                             = 1310;
+exports.ER_SP_UNINIT_VAR                                                                 = 1311;
+exports.ER_SP_BADSELECT                                                                  = 1312;
+exports.ER_SP_BADRETURN                                                                  = 1313;
+exports.ER_SP_BADSTATEMENT                                                               = 1314;
+exports.ER_UPDATE_LOG_DEPRECATED_IGNORED                                                 = 1315;
+exports.ER_UPDATE_LOG_DEPRECATED_TRANSLATED                                              = 1316;
+exports.ER_QUERY_INTERRUPTED                                                             = 1317;
+exports.ER_SP_WRONG_NO_OF_ARGS                                                           = 1318;
+exports.ER_SP_COND_MISMATCH                                                              = 1319;
+exports.ER_SP_NORETURN                                                                   = 1320;
+exports.ER_SP_NORETURNEND                                                                = 1321;
+exports.ER_SP_BAD_CURSOR_QUERY                                                           = 1322;
+exports.ER_SP_BAD_CURSOR_SELECT                                                          = 1323;
+exports.ER_SP_CURSOR_MISMATCH                                                            = 1324;
+exports.ER_SP_CURSOR_ALREADY_OPEN                                                        = 1325;
+exports.ER_SP_CURSOR_NOT_OPEN                                                            = 1326;
+exports.ER_SP_UNDECLARED_VAR                                                             = 1327;
+exports.ER_SP_WRONG_NO_OF_FETCH_ARGS                                                     = 1328;
+exports.ER_SP_FETCH_NO_DATA                                                              = 1329;
+exports.ER_SP_DUP_PARAM                                                                  = 1330;
+exports.ER_SP_DUP_VAR                                                                    = 1331;
+exports.ER_SP_DUP_COND                                                                   = 1332;
+exports.ER_SP_DUP_CURS                                                                   = 1333;
+exports.ER_SP_CANT_ALTER                                                                 = 1334;
+exports.ER_SP_SUBSELECT_NYI                                                              = 1335;
+exports.ER_STMT_NOT_ALLOWED_IN_SF_OR_TRG                                                 = 1336;
+exports.ER_SP_VARCOND_AFTER_CURSHNDLR                                                    = 1337;
+exports.ER_SP_CURSOR_AFTER_HANDLER                                                       = 1338;
+exports.ER_SP_CASE_NOT_FOUND                                                             = 1339;
+exports.ER_FPARSER_TOO_BIG_FILE                                                          = 1340;
+exports.ER_FPARSER_BAD_HEADER                                                            = 1341;
+exports.ER_FPARSER_EOF_IN_COMMENT                                                        = 1342;
+exports.ER_FPARSER_ERROR_IN_PARAMETER                                                    = 1343;
+exports.ER_FPARSER_EOF_IN_UNKNOWN_PARAMETER                                              = 1344;
+exports.ER_VIEW_NO_EXPLAIN                                                               = 1345;
+exports.ER_FRM_UNKNOWN_TYPE                                                              = 1346;
+exports.ER_WRONG_OBJECT                                                                  = 1347;
+exports.ER_NONUPDATEABLE_COLUMN                                                          = 1348;
+exports.ER_VIEW_SELECT_DERIVED                                                           = 1349;
+exports.ER_VIEW_SELECT_CLAUSE                                                            = 1350;
+exports.ER_VIEW_SELECT_VARIABLE                                                          = 1351;
+exports.ER_VIEW_SELECT_TMPTABLE                                                          = 1352;
+exports.ER_VIEW_WRONG_LIST                                                               = 1353;
+exports.ER_WARN_VIEW_MERGE                                                               = 1354;
+exports.ER_WARN_VIEW_WITHOUT_KEY                                                         = 1355;
+exports.ER_VIEW_INVALID                                                                  = 1356;
+exports.ER_SP_NO_DROP_SP                                                                 = 1357;
+exports.ER_SP_GOTO_IN_HNDLR                                                              = 1358;
+exports.ER_TRG_ALREADY_EXISTS                                                            = 1359;
+exports.ER_TRG_DOES_NOT_EXIST                                                            = 1360;
+exports.ER_TRG_ON_VIEW_OR_TEMP_TABLE                                                     = 1361;
+exports.ER_TRG_CANT_CHANGE_ROW                                                           = 1362;
+exports.ER_TRG_NO_SUCH_ROW_IN_TRG                                                        = 1363;
+exports.ER_NO_DEFAULT_FOR_FIELD                                                          = 1364;
+exports.ER_DIVISION_BY_ZERO                                                              = 1365;
+exports.ER_TRUNCATED_WRONG_VALUE_FOR_FIELD                                               = 1366;
+exports.ER_ILLEGAL_VALUE_FOR_TYPE                                                        = 1367;
+exports.ER_VIEW_NONUPD_CHECK                                                             = 1368;
+exports.ER_VIEW_CHECK_FAILED                                                             = 1369;
+exports.ER_PROCACCESS_DENIED_ERROR                                                       = 1370;
+exports.ER_RELAY_LOG_FAIL                                                                = 1371;
+exports.ER_PASSWD_LENGTH                                                                 = 1372;
+exports.ER_UNKNOWN_TARGET_BINLOG                                                         = 1373;
+exports.ER_IO_ERR_LOG_INDEX_READ                                                         = 1374;
+exports.ER_BINLOG_PURGE_PROHIBITED                                                       = 1375;
+exports.ER_FSEEK_FAIL                                                                    = 1376;
+exports.ER_BINLOG_PURGE_FATAL_ERR                                                        = 1377;
+exports.ER_LOG_IN_USE                                                                    = 1378;
+exports.ER_LOG_PURGE_UNKNOWN_ERR                                                         = 1379;
+exports.ER_RELAY_LOG_INIT                                                                = 1380;
+exports.ER_NO_BINARY_LOGGING                                                             = 1381;
+exports.ER_RESERVED_SYNTAX                                                               = 1382;
+exports.ER_WSAS_FAILED                                                                   = 1383;
+exports.ER_DIFF_GROUPS_PROC                                                              = 1384;
+exports.ER_NO_GROUP_FOR_PROC                                                             = 1385;
+exports.ER_ORDER_WITH_PROC                                                               = 1386;
+exports.ER_LOGGING_PROHIBIT_CHANGING_OF                                                  = 1387;
+exports.ER_NO_FILE_MAPPING                                                               = 1388;
+exports.ER_WRONG_MAGIC                                                                   = 1389;
+exports.ER_PS_MANY_PARAM                                                                 = 1390;
+exports.ER_KEY_PART_0                                                                    = 1391;
+exports.ER_VIEW_CHECKSUM                                                                 = 1392;
+exports.ER_VIEW_MULTIUPDATE                                                              = 1393;
+exports.ER_VIEW_NO_INSERT_FIELD_LIST                                                     = 1394;
+exports.ER_VIEW_DELETE_MERGE_VIEW                                                        = 1395;
+exports.ER_CANNOT_USER                                                                   = 1396;
+exports.ER_XAER_NOTA                                                                     = 1397;
+exports.ER_XAER_INVAL                                                                    = 1398;
+exports.ER_XAER_RMFAIL                                                                   = 1399;
+exports.ER_XAER_OUTSIDE                                                                  = 1400;
+exports.ER_XAER_RMERR                                                                    = 1401;
+exports.ER_XA_RBROLLBACK                                                                 = 1402;
+exports.ER_NONEXISTING_PROC_GRANT                                                        = 1403;
+exports.ER_PROC_AUTO_GRANT_FAIL                                                          = 1404;
+exports.ER_PROC_AUTO_REVOKE_FAIL                                                         = 1405;
+exports.ER_DATA_TOO_LONG                                                                 = 1406;
+exports.ER_SP_BAD_SQLSTATE                                                               = 1407;
+exports.ER_STARTUP                                                                       = 1408;
+exports.ER_LOAD_FROM_FIXED_SIZE_ROWS_TO_VAR                                              = 1409;
+exports.ER_CANT_CREATE_USER_WITH_GRANT                                                   = 1410;
+exports.ER_WRONG_VALUE_FOR_TYPE                                                          = 1411;
+exports.ER_TABLE_DEF_CHANGED                                                             = 1412;
+exports.ER_SP_DUP_HANDLER                                                                = 1413;
+exports.ER_SP_NOT_VAR_ARG                                                                = 1414;
+exports.ER_SP_NO_RETSET                                                                  = 1415;
+exports.ER_CANT_CREATE_GEOMETRY_OBJECT                                                   = 1416;
+exports.ER_FAILED_ROUTINE_BREAK_BINLOG                                                   = 1417;
+exports.ER_BINLOG_UNSAFE_ROUTINE                                                         = 1418;
+exports.ER_BINLOG_CREATE_ROUTINE_NEED_SUPER                                              = 1419;
+exports.ER_EXEC_STMT_WITH_OPEN_CURSOR                                                    = 1420;
+exports.ER_STMT_HAS_NO_OPEN_CURSOR                                                       = 1421;
+exports.ER_COMMIT_NOT_ALLOWED_IN_SF_OR_TRG                                               = 1422;
+exports.ER_NO_DEFAULT_FOR_VIEW_FIELD                                                     = 1423;
+exports.ER_SP_NO_RECURSION                                                               = 1424;
+exports.ER_TOO_BIG_SCALE                                                                 = 1425;
+exports.ER_TOO_BIG_PRECISION                                                             = 1426;
+exports.ER_M_BIGGER_THAN_D                                                               = 1427;
+exports.ER_WRONG_LOCK_OF_SYSTEM_TABLE                                                    = 1428;
+exports.ER_CONNECT_TO_FOREIGN_DATA_SOURCE                                                = 1429;
+exports.ER_QUERY_ON_FOREIGN_DATA_SOURCE                                                  = 1430;
+exports.ER_FOREIGN_DATA_SOURCE_DOESNT_EXIST                                              = 1431;
+exports.ER_FOREIGN_DATA_STRING_INVALID_CANT_CREATE                                       = 1432;
+exports.ER_FOREIGN_DATA_STRING_INVALID                                                   = 1433;
+exports.ER_CANT_CREATE_FEDERATED_TABLE                                                   = 1434;
+exports.ER_TRG_IN_WRONG_SCHEMA                                                           = 1435;
+exports.ER_STACK_OVERRUN_NEED_MORE                                                       = 1436;
+exports.ER_TOO_LONG_BODY                                                                 = 1437;
+exports.ER_WARN_CANT_DROP_DEFAULT_KEYCACHE                                               = 1438;
+exports.ER_TOO_BIG_DISPLAYWIDTH                                                          = 1439;
+exports.ER_XAER_DUPID                                                                    = 1440;
+exports.ER_DATETIME_FUNCTION_OVERFLOW                                                    = 1441;
+exports.ER_CANT_UPDATE_USED_TABLE_IN_SF_OR_TRG                                           = 1442;
+exports.ER_VIEW_PREVENT_UPDATE                                                           = 1443;
+exports.ER_PS_NO_RECURSION                                                               = 1444;
+exports.ER_SP_CANT_SET_AUTOCOMMIT                                                        = 1445;
+exports.ER_MALFORMED_DEFINER                                                             = 1446;
+exports.ER_VIEW_FRM_NO_USER                                                              = 1447;
+exports.ER_VIEW_OTHER_USER                                                               = 1448;
+exports.ER_NO_SUCH_USER                                                                  = 1449;
+exports.ER_FORBID_SCHEMA_CHANGE                                                          = 1450;
+exports.ER_ROW_IS_REFERENCED_2                                                           = 1451;
+exports.ER_NO_REFERENCED_ROW_2                                                           = 1452;
+exports.ER_SP_BAD_VAR_SHADOW                                                             = 1453;
+exports.ER_TRG_NO_DEFINER                                                                = 1454;
+exports.ER_OLD_FILE_FORMAT                                                               = 1455;
+exports.ER_SP_RECURSION_LIMIT                                                            = 1456;
+exports.ER_SP_PROC_TABLE_CORRUPT                                                         = 1457;
+exports.ER_SP_WRONG_NAME                                                                 = 1458;
+exports.ER_TABLE_NEEDS_UPGRADE                                                           = 1459;
+exports.ER_SP_NO_AGGREGATE                                                               = 1460;
+exports.ER_MAX_PREPARED_STMT_COUNT_REACHED                                               = 1461;
+exports.ER_VIEW_RECURSIVE                                                                = 1462;
+exports.ER_NON_GROUPING_FIELD_USED                                                       = 1463;
+exports.ER_TABLE_CANT_HANDLE_SPKEYS                                                      = 1464;
+exports.ER_NO_TRIGGERS_ON_SYSTEM_SCHEMA                                                  = 1465;
+exports.ER_REMOVED_SPACES                                                                = 1466;
+exports.ER_AUTOINC_READ_FAILED                                                           = 1467;
+exports.ER_USERNAME                                                                      = 1468;
+exports.ER_HOSTNAME                                                                      = 1469;
+exports.ER_WRONG_STRING_LENGTH                                                           = 1470;
+exports.ER_NON_INSERTABLE_TABLE                                                          = 1471;
+exports.ER_ADMIN_WRONG_MRG_TABLE                                                         = 1472;
+exports.ER_TOO_HIGH_LEVEL_OF_NESTING_FOR_SELECT                                          = 1473;
+exports.ER_NAME_BECOMES_EMPTY                                                            = 1474;
+exports.ER_AMBIGUOUS_FIELD_TERM                                                          = 1475;
+exports.ER_FOREIGN_SERVER_EXISTS                                                         = 1476;
+exports.ER_FOREIGN_SERVER_DOESNT_EXIST                                                   = 1477;
+exports.ER_ILLEGAL_HA_CREATE_OPTION                                                      = 1478;
+exports.ER_PARTITION_REQUIRES_VALUES_ERROR                                               = 1479;
+exports.ER_PARTITION_WRONG_VALUES_ERROR                                                  = 1480;
+exports.ER_PARTITION_MAXVALUE_ERROR                                                      = 1481;
+exports.ER_PARTITION_SUBPARTITION_ERROR                                                  = 1482;
+exports.ER_PARTITION_SUBPART_MIX_ERROR                                                   = 1483;
+exports.ER_PARTITION_WRONG_NO_PART_ERROR                                                 = 1484;
+exports.ER_PARTITION_WRONG_NO_SUBPART_ERROR                                              = 1485;
+exports.ER_WRONG_EXPR_IN_PARTITION_FUNC_ERROR                                            = 1486;
+exports.ER_NO_CONST_EXPR_IN_RANGE_OR_LIST_ERROR                                          = 1487;
+exports.ER_FIELD_NOT_FOUND_PART_ERROR                                                    = 1488;
+exports.ER_LIST_OF_FIELDS_ONLY_IN_HASH_ERROR                                             = 1489;
+exports.ER_INCONSISTENT_PARTITION_INFO_ERROR                                             = 1490;
+exports.ER_PARTITION_FUNC_NOT_ALLOWED_ERROR                                              = 1491;
+exports.ER_PARTITIONS_MUST_BE_DEFINED_ERROR                                              = 1492;
+exports.ER_RANGE_NOT_INCREASING_ERROR                                                    = 1493;
+exports.ER_INCONSISTENT_TYPE_OF_FUNCTIONS_ERROR                                          = 1494;
+exports.ER_MULTIPLE_DEF_CONST_IN_LIST_PART_ERROR                                         = 1495;
+exports.ER_PARTITION_ENTRY_ERROR                                                         = 1496;
+exports.ER_MIX_HANDLER_ERROR                                                             = 1497;
+exports.ER_PARTITION_NOT_DEFINED_ERROR                                                   = 1498;
+exports.ER_TOO_MANY_PARTITIONS_ERROR                                                     = 1499;
+exports.ER_SUBPARTITION_ERROR                                                            = 1500;
+exports.ER_CANT_CREATE_HANDLER_FILE                                                      = 1501;
+exports.ER_BLOB_FIELD_IN_PART_FUNC_ERROR                                                 = 1502;
+exports.ER_UNIQUE_KEY_NEED_ALL_FIELDS_IN_PF                                              = 1503;
+exports.ER_NO_PARTS_ERROR                                                                = 1504;
+exports.ER_PARTITION_MGMT_ON_NONPARTITIONED                                              = 1505;
+exports.ER_FOREIGN_KEY_ON_PARTITIONED                                                    = 1506;
+exports.ER_DROP_PARTITION_NON_EXISTENT                                                   = 1507;
+exports.ER_DROP_LAST_PARTITION                                                           = 1508;
+exports.ER_COALESCE_ONLY_ON_HASH_PARTITION                                               = 1509;
+exports.ER_REORG_HASH_ONLY_ON_SAME_NO                                                    = 1510;
+exports.ER_REORG_NO_PARAM_ERROR                                                          = 1511;
+exports.ER_ONLY_ON_RANGE_LIST_PARTITION                                                  = 1512;
+exports.ER_ADD_PARTITION_SUBPART_ERROR                                                   = 1513;
+exports.ER_ADD_PARTITION_NO_NEW_PARTITION                                                = 1514;
+exports.ER_COALESCE_PARTITION_NO_PARTITION                                               = 1515;
+exports.ER_REORG_PARTITION_NOT_EXIST                                                     = 1516;
+exports.ER_SAME_NAME_PARTITION                                                           = 1517;
+exports.ER_NO_BINLOG_ERROR                                                               = 1518;
+exports.ER_CONSECUTIVE_REORG_PARTITIONS                                                  = 1519;
+exports.ER_REORG_OUTSIDE_RANGE                                                           = 1520;
+exports.ER_PARTITION_FUNCTION_FAILURE                                                    = 1521;
+exports.ER_PART_STATE_ERROR                                                              = 1522;
+exports.ER_LIMITED_PART_RANGE                                                            = 1523;
+exports.ER_PLUGIN_IS_NOT_LOADED                                                          = 1524;
+exports.ER_WRONG_VALUE                                                                   = 1525;
+exports.ER_NO_PARTITION_FOR_GIVEN_VALUE                                                  = 1526;
+exports.ER_FILEGROUP_OPTION_ONLY_ONCE                                                    = 1527;
+exports.ER_CREATE_FILEGROUP_FAILED                                                       = 1528;
+exports.ER_DROP_FILEGROUP_FAILED                                                         = 1529;
+exports.ER_TABLESPACE_AUTO_EXTEND_ERROR                                                  = 1530;
+exports.ER_WRONG_SIZE_NUMBER                                                             = 1531;
+exports.ER_SIZE_OVERFLOW_ERROR                                                           = 1532;
+exports.ER_ALTER_FILEGROUP_FAILED                                                        = 1533;
+exports.ER_BINLOG_ROW_LOGGING_FAILED                                                     = 1534;
+exports.ER_BINLOG_ROW_WRONG_TABLE_DEF                                                    = 1535;
+exports.ER_BINLOG_ROW_RBR_TO_SBR                                                         = 1536;
+exports.ER_EVENT_ALREADY_EXISTS                                                          = 1537;
+exports.ER_EVENT_STORE_FAILED                                                            = 1538;
+exports.ER_EVENT_DOES_NOT_EXIST                                                          = 1539;
+exports.ER_EVENT_CANT_ALTER                                                              = 1540;
+exports.ER_EVENT_DROP_FAILED                                                             = 1541;
+exports.ER_EVENT_INTERVAL_NOT_POSITIVE_OR_TOO_BIG                                        = 1542;
+exports.ER_EVENT_ENDS_BEFORE_STARTS                                                      = 1543;
+exports.ER_EVENT_EXEC_TIME_IN_THE_PAST                                                   = 1544;
+exports.ER_EVENT_OPEN_TABLE_FAILED                                                       = 1545;
+exports.ER_EVENT_NEITHER_M_EXPR_NOR_M_AT                                                 = 1546;
+exports.ER_COL_COUNT_DOESNT_MATCH_CORRUPTED                                              = 1547;
+exports.ER_CANNOT_LOAD_FROM_TABLE                                                        = 1548;
+exports.ER_EVENT_CANNOT_DELETE                                                           = 1549;
+exports.ER_EVENT_COMPILE_ERROR                                                           = 1550;
+exports.ER_EVENT_SAME_NAME                                                               = 1551;
+exports.ER_EVENT_DATA_TOO_LONG                                                           = 1552;
+exports.ER_DROP_INDEX_FK                                                                 = 1553;
+exports.ER_WARN_DEPRECATED_SYNTAX_WITH_VER                                               = 1554;
+exports.ER_CANT_WRITE_LOCK_LOG_TABLE                                                     = 1555;
+exports.ER_CANT_LOCK_LOG_TABLE                                                           = 1556;
+exports.ER_FOREIGN_DUPLICATE_KEY                                                         = 1557;
+exports.ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE                                          = 1558;
+exports.ER_TEMP_TABLE_PREVENTS_SWITCH_OUT_OF_RBR                                         = 1559;
+exports.ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_FORMAT                                 = 1560;
+exports.ER_NDB_CANT_SWITCH_BINLOG_FORMAT                                                 = 1561;
+exports.ER_PARTITION_NO_TEMPORARY                                                        = 1562;
+exports.ER_PARTITION_CONST_DOMAIN_ERROR                                                  = 1563;
+exports.ER_PARTITION_FUNCTION_IS_NOT_ALLOWED                                             = 1564;
+exports.ER_DDL_LOG_ERROR                                                                 = 1565;
+exports.ER_NULL_IN_VALUES_LESS_THAN                                                      = 1566;
+exports.ER_WRONG_PARTITION_NAME                                                          = 1567;
+exports.ER_CANT_CHANGE_TX_CHARACTERISTICS                                                = 1568;
+exports.ER_DUP_ENTRY_AUTOINCREMENT_CASE                                                  = 1569;
+exports.ER_EVENT_MODIFY_QUEUE_ERROR                                                      = 1570;
+exports.ER_EVENT_SET_VAR_ERROR                                                           = 1571;
+exports.ER_PARTITION_MERGE_ERROR                                                         = 1572;
+exports.ER_CANT_ACTIVATE_LOG                                                             = 1573;
+exports.ER_RBR_NOT_AVAILABLE                                                             = 1574;
+exports.ER_BASE64_DECODE_ERROR                                                           = 1575;
+exports.ER_EVENT_RECURSION_FORBIDDEN                                                     = 1576;
+exports.ER_EVENTS_DB_ERROR                                                               = 1577;
+exports.ER_ONLY_INTEGERS_ALLOWED                                                         = 1578;
+exports.ER_UNSUPORTED_LOG_ENGINE                                                         = 1579;
+exports.ER_BAD_LOG_STATEMENT                                                             = 1580;
+exports.ER_CANT_RENAME_LOG_TABLE                                                         = 1581;
+exports.ER_WRONG_PARAMCOUNT_TO_NATIVE_FCT                                                = 1582;
+exports.ER_WRONG_PARAMETERS_TO_NATIVE_FCT                                                = 1583;
+exports.ER_WRONG_PARAMETERS_TO_STORED_FCT                                                = 1584;
+exports.ER_NATIVE_FCT_NAME_COLLISION                                                     = 1585;
+exports.ER_DUP_ENTRY_WITH_KEY_NAME                                                       = 1586;
+exports.ER_BINLOG_PURGE_EMFILE                                                           = 1587;
+exports.ER_EVENT_CANNOT_CREATE_IN_THE_PAST                                               = 1588;
+exports.ER_EVENT_CANNOT_ALTER_IN_THE_PAST                                                = 1589;
+exports.ER_SLAVE_INCIDENT                                                                = 1590;
+exports.ER_NO_PARTITION_FOR_GIVEN_VALUE_SILENT                                           = 1591;
+exports.ER_BINLOG_UNSAFE_STATEMENT                                                       = 1592;
+exports.ER_SLAVE_FATAL_ERROR                                                             = 1593;
+exports.ER_SLAVE_RELAY_LOG_READ_FAILURE                                                  = 1594;
+exports.ER_SLAVE_RELAY_LOG_WRITE_FAILURE                                                 = 1595;
+exports.ER_SLAVE_CREATE_EVENT_FAILURE                                                    = 1596;
+exports.ER_SLAVE_MASTER_COM_FAILURE                                                      = 1597;
+exports.ER_BINLOG_LOGGING_IMPOSSIBLE                                                     = 1598;
+exports.ER_VIEW_NO_CREATION_CTX                                                          = 1599;
+exports.ER_VIEW_INVALID_CREATION_CTX                                                     = 1600;
+exports.ER_SR_INVALID_CREATION_CTX                                                       = 1601;
+exports.ER_TRG_CORRUPTED_FILE                                                            = 1602;
+exports.ER_TRG_NO_CREATION_CTX                                                           = 1603;
+exports.ER_TRG_INVALID_CREATION_CTX                                                      = 1604;
+exports.ER_EVENT_INVALID_CREATION_CTX                                                    = 1605;
+exports.ER_TRG_CANT_OPEN_TABLE                                                           = 1606;
+exports.ER_CANT_CREATE_SROUTINE                                                          = 1607;
+exports.ER_NEVER_USED                                                                    = 1608;
+exports.ER_NO_FORMAT_DESCRIPTION_EVENT_BEFORE_BINLOG_STATEMENT                           = 1609;
+exports.ER_SLAVE_CORRUPT_EVENT                                                           = 1610;
+exports.ER_LOAD_DATA_INVALID_COLUMN                                                      = 1611;
+exports.ER_LOG_PURGE_NO_FILE                                                             = 1612;
+exports.ER_XA_RBTIMEOUT                                                                  = 1613;
+exports.ER_XA_RBDEADLOCK                                                                 = 1614;
+exports.ER_NEED_REPREPARE                                                                = 1615;
+exports.ER_DELAYED_NOT_SUPPORTED                                                         = 1616;
+exports.WARN_NO_MASTER_INFO                                                              = 1617;
+exports.WARN_OPTION_IGNORED                                                              = 1618;
+exports.ER_PLUGIN_DELETE_BUILTIN                                                         = 1619;
+exports.WARN_PLUGIN_BUSY                                                                 = 1620;
+exports.ER_VARIABLE_IS_READONLY                                                          = 1621;
+exports.ER_WARN_ENGINE_TRANSACTION_ROLLBACK                                              = 1622;
+exports.ER_SLAVE_HEARTBEAT_FAILURE                                                       = 1623;
+exports.ER_SLAVE_HEARTBEAT_VALUE_OUT_OF_RANGE                                            = 1624;
+exports.ER_NDB_REPLICATION_SCHEMA_ERROR                                                  = 1625;
+exports.ER_CONFLICT_FN_PARSE_ERROR                                                       = 1626;
+exports.ER_EXCEPTIONS_WRITE_ERROR                                                        = 1627;
+exports.ER_TOO_LONG_TABLE_COMMENT                                                        = 1628;
+exports.ER_TOO_LONG_FIELD_COMMENT                                                        = 1629;
+exports.ER_FUNC_INEXISTENT_NAME_COLLISION                                                = 1630;
+exports.ER_DATABASE_NAME                                                                 = 1631;
+exports.ER_TABLE_NAME                                                                    = 1632;
+exports.ER_PARTITION_NAME                                                                = 1633;
+exports.ER_SUBPARTITION_NAME                                                             = 1634;
+exports.ER_TEMPORARY_NAME                                                                = 1635;
+exports.ER_RENAMED_NAME                                                                  = 1636;
+exports.ER_TOO_MANY_CONCURRENT_TRXS                                                      = 1637;
+exports.WARN_NON_ASCII_SEPARATOR_NOT_IMPLEMENTED                                         = 1638;
+exports.ER_DEBUG_SYNC_TIMEOUT                                                            = 1639;
+exports.ER_DEBUG_SYNC_HIT_LIMIT                                                          = 1640;
+exports.ER_DUP_SIGNAL_SET                                                                = 1641;
+exports.ER_SIGNAL_WARN                                                                   = 1642;
+exports.ER_SIGNAL_NOT_FOUND                                                              = 1643;
+exports.ER_SIGNAL_EXCEPTION                                                              = 1644;
+exports.ER_RESIGNAL_WITHOUT_ACTIVE_HANDLER                                               = 1645;
+exports.ER_SIGNAL_BAD_CONDITION_TYPE                                                     = 1646;
+exports.WARN_COND_ITEM_TRUNCATED                                                         = 1647;
+exports.ER_COND_ITEM_TOO_LONG                                                            = 1648;
+exports.ER_UNKNOWN_LOCALE                                                                = 1649;
+exports.ER_SLAVE_IGNORE_SERVER_IDS                                                       = 1650;
+exports.ER_QUERY_CACHE_DISABLED                                                          = 1651;
+exports.ER_SAME_NAME_PARTITION_FIELD                                                     = 1652;
+exports.ER_PARTITION_COLUMN_LIST_ERROR                                                   = 1653;
+exports.ER_WRONG_TYPE_COLUMN_VALUE_ERROR                                                 = 1654;
+exports.ER_TOO_MANY_PARTITION_FUNC_FIELDS_ERROR                                          = 1655;
+exports.ER_MAXVALUE_IN_VALUES_IN                                                         = 1656;
+exports.ER_TOO_MANY_VALUES_ERROR                                                         = 1657;
+exports.ER_ROW_SINGLE_PARTITION_FIELD_ERROR                                              = 1658;
+exports.ER_FIELD_TYPE_NOT_ALLOWED_AS_PARTITION_FIELD                                     = 1659;
+exports.ER_PARTITION_FIELDS_TOO_LONG                                                     = 1660;
+exports.ER_BINLOG_ROW_ENGINE_AND_STMT_ENGINE                                             = 1661;
+exports.ER_BINLOG_ROW_MODE_AND_STMT_ENGINE                                               = 1662;
+exports.ER_BINLOG_UNSAFE_AND_STMT_ENGINE                                                 = 1663;
+exports.ER_BINLOG_ROW_INJECTION_AND_STMT_ENGINE                                          = 1664;
+exports.ER_BINLOG_STMT_MODE_AND_ROW_ENGINE                                               = 1665;
+exports.ER_BINLOG_ROW_INJECTION_AND_STMT_MODE                                            = 1666;
+exports.ER_BINLOG_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE                               = 1667;
+exports.ER_BINLOG_UNSAFE_LIMIT                                                           = 1668;
+exports.ER_BINLOG_UNSAFE_INSERT_DELAYED                                                  = 1669;
+exports.ER_BINLOG_UNSAFE_SYSTEM_TABLE                                                    = 1670;
+exports.ER_BINLOG_UNSAFE_AUTOINC_COLUMNS                                                 = 1671;
+exports.ER_BINLOG_UNSAFE_UDF                                                             = 1672;
+exports.ER_BINLOG_UNSAFE_SYSTEM_VARIABLE                                                 = 1673;
+exports.ER_BINLOG_UNSAFE_SYSTEM_FUNCTION                                                 = 1674;
+exports.ER_BINLOG_UNSAFE_NONTRANS_AFTER_TRANS                                            = 1675;
+exports.ER_MESSAGE_AND_STATEMENT                                                         = 1676;
+exports.ER_SLAVE_CONVERSION_FAILED                                                       = 1677;
+exports.ER_SLAVE_CANT_CREATE_CONVERSION                                                  = 1678;
+exports.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_FORMAT                              = 1679;
+exports.ER_PATH_LENGTH                                                                   = 1680;
+exports.ER_WARN_DEPRECATED_SYNTAX_NO_REPLACEMENT                                         = 1681;
+exports.ER_WRONG_NATIVE_TABLE_STRUCTURE                                                  = 1682;
+exports.ER_WRONG_PERFSCHEMA_USAGE                                                        = 1683;
+exports.ER_WARN_I_S_SKIPPED_TABLE                                                        = 1684;
+exports.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_BINLOG_DIRECT                              = 1685;
+exports.ER_STORED_FUNCTION_PREVENTS_SWITCH_BINLOG_DIRECT                                 = 1686;
+exports.ER_SPATIAL_MUST_HAVE_GEOM_COL                                                    = 1687;
+exports.ER_TOO_LONG_INDEX_COMMENT                                                        = 1688;
+exports.ER_LOCK_ABORTED                                                                  = 1689;
+exports.ER_DATA_OUT_OF_RANGE                                                             = 1690;
+exports.ER_WRONG_SPVAR_TYPE_IN_LIMIT                                                     = 1691;
+exports.ER_BINLOG_UNSAFE_MULTIPLE_ENGINES_AND_SELF_LOGGING_ENGINE                        = 1692;
+exports.ER_BINLOG_UNSAFE_MIXED_STATEMENT                                                 = 1693;
+exports.ER_INSIDE_TRANSACTION_PREVENTS_SWITCH_SQL_LOG_BIN                                = 1694;
+exports.ER_STORED_FUNCTION_PREVENTS_SWITCH_SQL_LOG_BIN                                   = 1695;
+exports.ER_FAILED_READ_FROM_PAR_FILE                                                     = 1696;
+exports.ER_VALUES_IS_NOT_INT_TYPE_ERROR                                                  = 1697;
+exports.ER_ACCESS_DENIED_NO_PASSWORD_ERROR                                               = 1698;
+exports.ER_SET_PASSWORD_AUTH_PLUGIN                                                      = 1699;
+exports.ER_GRANT_PLUGIN_USER_EXISTS                                                      = 1700;
+exports.ER_TRUNCATE_ILLEGAL_FK                                                           = 1701;
+exports.ER_PLUGIN_IS_PERMANENT                                                           = 1702;
+exports.ER_SLAVE_HEARTBEAT_VALUE_OUT_OF_RANGE_MIN                                        = 1703;
+exports.ER_SLAVE_HEARTBEAT_VALUE_OUT_OF_RANGE_MAX                                        = 1704;
+exports.ER_STMT_CACHE_FULL                                                               = 1705;
+exports.ER_MULTI_UPDATE_KEY_CONFLICT                                                     = 1706;
+exports.ER_TABLE_NEEDS_REBUILD                                                           = 1707;
+exports.WARN_OPTION_BELOW_LIMIT                                                          = 1708;
+exports.ER_INDEX_COLUMN_TOO_LONG                                                         = 1709;
+exports.ER_ERROR_IN_TRIGGER_BODY                                                         = 1710;
+exports.ER_ERROR_IN_UNKNOWN_TRIGGER_BODY                                                 = 1711;
+exports.ER_INDEX_CORRUPT                                                                 = 1712;
+exports.ER_UNDO_RECORD_TOO_BIG                                                           = 1713;
+exports.ER_BINLOG_UNSAFE_INSERT_IGNORE_SELECT                                            = 1714;
+exports.ER_BINLOG_UNSAFE_INSERT_SELECT_UPDATE                                            = 1715;
+exports.ER_BINLOG_UNSAFE_REPLACE_SELECT                                                  = 1716;
+exports.ER_BINLOG_UNSAFE_CREATE_IGNORE_SELECT                                            = 1717;
+exports.ER_BINLOG_UNSAFE_CREATE_REPLACE_SELECT                                           = 1718;
+exports.ER_BINLOG_UNSAFE_UPDATE_IGNORE                                                   = 1719;
+exports.ER_PLUGIN_NO_UNINSTALL                                                           = 1720;
+exports.ER_PLUGIN_NO_INSTALL                                                             = 1721;
+exports.ER_BINLOG_UNSAFE_WRITE_AUTOINC_SELECT                                            = 1722;
+exports.ER_BINLOG_UNSAFE_CREATE_SELECT_AUTOINC                                           = 1723;
+exports.ER_BINLOG_UNSAFE_INSERT_TWO_KEYS                                                 = 1724;
+exports.ER_TABLE_IN_FK_CHECK                                                             = 1725;
+exports.ER_UNSUPPORTED_ENGINE                                                            = 1726;
+exports.ER_BINLOG_UNSAFE_AUTOINC_NOT_FIRST                                               = 1727;
+exports.ER_CANNOT_LOAD_FROM_TABLE_V2                                                     = 1728;
+exports.ER_MASTER_DELAY_VALUE_OUT_OF_RANGE                                               = 1729;
+exports.ER_ONLY_FD_AND_RBR_EVENTS_ALLOWED_IN_BINLOG_STATEMENT                            = 1730;
+exports.ER_PARTITION_EXCHANGE_DIFFERENT_OPTION                                           = 1731;
+exports.ER_PARTITION_EXCHANGE_PART_TABLE                                                 = 1732;
+exports.ER_PARTITION_EXCHANGE_TEMP_TABLE                                                 = 1733;
+exports.ER_PARTITION_INSTEAD_OF_SUBPARTITION                                             = 1734;
+exports.ER_UNKNOWN_PARTITION                                                             = 1735;
+exports.ER_TABLES_DIFFERENT_METADATA                                                     = 1736;
+exports.ER_ROW_DOES_NOT_MATCH_PARTITION                                                  = 1737;
+exports.ER_BINLOG_CACHE_SIZE_GREATER_THAN_MAX                                            = 1738;
+exports.ER_WARN_INDEX_NOT_APPLICABLE                                                     = 1739;
+exports.ER_PARTITION_EXCHANGE_FOREIGN_KEY                                                = 1740;
+exports.ER_NO_SUCH_KEY_VALUE                                                             = 1741;
+exports.ER_RPL_INFO_DATA_TOO_LONG                                                        = 1742;
+exports.ER_NETWORK_READ_EVENT_CHECKSUM_FAILURE                                           = 1743;
+exports.ER_BINLOG_READ_EVENT_CHECKSUM_FAILURE                                            = 1744;
+exports.ER_BINLOG_STMT_CACHE_SIZE_GREATER_THAN_MAX                                       = 1745;
+exports.ER_CANT_UPDATE_TABLE_IN_CREATE_TABLE_SELECT                                      = 1746;
+exports.ER_PARTITION_CLAUSE_ON_NONPARTITIONED                                            = 1747;
+exports.ER_ROW_DOES_NOT_MATCH_GIVEN_PARTITION_SET                                        = 1748;
+exports.ER_NO_SUCH_PARTITION                                                             = 1749;
+exports.ER_CHANGE_RPL_INFO_REPOSITORY_FAILURE                                            = 1750;
+exports.ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_CREATED_TEMP_TABLE                         = 1751;
+exports.ER_WARNING_NOT_COMPLETE_ROLLBACK_WITH_DROPPED_TEMP_TABLE                         = 1752;
+exports.ER_MTS_FEATURE_IS_NOT_SUPPORTED                                                  = 1753;
+exports.ER_MTS_UPDATED_DBS_GREATER_MAX                                                   = 1754;
+exports.ER_MTS_CANT_PARALLEL                                                             = 1755;
+exports.ER_MTS_INCONSISTENT_DATA                                                         = 1756;
+exports.ER_FULLTEXT_NOT_SUPPORTED_WITH_PARTITIONING                                      = 1757;
+exports.ER_DA_INVALID_CONDITION_NUMBER                                                   = 1758;
+exports.ER_INSECURE_PLAIN_TEXT                                                           = 1759;
+exports.ER_INSECURE_CHANGE_MASTER                                                        = 1760;
+exports.ER_FOREIGN_DUPLICATE_KEY_WITH_CHILD_INFO                                         = 1761;
+exports.ER_FOREIGN_DUPLICATE_KEY_WITHOUT_CHILD_INFO                                      = 1762;
+exports.ER_SQLTHREAD_WITH_SECURE_SLAVE                                                   = 1763;
+exports.ER_TABLE_HAS_NO_FT                                                               = 1764;
+exports.ER_VARIABLE_NOT_SETTABLE_IN_SF_OR_TRIGGER                                        = 1765;
+exports.ER_VARIABLE_NOT_SETTABLE_IN_TRANSACTION                                          = 1766;
+exports.ER_GTID_NEXT_IS_NOT_IN_GTID_NEXT_LIST                                            = 1767;
+exports.ER_CANT_CHANGE_GTID_NEXT_IN_TRANSACTION                                          = 1768;
+exports.ER_SET_STATEMENT_CANNOT_INVOKE_FUNCTION                                          = 1769;
+exports.ER_GTID_NEXT_CANT_BE_AUTOMATIC_IF_GTID_NEXT_LIST_IS_NON_NULL                     = 1770;
+exports.ER_SKIPPING_LOGGED_TRANSACTION                                                   = 1771;
+exports.ER_MALFORMED_GTID_SET_SPECIFICATION                                              = 1772;
+exports.ER_MALFORMED_GTID_SET_ENCODING                                                   = 1773;
+exports.ER_MALFORMED_GTID_SPECIFICATION                                                  = 1774;
+exports.ER_GNO_EXHAUSTED                                                                 = 1775;
+exports.ER_BAD_SLAVE_AUTO_POSITION                                                       = 1776;
+exports.ER_AUTO_POSITION_REQUIRES_GTID_MODE_NOT_OFF                                      = 1777;
+exports.ER_CANT_DO_IMPLICIT_COMMIT_IN_TRX_WHEN_GTID_NEXT_IS_SET                          = 1778;
+exports.ER_GTID_MODE_ON_REQUIRES_ENFORCE_GTID_CONSISTENCY_ON                             = 1779;
+exports.ER_GTID_MODE_REQUIRES_BINLOG                                                     = 1780;
+exports.ER_CANT_SET_GTID_NEXT_TO_GTID_WHEN_GTID_MODE_IS_OFF                              = 1781;
+exports.ER_CANT_SET_GTID_NEXT_TO_ANONYMOUS_WHEN_GTID_MODE_IS_ON                          = 1782;
+exports.ER_CANT_SET_GTID_NEXT_LIST_TO_NON_NULL_WHEN_GTID_MODE_IS_OFF                     = 1783;
+exports.ER_FOUND_GTID_EVENT_WHEN_GTID_MODE_IS_OFF                                        = 1784;
+exports.ER_GTID_UNSAFE_NON_TRANSACTIONAL_TABLE                                           = 1785;
+exports.ER_GTID_UNSAFE_CREATE_SELECT                                                     = 1786;
+exports.ER_GTID_UNSAFE_CREATE_DROP_TEMPORARY_TABLE_IN_TRANSACTION                        = 1787;
+exports.ER_GTID_MODE_CAN_ONLY_CHANGE_ONE_STEP_AT_A_TIME                                  = 1788;
+exports.ER_MASTER_HAS_PURGED_REQUIRED_GTIDS                                              = 1789;
+exports.ER_CANT_SET_GTID_NEXT_WHEN_OWNING_GTID                                           = 1790;
+exports.ER_UNKNOWN_EXPLAIN_FORMAT                                                        = 1791;
+exports.ER_CANT_EXECUTE_IN_READ_ONLY_TRANSACTION                                         = 1792;
+exports.ER_TOO_LONG_TABLE_PARTITION_COMMENT                                              = 1793;
+exports.ER_SLAVE_CONFIGURATION                                                           = 1794;
+exports.ER_INNODB_FT_LIMIT                                                               = 1795;
+exports.ER_INNODB_NO_FT_TEMP_TABLE                                                       = 1796;
+exports.ER_INNODB_FT_WRONG_DOCID_COLUMN                                                  = 1797;
+exports.ER_INNODB_FT_WRONG_DOCID_INDEX                                                   = 1798;
+exports.ER_INNODB_ONLINE_LOG_TOO_BIG                                                     = 1799;
+exports.ER_UNKNOWN_ALTER_ALGORITHM                                                       = 1800;
+exports.ER_UNKNOWN_ALTER_LOCK                                                            = 1801;
+exports.ER_MTS_CHANGE_MASTER_CANT_RUN_WITH_GAPS                                          = 1802;
+exports.ER_MTS_RECOVERY_FAILURE                                                          = 1803;
+exports.ER_MTS_RESET_WORKERS                                                             = 1804;
+exports.ER_COL_COUNT_DOESNT_MATCH_CORRUPTED_V2                                           = 1805;
+exports.ER_SLAVE_SILENT_RETRY_TRANSACTION                                                = 1806;
+exports.ER_DISCARD_FK_CHECKS_RUNNING                                                     = 1807;
+exports.ER_TABLE_SCHEMA_MISMATCH                                                         = 1808;
+exports.ER_TABLE_IN_SYSTEM_TABLESPACE                                                    = 1809;
+exports.ER_IO_READ_ERROR                                                                 = 1810;
+exports.ER_IO_WRITE_ERROR                                                                = 1811;
+exports.ER_TABLESPACE_MISSING                                                            = 1812;
+exports.ER_TABLESPACE_EXISTS                                                             = 1813;
+exports.ER_TABLESPACE_DISCARDED                                                          = 1814;
+exports.ER_INTERNAL_ERROR                                                                = 1815;
+exports.ER_INNODB_IMPORT_ERROR                                                           = 1816;
+exports.ER_INNODB_INDEX_CORRUPT                                                          = 1817;
+exports.ER_INVALID_YEAR_COLUMN_LENGTH                                                    = 1818;
+exports.ER_NOT_VALID_PASSWORD                                                            = 1819;
+exports.ER_MUST_CHANGE_PASSWORD                                                          = 1820;
+exports.ER_FK_NO_INDEX_CHILD                                                             = 1821;
+exports.ER_FK_NO_INDEX_PARENT                                                            = 1822;
+exports.ER_FK_FAIL_ADD_SYSTEM                                                            = 1823;
+exports.ER_FK_CANNOT_OPEN_PARENT                                                         = 1824;
+exports.ER_FK_INCORRECT_OPTION                                                           = 1825;
+exports.ER_FK_DUP_NAME                                                                   = 1826;
+exports.ER_PASSWORD_FORMAT                                                               = 1827;
+exports.ER_FK_COLUMN_CANNOT_DROP                                                         = 1828;
+exports.ER_FK_COLUMN_CANNOT_DROP_CHILD                                                   = 1829;
+exports.ER_FK_COLUMN_NOT_NULL                                                            = 1830;
+exports.ER_DUP_INDEX                                                                     = 1831;
+exports.ER_FK_COLUMN_CANNOT_CHANGE                                                       = 1832;
+exports.ER_FK_COLUMN_CANNOT_CHANGE_CHILD                                                 = 1833;
+exports.ER_FK_CANNOT_DELETE_PARENT                                                       = 1834;
+exports.ER_MALFORMED_PACKET                                                              = 1835;
+exports.ER_READ_ONLY_MODE                                                                = 1836;
+exports.ER_GTID_NEXT_TYPE_UNDEFINED_GROUP                                                = 1837;
+exports.ER_VARIABLE_NOT_SETTABLE_IN_SP                                                   = 1838;
+exports.ER_CANT_SET_GTID_PURGED_WHEN_GTID_MODE_IS_OFF                                    = 1839;
+exports.ER_CANT_SET_GTID_PURGED_WHEN_GTID_EXECUTED_IS_NOT_EMPTY                          = 1840;
+exports.ER_CANT_SET_GTID_PURGED_WHEN_OWNED_GTIDS_IS_NOT_EMPTY                            = 1841;
+exports.ER_GTID_PURGED_WAS_CHANGED                                                       = 1842;
+exports.ER_GTID_EXECUTED_WAS_CHANGED                                                     = 1843;
+exports.ER_BINLOG_STMT_MODE_AND_NO_REPL_TABLES                                           = 1844;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED                                                 = 1845;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON                                          = 1846;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COPY                                     = 1847;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_PARTITION                                = 1848;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_RENAME                                = 1849;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_COLUMN_TYPE                              = 1850;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FK_CHECK                                 = 1851;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_IGNORE                                   = 1852;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOPK                                     = 1853;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_AUTOINC                                  = 1854;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_HIDDEN_FTS                               = 1855;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_CHANGE_FTS                               = 1856;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_FTS                                      = 1857;
+exports.ER_SQL_SLAVE_SKIP_COUNTER_NOT_SETTABLE_IN_GTID_MODE                              = 1858;
+exports.ER_DUP_UNKNOWN_IN_INDEX                                                          = 1859;
+exports.ER_IDENT_CAUSES_TOO_LONG_PATH                                                    = 1860;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_NOT_NULL                                 = 1861;
+exports.ER_MUST_CHANGE_PASSWORD_LOGIN                                                    = 1862;
+exports.ER_ROW_IN_WRONG_PARTITION                                                        = 1863;
+exports.ER_MTS_EVENT_BIGGER_PENDING_JOBS_SIZE_MAX                                        = 1864;
+exports.ER_INNODB_NO_FT_USES_PARSER                                                      = 1865;
+exports.ER_BINLOG_LOGICAL_CORRUPTION                                                     = 1866;
+exports.ER_WARN_PURGE_LOG_IN_USE                                                         = 1867;
+exports.ER_WARN_PURGE_LOG_IS_ACTIVE                                                      = 1868;
+exports.ER_AUTO_INCREMENT_CONFLICT                                                       = 1869;
+exports.WARN_ON_BLOCKHOLE_IN_RBR                                                         = 1870;
+exports.ER_SLAVE_MI_INIT_REPOSITORY                                                      = 1871;
+exports.ER_SLAVE_RLI_INIT_REPOSITORY                                                     = 1872;
+exports.ER_ACCESS_DENIED_CHANGE_USER_ERROR                                               = 1873;
+exports.ER_INNODB_READ_ONLY                                                              = 1874;
+exports.ER_STOP_SLAVE_SQL_THREAD_TIMEOUT                                                 = 1875;
+exports.ER_STOP_SLAVE_IO_THREAD_TIMEOUT                                                  = 1876;
+exports.ER_TABLE_CORRUPT                                                                 = 1877;
+exports.ER_TEMP_FILE_WRITE_FAILURE                                                       = 1878;
+exports.ER_INNODB_FT_AUX_NOT_HEX_ID                                                      = 1879;
+exports.ER_OLD_TEMPORALS_UPGRADED                                                        = 1880;
+exports.ER_INNODB_FORCED_RECOVERY                                                        = 1881;
+exports.ER_AES_INVALID_IV                                                                = 1882;
+exports.ER_PLUGIN_CANNOT_BE_UNINSTALLED                                                  = 1883;
+exports.ER_GTID_UNSAFE_BINLOG_SPLITTABLE_STATEMENT_AND_GTID_GROUP                        = 1884;
+exports.ER_SLAVE_HAS_MORE_GTIDS_THAN_MASTER                                              = 1885;
+exports.ER_FILE_CORRUPT                                                                  = 1886;
+exports.ER_ERROR_ON_MASTER                                                               = 1887;
+exports.ER_INCONSISTENT_ERROR                                                            = 1888;
+exports.ER_STORAGE_ENGINE_NOT_LOADED                                                     = 1889;
+exports.ER_GET_STACKED_DA_WITHOUT_ACTIVE_HANDLER                                         = 1890;
+exports.ER_WARN_LEGACY_SYNTAX_CONVERTED                                                  = 1891;
+exports.ER_BINLOG_UNSAFE_FULLTEXT_PLUGIN                                                 = 1892;
+exports.ER_CANNOT_DISCARD_TEMPORARY_TABLE                                                = 1893;
+exports.ER_FK_DEPTH_EXCEEDED                                                             = 1894;
+exports.ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE_V2                                       = 1895;
+exports.ER_WARN_TRIGGER_DOESNT_HAVE_CREATED                                              = 1896;
+exports.ER_REFERENCED_TRG_DOES_NOT_EXIST                                                 = 1897;
+exports.ER_EXPLAIN_NOT_SUPPORTED                                                         = 1898;
+exports.ER_INVALID_FIELD_SIZE                                                            = 1899;
+exports.ER_MISSING_HA_CREATE_OPTION                                                      = 1900;
+exports.ER_ENGINE_OUT_OF_MEMORY                                                          = 1901;
+exports.ER_PASSWORD_EXPIRE_ANONYMOUS_USER                                                = 1902;
+exports.ER_SLAVE_SQL_THREAD_MUST_STOP                                                    = 1903;
+exports.ER_NO_FT_MATERIALIZED_SUBQUERY                                                   = 1904;
+exports.ER_INNODB_UNDO_LOG_FULL                                                          = 1905;
+exports.ER_INVALID_ARGUMENT_FOR_LOGARITHM                                                = 1906;
+exports.ER_SLAVE_CHANNEL_IO_THREAD_MUST_STOP                                             = 1907;
+exports.ER_WARN_OPEN_TEMP_TABLES_MUST_BE_ZERO                                            = 1908;
+exports.ER_WARN_ONLY_MASTER_LOG_FILE_NO_POS                                              = 1909;
+exports.ER_QUERY_TIMEOUT                                                                 = 1910;
+exports.ER_NON_RO_SELECT_DISABLE_TIMER                                                   = 1911;
+exports.ER_DUP_LIST_ENTRY                                                                = 1912;
+exports.ER_SQL_MODE_NO_EFFECT                                                            = 1913;
+exports.ER_AGGREGATE_ORDER_FOR_UNION                                                     = 1914;
+exports.ER_AGGREGATE_ORDER_NON_AGG_QUERY                                                 = 1915;
+exports.ER_SLAVE_WORKER_STOPPED_PREVIOUS_THD_ERROR                                       = 1916;
+exports.ER_DONT_SUPPORT_SLAVE_PRESERVE_COMMIT_ORDER                                      = 1917;
+exports.ER_SERVER_OFFLINE_MODE                                                           = 1918;
+exports.ER_GIS_DIFFERENT_SRIDS                                                           = 1919;
+exports.ER_GIS_UNSUPPORTED_ARGUMENT                                                      = 1920;
+exports.ER_GIS_UNKNOWN_ERROR                                                             = 1921;
+exports.ER_GIS_UNKNOWN_EXCEPTION                                                         = 1922;
+exports.ER_GIS_INVALID_DATA                                                              = 1923;
+exports.ER_BOOST_GEOMETRY_EMPTY_INPUT_EXCEPTION                                          = 1924;
+exports.ER_BOOST_GEOMETRY_CENTROID_EXCEPTION                                             = 1925;
+exports.ER_BOOST_GEOMETRY_OVERLAY_INVALID_INPUT_EXCEPTION                                = 1926;
+exports.ER_BOOST_GEOMETRY_TURN_INFO_EXCEPTION                                            = 1927;
+exports.ER_BOOST_GEOMETRY_SELF_INTERSECTION_POINT_EXCEPTION                              = 1928;
+exports.ER_BOOST_GEOMETRY_UNKNOWN_EXCEPTION                                              = 1929;
+exports.ER_STD_BAD_ALLOC_ERROR                                                           = 1930;
+exports.ER_STD_DOMAIN_ERROR                                                              = 1931;
+exports.ER_STD_LENGTH_ERROR                                                              = 1932;
+exports.ER_STD_INVALID_ARGUMENT                                                          = 1933;
+exports.ER_STD_OUT_OF_RANGE_ERROR                                                        = 1934;
+exports.ER_STD_OVERFLOW_ERROR                                                            = 1935;
+exports.ER_STD_RANGE_ERROR                                                               = 1936;
+exports.ER_STD_UNDERFLOW_ERROR                                                           = 1937;
+exports.ER_STD_LOGIC_ERROR                                                               = 1938;
+exports.ER_STD_RUNTIME_ERROR                                                             = 1939;
+exports.ER_STD_UNKNOWN_EXCEPTION                                                         = 1940;
+exports.ER_GIS_DATA_WRONG_ENDIANESS                                                      = 1941;
+exports.ER_CHANGE_MASTER_PASSWORD_LENGTH                                                 = 1942;
+exports.ER_USER_LOCK_WRONG_NAME                                                          = 1943;
+exports.ER_USER_LOCK_DEADLOCK                                                            = 1944;
+exports.ER_REPLACE_INACCESSIBLE_ROWS                                                     = 1945;
+exports.ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_GIS                                      = 1946;
+exports.ER_ILLEGAL_USER_VAR                                                              = 1947;
+exports.ER_GTID_MODE_OFF                                                                 = 1948;
+exports.ER_UNSUPPORTED_BY_REPLICATION_THREAD                                             = 1949;
+exports.ER_INCORRECT_TYPE                                                                = 1950;
+exports.ER_FIELD_IN_ORDER_NOT_SELECT                                                     = 1951;
+exports.ER_AGGREGATE_IN_ORDER_NOT_SELECT                                                 = 1952;
+exports.ER_INVALID_RPL_WILD_TABLE_FILTER_PATTERN                                         = 1953;
+exports.ER_NET_OK_PACKET_TOO_LARGE                                                       = 1954;
+exports.ER_INVALID_JSON_DATA                                                             = 1955;
+exports.ER_INVALID_GEOJSON_MISSING_MEMBER                                                = 1956;
+exports.ER_INVALID_GEOJSON_WRONG_TYPE                                                    = 1957;
+exports.ER_INVALID_GEOJSON_UNSPECIFIED                                                   = 1958;
+exports.ER_DIMENSION_UNSUPPORTED                                                         = 1959;
+exports.ER_SLAVE_CHANNEL_DOES_NOT_EXIST                                                  = 1960;
+exports.ER_SLAVE_MULTIPLE_CHANNELS_HOST_PORT                                             = 1961;
+exports.ER_SLAVE_CHANNEL_NAME_INVALID_OR_TOO_LONG                                        = 1962;
+exports.ER_SLAVE_NEW_CHANNEL_WRONG_REPOSITORY                                            = 1963;
+exports.ER_SLAVE_CHANNEL_DELETE                                                          = 1964;
+exports.ER_SLAVE_MULTIPLE_CHANNELS_CMD                                                   = 1965;
+exports.ER_SLAVE_MAX_CHANNELS_EXCEEDED                                                   = 1966;
+exports.ER_SLAVE_CHANNEL_MUST_STOP                                                       = 1967;
+exports.ER_SLAVE_CHANNEL_NOT_RUNNING                                                     = 1968;
+exports.ER_SLAVE_CHANNEL_WAS_RUNNING                                                     = 1969;
+exports.ER_SLAVE_CHANNEL_WAS_NOT_RUNNING                                                 = 1970;
+exports.ER_SLAVE_CHANNEL_SQL_THREAD_MUST_STOP                                            = 1971;
+exports.ER_SLAVE_CHANNEL_SQL_SKIP_COUNTER                                                = 1972;
+exports.ER_WRONG_FIELD_WITH_GROUP_V2                                                     = 1973;
+exports.ER_MIX_OF_GROUP_FUNC_AND_FIELDS_V2                                               = 1974;
+exports.ER_WARN_DEPRECATED_SYSVAR_UPDATE                                                 = 1975;
+exports.ER_WARN_DEPRECATED_SQLMODE                                                       = 1976;
+exports.ER_CANNOT_LOG_PARTIAL_DROP_DATABASE_WITH_GTID                                    = 1977;
+exports.ER_GROUP_REPLICATION_CONFIGURATION                                               = 1978;
+exports.ER_GROUP_REPLICATION_RUNNING                                                     = 1979;
+exports.ER_GROUP_REPLICATION_APPLIER_INIT_ERROR                                          = 1980;
+exports.ER_GROUP_REPLICATION_STOP_APPLIER_THREAD_TIMEOUT                                 = 1981;
+exports.ER_GROUP_REPLICATION_COMMUNICATION_LAYER_SESSION_ERROR                           = 1982;
+exports.ER_GROUP_REPLICATION_COMMUNICATION_LAYER_JOIN_ERROR                              = 1983;
+exports.ER_BEFORE_DML_VALIDATION_ERROR                                                   = 1984;
+exports.ER_PREVENTS_VARIABLE_WITHOUT_RBR                                                 = 1985;
+exports.ER_RUN_HOOK_ERROR                                                                = 1986;
+exports.ER_TRANSACTION_ROLLBACK_DURING_COMMIT                                            = 1987;
+exports.ER_GENERATED_COLUMN_FUNCTION_IS_NOT_ALLOWED                                      = 1988;
+exports.ER_UNSUPPORTED_ALTER_INPLACE_ON_VIRTUAL_COLUMN                                   = 1989;
+exports.ER_WRONG_FK_OPTION_FOR_GENERATED_COLUMN                                          = 1990;
+exports.ER_NON_DEFAULT_VALUE_FOR_GENERATED_COLUMN                                        = 1991;
+exports.ER_UNSUPPORTED_ACTION_ON_GENERATED_COLUMN                                        = 1992;
+exports.ER_GENERATED_COLUMN_NON_PRIOR                                                    = 1993;
+exports.ER_DEPENDENT_BY_GENERATED_COLUMN                                                 = 1994;
+exports.ER_GENERATED_COLUMN_REF_AUTO_INC                                                 = 1995;
+exports.ER_FEATURE_NOT_AVAILABLE                                                         = 1996;
+exports.ER_CANT_SET_GTID_MODE                                                            = 1997;
+exports.ER_CANT_USE_AUTO_POSITION_WITH_GTID_MODE_OFF                                     = 1998;
+exports.ER_CANT_REPLICATE_ANONYMOUS_WITH_AUTO_POSITION                                   = 1999;
+exports.ER_CANT_REPLICATE_ANONYMOUS_WITH_GTID_MODE_ON                                    = 2000;
+exports.ER_CANT_REPLICATE_GTID_WITH_GTID_MODE_OFF                                        = 2001;
+exports.ER_CANT_SET_ENFORCE_GTID_CONSISTENCY_ON_WITH_ONGOING_GTID_VIOLATING_TRANSACTIONS = 2002;
+exports.ER_SET_ENFORCE_GTID_CONSISTENCY_WARN_WITH_ONGOING_GTID_VIOLATING_TRANSACTIONS    = 2003;
+exports.ER_ACCOUNT_HAS_BEEN_LOCKED                                                       = 2004;
+exports.ER_WRONG_TABLESPACE_NAME                                                         = 2005;
+exports.ER_TABLESPACE_IS_NOT_EMPTY                                                       = 2006;
+exports.ER_WRONG_FILE_NAME                                                               = 2007;
+exports.ER_BOOST_GEOMETRY_INCONSISTENT_TURNS_EXCEPTION                                   = 2008;
+exports.ER_WARN_OPTIMIZER_HINT_SYNTAX_ERROR                                              = 2009;
+exports.ER_WARN_BAD_MAX_EXECUTION_TIME                                                   = 2010;
+exports.ER_WARN_UNSUPPORTED_MAX_EXECUTION_TIME                                           = 2011;
+exports.ER_WARN_CONFLICTING_HINT                                                         = 2012;
+exports.ER_WARN_UNKNOWN_QB_NAME                                                          = 2013;
+exports.ER_UNRESOLVED_HINT_NAME                                                          = 2014;
+exports.ER_WARN_ON_MODIFYING_GTID_EXECUTED_TABLE                                         = 2015;
+exports.ER_PLUGGABLE_PROTOCOL_COMMAND_NOT_SUPPORTED                                      = 2016;
+exports.ER_LOCKING_SERVICE_WRONG_NAME                                                    = 2017;
+exports.ER_LOCKING_SERVICE_DEADLOCK                                                      = 2018;
+exports.ER_LOCKING_SERVICE_TIMEOUT                                                       = 2019;
+exports.ER_GIS_MAX_POINTS_IN_GEOMETRY_OVERFLOWED                                         = 2020;
+exports.ER_SQL_MODE_MERGED                                                               = 2021;
+exports.ER_VTOKEN_PLUGIN_TOKEN_MISMATCH                                                  = 2022;
+exports.ER_VTOKEN_PLUGIN_TOKEN_NOT_FOUND                                                 = 2023;
+exports.ER_CANT_SET_VARIABLE_WHEN_OWNING_GTID                                            = 2024;
+exports.ER_SLAVE_CHANNEL_OPERATION_NOT_ALLOWED                                           = 2025;
+exports.ER_INVALID_JSON_TEXT                                                             = 2026;
+exports.ER_INVALID_JSON_TEXT_IN_PARAM                                                    = 2027;
+exports.ER_INVALID_JSON_BINARY_DATA                                                      = 2028;
+exports.ER_INVALID_JSON_PATH                                                             = 2029;
+exports.ER_INVALID_JSON_CHARSET                                                          = 2030;
+exports.ER_INVALID_JSON_CHARSET_IN_FUNCTION                                              = 2031;
+exports.ER_INVALID_TYPE_FOR_JSON                                                         = 2032;
+exports.ER_INVALID_CAST_TO_JSON                                                          = 2033;
+exports.ER_INVALID_JSON_PATH_CHARSET                                                     = 2034;
+exports.ER_INVALID_JSON_PATH_WILDCARD                                                    = 2035;
+exports.ER_JSON_VALUE_TOO_BIG                                                            = 2036;
+exports.ER_JSON_KEY_TOO_BIG                                                              = 2037;
+exports.ER_JSON_USED_AS_KEY                                                              = 2038;
+exports.ER_JSON_VACUOUS_PATH                                                             = 2039;
+exports.ER_JSON_BAD_ONE_OR_ALL_ARG                                                       = 2040;
+exports.ER_NUMERIC_JSON_VALUE_OUT_OF_RANGE                                               = 2041;
+exports.ER_INVALID_JSON_VALUE_FOR_CAST                                                   = 2042;
+exports.ER_JSON_DOCUMENT_TOO_DEEP                                                        = 2043;
+exports.ER_JSON_DOCUMENT_NULL_KEY                                                        = 2044;
+exports.ER_SECURE_TRANSPORT_REQUIRED                                                     = 2045;
+exports.ER_NO_SECURE_TRANSPORTS_CONFIGURED                                               = 2046;
+exports.ER_DISABLED_STORAGE_ENGINE                                                       = 2047;
+exports.ER_USER_DOES_NOT_EXIST                                                           = 2048;
+exports.ER_USER_ALREADY_EXISTS                                                           = 2049;
+exports.ER_AUDIT_API_ABORT                                                               = 2050;
+exports.ER_INVALID_JSON_PATH_ARRAY_CELL                                                  = 2051;
+exports.ER_BUFPOOL_RESIZE_INPROGRESS                                                     = 2052;
+exports.ER_FEATURE_DISABLED_SEE_DOC                                                      = 2053;
+exports.ER_SERVER_ISNT_AVAILABLE                                                         = 2054;
+exports.ER_SESSION_WAS_KILLED                                                            = 2055;
+exports.ER_CAPACITY_EXCEEDED                                                             = 2056;
+exports.ER_CAPACITY_EXCEEDED_IN_RANGE_OPTIMIZER                                          = 2057;
+exports.ER_TABLE_NEEDS_UPG_PART                                                          = 2058;
+exports.ER_CANT_WAIT_FOR_EXECUTED_GTID_SET_WHILE_OWNING_A_GTID                           = 2059;
 
 // Lookup-by-number table
 exports[1]    = 'EE_CANTCREATEFILE';
@@ -45593,6 +45845,7 @@ exports[30]   = 'EE_FILE_NOT_CLOSED';
 exports[31]   = 'EE_CHANGE_OWNERSHIP';
 exports[32]   = 'EE_CHANGE_PERMISSIONS';
 exports[33]   = 'EE_CANT_SEEK';
+exports[34]   = 'EE_CAPACITY_EXCEEDED';
 exports[120]  = 'HA_ERR_KEY_NOT_FOUND';
 exports[121]  = 'HA_ERR_FOUND_DUPP_KEY';
 exports[122]  = 'HA_ERR_INTERNAL_ERROR';
@@ -45610,7 +45863,7 @@ exports[135]  = 'HA_ERR_RECORD_FILE_FULL';
 exports[136]  = 'HA_ERR_INDEX_FILE_FULL';
 exports[137]  = 'HA_ERR_END_OF_FILE';
 exports[138]  = 'HA_ERR_UNSUPPORTED';
-exports[139]  = 'HA_ERR_TO_BIG_ROW';
+exports[139]  = 'HA_ERR_TOO_BIG_ROW';
 exports[140]  = 'HA_WRONG_CREATE_OPTION';
 exports[141]  = 'HA_ERR_FOUND_DUPP_UNIQUE';
 exports[142]  = 'HA_ERR_UNKNOWN_CHARSET';
@@ -45663,6 +45916,16 @@ exports[188]  = 'HA_ERR_FTS_EXCEED_RESULT_CACHE_LIMIT';
 exports[189]  = 'HA_ERR_TEMP_FILE_WRITE_FAILURE';
 exports[190]  = 'HA_ERR_INNODB_FORCED_RECOVERY';
 exports[191]  = 'HA_ERR_FTS_TOO_MANY_WORDS_IN_PHRASE';
+exports[192]  = 'HA_ERR_FK_DEPTH_EXCEEDED';
+exports[193]  = 'HA_MISSING_CREATE_OPTION';
+exports[194]  = 'HA_ERR_SE_OUT_OF_MEMORY';
+exports[195]  = 'HA_ERR_TABLE_CORRUPT';
+exports[196]  = 'HA_ERR_QUERY_INTERRUPTED';
+exports[197]  = 'HA_ERR_TABLESPACE_MISSING';
+exports[198]  = 'HA_ERR_TABLESPACE_IS_NOT_EMPTY';
+exports[199]  = 'HA_ERR_WRONG_FILE_NAME';
+exports[200]  = 'HA_ERR_NOT_ALLOWED_COMMAND';
+exports[201]  = 'HA_ERR_COMPUTE_FAILED';
 exports[1000] = 'ER_HASHCHK';
 exports[1001] = 'ER_NISAMCHK';
 exports[1002] = 'ER_NO';
@@ -46282,7 +46545,7 @@ exports[1615] = 'ER_NEED_REPREPARE';
 exports[1616] = 'ER_DELAYED_NOT_SUPPORTED';
 exports[1617] = 'WARN_NO_MASTER_INFO';
 exports[1618] = 'WARN_OPTION_IGNORED';
-exports[1619] = 'WARN_PLUGIN_DELETE_BUILTIN';
+exports[1619] = 'ER_PLUGIN_DELETE_BUILTIN';
 exports[1620] = 'WARN_PLUGIN_BUSY';
 exports[1621] = 'ER_VARIABLE_IS_READONLY';
 exports[1622] = 'ER_WARN_ENGINE_TRANSACTION_ROLLBACK';
@@ -46431,7 +46694,7 @@ exports[1764] = 'ER_TABLE_HAS_NO_FT';
 exports[1765] = 'ER_VARIABLE_NOT_SETTABLE_IN_SF_OR_TRIGGER';
 exports[1766] = 'ER_VARIABLE_NOT_SETTABLE_IN_TRANSACTION';
 exports[1767] = 'ER_GTID_NEXT_IS_NOT_IN_GTID_NEXT_LIST';
-exports[1768] = 'ER_CANT_CHANGE_GTID_NEXT_IN_TRANSACTION_WHEN_GTID_NEXT_LIST_IS_NULL';
+exports[1768] = 'ER_CANT_CHANGE_GTID_NEXT_IN_TRANSACTION';
 exports[1769] = 'ER_SET_STATEMENT_CANNOT_INVOKE_FUNCTION';
 exports[1770] = 'ER_GTID_NEXT_CANT_BE_AUTOMATIC_IF_GTID_NEXT_LIST_IS_NON_NULL';
 exports[1771] = 'ER_SKIPPING_LOGGED_TRANSACTION';
@@ -46440,9 +46703,9 @@ exports[1773] = 'ER_MALFORMED_GTID_SET_ENCODING';
 exports[1774] = 'ER_MALFORMED_GTID_SPECIFICATION';
 exports[1775] = 'ER_GNO_EXHAUSTED';
 exports[1776] = 'ER_BAD_SLAVE_AUTO_POSITION';
-exports[1777] = 'ER_AUTO_POSITION_REQUIRES_GTID_MODE_ON';
+exports[1777] = 'ER_AUTO_POSITION_REQUIRES_GTID_MODE_NOT_OFF';
 exports[1778] = 'ER_CANT_DO_IMPLICIT_COMMIT_IN_TRX_WHEN_GTID_NEXT_IS_SET';
-exports[1779] = 'ER_GTID_MODE_2_OR_3_REQUIRES_ENFORCE_GTID_CONSISTENCY_ON';
+exports[1779] = 'ER_GTID_MODE_ON_REQUIRES_ENFORCE_GTID_CONSISTENCY_ON';
 exports[1780] = 'ER_GTID_MODE_REQUIRES_BINLOG';
 exports[1781] = 'ER_CANT_SET_GTID_NEXT_TO_GTID_WHEN_GTID_MODE_IS_OFF';
 exports[1782] = 'ER_CANT_SET_GTID_NEXT_TO_ANONYMOUS_WHEN_GTID_MODE_IS_ON';
@@ -46546,6 +46809,183 @@ exports[1879] = 'ER_INNODB_FT_AUX_NOT_HEX_ID';
 exports[1880] = 'ER_OLD_TEMPORALS_UPGRADED';
 exports[1881] = 'ER_INNODB_FORCED_RECOVERY';
 exports[1882] = 'ER_AES_INVALID_IV';
+exports[1883] = 'ER_PLUGIN_CANNOT_BE_UNINSTALLED';
+exports[1884] = 'ER_GTID_UNSAFE_BINLOG_SPLITTABLE_STATEMENT_AND_GTID_GROUP';
+exports[1885] = 'ER_SLAVE_HAS_MORE_GTIDS_THAN_MASTER';
+exports[1886] = 'ER_FILE_CORRUPT';
+exports[1887] = 'ER_ERROR_ON_MASTER';
+exports[1888] = 'ER_INCONSISTENT_ERROR';
+exports[1889] = 'ER_STORAGE_ENGINE_NOT_LOADED';
+exports[1890] = 'ER_GET_STACKED_DA_WITHOUT_ACTIVE_HANDLER';
+exports[1891] = 'ER_WARN_LEGACY_SYNTAX_CONVERTED';
+exports[1892] = 'ER_BINLOG_UNSAFE_FULLTEXT_PLUGIN';
+exports[1893] = 'ER_CANNOT_DISCARD_TEMPORARY_TABLE';
+exports[1894] = 'ER_FK_DEPTH_EXCEEDED';
+exports[1895] = 'ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE_V2';
+exports[1896] = 'ER_WARN_TRIGGER_DOESNT_HAVE_CREATED';
+exports[1897] = 'ER_REFERENCED_TRG_DOES_NOT_EXIST';
+exports[1898] = 'ER_EXPLAIN_NOT_SUPPORTED';
+exports[1899] = 'ER_INVALID_FIELD_SIZE';
+exports[1900] = 'ER_MISSING_HA_CREATE_OPTION';
+exports[1901] = 'ER_ENGINE_OUT_OF_MEMORY';
+exports[1902] = 'ER_PASSWORD_EXPIRE_ANONYMOUS_USER';
+exports[1903] = 'ER_SLAVE_SQL_THREAD_MUST_STOP';
+exports[1904] = 'ER_NO_FT_MATERIALIZED_SUBQUERY';
+exports[1905] = 'ER_INNODB_UNDO_LOG_FULL';
+exports[1906] = 'ER_INVALID_ARGUMENT_FOR_LOGARITHM';
+exports[1907] = 'ER_SLAVE_CHANNEL_IO_THREAD_MUST_STOP';
+exports[1908] = 'ER_WARN_OPEN_TEMP_TABLES_MUST_BE_ZERO';
+exports[1909] = 'ER_WARN_ONLY_MASTER_LOG_FILE_NO_POS';
+exports[1910] = 'ER_QUERY_TIMEOUT';
+exports[1911] = 'ER_NON_RO_SELECT_DISABLE_TIMER';
+exports[1912] = 'ER_DUP_LIST_ENTRY';
+exports[1913] = 'ER_SQL_MODE_NO_EFFECT';
+exports[1914] = 'ER_AGGREGATE_ORDER_FOR_UNION';
+exports[1915] = 'ER_AGGREGATE_ORDER_NON_AGG_QUERY';
+exports[1916] = 'ER_SLAVE_WORKER_STOPPED_PREVIOUS_THD_ERROR';
+exports[1917] = 'ER_DONT_SUPPORT_SLAVE_PRESERVE_COMMIT_ORDER';
+exports[1918] = 'ER_SERVER_OFFLINE_MODE';
+exports[1919] = 'ER_GIS_DIFFERENT_SRIDS';
+exports[1920] = 'ER_GIS_UNSUPPORTED_ARGUMENT';
+exports[1921] = 'ER_GIS_UNKNOWN_ERROR';
+exports[1922] = 'ER_GIS_UNKNOWN_EXCEPTION';
+exports[1923] = 'ER_GIS_INVALID_DATA';
+exports[1924] = 'ER_BOOST_GEOMETRY_EMPTY_INPUT_EXCEPTION';
+exports[1925] = 'ER_BOOST_GEOMETRY_CENTROID_EXCEPTION';
+exports[1926] = 'ER_BOOST_GEOMETRY_OVERLAY_INVALID_INPUT_EXCEPTION';
+exports[1927] = 'ER_BOOST_GEOMETRY_TURN_INFO_EXCEPTION';
+exports[1928] = 'ER_BOOST_GEOMETRY_SELF_INTERSECTION_POINT_EXCEPTION';
+exports[1929] = 'ER_BOOST_GEOMETRY_UNKNOWN_EXCEPTION';
+exports[1930] = 'ER_STD_BAD_ALLOC_ERROR';
+exports[1931] = 'ER_STD_DOMAIN_ERROR';
+exports[1932] = 'ER_STD_LENGTH_ERROR';
+exports[1933] = 'ER_STD_INVALID_ARGUMENT';
+exports[1934] = 'ER_STD_OUT_OF_RANGE_ERROR';
+exports[1935] = 'ER_STD_OVERFLOW_ERROR';
+exports[1936] = 'ER_STD_RANGE_ERROR';
+exports[1937] = 'ER_STD_UNDERFLOW_ERROR';
+exports[1938] = 'ER_STD_LOGIC_ERROR';
+exports[1939] = 'ER_STD_RUNTIME_ERROR';
+exports[1940] = 'ER_STD_UNKNOWN_EXCEPTION';
+exports[1941] = 'ER_GIS_DATA_WRONG_ENDIANESS';
+exports[1942] = 'ER_CHANGE_MASTER_PASSWORD_LENGTH';
+exports[1943] = 'ER_USER_LOCK_WRONG_NAME';
+exports[1944] = 'ER_USER_LOCK_DEADLOCK';
+exports[1945] = 'ER_REPLACE_INACCESSIBLE_ROWS';
+exports[1946] = 'ER_ALTER_OPERATION_NOT_SUPPORTED_REASON_GIS';
+exports[1947] = 'ER_ILLEGAL_USER_VAR';
+exports[1948] = 'ER_GTID_MODE_OFF';
+exports[1949] = 'ER_UNSUPPORTED_BY_REPLICATION_THREAD';
+exports[1950] = 'ER_INCORRECT_TYPE';
+exports[1951] = 'ER_FIELD_IN_ORDER_NOT_SELECT';
+exports[1952] = 'ER_AGGREGATE_IN_ORDER_NOT_SELECT';
+exports[1953] = 'ER_INVALID_RPL_WILD_TABLE_FILTER_PATTERN';
+exports[1954] = 'ER_NET_OK_PACKET_TOO_LARGE';
+exports[1955] = 'ER_INVALID_JSON_DATA';
+exports[1956] = 'ER_INVALID_GEOJSON_MISSING_MEMBER';
+exports[1957] = 'ER_INVALID_GEOJSON_WRONG_TYPE';
+exports[1958] = 'ER_INVALID_GEOJSON_UNSPECIFIED';
+exports[1959] = 'ER_DIMENSION_UNSUPPORTED';
+exports[1960] = 'ER_SLAVE_CHANNEL_DOES_NOT_EXIST';
+exports[1961] = 'ER_SLAVE_MULTIPLE_CHANNELS_HOST_PORT';
+exports[1962] = 'ER_SLAVE_CHANNEL_NAME_INVALID_OR_TOO_LONG';
+exports[1963] = 'ER_SLAVE_NEW_CHANNEL_WRONG_REPOSITORY';
+exports[1964] = 'ER_SLAVE_CHANNEL_DELETE';
+exports[1965] = 'ER_SLAVE_MULTIPLE_CHANNELS_CMD';
+exports[1966] = 'ER_SLAVE_MAX_CHANNELS_EXCEEDED';
+exports[1967] = 'ER_SLAVE_CHANNEL_MUST_STOP';
+exports[1968] = 'ER_SLAVE_CHANNEL_NOT_RUNNING';
+exports[1969] = 'ER_SLAVE_CHANNEL_WAS_RUNNING';
+exports[1970] = 'ER_SLAVE_CHANNEL_WAS_NOT_RUNNING';
+exports[1971] = 'ER_SLAVE_CHANNEL_SQL_THREAD_MUST_STOP';
+exports[1972] = 'ER_SLAVE_CHANNEL_SQL_SKIP_COUNTER';
+exports[1973] = 'ER_WRONG_FIELD_WITH_GROUP_V2';
+exports[1974] = 'ER_MIX_OF_GROUP_FUNC_AND_FIELDS_V2';
+exports[1975] = 'ER_WARN_DEPRECATED_SYSVAR_UPDATE';
+exports[1976] = 'ER_WARN_DEPRECATED_SQLMODE';
+exports[1977] = 'ER_CANNOT_LOG_PARTIAL_DROP_DATABASE_WITH_GTID';
+exports[1978] = 'ER_GROUP_REPLICATION_CONFIGURATION';
+exports[1979] = 'ER_GROUP_REPLICATION_RUNNING';
+exports[1980] = 'ER_GROUP_REPLICATION_APPLIER_INIT_ERROR';
+exports[1981] = 'ER_GROUP_REPLICATION_STOP_APPLIER_THREAD_TIMEOUT';
+exports[1982] = 'ER_GROUP_REPLICATION_COMMUNICATION_LAYER_SESSION_ERROR';
+exports[1983] = 'ER_GROUP_REPLICATION_COMMUNICATION_LAYER_JOIN_ERROR';
+exports[1984] = 'ER_BEFORE_DML_VALIDATION_ERROR';
+exports[1985] = 'ER_PREVENTS_VARIABLE_WITHOUT_RBR';
+exports[1986] = 'ER_RUN_HOOK_ERROR';
+exports[1987] = 'ER_TRANSACTION_ROLLBACK_DURING_COMMIT';
+exports[1988] = 'ER_GENERATED_COLUMN_FUNCTION_IS_NOT_ALLOWED';
+exports[1989] = 'ER_UNSUPPORTED_ALTER_INPLACE_ON_VIRTUAL_COLUMN';
+exports[1990] = 'ER_WRONG_FK_OPTION_FOR_GENERATED_COLUMN';
+exports[1991] = 'ER_NON_DEFAULT_VALUE_FOR_GENERATED_COLUMN';
+exports[1992] = 'ER_UNSUPPORTED_ACTION_ON_GENERATED_COLUMN';
+exports[1993] = 'ER_GENERATED_COLUMN_NON_PRIOR';
+exports[1994] = 'ER_DEPENDENT_BY_GENERATED_COLUMN';
+exports[1995] = 'ER_GENERATED_COLUMN_REF_AUTO_INC';
+exports[1996] = 'ER_FEATURE_NOT_AVAILABLE';
+exports[1997] = 'ER_CANT_SET_GTID_MODE';
+exports[1998] = 'ER_CANT_USE_AUTO_POSITION_WITH_GTID_MODE_OFF';
+exports[1999] = 'ER_CANT_REPLICATE_ANONYMOUS_WITH_AUTO_POSITION';
+exports[2000] = 'ER_CANT_REPLICATE_ANONYMOUS_WITH_GTID_MODE_ON';
+exports[2001] = 'ER_CANT_REPLICATE_GTID_WITH_GTID_MODE_OFF';
+exports[2002] = 'ER_CANT_SET_ENFORCE_GTID_CONSISTENCY_ON_WITH_ONGOING_GTID_VIOLATING_TRANSACTIONS';
+exports[2003] = 'ER_SET_ENFORCE_GTID_CONSISTENCY_WARN_WITH_ONGOING_GTID_VIOLATING_TRANSACTIONS';
+exports[2004] = 'ER_ACCOUNT_HAS_BEEN_LOCKED';
+exports[2005] = 'ER_WRONG_TABLESPACE_NAME';
+exports[2006] = 'ER_TABLESPACE_IS_NOT_EMPTY';
+exports[2007] = 'ER_WRONG_FILE_NAME';
+exports[2008] = 'ER_BOOST_GEOMETRY_INCONSISTENT_TURNS_EXCEPTION';
+exports[2009] = 'ER_WARN_OPTIMIZER_HINT_SYNTAX_ERROR';
+exports[2010] = 'ER_WARN_BAD_MAX_EXECUTION_TIME';
+exports[2011] = 'ER_WARN_UNSUPPORTED_MAX_EXECUTION_TIME';
+exports[2012] = 'ER_WARN_CONFLICTING_HINT';
+exports[2013] = 'ER_WARN_UNKNOWN_QB_NAME';
+exports[2014] = 'ER_UNRESOLVED_HINT_NAME';
+exports[2015] = 'ER_WARN_ON_MODIFYING_GTID_EXECUTED_TABLE';
+exports[2016] = 'ER_PLUGGABLE_PROTOCOL_COMMAND_NOT_SUPPORTED';
+exports[2017] = 'ER_LOCKING_SERVICE_WRONG_NAME';
+exports[2018] = 'ER_LOCKING_SERVICE_DEADLOCK';
+exports[2019] = 'ER_LOCKING_SERVICE_TIMEOUT';
+exports[2020] = 'ER_GIS_MAX_POINTS_IN_GEOMETRY_OVERFLOWED';
+exports[2021] = 'ER_SQL_MODE_MERGED';
+exports[2022] = 'ER_VTOKEN_PLUGIN_TOKEN_MISMATCH';
+exports[2023] = 'ER_VTOKEN_PLUGIN_TOKEN_NOT_FOUND';
+exports[2024] = 'ER_CANT_SET_VARIABLE_WHEN_OWNING_GTID';
+exports[2025] = 'ER_SLAVE_CHANNEL_OPERATION_NOT_ALLOWED';
+exports[2026] = 'ER_INVALID_JSON_TEXT';
+exports[2027] = 'ER_INVALID_JSON_TEXT_IN_PARAM';
+exports[2028] = 'ER_INVALID_JSON_BINARY_DATA';
+exports[2029] = 'ER_INVALID_JSON_PATH';
+exports[2030] = 'ER_INVALID_JSON_CHARSET';
+exports[2031] = 'ER_INVALID_JSON_CHARSET_IN_FUNCTION';
+exports[2032] = 'ER_INVALID_TYPE_FOR_JSON';
+exports[2033] = 'ER_INVALID_CAST_TO_JSON';
+exports[2034] = 'ER_INVALID_JSON_PATH_CHARSET';
+exports[2035] = 'ER_INVALID_JSON_PATH_WILDCARD';
+exports[2036] = 'ER_JSON_VALUE_TOO_BIG';
+exports[2037] = 'ER_JSON_KEY_TOO_BIG';
+exports[2038] = 'ER_JSON_USED_AS_KEY';
+exports[2039] = 'ER_JSON_VACUOUS_PATH';
+exports[2040] = 'ER_JSON_BAD_ONE_OR_ALL_ARG';
+exports[2041] = 'ER_NUMERIC_JSON_VALUE_OUT_OF_RANGE';
+exports[2042] = 'ER_INVALID_JSON_VALUE_FOR_CAST';
+exports[2043] = 'ER_JSON_DOCUMENT_TOO_DEEP';
+exports[2044] = 'ER_JSON_DOCUMENT_NULL_KEY';
+exports[2045] = 'ER_SECURE_TRANSPORT_REQUIRED';
+exports[2046] = 'ER_NO_SECURE_TRANSPORTS_CONFIGURED';
+exports[2047] = 'ER_DISABLED_STORAGE_ENGINE';
+exports[2048] = 'ER_USER_DOES_NOT_EXIST';
+exports[2049] = 'ER_USER_ALREADY_EXISTS';
+exports[2050] = 'ER_AUDIT_API_ABORT';
+exports[2051] = 'ER_INVALID_JSON_PATH_ARRAY_CELL';
+exports[2052] = 'ER_BUFPOOL_RESIZE_INPROGRESS';
+exports[2053] = 'ER_FEATURE_DISABLED_SEE_DOC';
+exports[2054] = 'ER_SERVER_ISNT_AVAILABLE';
+exports[2055] = 'ER_SESSION_WAS_KILLED';
+exports[2056] = 'ER_CAPACITY_EXCEEDED';
+exports[2057] = 'ER_CAPACITY_EXCEEDED_IN_RANGE_OPTIMIZER';
+exports[2058] = 'ER_TABLE_NEEDS_UPG_PART';
+exports[2059] = 'ER_CANT_WAIT_FOR_EXECUTED_GTID_SET_WHILE_OWNING_A_GTID';
 
 },{}],287:[function(require,module,exports){
 // Manually extracted from mysql-5.5.23/include/mysql_com.h
@@ -46577,7 +47017,7 @@ exports.SERVER_STATUS_DB_DROPPED           = 256; /* A database was dropped */
 exports.SERVER_STATUS_NO_BACKSLASH_ESCAPES = 512;
 /**
   Sent to the client if after a prepared statement reprepare
-  we discovered that the new statement returns a different 
+  we discovered that the new statement returns a different
   number of result set columns.
 */
 exports.SERVER_STATUS_METADATA_CHANGED = 1024;
@@ -46697,6 +47137,43 @@ exports['Amazon RDS'] = {
     + 'M+Ru+A0eM+jJ7uCjUoZKcpX8xkj4nmSnz9NMPog3wdOSB9cAW7XIc5mHa656wr7I\n'
     + 'WJxVcYNHTXIjCcng2zMKd1aCcl2KSFfy56sRfT7J5Wp69QSr+jq8KM55gw8uqAwi\n'
     + 'VPrXn2899T1rcTtFYFP16WXjGuc0\n'
+    + '-----END CERTIFICATE-----\n',
+
+    /**
+     * Amazon RDS ap-northeast-2 certificate CA 2015 to 2020
+     *
+     *   CN = Amazon RDS ap-northeast-2 CA
+     *   OU = Amazon RDS
+     *   O = Amazon Web Services, Inc.
+     *   L = Seattle
+     *   ST = Washington
+     *   C = US
+     *   P = 2015-11-06T00:05:46Z/2020-03-05T00:05:46Z
+     *   F = 77:D9:33:4E:CE:56:FC:42:7B:29:57:8D:67:59:ED:29:4E:18:CB:6B
+     */
+    '-----BEGIN CERTIFICATE-----\n'
+    + 'MIIEATCCAumgAwIBAgIBTDANBgkqhkiG9w0BAQUFADCBijELMAkGA1UEBhMCVVMx\n'
+    + 'EzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxIjAgBgNVBAoM\n'
+    + 'GUFtYXpvbiBXZWIgU2VydmljZXMsIEluYy4xEzARBgNVBAsMCkFtYXpvbiBSRFMx\n'
+    + 'GzAZBgNVBAMMEkFtYXpvbiBSRFMgUm9vdCBDQTAeFw0xNTExMDYwMDA1NDZaFw0y\n'
+    + 'MDAzMDUwMDA1NDZaMIGUMQswCQYDVQQGEwJVUzETMBEGA1UECAwKV2FzaGluZ3Rv\n'
+    + 'bjEQMA4GA1UEBwwHU2VhdHRsZTEiMCAGA1UECgwZQW1hem9uIFdlYiBTZXJ2aWNl\n'
+    + 'cywgSW5jLjETMBEGA1UECwwKQW1hem9uIFJEUzElMCMGA1UEAwwcQW1hem9uIFJE\n'
+    + 'UyBhcC1ub3J0aGVhc3QtMiBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC\n'
+    + 'ggEBAKSwd+RVUzTRH0FgnbwoTK8TMm/zMT4+2BvALpAUe6YXbkisg2goycWuuWLg\n'
+    + 'jOpFBB3GtyvXZnkqi7MkDWUmj1a2kf8l2oLyoaZ+Hm9x/sV+IJzOqPvj1XVUGjP6\n'
+    + 'yYYnPJmUYqvZeI7fEkIGdFkP2m4/sgsSGsFvpD9FK1bL1Kx2UDpYX0kHTtr18Zm/\n'
+    + '1oN6irqWALSmXMDydb8hE0FB2A1VFyeKE6PnoDj/Y5cPHwPPdEi6/3gkDkSaOG30\n'
+    + 'rWeQfL3pOcKqzbHaWTxMphd0DSL/quZ64Nr+Ly65Q5PRcTrtr55ekOUziuqXwk+o\n'
+    + '9QpACMwcJ7ROqOznZTqTzSFVXFECAwEAAaNmMGQwDgYDVR0PAQH/BAQDAgEGMBIG\n'
+    + 'A1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFM6Nox/QWbhzWVvzoJ/y0kGpNPK+\n'
+    + 'MB8GA1UdIwQYMBaAFE4C7qw+9hXITO0s9QXBj5yECEmDMA0GCSqGSIb3DQEBBQUA\n'
+    + 'A4IBAQCTkWBqNvyRf3Y/W21DwFx3oT/AIWrHt0BdGZO34tavummXemTH9LZ/mqv9\n'
+    + 'aljt6ZuDtf5DEQjdsAwXMsyo03ffnP7doWm8iaF1+Mui77ot0TmTsP/deyGwukvJ\n'
+    + 'tkxX8bZjDh+EaNauWKr+CYnniNxCQLfFtXYJsfOdVBzK3xNL+Z3ucOQRhr2helWc\n'
+    + 'CDQgwfhP1+3pRVKqHvWCPC4R3fT7RZHuRmZ38kndv476GxRntejh+ePffif78bFI\n'
+    + '3rIZCPBGobrrUMycafSbyXteoGca/kA+/IqrAPlk0pWQ4aEL0yTWN2h2dnjoD7oX\n'
+    + 'byIuL/g9AGRh97+ssn7D6bDRPTbW\n'
     + '-----END CERTIFICATE-----\n',
 
     /**
@@ -46995,10 +47472,10 @@ exports['Amazon RDS'] = {
     + '8YDWk3IIc1sd0bkZqoau2Q==\n'
     + '-----END CERTIFICATE-----\n'
   ]
-}
+};
 
 },{}],289:[function(require,module,exports){
-// Manually extracted from mysql-5.5.23/include/mysql_com.h
+// Manually extracted from mysql-5.7.9/include/mysql.h.pp
 // some more info here: http://dev.mysql.com/doc/refman/5.5/en/c-api-prepared-statement-type-codes.html
 exports.DECIMAL     = 0x00; // aka DECIMAL (http://dev.mysql.com/doc/refman/5.0/en/precision-math-decimal-changes.html)
 exports.TINY        = 0x01; // aka TINYINT, 1 byte
@@ -47017,6 +47494,10 @@ exports.YEAR        = 0x0d; // aka YEAR, 1 byte (don't ask)
 exports.NEWDATE     = 0x0e; // aka ?
 exports.VARCHAR     = 0x0f; // aka VARCHAR (?)
 exports.BIT         = 0x10; // aka BIT, 1-8 byte
+exports.TIMESTAMP2  = 0x11; // aka TIMESTAMP with fractional seconds
+exports.DATETIME2   = 0x12; // aka DATETIME with fractional seconds
+exports.TIME2       = 0x13; // aka TIME with fractional seconds
+exports.JSON        = 0xf5; // aka JSON
 exports.NEWDECIMAL  = 0xf6; // aka DECIMAL
 exports.ENUM        = 0xf7; // aka ENUM
 exports.SET         = 0xf8; // aka SET
@@ -47295,7 +47776,7 @@ function FieldPacket(options) {
   this.decimals   = options.decimals;
   this.default    = options.default;
   this.zeroFill   = options.zeroFill;
-  this.protocol41 = options.protocol41
+  this.protocol41 = options.protocol41;
 }
 
 FieldPacket.prototype.parse = function(parser) {
@@ -47634,8 +48115,10 @@ function typeCast(field, parser, timeZone, supportBigNumbers, bigNumberStrings, 
 
   switch (field.type) {
     case Types.TIMESTAMP:
+    case Types.TIMESTAMP2:
     case Types.DATE:
     case Types.DATETIME:
+    case Types.DATETIME2:
     case Types.NEWDATE:
       var dateString = parser.parseLengthCodedString();
       if (dateStrings) {
@@ -47813,7 +48296,7 @@ ChangeUser.prototype.start = function(handshakeInitializationPacket) {
     user          : this._user,
     scrambleBuff  : scrambleBuff,
     database      : this._database,
-    charsetNumber : this._charsetNumber,
+    charsetNumber : this._charsetNumber
   });
 
   this._currentConfig.user          = this._user;
@@ -47867,7 +48350,7 @@ Handshake.prototype['HandshakeInitializationPacket'] = function(packet) {
 
   this._config.protocol41 = packet.protocol41;
 
-  var serverSSLSupport = packet.serverCapabilities1 & ClientConstants.CLIENT_SSL; 
+  var serverSSLSupport = packet.serverCapabilities1 & ClientConstants.CLIENT_SSL;
 
   if (this._config.ssl) {
     if (!serverSSLSupport) {
@@ -47926,7 +48409,7 @@ Handshake.prototype['UseOldPasswordPacket'] = function(packet) {
   }
 
   this.emit('packet', new Packets.OldPasswordPacket({
-    scrambleBuff : Auth.scramble323(this._handshakeInitializationPacket.scrambleBuff(), this._config.password),
+    scrambleBuff : Auth.scramble323(this._handshakeInitializationPacket.scrambleBuff(), this._config.password)
   }));
 };
 
@@ -48254,12 +48737,12 @@ Sequence.prototype._packetToError = function(packet) {
   return err;
 };
 
-Sequence.prototype._addLongStackTrace = function(err) {
-  if (!this._callSite) {
+Sequence.prototype._addLongStackTrace = function _addLongStackTrace(err) {
+  if (!this._callSite || !this._callSite.stack) {
     return;
   }
 
-  var delimiter = '\n    --------------------\n' ;
+  var delimiter = '\n    --------------------\n';
 
   if (err.stack.indexOf(delimiter) > -1) {
     return;
@@ -48357,13 +48840,13 @@ exports.Sequence = require('./Sequence');
 exports.Statistics = require('./Statistics');
 
 },{"./ChangeUser":311,"./Handshake":312,"./Ping":313,"./Query":314,"./Quit":315,"./Sequence":316,"./Statistics":317}],319:[function(require,module,exports){
-/*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/*! bignumber.js v2.1.3 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
-;(function (global) {
+;(function (globalObj) {
     'use strict';
 
     /*
-      bignumber.js v2.0.7
+      bignumber.js v2.1.3
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2015 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -48371,7 +48854,7 @@ exports.Statistics = require('./Statistics');
     */
 
 
-    var BigNumber, crypto, parseNumeric,
+    var cryptoObj, parseNumeric,
         isNumeric = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
         mathceil = Math.ceil,
         mathfloor = Math.floor,
@@ -48393,11 +48876,13 @@ exports.Statistics = require('./Statistics');
          */
         MAX = 1E9;                                   // 0 to MAX_INT32
 
+    if ( typeof crypto != 'undefined' ) cryptoObj = crypto;
+
 
     /*
      * Create and return a BigNumber constructor.
      */
-    function another(configObj) {
+    function constructorFactory(configObj) {
         var div,
 
             // id tracks the caller function, so its name can be included in error messages.
@@ -48672,7 +49157,7 @@ exports.Statistics = require('./Statistics');
         // CONSTRUCTOR PROPERTIES
 
 
-        BigNumber.another = another;
+        BigNumber.another = constructorFactory;
 
         BigNumber.ROUND_UP = 0;
         BigNumber.ROUND_DOWN = 1;
@@ -48800,8 +49285,8 @@ exports.Statistics = require('./Statistics');
             if ( has( p = 'CRYPTO' ) ) {
 
                 if ( v === !!v || v === 1 || v === 0 ) {
-                    CRYPTO = !!( v && crypto && typeof crypto == 'object' );
-                    if ( v && !CRYPTO && ERRORS ) raise( 2, 'crypto unavailable', crypto );
+                    CRYPTO = !!( v && cryptoObj );
+                    if ( v && !CRYPTO && ERRORS ) raise( 2, 'crypto unavailable', cryptoObj );
                 } else if (ERRORS) {
                     raise( 2, p + notBool, v );
                 }
@@ -48891,9 +49376,9 @@ exports.Statistics = require('./Statistics');
                 if (CRYPTO) {
 
                     // Browsers supporting crypto.getRandomValues.
-                    if ( crypto && crypto.getRandomValues ) {
+                    if ( cryptoObj && cryptoObj.getRandomValues ) {
 
-                        a = crypto.getRandomValues( new Uint32Array( k *= 2 ) );
+                        a = cryptoObj.getRandomValues( new Uint32Array( k *= 2 ) );
 
                         for ( ; i < k; ) {
 
@@ -48910,7 +49395,7 @@ exports.Statistics = require('./Statistics');
                             // Probability that v >= 9e15, is
                             // 7199254740992 / 9007199254740992 ~= 0.0008, i.e. 1 in 1251
                             if ( v >= 9e15 ) {
-                                b = crypto.getRandomValues( new Uint32Array(2) );
+                                b = cryptoObj.getRandomValues( new Uint32Array(2) );
                                 a[i] = b[0];
                                 a[i + 1] = b[1];
                             } else {
@@ -48924,10 +49409,10 @@ exports.Statistics = require('./Statistics');
                         i = k / 2;
 
                     // Node.js supporting crypto.randomBytes.
-                    } else if ( crypto && crypto.randomBytes ) {
+                    } else if ( cryptoObj && cryptoObj.randomBytes ) {
 
                         // buffer
-                        a = crypto.randomBytes( k *= 7 );
+                        a = cryptoObj.randomBytes( k *= 7 );
 
                         for ( ; i < k; ) {
 
@@ -48940,7 +49425,7 @@ exports.Statistics = require('./Statistics');
                                   ( a[i + 4] << 16 ) + ( a[i + 5] << 8 ) + a[i + 6];
 
                             if ( v >= 9e15 ) {
-                                crypto.randomBytes(7).copy( a, i );
+                                cryptoObj.randomBytes(7).copy( a, i );
                             } else {
 
                                 // 0 <= (v % 1e14) <= 99999999999999
@@ -48950,7 +49435,7 @@ exports.Statistics = require('./Statistics');
                         }
                         i = k / 7;
                     } else if (ERRORS) {
-                        raise( 14, 'crypto unavailable', crypto );
+                        raise( 14, 'crypto unavailable', cryptoObj );
                     }
                 }
 
@@ -49659,7 +50144,7 @@ exports.Statistics = require('./Statistics');
                             sd -= x.e + 1;
 
                             // 1, 0.1, 0.01, 0.001, 0.0001 etc.
-                            xc[0] = pows10[ sd % LOG_BASE ];
+                            xc[0] = pows10[ ( LOG_BASE - sd % LOG_BASE ) % LOG_BASE ];
                             x.e = -sd || 0;
                         } else {
 
@@ -50712,10 +51197,7 @@ exports.Statistics = require('./Statistics');
          * Return the value of this BigNumber converted to a number primitive.
          */
         P.toNumber = function () {
-            var x = this;
-
-            // Ensure zero has correct sign.
-            return +x || ( x.s ? x.s * 0 : NaN );
+            return +this;
         };
 
 
@@ -50844,10 +51326,23 @@ exports.Statistics = require('./Statistics');
 
 
         /*
-         * Return as toString, but do not accept a base argument.
+         * Return as toString, but do not accept a base argument, and include the minus sign for
+         * negative zero.
          */
         P.valueOf = P.toJSON = function () {
-            return this.toString();
+            var str,
+                n = this,
+                e = n.e;
+
+            if ( e === null ) return n.toString();
+
+            str = coeffToString( n.c );
+
+            str = e <= TO_EXP_NEG || e >= TO_EXP_POS
+                ? toExponential( str, e )
+                : toFixedPoint( str, e );
+
+            return n.s < 0 ? '-' + str : str;
         };
 
 
@@ -51024,24 +51519,25 @@ exports.Statistics = require('./Statistics');
     // EXPORT
 
 
-    BigNumber = another();
-
-    // AMD.
+   // AMD.
     if ( typeof define == 'function' && define.amd ) {
-        define( function () { return BigNumber; } );
+        define( function () { return constructorFactory(); } );
 
-    // Node and other environments that support module.exports.
+    // Node.js and other environments that support module.exports.
     } else if ( typeof module != 'undefined' && module.exports ) {
-        module.exports = BigNumber;
-        if ( !crypto ) try { crypto = require('crypto'); } catch (e) {}
+        module.exports = constructorFactory();
+
+        // Split string stops browserify adding crypto shim.
+        if ( !cryptoObj ) try { cryptoObj = require('cry' + 'pto'); } catch (e) {}
 
     // Browser.
     } else {
-        global.BigNumber = BigNumber;
+        if ( !globalObj ) globalObj = typeof self != 'undefined' ? self : Function('return this')();
+        globalObj.BigNumber = constructorFactory();
     }
 })(this);
 
-},{"crypto":8}],320:[function(require,module,exports){
+},{}],320:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -52854,8 +53350,12 @@ function endWritable(stream, state, cb) {
 
 // NOTE: These type checking functions intentionally don't use `instanceof`
 // because it is fragile and can be easily faked with `Object.create()`.
-function isArray(ar) {
-  return Array.isArray(ar);
+
+function isArray(arg) {
+  if (Array.isArray) {
+    return Array.isArray(arg);
+  }
+  return objectToString(arg) === '[object Array]';
 }
 exports.isArray = isArray;
 
@@ -52895,7 +53395,7 @@ function isUndefined(arg) {
 exports.isUndefined = isUndefined;
 
 function isRegExp(re) {
-  return isObject(re) && objectToString(re) === '[object RegExp]';
+  return objectToString(re) === '[object RegExp]';
 }
 exports.isRegExp = isRegExp;
 
@@ -52905,13 +53405,12 @@ function isObject(arg) {
 exports.isObject = isObject;
 
 function isDate(d) {
-  return isObject(d) && objectToString(d) === '[object Date]';
+  return objectToString(d) === '[object Date]';
 }
 exports.isDate = isDate;
 
 function isError(e) {
-  return isObject(e) &&
-      (objectToString(e) === '[object Error]' || e instanceof Error);
+  return (objectToString(e) === '[object Error]' || e instanceof Error);
 }
 exports.isError = isError;
 
@@ -52930,14 +53429,12 @@ function isPrimitive(arg) {
 }
 exports.isPrimitive = isPrimitive;
 
-function isBuffer(arg) {
-  return Buffer.isBuffer(arg);
-}
-exports.isBuffer = isBuffer;
+exports.isBuffer = Buffer.isBuffer;
 
 function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
+
 }).call(this,{"isBuffer":require("../../../../../../browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js")})
 },{"../../../../../../browserify/node_modules/insert-module-globals/node_modules/is-buffer/index.js":202}],326:[function(require,module,exports){
 arguments[4][201][0].apply(exports,arguments)
@@ -52959,29 +53456,132 @@ var expect = require('chai').expect;
 var where  = require('../../config/database/where');
 
 describe("DATABASE", function () {
-    describe("QUERY BUILDER", function () {
-        describe("WHERE", function () {
-            describe(".where()", function () {
-                it("should match when passing integer", function (){
-                    var s = where.where({
-                        sid: 3
+    describe("Query Builder", function () {
+        describe(".where()", function () {
+            describe("Operators", function () {
+
+                describe("=", function () {
+
+                    it("should not have backtick when passing integer", function (){
+                        var s = where.where({
+                            sid: 3
+                        });
+                        expect(s).equal("`sid`=3");
                     });
-                    expect(s).equal("`sid`=3");
+
+                    it("should empty when passing empty object", function (){
+                        var s = where.where({});
+                        expect(s).equal("");
+                    });
+
+                    it("should empty when no object passed", function (){
+                        var s = where.where();
+                        expect(s).equal("");
+                    });
+
+                    it("should add AND operator when passing multiple equal", function (){
+                        var s = where.where({
+                            name: 'dinar',
+                            dept: 'cse'
+                        });
+                        expect(s).equal("`name`='dinar' AND `dept`='cse'");
+                    });
+
                 });
+
+                describe("AND, OR", function () {
+
+                    it("should have bracket", function (){
+                        var s = where.where({
+                            $and:{
+                                name: 'dinar',
+                                dept: 'cse'
+                            }
+                        });
+                        expect(s).equal("(`name`='dinar' AND `dept`='cse')");
+                    });
+
+                    it("should pass on nested statement", function (){
+                        var s = where.where({
+                            $and:{
+                                name: 'dinar',
+                                $or: {
+                                    dept: 'cse',
+                                    roll: '120135'
+                                }
+                            }
+                        });
+                        expect(s).equal("(`name`='dinar' AND (`dept`='cse' OR `roll`='120135'))");
+                    });
+
+                });
+
+                describe(">, <, >=, <=, !=", function () {
+
+                    it("should pass", function (){
+                        var s = where.where({
+                            $and:{
+                                $gt:{
+                                    age: 3
+                                },
+                                $lt:{
+                                    age: 6
+                                },
+                                $ge:{
+                                    height: 5
+                                },
+                                $le:{
+                                    height: 9
+                                },
+                                $ne:{
+                                    roll: 112200
+                                }
+                            }
+                        });
+                        expect(s).equal("(`age`>3 AND `age`<6 AND `height`>=5 AND `height`<=9 AND `roll`!=112200)");
+                    });
+
+                });
+
+                describe("BETWEEN , NOT BETWEEN", function () {
+
+                    it("should pass", function (){
+                        var s = where.where({
+                            $and:{
+                                $between:{
+                                    age:[25,30]
+                                },
+                                $notBetween:{
+                                    roll:[100,200]
+                                }
+                            }
+                        });
+                        expect(s).equal("((`age` BETWEEN 25 AND 30) AND (`roll` NOT BETWEEN 100 AND 200))");
+                    });
+
+                });
+
+                describe("LIKE , NOT LIKE", function () {
+
+                    it("should pass", function (){
+                        var s = where.where({
+                            $or:{
+                                $like:{
+                                    firstName: '%dinar'
+                                },
+                                $notLike:{
+                                    lastName: 'Ok%'
+                                }
+                            }
+                        });
+                        expect(s).equal("((`firstName` LIKE '%dinar') OR (`lastName` NOT LIKE 'Ok%'))");
+                    });
+
+                });
+
             });
         });
     });
 });
 
-},{"../../config/database/where":1,"chai":231}],331:[function(require,module,exports){
-var expect = require('chai').expect;
-
-describe("Route", function () {
-    describe(".get()", function () {
-        it("should get works", function (){
-            expect(4+5).equal(9);
-        });
-    });
-});
-
-},{"chai":231}]},{},[330,331]);
+},{"../../config/database/where":1,"chai":231}]},{},[330]);

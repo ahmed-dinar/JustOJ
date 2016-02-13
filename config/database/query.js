@@ -1,3 +1,5 @@
+"use strict"
+
 /**
  * @author <a href="madinar.cse@gmail.com">Ahmed Dinar</a>
  *
@@ -54,17 +56,22 @@ exports.findAll = function(options,callback) {
 
     _.forOwn(options, function(value, key) {
 
-        if( key === 'attributes' ){
-            inserts.push(value);
-        }
-        else if( key === 'where' ){
-            whq = where.where(value);
-        }
-        else if( key === 'limit' ){
-            limit =  mysql.escape(value);
-        }
-        else if( key === 'offset' ){
-            offset =  mysql.escape(value);
+        switch(key) {
+            case 'attributes':
+                inserts.push(value);
+                break;
+            case 'where':
+                whq = where.where(value);
+                break;
+            case 'limit':
+                limit =  mysql.escape(value);
+                break;
+            case 'offset':
+                offset =  mysql.escape(value);
+                break;
+
+            default:
+
         }
 
     });

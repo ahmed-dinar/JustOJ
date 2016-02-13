@@ -1,4 +1,4 @@
-orm.in('user_solved_list').insertUnique({
+Query.in('user_solved_list').insertUnique({
     uid: '2',
     pid: '5',
     where: {

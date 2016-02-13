@@ -3,7 +3,7 @@
  * @type {exports|module.exports}
  */
 
-var orm         = require('../config/database/orm');
+var Query         = require('../config/database/query');
 var bcrypt      = require('bcryptjs');
 var _           = require('lodash');
 var moment      = require("moment");
@@ -43,7 +43,7 @@ exports.resister = function (req, res, next) {
                         var expire = moment(now).add(24, 'hours').format("YYYY-MM-DD HH:mm:ss");
 
 
-                        orm.in('temp_user').insert({
+                        Query.in('temp_user').insert({
                             username: username,
                             password: hash,
                             email   : email,
@@ -142,7 +142,7 @@ exports.verify = function (req, res, next) {
                 function(callback) {
 
 
-                    orm.in('temp_user').findAll({
+                    Query.in('temp_user').findAll({
                         attributes: ['username','password','email'],
                         where:{
                             token: token
@@ -166,7 +166,7 @@ exports.verify = function (req, res, next) {
                 //insert vafied user to main database
                 function (rows,callback) {
 
-                    orm.in('users').insert({
+                    Query.in('users').insert({
                         username : rows.username,
                         password : rows.password,
                         email    : rows.email,
@@ -186,7 +186,7 @@ exports.verify = function (req, res, next) {
                 //delete temp user
                 function (callback) {
 
-                    orm.in('temp_user').delete({
+                    Query.in('temp_user').delete({
                         where:{
                             token: token
                         }

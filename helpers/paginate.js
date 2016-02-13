@@ -5,13 +5,13 @@
  */
 
 
-var orm         = require('../config/database/orm');
+var Query         = require('../config/database/query');
 var Pagination  = require('../helpers/pagination').Pagination;
 
 
 exports.findAll = function(table,cur_page,limit,callback) {
 
-    orm.in(table).countAll(function (err, rows) {
+    Query.in(table).countAll(function (err, rows) {
 
         var total_count = 0;
 
@@ -27,7 +27,7 @@ exports.findAll = function(table,cur_page,limit,callback) {
 
         var pagination = new Pagination(cur_page,limit,total_count);
 
-        orm.in(table).findAll({
+        Query.in(table).findAll({
             limit: pagination.page_limit,
             offset: pagination.offset()
         },function(err,results){

@@ -10,6 +10,7 @@ html {
 }
 body {
   margin: 0;
+
 }
 article,
 aside,
@@ -1085,7 +1086,7 @@ body {
   font-size: 14px;
   line-height: 1.42857143;
   color: #333;
-  background-color: #eeeeee;
+  background-color: #efefef;
 }
 input,
 button,
@@ -4214,7 +4215,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   position: relative;
   min-height: 50px;
   margin-bottom: 20px;
-  border: 1px solid transparent;
+  border: none;
+  box-shadow: 0 0 5px #999;
 }
 @media (min-width: 768px) {
   .navbar {

@@ -1,6 +1,6 @@
 var express     = require('express');
 var router      = express.Router();
-var Orm         = require('../config/database/orm');
+var Orm         = require('../config/database/query');
 
 router.get('/', function(req, res, next) {
     res.status(404).send('Page Not found');
