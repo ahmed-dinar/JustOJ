@@ -1,28 +1,32 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
 @import url(https://fonts.googleapis.com/css?family=Carter+One);
-@import url(https://fonts.googleapis.com/css?family=Comfortaa|Aclonica|Quando|Offside|Catamaran|Martel+Sans);
+@import url(https://fonts.googleapis.com/css?family=Maven+Pro|Hammersmith+One);
+@import url(https://fonts.googleapis.com/css?family=Poiret+One);
+
 
 #web-title{
-  font-family: 'Carter One', cursive;
-  color: #000;
-  font-weight: 200;
+  font-family: 'Hammersmith One', sans-serif;
+  color: #4C4F84;
+  font-weight: 500;
+  border: 0px;
+  background: #fff;
+  border-radius: 3px;
+  border: 0px;
 }
 
-
 html{
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Maven Pro', sans-serif;
 }
 
 body {
   padding-top: 70px;
   margin: 0px;
-  font-family: 'Source Sans Pro', sans-serif;
-
+  font-family: 'Maven Pro', sans-serif;
 }
 
 p,h4,div{
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 500;
+  font-family: 'Maven Pro', sans-serif;
+
 }
 
 a {

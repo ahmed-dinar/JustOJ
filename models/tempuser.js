@@ -74,7 +74,7 @@ exports.resister = function (req, res, next) {
                 service: 'gmail',
                 auth: {
                     user: 'testjudge.me@gmail.com ',
-                    pass: 'just115599'
+                    pass: 'justoj112358'
                 }
             });
 
