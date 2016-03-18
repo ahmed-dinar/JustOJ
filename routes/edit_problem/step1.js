@@ -18,6 +18,7 @@ module.exports = function(req,res,next){
             if( row.length == 0 ) { return next(new Error('what you r looking for!')); }
             //if( row[0].status == 'incomplete' ) { return next(new Error('what you r looking for!!!')); }
 
+
             res.render('ep1', {
                 title: "editproblem | JUST Online Judge",
                 locals: req.app.locals,
@@ -42,6 +43,7 @@ module.exports = function(req,res,next){
                     input: entities.encodeHTML(req.body.input),
                     output: entities.encodeHTML(req.body.output),
                     author: entities.encodeHTML(req.body.author),
+                    score: entities.encodeHTML(req.body.score),
                     statement: entities.encodeHTML(req.body.statement)
                 },
                 where:{

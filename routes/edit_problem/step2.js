@@ -5,6 +5,7 @@ var uuid        = require('node-uuid');
 var fse         = require('fs-extra');
 var path        = require("path");
 var async       = require('async');
+var rimraf      = require('rimraf');
 
 module.exports = function(req,res,next){
   var module = {};
@@ -52,6 +53,10 @@ module.exports = function(req,res,next){
           user: req.user,
           _: _,
           pid: req.params.pid,
+          successMsg: req.flash('tcUpSuccess'),
+          errMsg: req.flash('tcUpErr'),
+          rsuccessMsg:  req.flash('tcRemSuccess'),
+          rerrMsg:  req.flash('tcRemErr'),
           data: row
         });
 
@@ -62,31 +67,47 @@ module.exports = function(req,res,next){
 
   module.post = function(){
 
+
     var busboy = new Busboy({ headers: req.headers });
     var uniquename =  uuid.v4();
     var namemap = ['i','o'];
+    var noFile = 0;
     var fname = 0;
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+
+        if( noFile || !filename ){
+            noFile = 1;
+            file.resume();
+            return;
+        }
+
         var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename + '/' + namemap[fname++] + path.extname(filename));
         file.pipe(fse.createOutputStream(saveTo));
     });
 
     busboy.on('finish', function() {
-      console.log('Test Case Upload complete!');
+
+        if( noFile ){
+            clearUpload( path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename) );
+            req.flash('tcUpErr', 'Please Select File');
+            res.redirect('/ep/' + req.params.pid + '/2');
+            return;
+        }
 
       async.waterfall([
         function(callback) {
             insertTestCase(req.params.pid,uniquename,callback);
-        },
-        function(callback){
-           reloadTestCases(req.params.pid,callback)
         }
       ], function (error, row) {
-          if( error ) { return next(error); }
-          else {
-              res.end(row);
+          if( error ) {
+              console.log(error);
+              req.flash('tcUpErr', 'Something went wrong with Database!');
           }
+          else {
+              req.flash('tcUpSuccess', 'Test Case added!');
+          }
+          res.redirect('/ep/' + req.params.pid + '/2');
       });
 
     });
@@ -103,21 +124,19 @@ var insertTestCase = function(pid,uniquename,callback){
     pid: pid,
     created: _.now()
   },function(err,row){
-      if( err ) { return callback(new Error('Porblem inserting TC: ')); }
+      if( err ) { return callback(err); }
 
-      callback(null);
+      callback(null,'success');
   });
 };
 
+var clearUpload = function(remDir){
 
-var  reloadTestCases = function(pid,callback){
-  Problems.findTC('test_cases',{
-    where:{
-      pid: pid
-    }
-  },function(err,row){
-    if( err ) { return callback(new Error(err)); }
+    console.log( 'Cleaning up: ' + remDir);
 
-    callback(null,JSON.stringify(row));
-  });
+    rimraf(remDir, function(error){
+        if( error ){ console.log(error); return; }
+
+        console.log('Clean up upload TC');
+    });
 };

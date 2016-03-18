@@ -3,6 +3,8 @@ var fse         = require('fs-extra');
 var async       = require('async');
 var _           = require('lodash');
 var Problems    = require('../../models/problems');
+var rimraf      = require('rimraf');
+
 
 module.exports = function(req, res, next) {
 
@@ -16,16 +18,16 @@ module.exports = function(req, res, next) {
         },
         function(testCase,callback){
             removeTestCase(testCase,req.body.pid,req.body.casename,callback);
-        },
-        function(callback){
-            reloadTestCases(req.body.pid,callback);
         }
     ], function (error, row) {
 
-        if( error ) { return next(new Error(error)); }
-        else {
-            res.end(row);
+        if( error ) {
+            req.flash('tcRemErr',error);
+        }else{
+            req.flash('tcRemSuccess', 'Test Case Removed');
         }
+
+        res.redirect('/ep/' + req.body.pid + '/2');
 
     });
 
@@ -50,7 +52,7 @@ var findTestCase = function(pid,casename,callback){
     });
 };
 
-var  removeTestCase = function(testCase,pid,casename,callback){
+var removeTestCase = function(testCase,pid,casename,callback){
 
     Problems.removeTC('test_cases',{
         where:{
@@ -65,21 +67,10 @@ var  removeTestCase = function(testCase,pid,casename,callback){
 
         var TCDir =  path.normalize(process.cwd() + '/files/tc/p/' + pid +  '/' + testCase.name);
 
-        fse.remove(TCDir, function (err) {
+        rimraf(TCDir, function (err) {
+            if( err ){ console.log(err); }
             callback(null);
         });
 
-    });
-};
-
-var  reloadTestCases = function(pid,callback){
-    Problems.findTC('test_cases',{
-        where:{
-            pid: pid
-        }
-    },function(err,row){
-        if( err ) { return callback(new Error(err)); }
-
-        callback(null,JSON.stringify(row));
     });
 };

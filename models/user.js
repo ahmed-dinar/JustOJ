@@ -1,4 +1,4 @@
-var Query             = require('../config/database/query');
+var Query           = require('../config/database/query');
 var async           = require('async');
 var bcrypt          = require('bcryptjs');
 

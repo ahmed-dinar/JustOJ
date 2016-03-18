@@ -105,3 +105,14 @@ pre{
   cursor: inherit;
   display: block;
 }
+
+
+.note-group-select-from-files {
+  display: none;
+}
+
+.limit-p{
+  border: 1px solid grey;
+  padding: 3px 8px;
+  border-radius: 3px;
+}

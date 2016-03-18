@@ -12,10 +12,10 @@ var flash            = require('connect-flash');
 
 
 //routes
-var routes        = require('.//routes/index');
+var routes        = require('./routes/index');
 var login         = require('./routes/login');
-var Logout        = require('.//routes/logout');
-var resister      = require('.//routes/resister');
+var Logout        = require('./routes/logout');
+var resister      = require('./routes/resister');
 var problems      = require('./routes/problems');
 var status        = require('./routes/status');
 var ranks         = require('./routes/ranks');
@@ -32,6 +32,11 @@ app.locals.site = {
     title: 'JUST OJ',
     url: 'http://localhost:8888/',
     description: 'SOMETHING'
+};
+
+app.locals.defines = {
+    RUN_DIR: '/SECURITY/JAIL/home/run'
+   // RUN_DIR: '/home/ahmed-dinar/Desktop/testRun'
 };
 
 

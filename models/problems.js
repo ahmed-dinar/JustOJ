@@ -57,7 +57,11 @@ exports.decodeToHTML = function(data){
     var obj = {};
 
     _.forOwn(data, function(value, key) {
-        obj[key] = JSON.stringify(entities.decodeHTML(value || '--' ));
+        if( value === null ){
+            obj[key] = '';
+        }else {
+            obj[key] = JSON.stringify(entities.decodeHTML(value));
+        }
     });
 
     return obj;

@@ -2,9 +2,16 @@
 //g++ -O2 -fomit-frame-pointer -o input input.cpp
 //gcc -O2 -fomit-frame-pointer -o input input.cpp
 
+/*
+ Codemarshal flags:
+ gcc -Wall -O2 -static source.c -lm
+ g++ -Wall -O2 -static -std=c++11 source.cpp
+*/
+
 
 var exec  = require('child_process').exec;
 var fs    = require('fs-extra');
+
 
 /**
  *

@@ -8,11 +8,14 @@
 
     <link rel="stylesheet" href="/stylesheets/style.css">
 
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css">
+
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <!-- Optional theme -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
     <!-- Latest compiled and minified JavaScript -->
     <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+
 
     <script src="/pace/pace.min.js"></script>
     <link href="/pace/pace-minimal.css" rel="stylesheet" />
@@ -43,7 +46,7 @@
                 <h3>Set and Test Limits</h3>
 
 
-                <form method="post"  name="judgesolution" id="judgesolution" enctype="multipart/form-data" >
+                <form method="post" action="/ep/<%= pid %>/tjs" name="judgesolution" id="judgesolution" enctype="multipart/form-data" >
 
                     <div class="row form-group">
                         <div class="col-xs-4">
@@ -66,7 +69,6 @@
                         <input type="hidden" form="judgesolution" id="sellanguage" />
                     </div>
 
-                    <div id="soluploadingDiv"><img src="/images/ajax-loader.gif"> <b>Submitting...</b></div>
 
                     <div class="form-group">
                         <div class="well well-sm">
@@ -97,6 +99,19 @@
 
                 </form>
 
+
+                <script type="text/javascript">
+
+                    $("#judgesolution").submit( function(eventObj) {
+                        $('<input />').attr('type', 'hidden')
+                                .attr('name', "language")
+                                .attr('value',  document.getElementById("language").value)
+                                .appendTo('#judgesolution');
+                        return true;
+                    });
+
+                </script>
+
             </div>
         </div>
     </div>
@@ -106,18 +121,99 @@
             <div class="panel-body">
 
 
+                <h3>C</h3>
+                <div class="row form-group">
+                    <div class="col-xs-4">
+
+                        <label style="margin-right: 5px;">Time Limit</label>
+                        <% if(data.timelimit.length){ %>
+                            <i class="fa fa-check-square fa-lg" style="color:green;"></i>
+                            <p class="limit-p"><%- data.timelimit %></p>
+                        <% }else{ %>
+                            <i class="fa fa-times  fa-lg" style="color:red"></i>
+                            <p class="limit-p">not set</p>
+                        <% } %>
+
+                    </div>
+                    <div class="col-xs-4">
+
+                        <label style="margin-right: 5px;">Memory Limit</label>
+                        <% if(data.memorylimit.length){ %>
+                            <i class="fa fa-check-square fa-lg" style="color:green"></i>
+                            <p class="limit-p"><%- data.memorylimit %></p>
+                        <% }else{ %>
+                            <i class="fa fa-times  fa-lg" style="color:red"></i>
+                            <p class="limit-p">not set</p>
+                        <% } %>
+
+                    </div>
+                </div>
+
+
+                <h3>C++</h3>
+                <div class="row form-group">
+                    <div class="col-xs-4">
+
+                        <label style="margin-right: 5px;">Time Limit</label>
+                        <% if(data.timelimit.length){ %>
+                        <i class="fa fa-check-square fa-lg" style="color:green;"></i>
+                        <p class="limit-p"><%- data.timelimit %></p>
+                        <% }else{ %>
+                        <i class="fa fa-times  fa-lg" style="color:red"></i>
+                        <p class="limit-p">not set</p>
+                        <% } %>
+
+                    </div>
+                    <div class="col-xs-4">
+
+                        <label style="margin-right: 5px;">Memory Limit</label>
+                        <% if(data.memorylimit.length){ %>
+                        <i class="fa fa-check-square fa-lg" style="color:green"></i>
+                        <p class="limit-p"><%- data.memorylimit %></p>
+                        <% }else{ %>
+                        <i class="fa fa-times  fa-lg" style="color:red"></i>
+                        <p class="limit-p">not set</p>
+                        <% } %>
+
+                    </div>
+                </div>
+
+                <h3>JAVA</h3>
+                <div class="row form-group">
+                    <div class="col-xs-4">
+
+                        <label style="margin-right: 5px;">Time Limit</label>
+                        <% if(data.timelimit.length){ %>
+                        <i class="fa fa-check-square fa-lg" style="color:green;"></i>
+                        <p class="limit-p"><%- data.timelimit %></p>
+                        <% }else{ %>
+                        <i class="fa fa-times  fa-lg" style="color:red"></i>
+                        <p class="limit-p">not set</p>
+                        <% } %>
+
+                    </div>
+                    <div class="col-xs-4">
+
+                        <label style="margin-right: 5px;">Memory Limit</label>
+                        <% if(data.memorylimit.length){ %>
+                        <i class="fa fa-check-square fa-lg" style="color:green"></i>
+                        <p class="limit-p"><%- data.memorylimit %></p>
+                        <% }else{ %>
+                        <i class="fa fa-times  fa-lg" style="color:red"></i>
+                        <p class="limit-p">not set</p>
+                        <% } %>
+
+                    </div>
+                </div>
 
             </div>
         </div>
     </div>
 
-    <script type="text/javascript">
-        var PID = <%= pid %>;
-    </script>
-    <script type='text/javascript' src="/javascripts/pagefunctions/ep2.js" ></script>
 
 
 </div>
+
 
 
 

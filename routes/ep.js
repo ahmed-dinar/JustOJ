@@ -97,7 +97,8 @@ router.post('/new/', function(req, res, next) {
             input: entities.encodeHTML(req.body.input),
             output: entities.encodeHTML(req.body.output),
             author: entities.encodeHTML(req.body.author),
-            statement: entities.encodeHTML(req.body.statement)
+            statement: entities.encodeHTML(req.body.statement),
+            score: entities.encodeHTML(req.body.score)
         };
 
 

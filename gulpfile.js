@@ -4,6 +4,8 @@ var browserify      = require('browserify');
 var livereload      = require('gulp-livereload');
 var source          = require('vinyl-source-stream');
 var glob            = require('glob');
+var nodemon         = require('gulp-nodemon');
+var notify          = require('gulp-notify');
 
 gulp.task('test', function() {
 
@@ -26,4 +28,25 @@ gulp.task('test-view', ['test'], function() {
 gulp.task('watch', function() {
     livereload.listen();
     gulp.watch('./test/**/*.js', ['test-view']);
+});
+
+
+gulp.task('nodemon_restart', function () {
+
+    livereload.listen();
+
+    nodemon({
+             script: 'bin/www',
+             ext: 'ejs js',
+             exec: 'sudo node'
+        })
+        .on('crash', function () {
+            console.log('script crashed for some reason');
+        })
+        .on('restart', function () {
+            gulp.src('bin/www')
+                .pipe(livereload())
+                .pipe(notify('Page Reloading...'));
+        });
+
 });

@@ -516,6 +516,7 @@ fieldset[disabled] .btn-danger.active {
   box-shadow: none;
   border: 0px;
   border-radius: 3px;
+  border: 1px solid #ddd;
 }
 .panel-default > .panel-heading {
   background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #e8e8e8 100%);

@@ -1,0 +1,23 @@
+ALTER TABLE `problems`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `problems_limit`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `submissions`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `submission_code`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `temp_user`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `users`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `problems_limit`
+ADD CONSTRAINT fk_limit
+FOREIGN KEY(`pid`)
+REFERENCES problems(`id`)
+ON DELETE CASCADE

@@ -58,6 +58,10 @@
                     <label for="author">Author</label>
                     <input type="text"  name="author"  class="form-control"  >
                 </div>
+                <div class="col-xs-4">
+                    <label for="score">Score</label>
+                    <input type="text"  name="score"  class="form-control"  >
+                </div>
             </div>
 
             <div class="row form-group">
@@ -148,6 +152,7 @@ Case 2: 5
                         $('input[name="author"]').val(getEmpty(<%- data.author %>));
                         $('input[name="input"]').val(getEmpty(<%- data.input %>));
                         $('input[name="output"]').val(getEmpty(<%- data.output %>));
+                        $('input[name="score"]').val(getEmpty(<%- data.score %>));
                     }
                 },
                 height: 300,                 // set editor height
