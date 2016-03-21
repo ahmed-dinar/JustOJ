@@ -16,10 +16,7 @@
 
 
 
-    <!-- include libraries(jQuery, bootstrap, fontawesome) -->
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet">
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
-    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
 
     <!-- include summernote css/js-->
     <link href="/stylesheets/summernote.css" rel="stylesheet">
@@ -50,8 +47,8 @@
         <form method="post" action="/ep/new" role="form"   onsubmit="return submitForm()" >
 
             <div class="form-group">
-                <label for="name" >Problem Name</label>
-                <input type="text" id="pname" name="name" value="Sample Title"  class="form-control" >
+                <label for="title" >Problem Title</label>
+                <input type="text" id="pname" name="title" value="Sample Title"  class="form-control" >
             </div>
 
             <div class="row form-group">
@@ -61,7 +58,7 @@
                 </div>
                 <div class="col-xs-4">
                     <label for="score">Score</label>
-                    <input type="text"  name="score"   class="form-control"  >
+                    <input type="text"  name="score"  value="10" class="form-control"  >
                 </div>
             </div>
 
@@ -83,6 +80,26 @@
 Case 1: 3
 Case 2: 5
                         </textarea>
+                </div>
+            </div>
+
+            <label>Tags</label>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <label class="checkbox-inline"><input type="checkbox" name="beginner" value="hi">Beginner</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="addhoc" value="addhoc">Add-hoc</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="dp" value="dp">DP</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="ds" value="ds">Data Structures</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="dac" value="dac">Divide and Conquer</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="fom" value="fom">Flow/Matching</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="geometry" value="geometry">Geometry</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="graph" value="graph">Graph Theory</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="number" value="number">Number Theory</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="string" value="string">String</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="recursion" value="recursion">Recursion</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="searching" value="searching">Searching</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="game" value="game">Game Theory</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="matrix" value="matrix">Matrix</label>
                 </div>
             </div>
 

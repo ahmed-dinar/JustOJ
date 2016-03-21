@@ -58,7 +58,9 @@ exports.findAll = function(options,callback) {
 
         switch(key) {
             case 'attributes':
-                inserts.push(value);
+                if(value.length){
+                    inserts.push(value);
+                }
                 break;
             case 'where':
                 whq = where.where(value);
@@ -121,6 +123,51 @@ exports.insert = function(options,callback) {
     return query(sql,callback);
 
 };
+
+
+/**
+ *
+ * @param options
+ * @param callback
+ * @returns {*}
+ */
+exports.insertMultiple = function(options,callback) {
+
+    var sql = "INSERT INTO " + mysql.escapeId(this.table);
+    var i;
+
+    sql+="(";
+    for(i=0; i<options.columns.length; i++){
+        if(i>0){
+            sql += ",";
+        }
+        sql += mysql.escapeId(options.columns[i]);
+    }
+    sql+=") VALUES ";
+
+
+    for(i=0; i<options.values.length; i++){
+
+        var value = options.values[i];
+
+        if(i>0){
+            sql += ",";
+        }
+
+        sql+="(";
+        for(var j=0; j<value.length; j++){
+            if(j>0){
+                sql += ",";
+            }
+            sql += mysql.escape(String(value[j]));
+        }
+        sql+=") ";
+    }
+
+
+    return query(sql,callback);
+};
+
 
 /**
  *
@@ -204,6 +251,8 @@ exports.delete = function(options,callback) {
  */
 exports.update = function(options,callback) {
 
+    console.log(options);
+
     var sql = "UPDATE ?? SET ?";
     var inserts = [this.table];
     var whq = null;
@@ -237,12 +286,13 @@ exports.update = function(options,callback) {
  */
 function query(sql,callback){
 
-    console.log(sql);
+   // console.log(sql);
 
     dbPool.getConnection(function(err, connection) {
 
         if(err){
-            //console.log(err);
+            console.log('err establishing connection with database::');
+            console.log(err);
             return callback('error establishing connection with database!',null);
         }
 
@@ -251,7 +301,8 @@ function query(sql,callback){
             connection.release();
 
             if(err){
-               // console.log(err);
+                console.log('database error!::');
+                console.log(err);
                 return callback('database error!',null);
             }
 

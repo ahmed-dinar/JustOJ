@@ -8,6 +8,8 @@
 
     <link rel="stylesheet" href="/stylesheets/style.css">
 
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <!-- Optional theme -->
     <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
@@ -38,14 +40,14 @@
 
 
     <div class="col-md-12">
-        <% if (successMsg.length > 0) { %>
+        <% if (successMsg.length) { %>
             <div class="col-md-6 col-md-offset-3">
                 <div class="alert alert-success alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <%= successMsg %>
                 </div>
             </div>
-        <% }else if (errMsg.length > 0) { %>
+        <% }else if (errMsg.length) { %>
             <div class="col-md-6 col-md-offset-3">
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -54,14 +56,14 @@
             </div>
         <% } %>
 
-        <% if (rsuccessMsg.length > 0) { %>
+        <% if (rsuccessMsg.length) { %>
             <div class="col-md-6 col-md-offset-3">
                 <div class="alert alert-success alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <%= rsuccessMsg %>
                 </div>
             </div>
-        <% }else if (rerrMsg.length > 0) { %>
+        <% }else if (rerrMsg.length) { %>
             <div class="col-md-6 col-md-offset-3">
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -93,14 +95,13 @@
                                             <td>
                                                 Test Case:  <%= i+1 %>
                                             </td>
-                                            <input type="hidden" value="<%= data[0].name %>" />
+                                            <input type="hidden" value="<%= data[i] %>" />
                                         </tr>
                                     <% } %>
 
                                 </tbody>
                             </table>
 
-                <div id="caseuploadingDiv"><img src="/images/ajax-loader.gif"> <b>Uploading...</b></div>
 
                 <div class="well well-sm">
                     <form method="post" action="/ep/<%= pid %>/2" name="cases" id="cases" enctype="multipart/form-data" >

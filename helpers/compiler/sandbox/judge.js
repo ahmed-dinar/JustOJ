@@ -5,6 +5,9 @@ var fs          = require('fs');
 var async       = require('async');
 var _           = require('lodash');
 var jsdiff      = require('diff');
+var uuid        = require('node-uuid');
+var rimraf      = require('rimraf');
+var mkdirp      = require('mkdirp');
 
 var Compiler    = require('./compiler');
 
@@ -15,8 +18,6 @@ var Compiler    = require('./compiler');
  * @param cb
  */
 exports.run = function(opts,cb){
-
-    console.log(opts);
 
     async.waterfall([
         function(callback){
@@ -32,13 +33,69 @@ exports.run = function(opts,cb){
             });
 
         }
-    ], function (error, result) {
+    ], function (error, runs) {
 
 
+        if( error ){
+            if( runs ){
 
-        cb(error,result);
+                console.log('Why Compiler Error');
+                console.log(error);
+                console.log('And Runs::');
+                console.log(runs);
+
+                cb(null,{ compiler: 'Compiler Error' });
+            }else{
+                cb(error);
+            }
+            return;
+        }
+
+        getFinalResult(runs,opts.language,cb);
+
     });
 
+};
+
+var getFinalResult = function(runs,language,cb){
+
+
+    var finalResult = 'Accepted';
+    var cpu = 0;
+    var memory = 0;
+    var runResult = {};
+    var runTest = [];
+
+
+    _.forEach(runs,function(value) {
+
+        cpu = Math.max(cpu, parseInt(value.cpu));
+        memory = Math.max(memory, parseInt(value.memory));
+
+        if( value.result !=='Accepted' && finalResult === 'Accepted' ){
+            finalResult = value.result;
+        }
+
+        var temp = {
+            cpu: value.cpu,
+            memory: value.memory,
+            result: value.result,
+            language: language
+        };
+        runTest.push(temp);
+
+    });
+
+    runResult['runs'] = runTest;
+    runResult['language'] = language;
+    runResult['final'] = {
+        cpu: cpu,
+        memory: memory,
+        result: finalResult,
+        language: language
+    };
+
+    cb(null,runResult);
 };
 
 var compileCode = function (opts,cb) {
@@ -64,6 +121,7 @@ var getTestCases = function (pid,cb) {
 
         if( err ){
             console.log('getTestCases error:: ');
+            console.log(err);
             return cb(err);
         }
 
@@ -82,9 +140,26 @@ var getTestCases = function (pid,cb) {
 };
 
 
-var runTestCase = function(opts,testCase,cb){
+var runTestCase = function(options,testCase,cb){
+
+
+
+    var uniquename =  uuid.v4();
+    var saveTo = path.normalize(options.codeDir + '/' + uniquename);
+
+    console.log('run in : ' + options.codeDir);
+    console.log('and 0unTestCase in : ' + saveTo);
+
+    var opts = options;
+    opts['fileDir'] = uniquename;
 
     async.waterfall([
+        function(callback) {
+            makeTempDir(saveTo,callback);
+        },
+        function(callback) {
+            createAdditionalFiles(saveTo,callback);
+        },
         function(callback) {
             runCode(opts,testCase,callback);
         },
@@ -111,6 +186,38 @@ var runTestCase = function(opts,testCase,cb){
 };
 
 
+var makeTempDir = function(saveTo,cb){
+    mkdirp(saveTo, function (err) {
+        if (err) {
+            console.log('OMG ' + saveTo + ' creation failed! permission denied!!');
+            return cb(err);
+        }
+        cb();
+    });
+};
+
+var createAdditionalFiles = function(saveTo,cb){
+
+    var files = ['output.txt','error.txt','result.txt'];
+    async.eachSeries(files, function(file, callback) {
+
+        fs.open(saveTo + '/' + file ,'w',function(err, fd){
+            if( err ){
+                return callback(err);
+            }
+
+            callback();
+        });
+
+    }, function(err){
+        if( err ){
+            return cb(err);
+        }
+        cb();
+    });
+
+};
+
 var runCode = function (opts,testCase,cb) {
 
     Compiler.run(opts, testCase, function (err,stdout, stderr) {
@@ -132,7 +239,9 @@ var runCode = function (opts,testCase,cb) {
 
 var checkResult = function (opts,cb) {
 
-    fs.readFile(opts.codeDir +'/result.txt', 'utf8', function (error,data) {
+    var resDir = opts.codeDir + '/' + opts.fileDir +'/result.txt';
+
+    fs.readFile(resDir, 'utf8', function (error,data) {
 
         if (error ) { return cb(error); }
 
@@ -189,7 +298,8 @@ var compareResult = function (opts,testCase,resultObj,cb) {
         },
         function(judgeData,callback){
 
-            fs.readFile(opts.codeDir +'/output.txt', 'utf8', function (error,userData) {
+            var resDir = opts.codeDir + '/' + opts.fileDir +'/output.txt';
+            fs.readFile(resDir, 'utf8', function (error,userData) {
 
                 if (error) { return callback(error); }
 

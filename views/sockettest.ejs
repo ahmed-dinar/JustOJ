@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Socket.IO chat</title>
+
+        <script type="text/javascript" src="../../javascripts/jquery-2.1.4.min.js"></script>
+
+    </head>
+    <body>
+
+
+        <div id="msg"></div>
+
+        <ul id="messages"></ul>
+        <form action="" id="fmr"  >
+            <input id="m" autocomplete="off" /><input type="submit" value="send" />
+        </form>
+
+
+        <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+        <script>
+
+            var socket = io();
+            $('#fmr').submit(function(){
+                socket.emit('response', $('#m').val());
+                $('#m').val('');
+                return false;
+            });
+
+
+            socket.on('response', function(msg){
+                $('#msg').append('<br>' + msg);
+            });
+
+
+        </script>
+
+
+    </body>
+</html>

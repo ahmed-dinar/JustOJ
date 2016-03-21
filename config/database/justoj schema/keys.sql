@@ -1,7 +1,7 @@
 ALTER TABLE `problems`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `problems_limit`
+ALTER TABLE `problem_tags`
 ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `submissions`

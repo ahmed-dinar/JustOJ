@@ -1,7 +1,7 @@
 ALTER TABLE `problems`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `problems_limit`
+ALTER TABLE `problem_tags`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `submissions`
@@ -16,8 +16,10 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `users`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `problems_limit`
-ADD CONSTRAINT fk_limit
-FOREIGN KEY(`pid`)
-REFERENCES problems(`id`)
-ON DELETE CASCADE
+
+ALTER TABLE `problem_tags`
+ADD CONSTRAINT `fk_problem_tags` 
+FOREIGN KEY(`pid`) 
+REFERENCES `problems`(`id`) 
+ON DELETE CASCADE;
+

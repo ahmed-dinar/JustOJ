@@ -28,11 +28,11 @@ User.login = function(username, password, fn) {
                    return callback(err,null);
                 }
 
-                if (rows.length > 0) {
+                if (rows.length) {
                     return callback(null, rows[0]);
                 }
 
-                return callback('invalid username or password', null);
+                callback('invalid username or password');
 
             });
 
@@ -47,7 +47,7 @@ User.login = function(username, password, fn) {
 
                 if(res){ return callback(null,rows);  }
 
-                return callback('invalid username or password', null);
+                callback('invalid username or password');
 
             });
 
@@ -56,7 +56,7 @@ User.login = function(username, password, fn) {
 
     ], function (err, result) {
 
-        if( err ){ return fn(err,null); }
+        if( err ){ return fn(err); }
 
         return fn(null,result);
 

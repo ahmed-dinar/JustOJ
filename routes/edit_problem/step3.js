@@ -1,43 +1,113 @@
 var Problems    = require('../../models/problems');
+var MyUtil      = require('../../helpers/myutil');
 var _           = require('lodash');
 var Busboy      = require('busboy');
-var uuid        = require('node-uuid');
 var fse         = require('fs-extra');
 var path        = require("path");
 var async       = require('async');
 
 
+
 module.exports = function(req,res,next){
+
     var module = {};
 
     module.get = function(){
 
+        Problems.findById(req.params.pid,['id'],function(err,row){
 
-                Problems.findById(req.params.pid,function(err,row){
+            if( err ) { return next(new Error(err)); }
 
-                    if( err ) { return next(new next(err)); }
+            if( row.length == 0 ) { return next(new Error('what you r looking for!')); }
 
-                    if( row.length == 0 ) { return next(new Error('what you r looking for!')); }
-                    //if( row[0].status == 'incomplete' ) { return callback(new Error('what you r looking for!!!')); }
 
-                    res.render('ep3', {
-                        title: "editproblem | JUST Online Judge",
-                        locals: req.app.locals,
-                        isLoggedIn: req.isAuthenticated(),
-                        user: req.user,
-                        _: _,
-                        pid: req.params.pid,
-                        data: Problems.decodeToHTML(row[0])
-                    });
+            res.render('ep3', {
+                title: "editproblem | JUST Online Judge",
+                locals: req.app.locals,
+                isLoggedIn: req.isAuthenticated(),
+                user: req.user,
+                pid: req.params.pid,
+                error: req.flash('error')
+            });
 
-                });
-
+        });
 
     };
 
     module.post = function(){
-        res.end('Constructing!');
+
+
+        async.waterfall([
+            function(callback) {
+
+                Problems.findById(req.params.pid,['id'],function(err,row){
+
+                    if( err ) { return next(new Error(err)); }
+
+                    if( row.length == 0 ) { return next(new Error('what you r looking for!')); }
+
+                    callback();
+                });
+
+            },
+            function(callback) {
+
+                var cpu = req.body.ftl;
+                var memory = req.body.fml;
+
+                if( cpu && memory &&
+                    MyUtil.isNumeric(cpu) &&
+                    MyUtil.isNumeric(memory) ){
+
+                    var limits = {
+                        cpu: parseInt(parseFloat(cpu)*1000.0),
+                        memory: memory
+                    };
+                    var inserts = {
+                        attributes: limits,
+                        where:{
+                            id: req.params.pid
+                        }
+                    };
+                    Problems.update('problems',inserts,function(err,row){
+
+                        if(err){
+                            console.log('Set limit db error');
+                            console.log(err);
+                            return callback(err);
+                        }
+
+                        callback();
+                    });
+
+                    return;
+                }
+                callback({field: 'Invalid Or Empty Field' });
+            }
+        ], function (error, result) {
+
+            if( error ){
+
+                if( error.field ){
+                    req.flash('error', error.field);
+                    res.redirect('/ep/' + req.params.pid + '/3');
+                    return;
+                }
+                return next(new Error(error));
+            }
+
+            res.redirect('/problems');
+
+        });
+
     };
 
     return module;
 };
+
+function toSecond(milisecond){
+    if(milisecond===null){
+        return milisecond;
+    }
+    return parseFloat(parseFloat(milisecond)/1000.0).toFixed(2);
+}

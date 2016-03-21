@@ -36,160 +36,72 @@
 <!-- Main Content -->
 <div class="container">
 
-    <div class="col-md-10">
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-body">
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Test Case
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                <h3>Test Limits</h3>
+
+
+                <form method="post" action="/s3/formidable" name="judgesolution" id="judgesolution" enctype="multipart/form-data" >
+
+                    <div class="row form-group">
+                        <div class="col-xs-4">
+                            <label form="tl">Time Limit</label>
+                            <input type="text" name="tl" value="" form="judgesolution" class="form-control"  >
+                        </div>
+                        <div class="col-xs-4">
+                            <label form="ml">Memory Limit</label>
+                            <input type="text" name="ml" value="" form="judgesolution"  class="form-control"  >
+                        </div>
                     </div>
-                </div>
 
-                <div style="background-color: #f5f5f5; border: 1px solid #e3e3e3;padding: 10px;" >
-                    <form method="post"  enctype="multipart/form-data" name="myform" >
-                        <table class="table">
-                            <thead>
+                    <div class="form-group">
+                        <label for="language">Select Language</label>
+                        <select class="form-control" id="language"  style="max-width: 200px;" >
+                            <option value="C">C</option>
+                            <option value="CPP">C++</option>
+                            <option value="JAVA">JAVA</option>
+                        </select>
+                        <input type="hidden" form="judgesolution" id="sellanguage" />
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="well well-sm">
+                            <table class="table">
+                                <thead>
                                 <tr>
                                     <th>
-                                        INPUT FILE
-                                    </th>
-                                    <th>
-                                        OUTPUT FILE
+                                        UPLOAD JUDGE SOLUTION
                                     </th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                                </thead>
+                                <tbody>
                                 <tr>
                                     <td>
-                                        <input type='file' id='fileinput' accept="text/plain"  name="input" class="btn btn-primary btn-sm" style="background: #87CEEE" >
-                                    </td>
-                                    <td>
-                                        <input type='file' id='fileinput' accept="text/plain"  name="output" class="btn btn-primary btn-xs" class="btn btn-primary btn-sm" style="background: #87CEEE" >
+                                        <input type='file'  form="judgesolution" name="jsinput" class="btn btn-primary btn-sm" style="background: #87CEEE" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-
-                                        <input type='submit' class="btn btn-primary btn-sm" value="ADD" >
+                                        <input type='submit' class="btn btn-primary btn-sm" value="RUN" >
                                     </td>
-                                    <td></td>
                                 </tr>
-                            </tbody>
+                                </tbody>
 
-                        </table>
-
-                    </form>
-
-                 </div>
-            </div>
-        </div>
-
-
-        <div class="panel panel-default">
-            <div class="panel-body">
-
-                <h3>Ajax Test Form</h3>
-
-                <form method="post" name="ajaxform" enctype="multipart/form-data" id="ajaxform" >
-
-                    <input type="text" name="ajname" id="ajname" form="ajaxform" />
-                    <input type="file" name="ajfile" id="ajfile" form="ajaxform" />
-
-                    <input type="submit"  >
+                            </table>
+                        </div>
+                    </div>
 
                 </form>
 
+
+
+
             </div>
         </div>
-
-
-
     </div>
-
-
-
-
-
-    <script type='text/javascript'>
-
-
-
-        $('#ajaxform').on('submit', function (e) {
-            e.preventDefault();
-
-            var formData = new FormData($('#ajaxform')[0]);
-
-            console.log(formData);
-
-            $.ajax({
-                url: "/s3/ajaxtest",
-                type: "POST",
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                complete: function() {
-                    //called when complete
-                    console.log('process complete');
-                },
-                success: function(data) {
-                    console.log('process sucess : ');
-                    console.log(data);
-                },
-                error: function(err) {
-                    console.log('process error');
-                    console.log(err);
-                }
-            });
-
-        });
-
-
-        window.onload = function() {
-            document.myform.action = get_action();
-        }
-
-        function get_action() {
-            return '/s3/14';
-        }
-
-
-        var count=1;
-        var approvedHTML = '';
-        var limitsize = 5;
-
-        $("#fileinput").on("change", function (e) {
-
-                var files = e.currentTarget.files; // puts all files into an array
-
-                if( files.length == 0 ){
-                    $("#ddddd").html('no file selected');
-                    return;
-                }
-
-                var filesize = ((files[0].size/1024)/1024).toFixed(4); // MB
-
-                if (filesize>limitsize) {
-                    $("#ddddd").html('file size should less than ' + limitsize + 'MB');
-                    $("#fileinput").val('');
-                }
-
-        });
-
-    </script>
 
 
 </div>

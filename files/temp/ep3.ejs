@@ -1,0 +1,201 @@
+<!-- <h3>C</h3>
+                <div class="row form-group">
+                    <div class="col-xs-4">
+
+                        <label style="margin-right: 5px;">Time Limit</label>
+                        <% if(data.timelimit.length){ %>
+                            <i class="fa fa-check-square fa-lg" style="color:green;"></i>
+                            <p class="limit-p"><%- data.timelimit %></p>
+                        <% }else{ %>
+                            <i class="fa fa-times  fa-lg" style="color:red"></i>
+                            <p class="limit-p">not set</p>
+                        <% } %>
+
+                    </div>
+                    <div class="col-xs-4">
+
+                        <label style="margin-right: 5px;">Memory Limit</label>
+                        <% if(data.memorylimit.length){ %>
+                            <i class="fa fa-check-square fa-lg" style="color:green"></i>
+                            <p class="limit-p"><%- data.memorylimit %></p>
+                        <% }else{ %>
+                            <i class="fa fa-times  fa-lg" style="color:red"></i>
+                            <p class="limit-p">not set</p>
+                        <% } %>
+
+                    </div>
+                </div>
+                -->
+
+}
+%>
+
+<form method="post" action="#" name="limits" enctype="multipart/form-data" >
+
+    <% for(var i=0; i<3; i++){ %>
+
+    <h3><%= langName[langs[i]] %></h3>
+    <div class="row form-group">
+        <div class="col-xs-4">
+
+            <label style="margin-right: 5px;">Time Limit</label>
+            <% if(data[langs[i]].timelimit!==null){ %>
+            <i class="fa fa-check-square fa-lg" style="color:green;"></i>
+            <p class="limit-p"><%= data[langs[i]].timelimit %> s</p>
+            <% }else{ %>
+            <i class="fa fa-times  fa-lg" style="color:red"></i>
+            <p class="limit-p">not set</p>
+            <% } %>
+
+        </div>
+        <div class="col-xs-4">
+
+            <label style="margin-right: 5px;">Memory Limit</label>
+            <% if(data[langs[i]].memorylimit!==null){ %>
+            <i class="fa fa-check-square fa-lg" style="color:green"></i>
+            <p class="limit-p"><%= data[langs[i]].memorylimit %> KB</p>
+            <% }else{ %>
+            <i class="fa fa-times  fa-lg" style="color:red"></i>
+            <p class="limit-p">not set</p>
+            <% } %>
+
+        </div>
+    </div>
+
+    <% } %>
+
+    <input type="submit" class="btn btn-lg btn-primary" value="Save and Finish" />
+
+</form>
+
+
+module.get = function(){
+
+var attr = ['language','timelimit','memorylimit'];
+Problems.findProblemLimit(req.params.pid,attr,function(err,row){
+
+if( err ) {
+console.log('findProblemLimit eror::');
+console.log(err);
+return next(new Error(err));
+}
+
+if( row.length == 0 ) {
+return next(new Error('what you r looking for!'));
+}
+
+console.log(row);
+
+var results = {};
+_.forEach(row,function(value) {
+results[value.language] = {
+timelimit: toSecond(value.timelimit),
+memorylimit: value.memorylimit
+};
+});
+
+
+res.render('ep3', {
+title: "editproblem | JUST Online Judge",
+locals: req.app.locals,
+isLoggedIn: req.isAuthenticated(),
+user: req.user,
+pid: req.params.pid,
+runfailed: req.flash('runfailed'),
+data: results,
+runresult: req.flash('runresult')[0],
+runs: req.flash('runs')
+});
+
+});
+
+
+
+};
+
+
+<% if(runs.length){ %>
+
+<div class="col-md-6 pull-left">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <h4>Run</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>CPU</th>
+                    <th>Memory</th>
+                    <th>Language</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><%= toSecond(runresult.cpu) %>s</td>
+                    <td><%= runresult.memory %>KB</td>
+                    <td><%= langName[runresult.language] %></td>
+                    <td>
+                        <% if(runresult.result === 'Accepted'){ %>
+                        <span class="badge" style="background: green; border-radius: 0px;"><%= runresult.result %></span>
+                        <% }else{ %>
+                        <span class="badge" style="background: indianred; border-radius: 0px;"><%= runresult.result %></span>
+                        <% } %>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <h4>Tests</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>CPU</th>
+                    <th>Memory</th>
+                    <th>Language</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <%   for(var i=0; i<runs.length; i++){ %>
+                <tr>
+                    <td><%= i+1 %></td>
+                    <td><%= toSecond(runs[i].cpu) %>s</td>
+                    <td><%= runs[i].memory %>KB</td>
+                    <td><%= langName[runs[i].language] %></td>
+                    <td>
+                        <% if(runs[i].result === 'Accepted'){ %>
+                        <span class="badge" style="background: green; border-radius: 0px;"><%= runs[i].result %></span>
+                        <% }else{ %>
+                        <span class="badge" style="background: indianred; border-radius: 0px;"><%= runs[i].result %></span>
+                        <% } %>
+                    </td>
+                </tr>
+                <% } %>
+
+                </tbody>
+
+            </table>
+
+
+        </div>
+    </div>
+</div>
+<% } %>
+
+
+
+<div class="col-md-12">
+
+    <%  if(runfailed.length){ %>
+    <div class="col-md-6 col-md-offset-3">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <%= runfailed %>
+        </div>
+    </div>
+    <% } %>
+</div>

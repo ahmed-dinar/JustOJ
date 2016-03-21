@@ -7,6 +7,7 @@ var bodyParser       = require('body-parser');
 var expressSession   = require('express-session');
 var passport         = require('passport');
 var flash            = require('connect-flash');
+var io               = require('socket.io')();
 
 //testing ubuntu commit
 
@@ -23,6 +24,8 @@ var ucheck        = require('./routes/ucheck');
 var verify        = require('./routes/verify');
 var ep            = require('./routes/ep');
 var s3p           = require('./routes/s3');
+var sockettest    = require('./routes/sockettest');
+
 
 
 var app = express();
@@ -85,6 +88,7 @@ app.use('/ucheck', ucheck);
 app.use('/verify', verify);
 app.use('/ep', ep);
 app.use('/s3', s3p);
+app.use('/sockettest', sockettest);
 
 
 // catch 404 and forward to error handler
@@ -133,4 +137,67 @@ app.use(function(err, req, res, next) {
 });
 
 
+
+
+
+
+
+/**
+ * Get port from environment and store in Express.
+ */
+var port = normalizePort(process.env.PORT || '8888');
+
+
+/**
+ * set port
+ */
+app.set('port', port);
+
+
+/**
+ * Create HTTP server.
+ */
+var server = require('http').createServer(app);
+
+
+/**
+ * socket.io server
+ */
+io.listen(server);
+require('./config/socket.io/socketio')(io);
+
+
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+server.listen(port);
+
+
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+
+
+
 module.exports = app;
+
+

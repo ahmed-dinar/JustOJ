@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="/stylesheets/style.css">
 
-    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
 
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <!-- Optional theme -->
@@ -39,23 +39,33 @@
 <!-- Main Content -->
 <div class="container">
 
+
+    <%  if(error.length){ %>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <%= error %>
+            </div>
+        </div>
+    <% } %>
+
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-body">
 
-                <h3>Set and Test Limits</h3>
+                <h3>Test Limits</h3>
 
 
-                <form method="post" action="/ep/<%= pid %>/tjs" name="judgesolution" id="judgesolution" enctype="multipart/form-data" >
+                <form method="post" action="#" name="judgesolution" id="judgesolution" enctype="multipart/form-data" >
 
                     <div class="row form-group">
                         <div class="col-xs-4">
-                            <label form="tl">Time Limit</label>
-                            <input type="text" name="tl" value="" form="judgesolution" class="form-control"  >
+                            <label form="tl">Time Limit (S)</label>
+                            <input type="text" name="tl" placeholder="0.0" form="judgesolution" class="form-control"  >
                         </div>
                         <div class="col-xs-4">
-                            <label form="ml">Memory Limit</label>
-                            <input type="text" name="ml" value="" form="judgesolution"  class="form-control"  >
+                            <label form="ml">Memory Limit (MB)</label>
+                            <input type="text" name="ml" placeholder="0" form="judgesolution"  class="form-control"  >
                         </div>
                     </div>
 
@@ -100,111 +110,112 @@
                 </form>
 
 
+
+
+                <script type="text/javascript" src="/javascripts/pageFunctions/judgeCodeTest.js"></script>
                 <script type="text/javascript">
 
-                    $("#judgesolution").submit( function(eventObj) {
-                        $('<input />').attr('type', 'hidden')
-                                .attr('name', "language")
-                                .attr('value',  document.getElementById("language").value)
-                                .appendTo('#judgesolution');
-                        return true;
+                    $(document).ready(function(e) {
+
+
+                        $(document).on('click', '.flb', function () {
+
+                            var ftl = $(this).parent().parent().parent().find(".ftl").html();
+                            var fml = $(this).parent().parent().parent().find(".fml").html();
+
+
+
+                            $('input[name="ftl"]').val(cutStr(ftl));
+                            $('input[name="fml"]').val(cutStr(fml));
+
+
+                        });
+
+                        $('#judgesolution').on('submit', function (ev) {
+
+                            ev.preventDefault();
+
+
+                            $('<input />').attr('type', 'hidden')
+                                    .attr('name', "language")
+                                    .attr('value',  document.getElementById("language").value)
+                                    .appendTo('#judgesolution');
+
+
+                            var form = $('#judgesolution')[0];
+                            var formData = new FormData(form);
+                            var submitUrl = '/ep/' + <%= pid %> + '/tjs';
+
+
+
+                            $("#ajaxResult").html('<h4><img src="/images/hourglass1.gif"> Running Please Wait..</h4>');
+
+                            $.ajax({
+                                url: submitUrl,
+                                type: "POST",
+                                data: formData,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                complete: function(){
+                                    form.reset();
+                                },
+                                success: function(data) {
+                                    showRuns(data);
+                                },
+                                error: function(err) {
+                                    $("#ajaxResult").html('submitting error');
+                                }
+                            });
+
+                        });
+
                     });
 
+
+                    function cutStr(x){
+                        var ret = '';
+                        for(var i=0; i<x.length && (x.charAt(i) === '.' || !isNaN(x.charAt(i)) ); i++){
+                            ret += x.charAt(i);
+                        }
+                        return ret;
+                    }
+
                 </script>
+
+
 
             </div>
         </div>
     </div>
+
 
     <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-body">
 
 
-                <h3>C</h3>
-                <div class="row form-group">
-                    <div class="col-xs-4">
 
-                        <label style="margin-right: 5px;">Time Limit</label>
-                        <% if(data.timelimit.length){ %>
-                            <i class="fa fa-check-square fa-lg" style="color:green;"></i>
-                            <p class="limit-p"><%- data.timelimit %></p>
-                        <% }else{ %>
-                            <i class="fa fa-times  fa-lg" style="color:red"></i>
-                            <p class="limit-p">not set</p>
-                        <% } %>
+                <form method="post" action="/ep/<%= pid %>/3" name="limits" >
 
+                    <h3>Final Limits</h3>
+                    <div class="row form-group">
+                        <div class="col-xs-4">
+                            <label>Time Limit (S)</label>
+                            <input type="text" name="ftl" placeholder="0.0" class="form-control" />
+                        </div>
+                        <div class="col-xs-4">
+                            <label style="margin-right: 5px;">Memory Limit (MB)</label>
+                            <input type="text" name="fml" placeholder="0" class="form-control" />
+                        </div>
                     </div>
-                    <div class="col-xs-4">
 
-                        <label style="margin-right: 5px;">Memory Limit</label>
-                        <% if(data.memorylimit.length){ %>
-                            <i class="fa fa-check-square fa-lg" style="color:green"></i>
-                            <p class="limit-p"><%- data.memorylimit %></p>
-                        <% }else{ %>
-                            <i class="fa fa-times  fa-lg" style="color:red"></i>
-                            <p class="limit-p">not set</p>
-                        <% } %>
+                    <input type="submit" class="btn btn-primary" value="Save and Finish" />
 
-                    </div>
-                </div>
+                </form>
 
 
-                <h3>C++</h3>
-                <div class="row form-group">
-                    <div class="col-xs-4">
-
-                        <label style="margin-right: 5px;">Time Limit</label>
-                        <% if(data.timelimit.length){ %>
-                        <i class="fa fa-check-square fa-lg" style="color:green;"></i>
-                        <p class="limit-p"><%- data.timelimit %></p>
-                        <% }else{ %>
-                        <i class="fa fa-times  fa-lg" style="color:red"></i>
-                        <p class="limit-p">not set</p>
-                        <% } %>
-
-                    </div>
-                    <div class="col-xs-4">
-
-                        <label style="margin-right: 5px;">Memory Limit</label>
-                        <% if(data.memorylimit.length){ %>
-                        <i class="fa fa-check-square fa-lg" style="color:green"></i>
-                        <p class="limit-p"><%- data.memorylimit %></p>
-                        <% }else{ %>
-                        <i class="fa fa-times  fa-lg" style="color:red"></i>
-                        <p class="limit-p">not set</p>
-                        <% } %>
-
-                    </div>
-                </div>
-
-                <h3>JAVA</h3>
-                <div class="row form-group">
-                    <div class="col-xs-4">
-
-                        <label style="margin-right: 5px;">Time Limit</label>
-                        <% if(data.timelimit.length){ %>
-                        <i class="fa fa-check-square fa-lg" style="color:green;"></i>
-                        <p class="limit-p"><%- data.timelimit %></p>
-                        <% }else{ %>
-                        <i class="fa fa-times  fa-lg" style="color:red"></i>
-                        <p class="limit-p">not set</p>
-                        <% } %>
-
-                    </div>
-                    <div class="col-xs-4">
-
-                        <label style="margin-right: 5px;">Memory Limit</label>
-                        <% if(data.memorylimit.length){ %>
-                        <i class="fa fa-check-square fa-lg" style="color:green"></i>
-                        <p class="limit-p"><%- data.memorylimit %></p>
-                        <% }else{ %>
-                        <i class="fa fa-times  fa-lg" style="color:red"></i>
-                        <p class="limit-p">not set</p>
-                        <% } %>
-
-                    </div>
-                </div>
+                <div id="ajaxResult"></div>
 
             </div>
         </div>

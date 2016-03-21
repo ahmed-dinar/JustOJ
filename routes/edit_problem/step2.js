@@ -3,6 +3,7 @@ var _           = require('lodash');
 var Busboy      = require('busboy');
 var uuid        = require('node-uuid');
 var fse         = require('fs-extra');
+var fs          = require('fs');
 var path        = require("path");
 var async       = require('async');
 var rimraf      = require('rimraf');
@@ -15,29 +16,43 @@ module.exports = function(req,res,next){
     async.waterfall([
       function(callback) {
 
-        Problems.findById(req.params.pid,function(err,row){
+            var attr = ['id'];
+            Problems.findById(req.params.pid,attr,function(err,row){
 
-            if( err ) { return callback(new Error(err)); }
+                if( err ) { return callback(err); }
 
-            if( row.length == 0 ) { return callback(new Error('what you r looking for!')); }
-            //if( row[0].status == 'incomplete' ) { return callback(new Error('what you r looking for!!!')); }
+                if( row.length == 0 ) { return callback('what you r looking for!'); }
+                //if( row[0].status == 'incomplete' ) { return callback(new Error('what you r looking for!!!')); }
 
-            callback(null);
+                callback();
 
-        });
+            });
 
       },
       function(callback){
 
-        Problems.findTC('test_cases',{
-          where:{
-            pid: req.params.pid
-          }
-        },function(err,row){
-            if( err ) { return callback(new Error(err)); }
+          var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid);
+          fs.readdir(rootDir, function(err, files) {
 
-            callback(null,row);
-        });
+              var empty = [];
+              if( err ){
+
+                  if( err.code === 'ENOENT' ){
+                      return callback(null,empty);
+                  }
+
+                  console.log('getTestCases error:: ');
+                  console.log(err);
+                  return callback('getTestCases error');
+              }
+
+              if(files){
+                  return callback(null,files);
+              }
+
+              callback(null,empty);
+
+          });
 
       }
     ], function (error, row) {
@@ -51,7 +66,6 @@ module.exports = function(req,res,next){
           locals: req.app.locals,
           isLoggedIn: req.isAuthenticated(),
           user: req.user,
-          _: _,
           pid: req.params.pid,
           successMsg: req.flash('tcUpSuccess'),
           errMsg: req.flash('tcUpErr'),
@@ -70,7 +84,7 @@ module.exports = function(req,res,next){
 
     var busboy = new Busboy({ headers: req.headers });
     var uniquename =  uuid.v4();
-    var namemap = ['i','o'];
+    var namemap = ['i.txt','o.txt'];
     var noFile = 0;
     var fname = 0;
 
@@ -82,33 +96,21 @@ module.exports = function(req,res,next){
             return;
         }
 
-        var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename + '/' + namemap[fname++] + path.extname(filename));
+        var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename + '/' + namemap[fname++]);
         file.pipe(fse.createOutputStream(saveTo));
     });
 
     busboy.on('finish', function() {
 
-        if( noFile ){
+        if( noFile || fname!==2 ){
             clearUpload( path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename) );
             req.flash('tcUpErr', 'Please Select File');
             res.redirect('/ep/' + req.params.pid + '/2');
             return;
         }
 
-      async.waterfall([
-        function(callback) {
-            insertTestCase(req.params.pid,uniquename,callback);
-        }
-      ], function (error, row) {
-          if( error ) {
-              console.log(error);
-              req.flash('tcUpErr', 'Something went wrong with Database!');
-          }
-          else {
-              req.flash('tcUpSuccess', 'Test Case added!');
-          }
-          res.redirect('/ep/' + req.params.pid + '/2');
-      });
+        req.flash('tcUpSuccess', 'Test Case added!');
+        res.redirect('/ep/' + req.params.pid + '/2');
 
     });
 
@@ -118,25 +120,16 @@ module.exports = function(req,res,next){
   return module;
 };
 
-var insertTestCase = function(pid,uniquename,callback){
-  Problems.insertTC('test_cases',{
-    name: uniquename,
-    pid: pid,
-    created: _.now()
-  },function(err,row){
-      if( err ) { return callback(err); }
-
-      callback(null,'success');
-  });
-};
 
 var clearUpload = function(remDir){
 
-    console.log( 'Cleaning up: ' + remDir);
-
     rimraf(remDir, function(error){
-        if( error ){ console.log(error); return; }
+        if( error ){
+            console.log('Clean up upload error::');
+            console.log(error);
+            return;
+        }
 
-        console.log('Clean up upload TC');
+        console.log('Cleaned uploaded TC');
     });
 };

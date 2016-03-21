@@ -12,65 +12,17 @@ module.exports = function(req, res, next) {
         return next(new Error('No Request body found'));
     }
 
-    async.waterfall([
-        function(callback) {
-            findTestCase(req.body.pid,req.body.casename,callback);
-        },
-        function(testCase,callback){
-            removeTestCase(testCase,req.body.pid,req.body.casename,callback);
-        }
-    ], function (error, row) {
+    var TCDir =  path.normalize(process.cwd() + '/files/tc/p/' + req.body.pid +  '/' + req.body.casename);
 
-        if( error ) {
-            req.flash('tcRemErr',error);
+    console.log('tc to remove ' + TCDir);
+    rimraf(TCDir, function (err) {
+        if( err ){
+            console.log(err);
+            req.flash('tcRemErr','Something wrong');
         }else{
             req.flash('tcRemSuccess', 'Test Case Removed');
         }
-
         res.redirect('/ep/' + req.body.pid + '/2');
-
     });
 
-};
-
-
-var findTestCase = function(pid,casename,callback){
-
-    Problems.findTC('test_cases',{
-        where:{
-            $and:{
-                pid: pid,
-                name: casename
-            }
-        }
-    },function(err,row){
-        if( err ) { return callback(new Error(err)); }
-
-        if( row.length == 0 ) { return callback(new Error('No such Test Case Found')); }
-
-        callback(null,row[0]);
-    });
-};
-
-var removeTestCase = function(testCase,pid,casename,callback){
-
-    Problems.removeTC('test_cases',{
-        where:{
-            $and: {
-                pid: pid,
-                name: casename
-            }
-        }
-    },function(err,row){
-
-        if( err ) { return callback(new Error('Problem Removing TC DB')) ; }
-
-        var TCDir =  path.normalize(process.cwd() + '/files/tc/p/' + pid +  '/' + testCase.name);
-
-        rimraf(TCDir, function (err) {
-            if( err ){ console.log(err); }
-            callback(null);
-        });
-
-    });
 };

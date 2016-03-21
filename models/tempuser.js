@@ -52,7 +52,7 @@ exports.resister = function (req, res, next) {
                             token   : token
                         },function(err,rows){
 
-                            if (err) { return callback('insert error', null); }
+                            if (err) { return callback('insert temp user error', null); }
 
                             callback(null, token);
 
@@ -74,7 +74,7 @@ exports.resister = function (req, res, next) {
                 service: 'gmail',
                 auth: {
                     user: 'testjudge.me@gmail.com ',
-                    pass: 'justoj112358'
+                    pass: 'just8864264'
                 }
             });
 
@@ -90,11 +90,14 @@ exports.resister = function (req, res, next) {
             };
 
             transporter.sendMail(mailOptions, function (error, info) {
+
                 if (error) {
 
                     //delete previous inserted row*******************
 
-                    return callback('send mail error' + error, null);
+                    console.log('send mail error::');
+                    console.log(error);
+                    return callback('Error resistration');
                 }
 
                 callback(null, true);
@@ -110,7 +113,7 @@ exports.resister = function (req, res, next) {
             req.flash('resFailure', err);
             res.redirect('/resister');
         } else {
-            req.flash('success', 'Successfully resisterd! A varification link sent to your mail.Please follow the link to activate account in 24 hours.');
+            req.flash('success', 'Successfully resisterd! A varification link sent to ' + email + '.Please follow the link to activate account in 24 hours.');
             res.redirect('/login');
         }
 
@@ -146,12 +149,13 @@ exports.verify = function (req, res, next) {
                         attributes: ['username','password','email'],
                         where:{
                             token: token
-                        }
+                        },
+                        limit: 1
                     },function(err,rows){
 
                         if( err ){ return callback(err,null);  }
 
-                        if( rows.length > 0 ) {
+                        if( rows.length ) {
                             return callback(null,rows[0]);
                         }
 
@@ -176,7 +180,7 @@ exports.verify = function (req, res, next) {
 
                         if (err) { return callback('insert error', null); }
 
-                        callback(null);
+                        callback();
 
                     });
 
@@ -194,7 +198,7 @@ exports.verify = function (req, res, next) {
 
                         if (err) { return callback('delete temp-user error', null); }
 
-                        callback(null,true);
+                        callback();
 
                     });
                 }

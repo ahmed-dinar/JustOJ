@@ -11,19 +11,18 @@ var exec  = require('child_process').exec;
 exports.run = function run(opts,testCase,fn){
 
 
-    var command =  './helpers/compiler/sandbox/saferun ';
+    var command =  './helpers/compiler/sandbox/safeexec66 ';
     command += opts.runDir + '/code ';
     command += testCase + '/i.txt ';
-    command += '/home/run/' + opts.runDir + '/output.txt ';
-    command += '/home/run/' + opts.runDir + '/error.txt ';
-    command += '/SECURITY/JAIL/home/run/' + opts.runDir + '/result.txt ';
+    command += '/home/run/' + opts.runDir + '/' + opts.fileDir + '/output.txt ';
+    command += '/home/run/' + opts.runDir + '/' + opts.fileDir + '/error.txt ';
+    command += '/SECURITY/JAIL/home/run/' + opts.runDir + '/' + opts.fileDir + '/result.txt ';
     command += String(parseInt(parseFloat(opts.timeLimit) * 1000)) + ' ';
     command += String(opts.memoryLimit);
 
 
     exec(command,{
-            env: process.env,
-            maxBuffer: 1000*1024
+            env: process.env
         },
         function(err, stdout, stderr) {
             fn(err,stdout,stderr);

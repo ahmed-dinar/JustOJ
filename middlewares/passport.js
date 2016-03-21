@@ -1,6 +1,6 @@
 var passportLocal   = require('passport-local');
 var User            = require('../models/user');
-var Query             = require('../config/database/query');
+var Query           = require('../config/database/query');
 
 
 module.exports = function(passport) {

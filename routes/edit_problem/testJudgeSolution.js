@@ -9,12 +9,12 @@ var rimraf      = require('rimraf');
 var mkdirp      = require('mkdirp');
 var async       = require('async');
 
+var MyUtil      = require('../../helpers/myutil');
 var Judge       = require('../../helpers/compiler/sandbox/judge');
+var Problems    = require('../../models/problems');
 
 
 module.exports = function(req, res, next) {
-
-
 
     var uniquename =  uuid.v4();
     var saveTo = path.normalize(req.app.locals.defines.RUN_DIR + '/' + uniquename);
@@ -22,9 +22,6 @@ module.exports = function(req, res, next) {
     async.waterfall([
         function(callback) {
             makeTempDir(saveTo,callback);
-        },
-        function(callback) {
-            createAdditionalFiles(saveTo,callback);
         },
         function(callback) {
             parseFile(saveTo,req,callback);
@@ -35,42 +32,64 @@ module.exports = function(req, res, next) {
             opts['runDir'] = uniquename;
             opts['pid'] = req.params.pid;
 
-            Judge.run(opts,function(err,result){
+            Judge.run(opts,function(err,runs){
 
-                if( err ){ return callback(err,result); }
+                if( err ){ return callback(err); }
 
-                callback(null,result);
+                callback(null,runs,opts['language']);
 
             });
 
-        }
+        },
+        function(runs,language,callback){
 
-    ], function (error, result) {
+            if( runs.compiler || runs.final.result !== 'Accepted' ){
+                return callback(null,runs);
+            }
+
+
+            callback(null,runs);
+
+           /* var inserts = {
+                attributes:{
+                    timelimit: runs.final.cpu,
+                    memorylimit: runs.final.memory
+                },
+                where:{
+                    pid: req.params.pid,
+                    language: language
+                }
+            };
+            Problems.update('problems_limit',inserts,function(err,row){
+
+                if( err ){ return callback(err); }
+
+                callback(null,runs);
+
+            });*/
+
+        }
+    ], function (error, runs) {
 
         cleanSubmit(saveTo);
 
         if( error ) {
+            if(error.emptyField){
+                res.json({error: error.emptyField});
+            }else {
 
-            if(result){
-                res.end(result);
-                return;
+                console.log('Test Judge Solution Error:');
+                console.log(error);
+
+                res.json({system: 'System Error'});
             }
-
-            res.end(JSON.stringify(error));
         }
         else{
-
-            var html = '<p style="font-family: monospace;">TC&nbspSTATUS&nbsp&nbsp&nbsp CPU&nbsp&nbspMEMORY</p>';
-            var caseCount = 1;
-            _.forEach(result,function(value) {
-                html += '<p style="font-family: monospace;">';
-                html += caseCount++;
-                html += '&nbsp&nbsp' + value.result;
-                html += '&nbsp&nbsp'  + value.cpu ;
-                html += 'S&nbsp&nbsp' + value.memory + 'KB</p>';
-            });
-            res.end(html);
+            res.json(runs);
         }
+
+        res.end();
+
 
     });
 
@@ -87,6 +106,7 @@ var parseFile = function(saveTo,req,cb){
 
     busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
         limits[fieldname] = val;
+        console.log('[' + fieldname + '] = ' + val );
     });
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
@@ -95,7 +115,7 @@ var parseFile = function(saveTo,req,cb){
             fstream = fse.createOutputStream(saveTo + '/code' + extn);
             file.pipe(fstream);
         }else {
-            error = 'Invalid Or Empty File';
+            error = 'Invalid Or Empty limits or source code';
             file.resume();
         }
     });
@@ -104,21 +124,22 @@ var parseFile = function(saveTo,req,cb){
     busboy.on('finish', function() {
 
         if( error ){
-            return cb(error);
+            return cb({emptyField: error});
         }
 
-        if( limits['tl'].length &&  isNumeric(limits['tl'])
-            && limits['ml'].length  &&  isNumeric(limits['ml'])
-            && limits['language'].length ){
 
-            fstream.on('close', function () {
+        fstream.on('close', function () {
 
-                fs.access( saveTo + '/code' + extn , fs.F_OK, function(noerr) {
+            fs.access( saveTo + '/code' + extn , fs.F_OK, function(noerr) {
 
 
-                    if (noerr) {
-                        return cb(noerr);
-                    }
+                if (noerr) {
+                    return cb(noerr);
+                }
+
+                if( limits['tl'].length &&  MyUtil.isNumeric(limits['tl'])
+                    && limits['ml'].length  &&  MyUtil.isNumeric(limits['ml'])
+                    && limits['language'].length ){
 
                     var opts = {
                         language: _.lowerCase(limits['language']),
@@ -126,41 +147,23 @@ var parseFile = function(saveTo,req,cb){
                         memoryLimit: limits['ml']
                     };
                     cb(null,opts);
-                });
+
+                    return;
+                }
+
+                cb({emptyField: 'Invalid Or Empty Limits Or source code'});
 
             });
-            return;
-        }
 
-        cb('limits empty?');
+        });
+
+
     });
 
     req.pipe(busboy);
 
 };
 
-
-var createAdditionalFiles = function(saveTo,cb){
-
-    var files = ['output.txt','error.txt','result.txt'];
-    async.eachSeries(files, function(file, callback) {
-
-        fs.open(saveTo + '/' + file ,'w',function(err, fd){
-            if( err ){
-                return callback(err);
-            }
-
-            callback();
-        });
-
-    }, function(err){
-        if( err ){
-            return cb(err);
-        }
-        cb();
-    });
-
-};
 
 var makeTempDir = function(saveTo,cb){
     mkdirp(saveTo, function (err) {
@@ -173,12 +176,6 @@ var makeTempDir = function(saveTo,cb){
 };
 
 
-
-
-//string input
-function isNumeric(num){
-    return !isNaN(num);
-}
 
 //clean up submitted code and run files
 function cleanSubmit(codeDir){

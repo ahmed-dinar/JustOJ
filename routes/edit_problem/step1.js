@@ -5,13 +5,14 @@ var uuid        = require('node-uuid');
 var fse         = require('fs-extra');
 var path        = require("path");
 var entities    = require("entities");
+var async       = require('async');
 
 
 module.exports = function(req,res,next){
     var module = {};
 
     module.get = function(){
-        Problems.findById(req.params.pid,function(err,row){
+        Problems.findById(req.params.pid,[],function(err,row){
 
             if( err ) { return next(new Error(err)); }
 
@@ -36,23 +37,7 @@ module.exports = function(req,res,next){
 
         if( req.body ) {
 
-            var inserts = {
-                attributes:{
-                    name: entities.encodeHTML(req.body.name),
-                    status: 'incomplete',
-                    input: entities.encodeHTML(req.body.input),
-                    output: entities.encodeHTML(req.body.output),
-                    author: entities.encodeHTML(req.body.author),
-                    score: entities.encodeHTML(req.body.score),
-                    statement: entities.encodeHTML(req.body.statement)
-                },
-                where:{
-                    pid: req.params.pid
-                }
-            };
-
-
-            Problems.update('problems',inserts, function(err,row){
+            Problems.update(req, function(err,row){
 
                 if( err ) { return next(new Error( 'Problem Update Error : ' +  err)); }
 

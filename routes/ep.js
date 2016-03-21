@@ -7,7 +7,6 @@ var express     = require('express');
 var path        = require("path");
 var router      = express.Router();
 var _           = require('lodash');
-var entities    = require("entities");
 var Problems    = require('../models/problems');
 var EditProblem = require('./edit_problem/editProblem');
 
@@ -16,9 +15,6 @@ var EditProblem = require('./edit_problem/editProblem');
  *
  */
 router.get('/', function(req, res, next) {
-
-
-
 
     res.render('ep', {
         title: "editproblem | JUST Online Judge",
@@ -91,29 +87,18 @@ router.post('/new/', function(req, res, next) {
 
     if( req.body ) {
 
-        var inserts = {
-            name: entities.encodeHTML(req.body.name),
-            status: 'incomplete',
-            input: entities.encodeHTML(req.body.input),
-            output: entities.encodeHTML(req.body.output),
-            author: entities.encodeHTML(req.body.author),
-            statement: entities.encodeHTML(req.body.statement),
-            score: entities.encodeHTML(req.body.score)
-        };
+        Problems.insert(req, function(err,pid){
 
+            if( err ){
+                return next(new Error(err));
+            }
 
-        Problems.insert('problems',inserts, function(err,row){
-
-            if( err ) { return next(new Error(err)); }
-
-            res.redirect('/ep/' + row.insertId + '/2');
-
+            res.redirect('/ep/' + pid + '/2');
         });
 
     }else{
         res.end('REQUEST BODY NOT FOUND');
     }
-
 
 });
 
@@ -144,6 +129,13 @@ router.post('/:pid/1', function(req, res, next) {
 router.post('/:pid/2', function(req, res, next) {
 
     EditProblem.step2Post(req, res, next);
+
+});
+
+
+router.post('/:pid/3', function(req, res, next) {
+
+    EditProblem.step3Post(req, res, next);
 
 });
 

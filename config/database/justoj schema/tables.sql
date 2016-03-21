@@ -6,19 +6,20 @@ CREATE TABLE `problems` (
   `input` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `output` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `score` int(11) NOT NULL,
+  `cpu` int(11) DEFAULT NULL,
+  `memory` int(11) DEFAULT NULL,
   `submissions` int(11) DEFAULT '0',
   `solved` int(11) DEFAULT '0',
   `author` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
 
 
-CREATE TABLE `problems_limit` (
+CREATE TABLE `problem_tags` (
   `id` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
-  `language` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `timelimit` decimal(3,2) DEFAULT NULL,
-  `memorylimit` int(11) DEFAULT NULL
+  `tag` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT ''
 ) ENGINE=InnoDB;
+
 
 
 CREATE TABLE `submissions` (
