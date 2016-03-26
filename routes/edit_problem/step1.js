@@ -27,7 +27,7 @@ module.exports = function(req,res,next){
                 user: req.user,
                 _: _,
                 pid: req.params.pid,
-                data: Problems.decodeToHTML(row[0])
+                problem: Problems.decodeToHTML(row[0])
             });
 
         });

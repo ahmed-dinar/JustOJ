@@ -22,6 +22,63 @@ exports.findById = function (pid,attr,callback) {
 };
 
 
+exports.GROUP_CONCAT = function (pid,callback) {
+
+    Query.in('problems').GROUP_CONCAT(pid,function(err,rows){
+        callback(err,rows);
+    });
+
+};
+
+
+exports.findRank = function (pid,limit,callback) {
+
+    Query.in('submissions').findAll({
+        attributes: ['uid','language','username'],
+        where:{
+            pid: pid,
+            status: '0'
+        },
+        leftJoin:{
+            table: 'users',
+            pcol: 'uid',
+            scol: 'id'
+        },
+        min: 'cpu',
+        group: 'uid',  //for unique users
+        order:{
+            by: 'cpu'
+        },
+        limit: limit
+    },function(err,rows){
+        callback(err,rows);
+    });
+};
+
+exports.findUserSubmissions = function(opts,callback){
+
+    Query.in('submissions').findAll({
+        attributes: ['status','submittime'],
+        where:{
+            $and:{
+                pid: opts.pid,
+                uid: opts.uid
+            }
+        },
+        order:{
+            by: 'submittime',
+            desc: true
+        },
+        limit: opts.limit
+    },function(err,rows){
+        callback(err,rows);
+    });
+
+};
+
+
+
+
 /**
  *
  * @param req
@@ -67,6 +124,28 @@ exports.update = function(req,fn){
 
 };
 
+
+exports.updateLimits = function(inserts,fn){
+
+    Query.in('problems').update(inserts, function (err,row) {
+
+        if( err ){ return fn(err); }
+
+        fn();
+    });
+};
+
+exports.updateSubmission = function(inserts,fn){
+
+
+    Query.in('problems').update(inserts, function (err,row) {
+
+        if( err ){ return fn(err); }
+
+        fn();
+    });
+};
+
 exports.insertTC = function(table,inserts,fn){
     Query.in(table).insert(inserts, function (err,row) {
         fn(err,row);
@@ -98,7 +177,7 @@ exports.decodeToHTML = function(data){
         if( value === null ){
             obj[key] = '';
         }else {
-            obj[key] = JSON.stringify(entities.decodeHTML(value));
+            obj[key] = entities.decodeHTML(value);
         }
     });
 
@@ -152,6 +231,8 @@ var deleteTags = function(req,callback){
 };
 
 var insertProblem = function(req,callback){
+
+
     var inserts = {
         title: entities.encodeHTML(req.body.title),
         status: 'incomplete',
@@ -159,7 +240,9 @@ var insertProblem = function(req,callback){
         output: entities.encodeHTML(req.body.output),
         author: entities.encodeHTML(req.body.author),
         statement: entities.encodeHTML(req.body.statement),
-        score: entities.encodeHTML(req.body.score)
+        score: entities.encodeHTML(req.body.score),
+        category: req.body.category,
+        difficulty: req.body.difficulty
     };
 
     Query.in('problems').insert(inserts, function (err,row) {
@@ -175,7 +258,7 @@ var insertTags = function(req,pid,callback){
 
     var values = [];
     _.forEach(MyUtil.tagList(),function(tag){
-        if( req.body[tag] || req.body[tag] !== undefined ){
+        if( req.body[tag] || !_.isUndefined(req.body[tag]) ){
             var value = [];
             value.push(pid,tag);
             values.push(value);

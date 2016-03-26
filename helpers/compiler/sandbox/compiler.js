@@ -1,6 +1,8 @@
 
 var exec  = require('child_process').exec;
 
+var colors      = require('colors');
+
 
 /**
  *
@@ -11,15 +13,17 @@ var exec  = require('child_process').exec;
 exports.run = function run(opts,testCase,fn){
 
 
-    var command =  './helpers/compiler/sandbox/safeexec66 ';
-    command += opts.runDir + '/code ';
+    var command =  './helpers/compiler/sandbox/safe ';
+    command += opts.runName + '/code ';
     command += testCase + '/i.txt ';
-    command += '/home/run/' + opts.runDir + '/' + opts.fileDir + '/output.txt ';
-    command += '/home/run/' + opts.runDir + '/' + opts.fileDir + '/error.txt ';
-    command += '/SECURITY/JAIL/home/run/' + opts.runDir + '/' + opts.fileDir + '/result.txt ';
-    command += String(parseInt(parseFloat(opts.timeLimit) * 1000)) + ' ';
+    command += '/home/run/' + opts.runName + '/output.txt ';
+    command += '/home/run/' + opts.runName + '/error.txt ';
+    command += opts.runDir + '/result.txt ';
+    command += String(opts.timeLimit) + ' ';
     command += String(opts.memoryLimit);
 
+
+    console.log(command.cyan);
 
     exec(command,{
             env: process.env
@@ -42,10 +46,10 @@ exports.compile = function compile(opts,fn){
     var command = null;
     switch(opts.language) {
         case 'c':
-            command = 'gcc -w -O2 -fomit-frame-pointer -lm -o code code.c';
+            command = 'gcc -w -O2 -fomit-frame-pointer -lm -o ' + opts.runDir +'/code code.c';
             break;
         case 'cpp':
-            command =  'g++ -w -O2 -fomit-frame-pointer -lm -o code code.cpp';
+            command =  'g++ -w -O2 -fomit-frame-pointer -lm -o ' + opts.runDir + '/code code.cpp';
             break;
         case 'java':
             return fn('Java will be supported soon!','');
@@ -54,6 +58,7 @@ exports.compile = function compile(opts,fn){
             return fn('invalid language','');
     }
 
+    console.log(('Code to Compile: ' + opts.codeDir).magenta);
 
     exec(command, {
         env: process.env,

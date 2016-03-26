@@ -18,6 +18,7 @@ var login         = require('./routes/login');
 var Logout        = require('./routes/logout');
 var resister      = require('./routes/resister');
 var problems      = require('./routes/problems');
+var submit        = require('./routes/submit');
 var status        = require('./routes/status');
 var ranks         = require('./routes/ranks');
 var ucheck        = require('./routes/ucheck');
@@ -38,7 +39,8 @@ app.locals.site = {
 };
 
 app.locals.defines = {
-    RUN_DIR: '/SECURITY/JAIL/home/run'
+    RUN_DIR: '/SECURITY/JAIL/home/run',
+    SUBMISSION_DIR: process.cwd() + '/files/submissions'
    // RUN_DIR: '/home/ahmed-dinar/Desktop/testRun'
 };
 
@@ -71,7 +73,7 @@ app.use(passport.session());
 app.use(flash());
 
 
-//authemticate login data
+//authenticate login data
 require('./middlewares/passport')(passport);
 
 
@@ -82,6 +84,7 @@ app.use('/login', login);
 app.use('/logout', Logout);
 app.use('/resister', resister);
 app.use('/problems', problems);
+app.use('/submit', submit);
 app.use('/status', status);
 app.use('/ranks', ranks);
 app.use('/ucheck', ucheck);

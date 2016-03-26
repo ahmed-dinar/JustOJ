@@ -72,11 +72,10 @@
                     <div class="form-group">
                         <label for="language">Select Language</label>
                         <select class="form-control" id="language"  style="max-width: 200px;" >
-                            <option value="C">C</option>
-                            <option value="CPP">C++</option>
-                            <option value="JAVA">JAVA</option>
+                            <option value="c">C</option>
+                            <option value="cpp">C++</option>
+                            <option value="java">JAVA</option>
                         </select>
-                        <input type="hidden" form="judgesolution" id="sellanguage" />
                     </div>
 
 
@@ -163,8 +162,8 @@
                                 success: function(data) {
                                     showRuns(data);
                                 },
-                                error: function(err) {
-                                    $("#ajaxResult").html('submitting error');
+                                error: function(xhr, status, error) {
+                                    $("#ajaxResult").html(JSON.stringify(xhr.responseText));
                                 }
                             });
 

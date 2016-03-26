@@ -9,6 +9,7 @@ var router      = express.Router();
 var _           = require('lodash');
 var Problems    = require('../models/problems');
 var EditProblem = require('./edit_problem/editProblem');
+var Query       = require('../config/database/query');
 
 
 /**
@@ -32,6 +33,20 @@ router.get('/', function(req, res, next) {
  */
 router.get('/new', function(req, res, next) {
 
+    var inserts = {
+        pid: '1',
+        uid: '3',
+        status: '3',
+        where:{
+            pid: '1',
+            uid: '3',
+            status: '3'
+        }
+    };
+
+   /* Query.in('submissions').insertUnique(inserts,function(er,row){
+
+    });*/
 
     res.render('epN', {
         title: "editproblem | JUST Online Judge",
@@ -84,6 +99,7 @@ router.post('/', function(req, res, next) {
  *
  */
 router.post('/new/', function(req, res, next) {
+
 
     if( req.body ) {
 

@@ -65,9 +65,9 @@ User.login = function(username, password, fn) {
 };
 
 
-User.solvedList = function(id,callback){
+User.problemStatus = function(id,callback){
 
-    Query.in('user_solved_list').findAll({
+    Query.in('user_problem_status').findAll({
         where:{
             uid: id
         }

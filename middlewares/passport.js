@@ -44,6 +44,15 @@ module.exports = function(passport) {
                 id: id
             }
         }, function (err, rows) {
+
+            if( err ){
+                return done(err);
+            }
+
+            if( !rows.length ){
+                return done(err);
+            }
+
             done(err, rows[0]);
         });
 

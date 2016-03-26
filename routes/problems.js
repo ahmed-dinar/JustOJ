@@ -9,58 +9,51 @@ var router      = express.Router();
 var _           = require('lodash');
 
 var Paginate    = require('../helpers/paginate');
-var User        = require('../models/user');
+var MyUtil      = require('../helpers/myutil');
 var Problems    = require('../models/problems');
-
+var User        = require('../models/user');
+var async       = require('async');
+var moment      = require("moment");
+var colors      = require('colors');
 
 
 router.get('/', function(req, res, next) {
-    var limit=5;
-    var cur_page = req.query.page;
-    var table = 'problems';
-
-    if( _.isUndefined(cur_page) ){
-        cur_page = 1;
-    }else{
-        cur_page = parseInt(cur_page);
-    }
-
-    if( cur_page <=0 ) { return next(new Error('what are u looking for!?')); }
 
 
-    Paginate.findAll(table,cur_page,limit,function(err,rows,pagination){
 
-        if( err ){ return next(err); }
-        
-        if( req.isAuthenticated() ) {
-            User.solvedList(req.user.id, function (err,result) {
+    async.waterfall([
+        function(callback) {
+            findProblems(req,callback);
+        },
+        function(rows,pagination,callback){
+            if( !req.isAuthenticated() ){
+                return callback(null,rows,pagination);
+            }
 
-                if( err ){ return next(err); }
+            User.problemStatus(req.user.id, function(err,status){
 
-                res.render('problems', {
-                    title: "Problems | JUST Online Judge",
-                    pagination: pagination,
-                    problems: rows,
-                    locals: req.app.locals,
-                    isLoggedIn: req.isAuthenticated(),
-                    slist: result,
-                    user: req.user,
-                    _: _
-                });
+                if( err ){ return callback(err); }
 
-            });
-        }else{
-            res.render('problems', {
-                title: "Problems | JUST Online Judge",
-                pagination: pagination,
-                problems: rows,
-                locals: req.app.locals,
-                isLoggedIn: req.isAuthenticated(),
-                user: req.user,
-                _: _
+                callback(null,rows,pagination,status);
+
             });
         }
+    ], function (error, problems, pagination, status) {
 
+
+        if( error ){ return next(new Error(error)); }
+
+
+        res.render('problems', {
+            title: "Problems | JUST Online Judge",
+            locals: req.app.locals,
+            isLoggedIn: req.isAuthenticated(),
+            user: req.user,
+            _: _,
+            problems: _.isUndefined(problems) ? {} : problems,
+            pagination: _.isUndefined(pagination) ? {} : pagination,
+            status: _.isUndefined(status) ? {} : status
+        });
 
 
     });
@@ -69,37 +62,141 @@ router.get('/', function(req, res, next) {
 });
 
 
+
 router.get('/:pid', function(req, res, next) {
-    var pid = req.params.pid;
+    var pid = getPID(req.params.pid);
 
-    if( pid = getPID(pid) ){
-        console.log('YEAH  ' + pid);
 
-        Problems.findById(pid,function(err,rows){
-            if( err ) { return next(err); }
+    if( pid ){
 
-            if( rows.length == 0 ) { return next(new Error('missing probelem?')); }
+        async.waterfall([
+            function(callback) {
+                findProblem(pid,callback);
+            },
+            function(problem,callback){
+                findRank(pid,problem,callback);
+            },
+            function(problem,rank,callback){
 
-            console.log(rows);
+                if( !req.isAuthenticated() ){
+                    return callback(null,problem,rank,{});
+                }
+
+                findUserSubmissions(pid,req.user.id,problem,rank,callback);
+            }
+        ], function (error, problem, rank, userSubmissions) {
+
+            if( error ){ return next(new Error(error)); }
+
+
+            var tags = _.split(problem[0].tags, ',', 20);
+            tags = (tags[0]==='') ? [] : tags;
+
 
             res.render('viewproblem' , {
                 title: "Problems | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
                 user: req.user,
-                problem: Problems.decodeToHTML(rows[0]),
-                _: _
+                problem: Problems.decodeToHTML(problem[0]),
+                rank: rank,
+                tags: tags,
+                userSubmissions: userSubmissions,
+                tagName: MyUtil.tagNames(),
+                runStatus: MyUtil.runStatus(),
+                _: _,
+                moment: moment,
+                formError: req.flash('formError')
             });
 
         });
 
-    }else{
-        console.log('OOPSSS' );
-        res.redirect(req.app.locals.site.url);
+        return;
     }
+
+     console.log('OOPSSS' );
+     next(new Error('Invaild problem?'));
 
 });
 
+
+var findProblem = function(pid,cb){
+
+
+    Problems.GROUP_CONCAT(pid,function(err,rows){
+         if( err ) { return cb(err); }
+
+         if( rows.length == 0 ) { return cb('probelem row lenth 0?'); }
+
+         cb(null,rows);
+
+     });
+};
+
+
+var findRank = function(pid,problem,cb){
+
+    Problems.findRank(pid, 5,function(err,rows){
+        if( err ) { return cb(err); }
+
+
+        if( _.isUndefined(rows) || rows.length === 0 ){
+            return cb(null,problem,{});
+        }
+
+        cb(null,problem,rows);
+    });
+
+};
+
+
+var findUserSubmissions = function(pid,uid,problem,rank,cb){
+
+    var opts = {
+        pid: pid,
+        uid: uid,
+        limit: 5
+    };
+    Problems.findUserSubmissions(opts, function(err,rows){
+        if( err ) { return cb(err); }
+
+        if( _.isUndefined(rows) || rows.length === 0 ){
+            return cb(null,problem,rank,{});
+        }
+
+        cb(null,problem,rank,rows);
+    });
+
+};
+
+
+var findProblems = function(req,cb){
+
+    var cur_page = req.query.page;
+
+    if( _.isUndefined(cur_page) ){
+        cur_page = 1;
+    }else{
+        cur_page = parseInt(cur_page);
+    }
+
+    if( cur_page<1 ) { return cb('what are u looking for!'); }
+
+
+    var opts = {
+        table: MyUtil.tables().problem,
+        cur_page: cur_page,
+        limit: MyUtil.paginationLimit()
+    };
+    Paginate.findAll(opts , function(err,rows,pagination){
+
+        if( err ){ return cb(err); }
+
+        cb(null,rows,pagination);
+
+    });
+
+};
 
 
 function getPID(pid){
@@ -123,6 +220,8 @@ function getPID(pid){
     }
     return null;
 }
+
+
 
 
 module.exports = router;

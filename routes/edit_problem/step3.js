@@ -69,7 +69,8 @@ module.exports = function(req,res,next){
                             id: req.params.pid
                         }
                     };
-                    Problems.update('problems',inserts,function(err,row){
+
+                    Problems.updateLimits(inserts,function(err,row){
 
                         if(err){
                             console.log('Set limit db error');

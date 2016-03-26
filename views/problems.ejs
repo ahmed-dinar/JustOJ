@@ -47,56 +47,53 @@
 
                     <!-- problem list -->
                     <table class="table">
+                        <thead>
+                            <tr>
+                                <% if(isLoggedIn){  %>
+                                    <th>#</th>
+                                <% } %>
+                                <th>Title</th>
+                                <th>Difficulty</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
                         <tbody>
 
                             <% for(var i=0; i<problems.length; i++){ %>
                                 <tr>
 
+
                                     <% if(isLoggedIn){  %>
                                         <td style="width: 20px;">
-
                                             <%
-                                                var x = _.findIndex(slist, function(o) { return o.pid == problems[i].pid; });
-                                                if( x > -1  ){
-                                                    switch(slist[x].status) {
-                                                        case 'AC':
-                                                %>
-                                                        <span class="badge" style="background: limegreen;color:white">AC</span>
-                                                <%
-                                                        break;
-                                                        case 'WA':
-                                                %>
-                                                        <span class="badge" style="background: red;color:white">WA</span>
-                                                <%
-                                                        break;
-                                                        case 'TLE':
-                                                %>
-                                                        <span class="badge" style="background: #FF9900;color:white">TL</span>
-                                                <%
-                                                        break;
-                                                        case 'MLE':
-                                                %>
-                                                        <span class="badge" style="background: #800000;color:white">ML</span>
-                                                <%
-                                                        break;
-                                                        default:
-
-                                                    }
-                                              } %>
-
+                                                var tried = _.findIndex(status, function(o) { return o.pid === problems[i].id; });
+                                                if( tried !== -1 ){
+                                                     if( status[tried].status === 3 ){ %>
+                                                        <span class="badge" style="background: transparent;color:limegreen"><i class="fa fa-lg fa-check-square"></i></span>
+                                            <%       }else{ %>
+                                                        <span class="badge" style="background: transparent;color: red"><i class="fa fa-lg fa-minus-square"></i></span>
+                                            <%       }
+                                                }
+                                             %>
                                         </td>
                                     <% } %>
 
 
                                     <td>
-                                        <a href="<%= locals.site.url %>problems/JOP0<%= problems[i].pid %>" >
-                                            <%- problems[i].name %>
+                                        <a href="problems/JOP0<%= problems[i].id %>" >
+                                            <%= problems[i].title %>
                                         </a>
                                     </td>
 
                                     <td class="col-md-1">
-                                        <span class="badge">
-                                            <%= problems[i].solved %>/<%= problems[i].submissions %>
+                                        <span class="label label-default">
+                                            <%= problems[i].difficulty %>
+                                        </span>
+                                    </td>
+
+                                    <td class="col-md-1">
+                                        <span class="label label-info">
+                                            <%= problems[i].submissions %> / <%= problems[i].solved %>
                                         </span>
                                     </td>
                                 </tr>

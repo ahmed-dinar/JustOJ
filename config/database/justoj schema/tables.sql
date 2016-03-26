@@ -1,6 +1,8 @@
 CREATE TABLE `problems` (
   `id` int(11) NOT NULL,
   `title` tinytext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `category` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `difficulty` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `status` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `statement` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `input` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -10,7 +12,8 @@ CREATE TABLE `problems` (
   `memory` int(11) DEFAULT NULL,
   `submissions` int(11) DEFAULT '0',
   `solved` int(11) DEFAULT '0',
-  `author` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+  `author` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 
@@ -21,17 +24,23 @@ CREATE TABLE `problem_tags` (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE `user_problem_status` (
+  `id` int(11) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `status` tinyint(3) NOT NULL
+) ENGINE=InnoDB;
+
 
 CREATE TABLE `submissions` (
   `id` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `language` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `status` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `access` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `status` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `submittime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `runtime` decimal(3,2) NOT NULL,
-  `runmemory` int(11) NOT NULL
+  `cpu` int(11) NOT NULL,
+  `memory` int(11) NOT NULL
 ) ENGINE=InnoDB;
 
 

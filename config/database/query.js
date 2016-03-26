@@ -40,6 +40,26 @@ exports.countAll = function(callback) {
 };
 
 
+exports.count = function(opts,callback) {
+
+    var sql = 'SELECT COUNT(*) FROM ?? ';
+    var inserts = [this.table];
+
+
+    if( opts.where ){
+        sql += ' WHERE '  + where.where(opts.where);
+    }
+
+    sql = mysql.format(sql,inserts);
+
+    return query(sql,callback);
+};
+
+
+
+
+
+
 
 /**
  *
@@ -52,7 +72,9 @@ exports.findAll = function(options,callback) {
     var sql = 'SELECT ';
 
     var inserts = [];
-    var whq = null,limit = null,offset = null;
+    var whq = null,limit = null,offset = null, order = null, desc = false, group = null, min  = null, max = null;
+    var leftJoin = null;
+    var TABLE = this.table;
 
     _.forOwn(options, function(value, key) {
 
@@ -65,13 +87,32 @@ exports.findAll = function(options,callback) {
             case 'where':
                 whq = where.where(value);
                 break;
+            case 'leftJoin':
+                leftJoin = mysql.escapeId(value.table) + ' ON ';
+                leftJoin += mysql.escapeId(TABLE) + '.' + mysql.escapeId(value.pcol) + ' = ';
+                leftJoin += mysql.escapeId(value.table) + '.' + mysql.escapeId(value.scol);
+                break;
             case 'limit':
                 limit =  mysql.escape(value);
                 break;
             case 'offset':
                 offset =  mysql.escape(value);
                 break;
-
+            case 'order':
+                order =  mysql.escapeId(value.by);
+                if( value.desc ){
+                    desc = true;
+                }
+                break;
+            case 'group':
+                group =  mysql.escapeId(value);
+                break;
+            case 'min':
+                min =  mysql.escapeId(value);
+                break;
+            case 'max':
+                max =  mysql.escapeId(value);
+                break;
             default:
 
         }
@@ -86,13 +127,39 @@ exports.findAll = function(options,callback) {
 
     inserts.push(this.table);
 
+    if( min ){
+        sql += ', MIN(' + min + ') AS ' + min + ' ';
+    }
+
+    if( max ){
+        sql += ', MIN(' + max + ') AS ' + max + ' ';
+    }
+
     sql += ' FROM ?? ';
 
 
     sql = mysql.format(sql,inserts);
 
+
+    if( leftJoin ){
+        sql += ' LEFT JOIN ' + leftJoin;
+    }
+
     if(whq){
         sql += ' WHERE ' + whq;
+    }
+
+
+    if( group ){
+        sql += ' GROUP BY ' + group;
+    }
+
+
+    if( order ){
+        sql += ' ORDER BY ' + order;
+        if( desc ){
+            sql += ' DESC';
+        }
     }
 
     if( limit ){
@@ -214,7 +281,9 @@ exports.insertUnique = function(options,callback) {
 
     sql = mysql.format(sql, inserts);
 
-    return query(sql,callback);
+    console.log(sql);
+    callback();
+    //return query(sql,callback);
 };
 
 
@@ -245,17 +314,44 @@ exports.delete = function(options,callback) {
 
 /**
  *
+ * self: array of object
+ *       object: two elements 'col' and 'val'
+ *              col: column name to update
+ *              val: value to add
+ *                  example#
+ *                          self: [
+ *                              {
+ *                                  col: users,
+ *                                  val: 2
+ *                              },
+ *                              {
+ *                                  col: penalty
+ *                                  val: -1
+ *                              }
+ *                           ]
+ *                           result: UPDATE `table` SET `users` = `users` + 2, `penalty` = `penalty` + (-1)
+ *
+ *
+ * attributes: object of column name and value to set
+ *             example#
+ *                      attributes:{
+ *                          username: 'name',
+ *                          age: '24'
+ *                      }
+ *                      result: UPDATE `table` SET `username` = 'name', `age` = '24'
+ *
+ *
  * @param options
  * @param callback
  * @returns {*}
  */
 exports.update = function(options,callback) {
 
-    console.log(options);
 
-    var sql = "UPDATE ?? SET ?";
+    var sql = "UPDATE ?? SET ";
     var inserts = [this.table];
     var whq = null;
+    var self = null;
 
     _.forOwn(options, function(value, key) {
 
@@ -264,15 +360,53 @@ exports.update = function(options,callback) {
         }
         else if( key === 'where' ){
             whq = where.where(value);
+        }else if( key === 'self' ){
+            self = '';
+            var c = 0;
+            _.forEach(value, function(val){
+                if(c>0){
+                    self += ', ';
+                }
+                self += mysql.escapeId(val.col) + ' = ' + mysql.escapeId(val.col) + ' + ' + val.val;
+            });
         }
 
     });
 
-    sql = mysql.format(sql,inserts);
+    if( inserts.length>1 ) {
+        sql += '?';
+    }
+
+    sql = mysql.format(sql, inserts);
+
+    if( self ){
+        if( inserts.length>1 ){
+            sql+= ', ';
+        }
+        sql += self;
+    }
+
+
 
     if(whq){
         sql += ' WHERE ' + whq;
     }
+
+    return query(sql,callback);
+};
+
+
+
+/**
+ *  This is custom function use only my in project
+ * @constructor
+ */
+exports.GROUP_CONCAT = function(pid,callback){
+
+    var sql = 'SELECT p.*,(SELECT GROUP_CONCAT(`tag`) FROM `problem_tags` pt WHERE p.`id` =  pt.`pid`) AS `tags`';
+    sql += " FROM " + mysql.escapeId(this.table) + " p ";
+    sql += " WHERE `id` = " + mysql.escape(pid);
+    sql += " LIMIT 1";
 
     return query(sql,callback);
 };
@@ -286,7 +420,7 @@ exports.update = function(options,callback) {
  */
 function query(sql,callback){
 
-   // console.log(sql);
+    console.log(sql);
 
     dbPool.getConnection(function(err, connection) {
 

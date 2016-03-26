@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+
+    <script type="text/javascript" src="<%= locals.site.url %>/javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="<%= locals.site.url %>/stylesheets/style.css">
+
+    <link rel="stylesheet" href="<%= locals.site.url %>/font-awesome-4.5.0/css/font-awesome.min.css" >
+
+    <link rel="stylesheet" href="<%= locals.site.url %>/bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="<%= locals.site.url %>/bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="<%= locals.site.url %>/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include templates/header.ejs %>
+<% if(!isLoggedIn){ %>
+<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+<% } else{ %>
+<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.name %> </a></li>
+<% } %>
+<% include templates/headerend.ejs %>
+
+
+<!-- Main Content -->
+<div class="container" style="min-height: 550px;">
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <h4>Problem: <a href="/problems/JOP0<%= pid %>"><%= pName %></a></h4>
+
+                    <!-- problem list -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Language</th>
+                            <th>CPU</th>
+                            <th>Memory</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            <% for(var i=0; i<status.length; i++){ %>
+                                <tr>
+                                    <td><%= pagination.offset() + i + 1 %></td>
+                                    <td title="<%= status[i].submittime %>"><%= moment(status[i].submittime).from() %></td>
+                                    <td><%= langNames[status[i].language] %></td>
+                                    <td><%= parseFloat(status[i].cpu/1000.0).toFixed(2) %>s</td>
+                                    <td><%= status[i].memory %>KB</td>
+                                    <td>
+                                        <% if(status[i].status === 0){ %>
+                                            <span class="label label-success">
+                                        <% }else if(status[i].status === 5){ %>
+                                            <span class="label label-default">
+                                        <% }else if(status[i].status === 6){ %>
+                                            <span class="label label-info">
+                                        <% }else{ %>
+                                            <span class="label label-danger">
+                                        <% } %>
+                                                <%= runStatus[status[i].status] %>
+                                            </span>
+                                    </td>
+                                </tr>
+                            <% } %>
+
+                        </tbody>
+                    </table>
+
+
+
+
+
+                    <!-- pagination  -->
+                    <nav class="text-center">
+                        <ul class="pagination">
+
+
+                            <% if( pagination.hasPrevPage() ){ %>
+                            <li>
+                                <a href="<%= locals.site.url %>problems?page=<%= pagination.prevPage() %>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <% } %>
+
+
+                            <% for(var i=0; i<pagination.totalPages(); i++){ %>
+
+                            <% if( pagination.cur_page == i+1 ){ %>
+                            <li class="active">
+                                <% }else{ %>
+                            <li>
+                                <% } %>
+
+                                <a href="<%= locals.site.url %>status/u/<%= pid %>?page=<%= i+1 %>">
+                                    <%= i+1 %>
+                                </a>
+                            </li>
+                            <% } %>
+
+                            <% if( pagination.hasNextPage() ){ %>
+                            <li>
+                                <a href="<%= locals.site.url %>status/u/<%= pid %>?page=<%= pagination.nextPage() %>" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <% } %>
+
+                        </ul>
+                    </nav>
+                    <!-- end pagination -->
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- footer -->
+<% include templates/footer.ejs %>
+
+</body>
+</html>

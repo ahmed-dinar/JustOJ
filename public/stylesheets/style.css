@@ -111,3 +111,27 @@ pre{
   display: none;
 }
 
+.codePre{
+  padding: 9.5px;
+  margin: 0 0 10px;
+  overflow: auto;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.btn-dark{
+  background-color: #34495E;
+  color: #fff;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #000;
+  margin: 1em 0;
+  padding: 0;
+}

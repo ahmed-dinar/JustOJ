@@ -3,7 +3,7 @@
  * @type {exports|module.exports}
  */
 
-var Query         = require('../config/database/query');
+var Query       = require('../config/database/query');
 var bcrypt      = require('bcryptjs');
 var _           = require('lodash');
 var moment      = require("moment");

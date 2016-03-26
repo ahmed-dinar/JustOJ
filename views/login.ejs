@@ -38,7 +38,7 @@
     <div class="row-fluid">
 
         <!-- errors -->
-        <% if (errors.length > 0) { %>
+        <% if (errors.length) { %>
             <div class="col-md-6 col-md-offset-3">
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -48,7 +48,7 @@
         <% } %>
 
         <!-- succes -->
-        <% if (success.length > 0) { %>
+        <% if (success.length) { %>
             <div class="col-md-6 col-md-offset-3">
                 <div class="alert alert-success alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

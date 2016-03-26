@@ -4,6 +4,9 @@ ADD PRIMARY KEY (`id`);
 ALTER TABLE `problem_tags`
 ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `user_problem_status`
+ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `submissions`
 ADD PRIMARY KEY (`id`);
 
@@ -15,6 +18,7 @@ ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `users`
 ADD PRIMARY KEY (`id`);
+
 
 
 

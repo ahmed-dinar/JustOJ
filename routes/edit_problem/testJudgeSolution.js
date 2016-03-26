@@ -10,151 +10,148 @@ var mkdirp      = require('mkdirp');
 var async       = require('async');
 
 var MyUtil      = require('../../helpers/myutil');
-var Judge       = require('../../helpers/compiler/sandbox/judge');
+var Judge       = require('../../helpers/problemSetter/settersJudge');
 var Problems    = require('../../models/problems');
+
+var colors      = require('colors');
 
 
 module.exports = function(req, res, next) {
 
-    var uniquename =  uuid.v4();
-    var saveTo = path.normalize(req.app.locals.defines.RUN_DIR + '/' + uniquename);
+    var uploadName = uuid.v4();
+    var uploadFile =  MyUtil.RUN_DIR + '/' + uploadName;
+
+    var pID = req.params.pid;
+
 
     async.waterfall([
-        function(callback) {
-            makeTempDir(saveTo,callback);
+        function(callback){
+            makeTempDir(uploadFile,callback);
         },
         function(callback) {
-            parseFile(saveTo,req,callback);
+            getForm(uploadFile,req,callback);
         },
-        function(opts,callback) {
+        function(opts,callback){
 
-            opts['codeDir'] = saveTo;
-            opts['runDir'] = uniquename;
-            opts['pid'] = req.params.pid;
+            fs.rename(uploadFile+'/code.txt', uploadFile+'/code.' + opts['language'], function(err){
+                if(err ){ return callback(err); }
 
-            Judge.run(opts,function(err,runs){
-
-                if( err ){ return callback(err); }
-
-                callback(null,runs,opts['language']);
-
+                callback(null,opts);
             });
 
         },
-        function(runs,language,callback){
+        function(opts,callback){
 
-            if( runs.compiler || runs.final.result !== 'Accepted' ){
-                return callback(null,runs);
-            }
+            opts['runName'] = uploadName;
+            opts['runDir']  = uploadFile;
+            opts['pID']     = pID;
+            opts['tcDir']   = MyUtil.TC_DIR + '/' + pID;
+            opts['codeDir'] = uploadFile;
 
 
-            callback(null,runs);
-
-           /* var inserts = {
-                attributes:{
-                    timelimit: runs.final.cpu,
-                    memorylimit: runs.final.memory
-                },
-                where:{
-                    pid: req.params.pid,
-                    language: language
-                }
-            };
-            Problems.update('problems_limit',inserts,function(err,row){
-
-                if( err ){ return callback(err); }
-
-                callback(null,runs);
-
-            });*/
-
+            Judge.run(opts,function(err,result){
+                callback(err,result);
+            });
         }
     ], function (error, runs) {
 
-        cleanSubmit(saveTo);
+        cleanSubmit(uploadFile);
 
-        if( error ) {
-            if(error.emptyField){
-                res.json({error: error.emptyField});
-            }else {
-
-                console.log('Test Judge Solution Error:');
-                console.log(error);
-
-                res.json({system: 'System Error'});
+        if( error ){
+            if( error.formError ){
+                res.json(error);
             }
-        }
-        else{
+            else if( runs.compiler ){
+                res.json(runs);
+            }
+            else{
+                res.json({ system: error });
+            }
+        }else{
             res.json(runs);
         }
 
         res.end();
-
 
     });
 
 };
 
 
-var parseFile = function(saveTo,req,cb){
+var getForm = function(uploadFile,req,cb){
 
-    var busboy = new Busboy({headers: req.headers});
-    var limits = {};
-    var extn = null;
-    var error = null;
+    var error = 0;
     var fstream = null;
+    var limits = {};
+    var opts = {};
+
+
+    var busboy = new Busboy({
+        headers: req.headers,
+        limits:{
+            files: 1,               //only user code file
+            fields: 3,              //only language
+            parts: 4,               //code and language
+            fileSize: 50000         // (in bytes)
+        }
+    });
+
 
     busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
         limits[fieldname] = val;
-        console.log('[' + fieldname + '] = ' + val );
+        console.log(('[' + fieldname + '] = ' + val).yellow);
     });
 
+
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        extn = path.extname(filename);
-        if( fieldname === 'jsinput' && filename.length && (extn === '.c' || extn === '.java' || extn === '.cpp')  ){
-            fstream = fse.createOutputStream(saveTo + '/code' + extn);
+
+        if( filename.length  ){
+
+            console.log((filename +' receieved with mimetype: ' + mimetype).yellow);
+
+            fstream = fs.createWriteStream(uploadFile + '/code.txt');
+
+            file.on('limit', function() {
+                error = 2;
+            });
+
             file.pipe(fstream);
         }else {
-            error = 'Invalid Or Empty limits or source code';
+            error = 1;
             file.resume();
         }
+
     });
 
 
     busboy.on('finish', function() {
 
-        if( error ){
-            return cb({emptyField: error});
+        if( error === 1 ){
+            console.log('Submit Source Required'.red);
+            return cb({ formError: 'Source Required' });
+        }
+
+        if( error === 2 ){
+            console.log('Source Size Limit Exceeded'.red);
+            return cb({ formError: 'Source Size Limit Exceeded' });
         }
 
 
         fstream.on('close', function () {
 
-            fs.access( saveTo + '/code' + extn , fs.F_OK, function(noerr) {
+            console.log('fstream closed');
 
 
-                if (noerr) {
-                    return cb(noerr);
-                }
 
-                if( limits['tl'].length &&  MyUtil.isNumeric(limits['tl'])
-                    && limits['ml'].length  &&  MyUtil.isNumeric(limits['ml'])
-                    && limits['language'].length ){
+            if(  limits['tl'] && limits['ml']  ){
+                opts['language'] = limits['language'];
+                opts['timeLimit'] = parseInt(parseFloat(limits['tl'])*1000);
+                opts['memoryLimit'] = limits['ml'];
+                return cb(null,opts);
+            }
 
-                    var opts = {
-                        language: _.lowerCase(limits['language']),
-                        timeLimit: limits['tl'],
-                        memoryLimit: limits['ml']
-                    };
-                    cb(null,opts);
-
-                    return;
-                }
-
-                cb({emptyField: 'Invalid Or Empty Limits Or source code'});
-
-            });
-
+            console.log('Field Required'.red);
+            cb({ formError: 'Empty Field?' });
         });
 
 
@@ -171,6 +168,7 @@ var makeTempDir = function(saveTo,cb){
             console.log('OMG ' + saveTo + ' creation failed! permission denied!!');
             return cb(err);
         }
+        console.log((saveTo + ' Created').green);
         cb();
     });
 };
@@ -185,6 +183,6 @@ function cleanSubmit(codeDir){
             return;
         }
 
-        console.log('success clean submit!');
+        console.log('success clean submit!'.green);
     });
 }
