@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <script type="text/javascript" src="../../javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="../stylesheets/style.css">
+
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+
+
+    <script type="text/javascript" src="../../javascripts/moment.min.js"></script>
+    <script type="text/javascript" src="../bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+
+
+    <script type="text/javascript" src="../javascripts/jquery.validate.js"></script>
+
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../templates/header.ejs %>
+<% if(!isUser){ %>
+<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+<% } else{ %>
+<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.username %> </a></li>
+<% } %>
+<% include ../templates/headerend.ejs %>
+
+
+<!-- Main Content -->
+<div class="container" style="min-height: 530px;">
+    <div class="row">
+
+        <!-- errors -->
+        <% if (errors.length) { %>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <%= errors %>
+            </div>
+        </div>
+        <% } %>
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <form method="post" action="/contest/create" role="form" id="ccFrom" class="form-horizontal" >
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Type</label>
+                                <div class="col-sm-11">
+                                    <fieldset>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="type"  value="public" required >Public
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="type"  value="private">Private
+                                        </label>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputTitle" class="col-sm-1 control-label">Title</label>
+                                <div class="col-sm-11">
+                                    <input type="text" name="title" class="form-control " id="inputTitle" placeholder="Title" required >
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="inputTime" class="col-sm-1 control-label">Begin</label>
+                                <div class="col-sm-11">
+                                     <div class='input-group date row'>
+                                         <div class="col-sm-6">
+                                             <input type='text' name="beginDate" class="form-control " id='datepicker' placeholder="MM-DD-YYYY" required >
+                                         </div>
+                                         <div class="col-sm-5">
+                                             <input type='text' name="beginTime" class="form-control  timepicker" placeholder="hh:mm:ss" required >
+                                         </div>
+                                     </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">Length</label>
+                                <div class="col-sm-11">
+                                    <div class='input-group date row'>
+                                        <div class="col-md-6">
+                                            <input type='text'  name="lenDay" class="form-control " placeholder="Day" required />
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type='text' name="lenTime" class="form-control  timepicker" placeholder="hh:mm:ss"  required />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <div class="col-sm-offset-1 col-sm-11">
+                                    <input type="button" name="btn" value="CREATE" id="submitBtn"  class="btn btn-primary" />
+                                </div>
+                            </div>
+                    </form>
+
+
+
+
+                    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Confirm Submit</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <b>*Make sure you have enough time to add problems before contest start</b>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">BACK</button>
+                                    <a href="#" id="create" class="btn btn-primary">CONFIRM</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <script type="text/javascript">
+
+                        jQuery(document).ready(function(){
+
+                            var validator = $("#ccFrom").validate({
+                                showErrors: function(errorMap, errorList) {
+
+                                    $.each(this.validElements(), function (index, element) {
+                                        var $element = $(element);
+                                        $element.data("title", "");
+                                        $element.removeClass("val-error");
+                                        $element.tooltip("destroy");
+                                    });
+
+                                    $.each(errorList, function (index, error) {
+                                        var $element = $(error.element);
+
+                                        $element.tooltip("destroy");
+                                        $element.data("title", error.message);
+                                        $element.addClass("val-error");
+                                        $element.tooltip("show");
+                                    });
+                                }
+                            });
+
+
+                            $('#create').click(function(){
+                                $('#ccFrom').submit();
+                            });
+
+
+                            $('#submitBtn').click(function(){
+
+                               if( $("#ccFrom").valid() ){
+                                   $('#confirm-submit').modal('show');
+                               }
+
+                            });
+
+
+                        });
+
+
+                        $(function () {
+                            $('.timepicker').datetimepicker({
+                                format: 'HH:mm:ss'
+                            });
+                            $('#datepicker').datetimepicker({
+                                format: 'YYYY-MM-DD'
+                            });
+                        });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- footer -->
+<% include ../templates/footer.ejs %>
+
+</body>
+</html>

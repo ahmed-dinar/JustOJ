@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var where  = require('../../config/database/where');
+var where  = require('../../config/database/myConfig/where');
 
 describe("DATABASE", function () {
     describe("Query Builder", function () {

@@ -21,9 +21,9 @@ var problems      = require('./routes/problems');
 var submit        = require('./routes/submit');
 var status        = require('./routes/status');
 var ranks         = require('./routes/ranks');
+var contest       = require('./routes/contest');
 var ucheck        = require('./routes/ucheck');
 var verify        = require('./routes/verify');
-var ep            = require('./routes/ep');
 var s3p           = require('./routes/s3');
 var sockettest    = require('./routes/sockettest');
 
@@ -87,9 +87,9 @@ app.use('/problems', problems);
 app.use('/submit', submit);
 app.use('/status', status);
 app.use('/ranks', ranks);
+app.use('/contest', contest);
 app.use('/ucheck', ucheck);
 app.use('/verify', verify);
-app.use('/ep', ep);
 app.use('/s3', s3p);
 app.use('/sockettest', sockettest);
 

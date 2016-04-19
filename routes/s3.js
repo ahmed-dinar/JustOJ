@@ -8,19 +8,48 @@ var path        = require("path");
 var mkdirp      = require('mkdirp');
 var util = require('util');
 
+var Query = require('../config/database/knex/query');
+var DB    = require('../config/database/knex/DB');
+
 
 /* GET resister page. */
 router.get('/' , function(req, res, next) {
 
 
+    var sql = Query.where({
+        'submissions.pid': '1',
+        'submissions.status': '0'
+    })
+        .select(['submissions.language','submissions.submittime','submissions.cpu','submissions.memory','users.username','problems.title'])
+        .from('submissions')
+        .min('submissions.cpu as cpu')
+        .groupBy('submissions.uid')
+        .orderBy('submissions.cpu')
+        .leftJoin('users', 'submissions.uid', 'users.id')
+        .leftJoin('problems', 'submissions.pid', 'problems.id')
+        .as('ignored_alias');
 
-    res.render('s3', {
-        title: "ADDProblems | JUST Online Judge",
-        locals: req.app.locals,
-        isLoggedIn: req.isAuthenticated(),
-        user: req.user,
-        imgURL: null
+
+
+
+    DB.execute(
+        sql.limit(20).offset(2).toString()
+        ,function(err,rows){
+
+        if(err){
+            console.log(err);
+            return;
+        }
+
+        console.log(rows);
+
+
+        res.end(JSON.stringify(rows));
+
     });
+
+
+
 
 
 

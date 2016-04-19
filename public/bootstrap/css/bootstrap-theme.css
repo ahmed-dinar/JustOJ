@@ -354,7 +354,7 @@ fieldset[disabled] .btn-danger.active {
 }
 .navbar-inverse {
   padding: 5px 0px;
-  background: #315269;
+  background: #FFFFFF;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3c3c3c', endColorstr='#ff222222', GradientType=0);
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-repeat: repeat-x;

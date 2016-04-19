@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+
+    <script type="text/javascript" src="../../../javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+
+
+    <script src="/pace/pace.min.js"></script>
+    <link href="/pace/pace-minimal.css" rel="stylesheet" />
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../../templates/header.ejs %>
+<% if(!isLoggedIn){ %>
+<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+<% } else{ %>
+<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.name %> </a></li>
+<% } %>
+<% include ../../templates/headerend.ejs %>
+
+
+<!-- Main Content -->
+<div class="container">
+
+
+    <%  if(error.length){ %>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <%= error %>
+            </div>
+        </div>
+    <% } %>
+
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <h3>Test Limits</h3>
+
+
+                <form method="post" action="#" name="judgesolution" id="judgesolution" enctype="multipart/form-data" >
+
+                    <div class="row form-group">
+                        <div class="col-xs-4">
+                            <label form="tl">Time Limit (S)</label>
+                            <input type="text" name="tl" placeholder="0.0" form="judgesolution" class="form-control"  >
+                        </div>
+                        <div class="col-xs-4">
+                            <label form="ml">Memory Limit (MB)</label>
+                            <input type="text" name="ml" placeholder="0" form="judgesolution"  class="form-control"  >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="language">Select Language</label>
+                        <select class="form-control" id="language"  style="max-width: 200px;" >
+                            <option value="c">C</option>
+                            <option value="cpp">C++</option>
+                            <option value="java">JAVA</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="well well-sm">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        UPLOAD JUDGE SOLUTION
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <input type='file'  form="judgesolution" name="jsinput" class="btn btn-primary btn-sm" style="background: #87CEEE" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type='submit' class="btn btn-primary btn-sm" value="RUN" >
+                                    </td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </form>
+
+
+
+
+                <script type="text/javascript" src="/javascripts/pageFunctions/judgeCodeTest.js"></script>
+                <script type="text/javascript">
+
+                    $(document).ready(function(e) {
+
+
+                        $(document).on('click', '.flb', function () {
+
+                            var ftl = $(this).parent().parent().parent().find(".ftl").html();
+                            var fml = $(this).parent().parent().parent().find(".fml").html();
+
+
+
+                            $('input[name="ftl"]').val(cutStr(ftl));
+                            $('input[name="fml"]').val(cutStr(fml));
+
+
+                        });
+
+                        $('#judgesolution').on('submit', function (ev) {
+
+                            ev.preventDefault();
+
+
+                            $('<input />').attr('type', 'hidden')
+                                    .attr('name', "language")
+                                    .attr('value',  document.getElementById("language").value)
+                                    .appendTo('#judgesolution');
+
+
+                            var form = $('#judgesolution')[0];
+                            var formData = new FormData(form);
+                            var submitUrl = '/problems/edit/' + <%= pid %> + '/tjs';
+
+
+
+                            $("#ajaxResult").html('<h4><img src="/images/hourglass1.gif"> Running Please Wait..</h4>');
+
+                            $.ajax({
+                                url: submitUrl,
+                                type: "POST",
+                                data: formData,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                complete: function(){
+                                    form.reset();
+                                },
+                                success: function(data) {
+                                    showRuns(data);
+                                },
+                                error: function(xhr, status, error) {
+                                    $("#ajaxResult").html(JSON.stringify(xhr.responseText));
+                                }
+                            });
+
+                        });
+
+                    });
+
+
+                    function cutStr(x){
+                        var ret = '';
+                        for(var i=0; i<x.length && (x.charAt(i) === '.' || !isNaN(x.charAt(i)) ); i++){
+                            ret += x.charAt(i);
+                        }
+                        return ret;
+                    }
+
+                </script>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+
+
+                <form method="post" action="/problems/edit/<%= pid %>/3" name="limits" >
+
+                    <h3>Final Limits</h3>
+                    <div class="row form-group">
+                        <div class="col-xs-4">
+                            <label>Time Limit (S)</label>
+                            <input type="text" name="ftl" placeholder="0.0" class="form-control" />
+                        </div>
+                        <div class="col-xs-4">
+                            <label style="margin-right: 5px;">Memory Limit (MB)</label>
+                            <input type="text" name="fml" placeholder="0" class="form-control" />
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary" value="Save and Finish" />
+
+                </form>
+
+
+                <div id="ajaxResult"></div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+<!-- footer -->
+<% include ../../templates/footer.ejs %>
+
+</body>
+</html>

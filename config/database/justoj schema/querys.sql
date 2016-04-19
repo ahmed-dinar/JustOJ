@@ -26,3 +26,20 @@ SELECT `submissions`.`language`, `submissions`.`submittime`, `submissions`.`cpu`
   LEFT JOIN `users`
     ON `submissions`.uid = `users`.id
 WHERE `pid`='1' AND `status`='0' GROUP BY `uid` ORDER BY `cpu` LIMIT 20 OFFSET 0
+
+
+
+
+
+
+
+SELECT MIN(counted) FROM
+  (
+    SELECT COUNT(*) AS counted
+    FROM `submissions`
+    WHERE `pid`='1' AND `status`='0'
+    GROUP BY(`uid`)
+  ) AS tata
+
+
+

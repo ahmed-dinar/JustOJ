@@ -1,22 +1,32 @@
-var Query       = require('../config/database/query');
+
 var _           = require('lodash');
 var async       = require('async');
+var DB          = require('../config/database/knex/DB');
+var Query       = require('../config/database/knex/query');
 
 
 exports.insert = function(inserts,cb){
-    Query.in('submissions').insert(inserts,function(err,row){
 
-        if( err ){ return cb(err); }
+    var sql = Query.insert(inserts)
+        .into('submissions');
 
-        cb(null,row.insertId);
-    });
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            if( err ){ return cb(err); }
+
+            cb(null,rows.insertId);
+        });
 };
 
 
-exports.update = function(inserts,cb){
+exports.update = function(sid,inserts,cb){
 
-    Query.in('submissions').update(inserts,function(err,rows){
-        cb(err);
-    });
+    var sql = Query('submissions').update(inserts).where('id',sid);
 
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            cb(err);
+        });
 };

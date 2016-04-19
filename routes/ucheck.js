@@ -1,6 +1,9 @@
 var express     = require('express');
 var router      = express.Router();
-var Orm         = require('../config/database/query');
+
+var DB          = require('../config/database/knex/DB');
+var Query       = require('../config/database/knex/query');
+
 
 router.get('/', function(req, res, next) {
     res.status(404).send('Page Not found');
@@ -14,38 +17,31 @@ router.post('/', function(req, res){
 
     if( username ){
 
-        Orm.in('users').findAll({
-            attributes: ['username'],
-            where:{
-                username: username
-            }
-        },function(err,rows){
+        var sql = Query.select('username').from('users').where({ 'username': username }).limit(1);
 
-            if( err || rows.length ){
-                res.send(false);
-            }else{
-                res.send(true);
-            }
-
-        });
-
+        DB.execute(
+            sql.toString()
+            ,function(err,rows){
+                if( err || rows.length ){
+                    res.send(false);
+                }else{
+                    res.send(true);
+                }
+            });
 
     }else if( email ){
 
-        Orm.in('users').findAll({
-            attributes: ['email'],
-            where:{
-                email: email
-            }
-        },function(err,rows){
+        var sql = Query.select('email').from('users').where({ 'email': email }).limit(1);
 
-            if( err || rows.length ){
-                res.send(false);
-            }else{
-                res.send(true);
-            }
-
-        });
+        DB.execute(
+            sql.toString()
+            ,function(err,rows){
+                if( err || rows.length ){
+                    res.send(false);
+                }else{
+                    res.send(true);
+                }
+            });
 
     }else{
         res.send(false);

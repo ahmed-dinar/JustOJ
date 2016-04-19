@@ -1,82 +1,121 @@
 CREATE TABLE `problems` (
-  `id` int(11) NOT NULL,
-  `title` tinytext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `category` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `difficulty` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `status` varchar(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `statement` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `input` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `output` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `score` int(11) NOT NULL,
-  `cpu` int(11) DEFAULT NULL,
-  `memory` int(11) DEFAULT NULL,
-  `submissions` int(11) DEFAULT '0',
-  `solved` int(11) DEFAULT '0',
-  `author` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` INT(11) NOT NULL,
+  `isContest` TINYINT(1) NOT NULL DEFAULT 0,
+  `title` TINYTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `category` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `difficulty` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `status` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `statement` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `input` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `output` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `score` INT(11) NOT NULL,
+  `cpu` INT(11) DEFAULT NULL,
+  `memory` INT(11) DEFAULT NULL,
+  `submissions` INT(11) DEFAULT '0',
+  `solved` INT(11) DEFAULT '0',
+  `author` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `added` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 
 CREATE TABLE `problem_tags` (
-  `id` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `tag` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT ''
+  `id` INT(11) NOT NULL,
+  `pid` INT(11) NOT NULL,
+  `tag` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT ''
 ) ENGINE=InnoDB;
 
 
 CREATE TABLE `user_problem_status` (
-  `id` int(11) NOT NULL,
-  `uid` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
+  `id` INT(11) NOT NULL,
+  `uid` INT(11) NOT NULL,
+  `pid` INT(11) NOT NULL,
   `status` tinyint(3) NOT NULL
 ) ENGINE=InnoDB;
 
 
 CREATE TABLE `submissions` (
-  `id` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `uid` int(11) NOT NULL,
-  `language` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `status` varchar(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `submittime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `cpu` int(11) NOT NULL,
-  `memory` int(11) NOT NULL
+  `id` INT(11) NOT NULL,
+  `pid` INT(11) NOT NULL,
+  `uid` INT(11) NOT NULL,
+  `isContest` TINYINT(1) NOT NULL DEFAULT 0,
+  `language` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `status` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `submittime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `cpu` INT(11) NOT NULL,
+  `memory` INT(11) NOT NULL
 ) ENGINE=InnoDB;
 
 
 CREATE TABLE `submission_code` (
-  `id` int(11) NOT NULL,
-  `sid` int(11) NOT NULL,
-  `code` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+  `id` INT(11) NOT NULL,
+  `sid` INT(11) NOT NULL,
+  `code` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
 
 
 CREATE TABLE `temp_user` (
-  `id` int(11) NOT NULL,
-  `username` varchar(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `password` varchar(60) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `created` datetime NOT NULL,
-  `expire` datetime NOT NULL,
-  `token` varchar(36) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
+  `id` INT(11) NOT NULL,
+  `username` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `password` VARCHAR(60) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `created` DATETIME NOT NULL,
+  `expire` DATETIME NOT NULL,
+  `token` VARCHAR(36) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB;
 
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `username` varchar(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `password` varchar(60) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `joined` datetime NOT NULL,
-  `firstname` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `lastname` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `institute` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+  `id` INT(11) NOT NULL,
+  `username` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `password` VARCHAR(60) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `joined` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `firstname` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `lastname` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `institute` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE `contest` (
+  `id` INT(11) NOT NULL,
+  `title` TINYTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `begin` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `end` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` TINYINT(1) NOT NULL,
+  `privacy` TINYINT(1) NOT NULL
+) ENGINE=InnoDB;
 
 
+CREATE TABLE `contest_participants` (
+  `id` INT(11) NOT NULL,
+  `cid` INT(11) NOT NULL,
+  `uid` INT(11) NOT NULL
+) ENGINE=InnoDB;
 
+
+CREATE TABLE `contest_problems` (
+  `id` INT(11) NOT NULL,
+  `cid` INT(11) NOT NULL,
+  `pid` INT(11) NOT NULL
+) ENGINE=InnoDB;
+
+
+CREATE TABLE `contest_submissions` (
+  `id` INT(11) NOT NULL,
+  `cid` INT(11) NOT NULL,
+  `sid` INT(11) NOT NULL
+) ENGINE=InnoDB;
+
+
+CREATE TABLE `contest_clarifications` (
+  `id` INT(11) NOT NULL,
+  `cid` INT(11) NOT NULL,
+  `uid` INT(11) NOT NULL,
+  `pid` INT(11) NOT NULL,
+  `status` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `request` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `response` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB;
 
 
 

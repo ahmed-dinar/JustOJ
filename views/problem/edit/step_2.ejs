@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+
+    <script type="text/javascript" src="../../../javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../../templates/header.ejs %>
+<% if(!isLoggedIn){ %>
+<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+<% } else{ %>
+<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.name %> </a></li>
+<% } %>
+<% include ../../templates/headerend.ejs %>
+
+
+<!-- Main Content -->
+<div class="container">
+
+
+    <div class="col-md-12">
+        <% if (successMsg.length) { %>
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <%= successMsg %>
+                </div>
+            </div>
+        <% }else if (errMsg.length) { %>
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <%= errMsg %>
+                </div>
+            </div>
+        <% } %>
+
+        <% if (rsuccessMsg.length) { %>
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <%= rsuccessMsg %>
+                </div>
+            </div>
+        <% }else if (rerrMsg.length) { %>
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <%= rerrMsg %>
+                </div>
+            </div>
+        <% } %>
+
+    </div>
+
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                    <h3>Add Test Cases</h3>
+
+
+                        <h5> <%= data.length %> Test Case Added</h5>
+                        <div id="caseremovingDiv"><img src="/images/ajax-loader.gif"> <b>Deleting...</b></div>
+
+                            <table class="table">
+                                <tbody id="caselist">
+
+                                    <% for(var i=0; i<data.length; i++){ %>
+                                        <tr>
+                                            <td class="col-md-4">
+                                                <input type='button' class="btn btn-primary btn-xs remove btn-danger" value="remove"  >
+                                            </td>
+                                            <td>
+                                                Test Case:  <%= i+1 %>
+                                            </td>
+                                            <input type="hidden" value="<%= data[i] %>" />
+                                        </tr>
+                                    <% } %>
+
+                                </tbody>
+                            </table>
+
+
+                <div class="well well-sm">
+                    <form method="post" action="/problems/edit/<%= pid %>/2" name="cases" id="cases" enctype="multipart/form-data" >
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>
+                                    INPUT FILE
+                                </th>
+                                <th>
+                                    OUTPUT FILE
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <input type='file' id='fileinput' form="cases"  accept="text/plain"  name="input" class="btn btn-primary btn-sm" style="background: #87CEEE" >
+                                </td>
+                                <td>
+                                    <input type='file' id='fileinput' form="cases" accept="text/plain"  name="output" class="btn btn-primary btn-sm" style="background: #87CEEE" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type='submit' class="btn btn-primary btn-sm" value="ADD" >
+                                </td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="col-md-6" style="margin-bottom: 30px;">
+        <a href="/problems/edit/<%= pid %>/3" style="color: #FFFFFF;"><button  class="btn btn-primary"> Save And Continue</button></a>
+    </div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            //remove TC
+            $(document).on('click', '.remove', function () {
+                var a = $(this).parent().parent();
+
+                var remName = null;
+                for(var i=0; i<a[0].childNodes.length; i++){
+                    if(a[0].childNodes[i].type == 'hidden'){
+                        remName = a[0].childNodes[i].value;
+                        break;
+                    }
+                }
+
+                if( remName ){
+                    submitRemoveReq(<%= pid %>,remName);
+                }else{
+                    alert('No test case selected!');
+                }
+            });
+
+        });
+
+        function submitRemoveReq(cPid, cName) {
+            var form = document.createElement("form");
+            var element1 = document.createElement("input");
+            var element2 = document.createElement("input");
+
+            form.method = "POST";
+            form.action = "/problems/rtc/";
+
+            element1.value = cPid;
+            element1.name = "pid";
+            form.appendChild(element1);
+
+            element2.value = cName;
+            element2.name = "casename" ;
+            form.appendChild(element2);
+
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+
+
+    </script>
+
+</div>
+
+
+
+<!-- footer -->
+<% include ../../templates/footer.ejs %>
+
+</body>
+</html>

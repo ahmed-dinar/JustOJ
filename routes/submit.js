@@ -64,15 +64,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
         },
         function(opts,callback){
 
-            Problems.updateSubmission({
-                self:[
-                    { col: 'submissions',  val: 1 }
-                ],
-                where:{
-                    id: pID
-                }
-            }, function(err){
-
+            Problems.updateSubmission(pID, 'submissions', function(err){
                 if( err ){
                     console.log('Updating submission errr'.red);
                     return callback(err);
@@ -80,7 +72,6 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
                 callback(null,opts);
             });
-
         },
         function(opts,callback){
             makeTempDir(opts,callback);

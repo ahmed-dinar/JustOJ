@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+
+    <script type="text/javascript" src="../../../javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+
+
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+
+
+    <!-- include summernote css/js-->
+    <link href="/stylesheets/summernote.css" rel="stylesheet">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.7.3/summernote.js"></script>
+
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../../templates/header.ejs %>
+<% if(!isLoggedIn){ %>
+<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+<% } else{ %>
+<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.name %> </a></li>
+<% } %>
+<% include ../../templates/headerend.ejs %>
+
+
+<!-- Main Content -->
+<div class="container">
+
+    <div class="col-md-12">
+        <form method="post" name="editForm"  role="form" onsubmit="return submitForm()"  >
+
+            <div class="form-group">
+                <label for="title" >Problem Name</label>
+                <input type="text" name="title" class="form-control" >
+            </div>
+
+            <div class="row form-group">
+                <div class="col-xs-4">
+                    <label for="author">Author</label>
+                    <input type="text"  name="author" class="form-control"  >
+                </div>
+                <div class="col-xs-4">
+                    <label for="score">Score</label>
+                    <input type="text"  name="score" class="form-control"  >
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-xs-4">
+                    <label for="input">Input</label>
+                        <textarea type="text" name="input" class="form-control" rows="4"  ></textarea>
+                </div>
+
+                <div class="col-xs-4">
+                    <label for="output">output</label>
+                        <textarea type="text" name="output" class="form-control" rows="4" ></textarea>
+                </div>
+            </div>
+
+
+            <label>Tags</label>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <label class="checkbox-inline"><input type="checkbox" name="beginner" value="hi">Beginner</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="addhoc" value="addhoc">Add-hoc</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="dp" value="dp">DP</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="ds" value="ds">Data Structures</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="dac" value="dac">Divide and Conquer</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="fom" value="fom">Flow/Matching</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="geometry" value="geometry">Geometry</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="graph" value="graph">Graph Theory</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="number" value="number">Number Theory</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="string" value="string">String</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="recursion" value="recursion">Recursion</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="searching" value="searching">Searching</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="game" value="game">Game Theory</label>
+                    <label class="checkbox-inline"><input type="checkbox" name="matrix" value="matrix">Matrix</label>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="iUsername" class="control-label">Problem Statement</label>
+                    <textarea id="summernote" type="username" name="statement"  class="form-control" >
+
+
+                    </textarea>
+            </div>
+
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary pull-right">Save And Continue</button>
+            </div>
+
+        </form>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Preview</button>
+        </div>
+
+    </div>
+
+
+
+    <div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4></h4>
+                </div>
+
+                <div class="modal-body">
+                    <div id="omg" ></div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+
+
+        function submitForm(){
+            $('textarea[name="statement"]').html($('#summernote').summernote('code'));
+            return true;
+        }
+
+        $(document).ready(function() {
+
+            $('#myModal').on('show.bs.modal', function (e) {
+
+                document.getElementById('omg').innerHTML = getProblem();
+            });
+
+
+            $('#summernote').summernote({
+                callbacks: {
+                    onInit: function() {
+                        $("input[name='title']").val(<%- JSON.stringify(problem.title) %>);
+                        $("input[name='author']").val(<%- JSON.stringify(problem.author) %>);
+                        $("input[name='score']").val(<%- JSON.stringify(problem.score) %>);
+                        $("textarea[name='input']").val(<%- JSON.stringify(problem.input) %>);
+                        $("textarea[name='output']").val(<%- JSON.stringify(problem.output) %>);
+                        $("#summernote").summernote("code", <%- JSON.stringify(problem.statement) %>);
+                    }
+                },
+                height: 300,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: true                  // set focus to editable area after initializing summernote
+            });
+
+
+
+        });
+
+
+
+
+
+
+        function getProblem(){
+            var prv = '<h3 id="h3"><%- problem.title %></h3>';
+
+            prv += '<p style="font-size: 84%; line-height: 1.1px;">';
+            prv += 'CPU: <%- (problem.cpu/1000.0) %>s | ';
+            prv += 'Memory: <%- problem.memory %>KB';
+            prv += '</p><br>';
+
+            prv += '<p>';
+            prv += '<%- problem.statement %>';
+            prv += '</p>';
+
+            prv += '<h3 id="h3">Sample</h3>';
+
+            prv += '<table class="table" style="padding: 0px; margin: 0px">';
+            prv += '<thead>';
+            prv += '<tr>';
+            prv += '<th style="border: none">Input</th>';
+            prv += '<th style="border: none">Output</th>';
+            prv += '</tr>';
+            prv += '</thead>';
+            prv += '<tbody style="padding: 0px; margin: 0px">';
+            prv += '<tr>';
+            prv += '<td class="col-md-1 codePre">' + <%- JSON.stringify(problem.input) %> +'</td>';
+            prv += '<td class="col-md-1 codePre">' + <%- JSON.stringify(problem.output) %> + '</td>';
+            prv += '</tr>';
+            prv += '</tbody>';
+            prv += '</table>';
+            return prv;
+        }
+
+
+
+        //add form action
+        window.onload = function() {
+            document.editForm.action = get_action('1');
+        }
+
+        function get_action(ac) {
+            return '/problems/edit/'+ <%= pid %> + '/' + ac;
+        }
+    </script>
+
+
+
+</div>
+
+
+
+<!-- footer -->
+<% include ../../templates/footer.ejs %>
+
+</body>
+</html>

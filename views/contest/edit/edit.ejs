@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <script type="text/javascript" src="../../javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="../../stylesheets/style.css">
+
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="../../bootstrap/js/bootstrap.min.js"></script>
+
+
+    <script type="text/javascript" src="../../javascripts/moment.min.js"></script>
+    <script type="text/javascript" src="../../bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="../../bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+
+    <script type="text/javascript" src="../../javascripts/jquery.validate.js"></script>
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../../templates/header.ejs %>
+<% if(!isUser){ %>
+<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+<% } else{ %>
+<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.username %> </a></li>
+<% } %>
+<% include ../../templates/headerend.ejs %>
+
+
+<!-- Main Content -->
+<div class="container" style="min-height: 530px;">
+
+    <div class="row">
+
+
+        <!-- errors -->
+        <% if (errors.length) { %>
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <%= errors %>
+                </div>
+            </div>
+        <% }else if(success.length){ %>
+            <div class="col-md-6 col-md-offset-3">
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <%= success %>
+                </div>
+            </div>
+        <% } %>
+
+        <div class="col-md-12">
+
+            <div class="row">
+                <div class="col-md-6 col-md-offset-5">
+                    <div id="countdown" style="font-size: 24px; font-weight: 200"></div>
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <h3>Edit Contest</h3>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Detail</a></li>
+                    <li role="presentation"><a href="#problems" aria-controls="problems" role="tab" data-toggle="tab">Problems</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+                                <form method="post" action="/contest/edit/detail/<%= cid %>" role="form" id="ccFrom" class="form-horizontal" >
+
+                                    <div class="form-group">
+                                        <label class="col-sm-1 control-label">Type</label>
+                                        <div class="col-sm-11">
+                                            <fieldset>
+                                                <% if(details.privacy === 1){ %>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="type" checked  value="public" required >Public
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="type"  value="private">Private
+                                                    </label>
+                                                <% }else{ %>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="type"  value="public" required >Public
+                                                    </label>
+                                                    <label class="radio-inline">
+                                                        <input type="radio" name="type" checked value="private">Private
+                                                    </label>
+                                                <% } %>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputTitle" class="col-sm-1 control-label">Title</label>
+                                        <div class="col-sm-11">
+                                            <input type="text" name="title" value="<%= details.title %>" class="form-control " id="inputTitle" placeholder="Title" required >
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label for="inputTime" class="col-sm-1 control-label">Begin</label>
+                                        <div class="col-sm-11">
+                                            <div class='input-group date row'>
+                                                <div class="col-sm-6">
+                                                    <input type='text' name="beginDate" value="<%= details.beginDate %>" class="form-control " id='datepicker' placeholder="MM-DD-YYYY" required >
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <input type='text' name="beginTime" value="<%= details.beginTime %>" class="form-control  timepicker" placeholder="hh:mm:ss" required >
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-1 control-label">Length</label>
+                                        <div class="col-sm-11">
+                                            <div class='input-group date row'>
+                                                <div class="col-md-6">
+                                                    <input type='text'  name="lenDay" class="form-control " placeholder="Day" required />
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <input type='text' name="lenTime" class="form-control  timepicker" placeholder="hh:mm:ss"  required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-1 col-sm-11">
+                                            <input type="button" name="btn" value="UPDATE" id="submitBtn"  class="btn btn-primary" />
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="problems">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+                                <div class="col-md-2 col-md-offset-5">
+                                    <a class="btn btn-success btn-sm" href="/contest/edit/<%= cid %>/problems/new" >ADD PROBLEM</a>
+                                </div>
+
+
+                                <% if(problems.length){ %>
+                                    <br/>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Title</th>
+                                                <th>Status</th>
+                                                <th>Preview</th>
+                                                <th>Edit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% for(var i=0; i<problems.length; i++){ %>
+                                                <tr>
+                                                    <input type="hidden" value="<%= problems[i].pid %>" >
+                                                    <td class="col-sm-1"><%= (i+1) %></td>
+                                                    <td><%= problems[i].title %></td>
+                                                    <td class="col-sm-1">
+                                                        <% if(problems[i].status==='incomplete'){ %>
+                                                            <span class="label label-danger">Incomplete
+                                                        <% }else{ %>
+                                                            <span class="label label-success">Ready
+                                                        <% } %>
+                                                        </span>
+                                                    </td>
+                                                    <td class="col-sm-1">
+                                                        <button class="btn btn-sm btn-primary previewBtn" >PREVIEW</button>
+                                                    </td>
+                                                    <td class="col-sm-1">
+                                                        <a class="btn btn-sm btn-primary" href="/contest/edit/<%= cid %>/problems/<%= problems[i].pid %>/step1">
+                                                            EDIT
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                <% } %>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4></h4>
+            </div>
+
+            <div class="modal-body">
+                <div id="omg" ></div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function(){
+
+        var validator = $("#ccFrom").validate({
+            showErrors: function(errorMap, errorList) {
+
+                $.each(this.validElements(), function (index, element) {
+                    var $element = $(element);
+                    $element.data("title", "");
+                    $element.removeClass("val-error");
+                    $element.tooltip("destroy");
+                });
+
+                $.each(errorList, function (index, error) {
+                    var $element = $(error.element);
+
+                    $element.tooltip("destroy");
+                    $element.data("title", error.message);
+                    $element.addClass("val-error");
+                    $element.tooltip("show");
+                });
+            }
+        });
+
+
+        $(document).on('click', '.previewBtn', function () {
+            var pid = $(this).parents('tr').find('input[type="hidden"]').val()
+
+            var URL = '/contest/edit/<%= cid %>/problems/' + pid + '/preview';
+
+            $.ajax({
+                type: "GET",
+                data: {
+                    format: 'json'
+                },
+                url: URL,
+                dataType: "json",
+                success: function(data) {
+
+                    document.getElementById('omg').innerHTML = getProblem(data);
+                    $('#myModal').modal('show');
+
+                },
+                error: function(xhr, status, error) {
+                    alert(JSON.stringify(xhr.responseText));
+                }
+            });
+
+        });
+
+
+
+
+        $('#submitBtn').click(function(){
+
+            if( $("#ccFrom").valid() ){
+                $('#ccFrom').submit();
+            }
+
+        });
+
+
+    });
+
+    function getProblem(data){
+        var htmls = '<div class="preview">';
+        htmls += '<h3 id="h3">';
+        htmls += data.title;
+        htmls += '</h3>';
+        htmls += '<p style="font-size: 84%; line-height: 1.1px;">';
+        htmls += 'CPU: ' + data.cpu/1000.0 + 's | ';
+        htmls += 'Memory: ' + isEmpty(data.memory) + 'KB';
+        htmls += '</p></br>';
+        htmls += '<p>';
+        htmls +=  data.statement;
+        htmls += '</p>';
+        htmls += '<h3 id="h3">Sample</h3>';
+        htmls += '<table class="table" style="padding: 0px; margin: 0px">';
+        htmls += '<tbody style="padding: 0px; margin: 0px">';
+        htmls += '<tr>';
+        htmls += '<th style="border: none">Input</th>';
+        htmls += '<th style="border: none">Output</th>';
+        htmls += '</tr>';
+        htmls += '<tr>';
+        htmls += '<td class="col-md-1" style="border: none"><pre>';
+        htmls +=  data.input;
+        htmls += '</td></pre>';
+        htmls += '<td class="col-md-1" style="border: none"><pre>';
+        htmls +=  data.output;
+        htmls += '</td></pre>';
+        htmls += '</tr>';
+        htmls += '</tbody>';
+        htmls += '</table>';
+        htmls += '</div>';
+        return htmls;
+    }
+
+
+    function isEmpty(val){
+        if( val ){
+            return val;
+        }
+        return '--';
+    }
+
+    $(function () {
+        $('.timepicker').datetimepicker({
+            format: 'HH:mm:ss'
+        });
+        $('#datepicker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+
+    window.onload = function () {
+        CountDownTimer('<%= details.begin %>');
+    };
+
+    function CountDownTimer(begin) {
+
+        var end = new Date(begin);
+
+        var _second = 1000;
+        var _minute = _second * 60;
+        var _hour = _minute * 60;
+        var _day = _hour * 24;
+        var timer;
+        var running = false;
+        var doc =  document.getElementById("countdown");
+
+        function showRemaining() {
+            var now = new Date();
+
+            var distance = end - now;
+
+            if (distance < 0) {
+
+                clearInterval(timer);
+                doc.innerHTML = '00:00:00:00';
+
+                if( running ) {
+                    alert('Contest Started!');
+                }
+                return;
+            }
+            var days = Math.floor(distance / _day);
+            var hours = Math.floor((distance % _day) / _hour);
+            var minutes = Math.floor((distance % _hour) / _minute);
+            var seconds = Math.floor((distance % _minute) / _second);
+
+
+            doc.innerHTML = Math.floor(days/10) + '' +  days%10 + ':';
+            doc.innerHTML += Math.floor(hours/10) + '' +  hours%10 + ':';
+            doc.innerHTML += Math.floor(minutes/10) + '' +  minutes%10 + ':';
+            doc.innerHTML += Math.floor(seconds/10) + '' +  seconds%10;
+
+
+            running = true;
+        }
+        showRemaining();
+        timer = setInterval(showRemaining, 1000);
+    }
+
+
+</script>
+
+
+<!-- footer -->
+<% include ../../templates/footer.ejs %>
+
+</body>
+</html>

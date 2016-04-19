@@ -1,7 +1,7 @@
 var passportLocal   = require('passport-local');
 var User            = require('../models/user');
-var Query           = require('../config/database/query');
-
+var DB              = require('../config/database/knex/DB');
+var Query           = require('../config/database/knex/query');
 
 module.exports = function(passport) {
 
@@ -17,14 +17,10 @@ module.exports = function(passport) {
 
             User.login(username,password,function(err,user){
 
-                if (err) {
-                    return done(null, false, req.flash('loginFailure', err) );
-                }
+                if (err) { return done(null, false, req.flash('loginFailure', err) ); }
 
-                return done(null, user);
-
+                done(null, user);
             });
-
         }
     ));
 
@@ -39,23 +35,22 @@ module.exports = function(passport) {
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
 
-        Query.in('users').findAll({
-            where: {
-                id: id
-            }
-        }, function (err, rows) {
+        var sql = Query.select()
+            .from('users')
+            .where({
+                'id': id
+            });
 
-            if( err ){
-                return done(err);
-            }
+        DB.execute(
+            sql.toString()
+            ,function(err,rows){
 
-            if( !rows.length ){
-                return done(err);
-            }
+                if( err ){ return done(err); }
 
-            done(err, rows[0]);
-        });
+                if( !rows.length ){ return done('empty user'); }
 
+                done(err, rows[0]);
+            });
     });
 
 };

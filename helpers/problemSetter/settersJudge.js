@@ -54,10 +54,10 @@ exports.run = function(opts,cb){
 
         if( error ){
 
-            if( runs.compiler ){
+            if( runs.compiler  ){
                 return cb(error,runs);
             }else if( !runs || _.isUndefined(runs[0]) ){
-                return cb(error,null);
+                return cb(error,{});
             }else{
                 console.log('Error but runs exists');
                 console.log(runs);
@@ -135,13 +135,13 @@ var getTestCases = function (tcDir,cb) {
         if( err ){
             console.log('getTestCases error:: '.red);
             console.log(err);
-            return cb(err);
+            return cb(err,{});
         }
 
 
         if( files.length === 0 ){
             console.log(('No Test Case Found in ' + tcDir).red);
-            return cb('No Test Case Found');
+            return cb('No Test Case Found',{});
         }
 
         console.log(files);

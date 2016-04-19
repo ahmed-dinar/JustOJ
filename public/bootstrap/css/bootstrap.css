@@ -1088,7 +1088,9 @@ body {
   font-size: 14px;
   line-height: 1.42857143;
   color: #333;
-  background-color: #f3f3f3;
+
+  /*background-image: url("../../images/diamond.png");
+  background-repeat: repeat-x repeat-y;*/
 }
 input,
 button,
@@ -4215,10 +4217,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar {
   position: relative;
-  min-height: 50px;
+  min-height: 30px;
   margin-bottom: 20px;
   border: none;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.11);
 }
 @media (min-width: 768px) {
   .navbar {
@@ -4550,7 +4551,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-default {
   background-color: #f8f8f8;
-  border-color: #DDD;
+
+  border-bottom: 1px solid #ddd;
 }
 .navbar-default .navbar-brand {
   color: #777;

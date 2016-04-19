@@ -22,7 +22,7 @@ module.exports = function(req, res, next) {
         }else{
             req.flash('tcRemSuccess', 'Test Case Removed');
         }
-        res.redirect('/ep/' + req.body.pid + '/2');
+        res.redirect('/problems/edit/' + req.body.pid + '/2');
     });
 
 };

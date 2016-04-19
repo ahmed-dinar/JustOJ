@@ -1,6 +1,9 @@
-var Query           = require('../config/database/query');
+
 var async           = require('async');
 var bcrypt          = require('bcryptjs');
+
+var DB              = require('../config/database/knex/DB');
+var Query           = require('../config/database/knex/query');
 
 function User(){}
 
@@ -18,26 +21,23 @@ User.login = function(username, password, fn) {
         //find user by username
         function (callback) {
 
-            Query.in('users').findAll({
-                where: {
-                    username: username
-                }
-            }, function (err, rows) {
+            var sql = Query.select()
+                .from('users')
+                .where({
+                    'username': username
+                })
+                .limit(1);
 
-                if (err) {
-                   return callback(err,null);
-                }
+            DB.execute(
+                sql.toString()
+                ,function(err,rows){
+                    if (err) { return callback(err,null); }
 
-                if (rows.length) {
-                    return callback(null, rows[0]);
-                }
+                    if (rows.length) { return callback(null, rows[0]); }
 
-                callback('invalid username or password');
-
-            });
-
+                    callback('invalid username or password');
+                });
         },
-
         //comapare password with hash
         function (rows, callback) {
 
@@ -53,28 +53,28 @@ User.login = function(username, password, fn) {
 
         }
 
-
     ], function (err, result) {
 
         if( err ){ return fn(err); }
 
         return fn(null,result);
-
     });
-
 };
 
 
 User.problemStatus = function(id,callback){
 
-    Query.in('user_problem_status').findAll({
-        where:{
-            uid: id
-        }
-    },function(err,rows){
-        callback(err,rows);
-    });
+    var sql = Query.select()
+        .from('user_problem_status')
+        .where({
+            'uid': id
+        });
 
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            callback(err,rows);
+        });
 };
 
 

@@ -11,6 +11,8 @@ var Paginate    = require('../helpers/paginate');
 var moment      = require("moment");
 var async       = require('async');
 
+var Query       = require('../config/database/knex/query');
+
 router.get('/', function(req, res, next) {
 
     res.render('ranks', {
@@ -53,33 +55,37 @@ router.get('/p/:pid', function(req, res, next) {
                     return callback('what are u looking for!');
                 }
 
-                Paginate.findAll({
-                    attributes: ['language','submittime','cpu','memory','username'],
-                    table: 'submissions',
-                    cur_page: cur_page,
-                    limit: 20,
-                    where:{
-                        pid: pID,
-                        status: '0'
+
+                var sql = Query.select(['submissions.language','submissions.submittime','submissions.cpu','submissions.memory','users.username'])
+                    .from('submissions')
+                    .orderBy('submissions.cpu')
+                    .leftJoin('users', 'submissions.uid', 'users.id')
+                    .min('submissions.cpu as cpu')
+                    .groupBy('submissions.uid')
+                    .where({
+                        'submissions.pid': pID,
+                        'submissions.status': '0'
+                    })
+                    .as('ignored_alias');
+
+
+                var sqlCount = Query.min('counted as count').from(function() {
+                    this.count('* as counted').from('submissions').where({pid: pID, status: '0'}).groupBy('uid').as('c');
+                }).as('ignored_alias');
+
+
+                Paginate.paginate({
+                        cur_page: cur_page,
+                        sql: sql,
+                        sqlCount: sqlCount,
+                        limit: 5
                     },
-                    min: 'cpu',
-                    group: 'uid',  //for unique users
-                    order:{
-                        by: 'cpu'
-                    },
-                    leftJoin:{
-                        table: 'users',
-                        pcol: 'uid',
-                        scol: 'id'
-                    }
-                } , function(err,rows,pagination){
-
-                    if( err ){ return callback(err); }
+                    function(err,rows,pagination) {
+                        if( err ){ return callback(err); }
 
 
-                    callback(null,pName,pagination,rows);
-
-                });
+                        callback(null,pName,pagination,rows);
+                    });
 
             }
         ], function (error, pName, pagination, rank) {
@@ -92,9 +98,9 @@ router.get('/p/:pid', function(req, res, next) {
             }
 
 
+            console.log(rank);
 
-
-            res.render('problem_rank' , {
+            res.render('problem/rank' , {
                 title: "Problems | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
@@ -110,7 +116,6 @@ router.get('/p/:pid', function(req, res, next) {
 
 
         });
-
 
         return;
     }

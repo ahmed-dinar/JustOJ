@@ -5,64 +5,54 @@
  */
 
 
-var Query       = require('../config/database/query');
 var Pagination  = require('../helpers/pagination').Pagination;
 var async       = require('async');
 
-exports.findAll = function(opts,cb) {
+var DB          = require('../config/database/knex/DB');
 
+
+exports.paginate = function(opts,cb) {
     async.waterfall([
         function(callback) {
-            countResults(opts,callback);
+            count(opts.sqlCount,callback);
         },
         function(total_count,callback){
-            findResults(opts,total_count,callback);
+            find(opts,total_count,callback);
         }
     ], function (error, rows, pagination) {
         cb(error,rows,pagination);
     });
-
 };
 
 
 
-var countResults = function(opts,callback){
+var count = function(sqlCount,callback){
 
-    Query.in(opts.table).count(opts,function (err, rows) {
+    DB.execute(
+        sqlCount.toString()
+        ,function(err,rows){
+            if(err){ return callback(err); }
 
-        if( err ) { return callback(err); }
-
-
-        var total_count = 0;
-
-        if( rows.length ) {
-            total_count =  rows[0]['COUNT(*)'];
-        }
-        else{
-            console.log('Paginate findAll no result??');
-        }
-
-        callback(null,total_count);
-
-    });
+            callback(null,rows[0].count);
+        });
 };
 
 
-
-var findResults = function(opts, total_count, callback){
+var find = function(opts, total_count, callback){
 
     var pagination = new Pagination(opts.cur_page,opts.limit,total_count);
-    var obj = {
-        limit: pagination.page_limit,
-        offset: pagination.offset()
-    };
 
-    opts['offset'] = pagination.offset();
+    var sql = opts.sql
+        .limit(pagination.page_limit)
+        .offset(pagination.offset());
 
-    Query.in(opts.table).findAll(opts,function(err,rows){
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            if(err){ return callback(err); }
 
-        if( err ) { return callback(err); }
-
-        callback(null,rows,pagination);
-    });
+            callback(null,rows,pagination);
+        });
 };
+
+

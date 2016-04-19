@@ -3,7 +3,7 @@
  * @type {exports|module.exports}
  */
 
-var Query       = require('../config/database/query');
+
 var bcrypt      = require('bcryptjs');
 var _           = require('lodash');
 var moment      = require("moment");
@@ -11,6 +11,8 @@ var uuid        = require('node-uuid');
 var nodemailer  = require('nodemailer');
 var async       = require('async');
 
+var DB          = require('../config/database/knex/DB');
+var Query       = require('../config/database/knex/query');
 
 /**
  *
@@ -24,48 +26,50 @@ exports.resister = function (req, res, next) {
     var password = req.body.password;
     var email    = req.body.email;
 
+    if (!username || !password || !email){
+        return next(new Error('Form Error'));
+    }
+
     async.waterfall([
 
         function(callback) {
+            bcrypt.genSalt(10, function (err, salt) {
+                if (err) { return callback('salt error');}
 
-            if (username && password && email) {
-                bcrypt.genSalt(10, function (err, salt) {
+                callback(null, salt);
+            });
+        },
+        function(salt,callback) {
+            bcrypt.hash(password, salt, function (err, hash) {
+                if (err) { return callback('hash error'); }
 
-                    if (err) { return callback('salt error', null); }
+                callback(null, hash);
+            });
+        },
+        function(hash,callback) {
 
-                    bcrypt.hash(password, salt, function (err, hash) {
+            var token = uuid.v4();
+            var now = _.now();
+            var created = moment(now).format("YYYY-MM-DD HH:mm:ss");
+            var expire = moment(now).add(24, 'hours').format("YYYY-MM-DD HH:mm:ss");
 
-                        if (err) { return callback('hash error', null); }
+            var sql = Query.insert({
+                username: username,
+                password: hash,
+                email   : email,
+                created : created,
+                expire  : expire,
+                token   : token
+            })
+                .into('temp_user');
 
-                        var token = uuid.v4();
-                        var now = _.now();
-                        var created = moment(now).format("YYYY-MM-DD HH:mm:ss");
-                        var expire = moment(now).add(24, 'hours').format("YYYY-MM-DD HH:mm:ss");
+            DB.execute(
+                sql.toString()
+                ,function(err,rows){
+                    if (err) { return callback('insert temp user error', null); }
 
-
-                        Query.in('temp_user').insert({
-                            username: username,
-                            password: hash,
-                            email   : email,
-                            created : created,
-                            expire  : expire,
-                            token   : token
-                        },function(err,rows){
-
-                            if (err) { return callback('insert temp user error', null); }
-
-                            callback(null, token);
-
-                        });
-
-
-                    });
+                    callback(null, token);
                 });
-
-            } else {
-                callback('form error', null);
-            }
-
         },
 
         function(token, callback) {
@@ -79,7 +83,7 @@ exports.resister = function (req, res, next) {
             });
 
             var link = "http://" + req.get('host') + "/verify?verification=" + token;
-            var html = "Hello," + username + "<br><br>Please Click on the link to verify your email.<br><br>"
+            var html = "Hello," + username + "<br><br>Please Follow the link to verify your email.<br><br>"
                 + "<a href=\"" + link + "\">" + link + "</a><br><br>Thank you,<br>JUSTOJ";
 
             var mailOptions = {
@@ -92,18 +96,13 @@ exports.resister = function (req, res, next) {
             transporter.sendMail(mailOptions, function (error, info) {
 
                 if (error) {
-
-                    //delete previous inserted row*******************
-
                     console.log('send mail error::');
                     console.log(error);
                     return callback('Error resistration');
                 }
 
-                callback(null, true);
-
+                callback();
             });
-
         }
 
 
@@ -133,96 +132,70 @@ exports.verify = function (req, res, next) {
     var thishost      = "http://localhost:8888";
     var requestedhost = req.protocol + "://" + req.get('host');
 
-    if( thishost === requestedhost ){
-        var token = req.query.verification;
+    if( thishost !== requestedhost ){ return next(new Error('Page Not Found')); }
 
-        if(token){
+    var token = req.query.verification;
 
-            async.waterfall([
+    if(!token){ return next(new Error('Page Not Found')); }
 
+    async.waterfall([
 
-                //find the token
-                function(callback) {
+        function(callback) {
 
+            var sql = Query.select(['username','password','email'])
+                .from('temp_user')
+                .where({ 'token': token })
+                .limit(1);
 
-                    Query.in('temp_user').findAll({
-                        attributes: ['username','password','email'],
-                        where:{
-                            token: token
-                        },
-                        limit: 1
-                    },function(err,rows){
+            DB.execute(
+                sql.toString()
+                ,function(err,rows){
+                    if( err ){ return callback(err);  }
 
-                        if( err ){ return callback(err,null);  }
+                    if( rows.length ) { return callback(null,rows[0]); }
 
-                        if( rows.length ) {
-                            return callback(null,rows[0]);
-                        }
+                    callback('Expired or invalid token');
+                });
+        },
+        function (rows,callback) {
 
-                         callback('Expired or invalid token',null);
+            var sql = Query.insert({
+                username : rows.username,
+                password : rows.password,
+                email    : rows.email
+            })
+                .into('users');
 
-                    });
+            DB.execute(
+                sql.toString()
+                ,function(err,rows){
+                    if (err) { return callback('insert user error', null); }
 
+                    callback();
+                });
 
-                },
+        },
 
+        function (callback) {
 
-                //insert vafied user to main database
-                function (rows,callback) {
+            var sql = Query('temp_user').where({ 'token': token }).del();
 
-                    Query.in('users').insert({
-                        username : rows.username,
-                        password : rows.password,
-                        email    : rows.email,
-                        joined   : moment(_.now()).format("YYYY-MM-DD HH:mm:ss")
+            DB.execute(
+                sql.toString()
+                ,function(err,rows){
+                    if (err) { return callback('delete temp-user error', null); }
 
-                    },function(err,rows){
-
-                        if (err) { return callback('insert error', null); }
-
-                        callback();
-
-                    });
-
-                },
-
-
-                //delete temp user
-                function (callback) {
-
-                    Query.in('temp_user').delete({
-                        where:{
-                            token: token
-                        }
-                    }, function (err,rows) {
-
-                        if (err) { return callback('delete temp-user error', null); }
-
-                        callback();
-
-                    });
-                }
-                
-
-            ], function (err, result) {
-
-                if(err){
-                    res.status(404).send(err);
-                }
-                else {
-                    req.flash('success', 'Email verified,You can login now!');
-                    res.redirect('/login');
-                }
-
-            });
-
-
-        }else{
-            res.status(404).send('Page Not found');
+                    callback();
+                });
         }
-
-    }else{
-        res.status(404).send('Page Not found');
-    }
-
+                
+    ], function (err, result) {
+        if(err){
+            res.status(404).send(err);
+        }
+        else {
+            req.flash('success', 'Email verified,You can login now!');
+            res.redirect('/login');
+        }
+    });
 };

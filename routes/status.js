@@ -11,13 +11,62 @@ var Paginate    = require('../helpers/paginate');
 var moment      = require("moment");
 var async       = require('async');
 
+
+var Query       = require('../config/database/knex/query');
+
+
 router.get('/' , function(req, res, next) {
 
-    res.render('status', {
-        title: "JUST Online Judge - Status",
-        isUser: req.isAuthenticated(),
-        user: req.user
-    });
+
+    var cur_page = req.query.page;
+
+    if( _.isUndefined(cur_page) ){
+        cur_page = 1;
+    }else{
+        cur_page = parseInt(cur_page);
+    }
+
+    if( cur_page<1 ) {
+        return callback('what are u looking for!');
+    }
+
+
+    var sql = Query.select(['submissions.status','submissions.language','submissions.submittime','submissions.cpu','submissions.memory','submissions.pid','users.username','problems.title'])
+        .from('submissions')
+        .orderBy('submissions.submittime', 'desc')
+        .leftJoin('users', 'submissions.uid', 'users.id')
+        .leftJoin('problems', 'submissions.pid', 'problems.id');
+
+    var sqlCount = Query.count('* as count').from('submissions');
+
+
+    Paginate.paginate({
+            cur_page: cur_page,
+            sql: sql,
+            limit: 5,
+            sqlCount: sqlCount
+        },
+        function(err,rows,pagination) {
+
+            if( err ){
+                console.log(err);
+                return next(new Error(err));
+            }
+
+
+            res.render('status/status' , {
+                title: "Problems | JUST Online Judge",
+                locals: req.app.locals,
+                isLoggedIn: req.isAuthenticated(),
+                user: req.user,
+                moment: moment,
+                status: rows,
+                runStatus: MyUtil.runStatus(),
+                langNames: MyUtil.langNames(),
+                pagination: _.isUndefined(pagination) ? {} : pagination
+            });
+
+        });
 
 });
 
@@ -54,26 +103,36 @@ router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
                     return callback('what are u looking for!');
                 }
 
-                Paginate.findAll({
-                    table: 'submissions',
-                    cur_page: cur_page,
-                    limit: 20,
-                    where:{
+
+                var sql = Query.select(['language','submittime','cpu','memory','status'])
+                    .from('submissions')
+                    .orderBy('submittime','desc')
+                    .where({
                         pid: pID,
-                        uid: String(uID)
+                        uid: uID
+                    });
+
+
+                var sqlCount = Query.count('* as count').from('submissions')
+                    .where({
+                        pid: pID,
+                        uid: uID
+                    });
+
+
+                Paginate.paginate({
+                        cur_page: cur_page,
+                        sql: sql,
+                        sqlCount: sqlCount,
+                        limit: 5
                     },
-                    order:{
-                        by: 'submittime',
-                        desc: true
-                    }
-                } , function(err,rows,pagination){
-
-                    if( err ){ return callback(err); }
+                    function(err,rows,pagination) {
+                        if( err ){ return callback(err); }
 
 
-                    callback(null,pName,pagination,rows);
+                        callback(null,pName,pagination,rows);
+                    });
 
-                });
 
             }
         ], function (error, pName, pagination, status) {
@@ -85,7 +144,7 @@ router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
                 status = {};
             }
 
-            res.render('u_problem_status' , {
+            res.render('status/user_status' , {
                 title: "Problems | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),

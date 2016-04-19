@@ -26,11 +26,7 @@ var colors      = require('colors');
 exports.run = function(opts,cb){
 
 
-
-    Submission.update({
-        attributes:{ status: '6' },
-        where:{ id: opts.sID }
-    }, function(err){
+    Submission.update(opts.sID, { status: '6' }, function(err){
         if(err){
             console.log('What the hell updating run status!'.red);
             console.log(err);
@@ -74,35 +70,37 @@ exports.run = function(opts,cb){
 
         if( error ){
 
-            if( runs.compiler ){
+            if( _.isUndefined(runs) ){
 
-                Submission.update({
-                    attributes:{ status: '7' },
-                    where:{ id: opts.sID }
-                }, function(err){
-                    if(err){
-                        console.log('What the hell updating run status!'.red);
-                        console.log(err);
-                    }
-                    return cb(null,runs);
-                });
-
-            }else if( !runs || _.isUndefined(runs[0]) ){
-
-
-                Submission.update({
-                    attributes:{ status: '8' },
-                    where:{ id: opts.sID }
-                }, function(err){
+                Submission.update(opts.sID, { status: '8' }, function(err){
                     if(err){
                         console.log('What the hell updating run status!'.red);
                         console.log(err);
                     }
                     return cb(error);
                 });
+            }
+            else if( runs.compiler ){
 
+                Submission.update(opts.sID, { status: '7' }, function(err){
+                    if(err){
+                        console.log('What the hell updating run status!'.red);
+                        console.log(err);
+                    }
+                    return cb(null,runs);
+                });
+            }
+            else if( _.isUndefined(runs[0]) ){
 
-            }else{
+                Submission.update(opts.sID, { status: '8' }, function(err){
+                    if(err){
+                        console.log('What the hell updating run status!'.red);
+                        console.log(err);
+                    }
+                    return cb(error);
+                });
+            }
+            else{
                 console.log('Error but runs exists');
                 console.log(runs);
                 getFinalResult(runs,opts,cb);
@@ -135,18 +133,13 @@ var getFinalResult = function(runs,opts,cb){
     console.log(('finalCode: ' + finalCode).green);
 
 
-
     async.parallel([
             function(callback){
 
-                //update Submission result
-                Submission.update({
-                    attributes:{
-                        status: String(finalCode),
-                        cpu: String(cpu),
-                        memory: String(memory)
-                    },
-                    where:{ id: opts.sID }
+                Submission.update(opts.sID, {
+                    status: String(finalCode),
+                    cpu: String(cpu),
+                    memory: String(memory)
                 }, function(err){
                     if(err){
                         console.log('What the hell updating run status!');
@@ -155,19 +148,13 @@ var getFinalResult = function(runs,opts,cb){
 
                     callback();
                 });
-
             },
+            //increment total solved
             function(callback){
 
                 if( finalCode !== '0'){ return callback(); }
 
-                Problems.updateSubmission({
-                    self:[
-                        { col: 'solved',  val: 1 }
-                    ],
-                    where:{ id: opts.pID }
-                }, function(err){
-
+                Problems.updateSubmission(opts.pID, 'solved', function(err){
                     if( err ){
                         console.log('Updating solved number errr'.red);
                         console.log(err);
@@ -175,6 +162,13 @@ var getFinalResult = function(runs,opts,cb){
 
                     callback();
                 });
+            },
+            //update user status for this problem
+            function(callback){
+
+                if( finalCode !== '0'){ return callback(); }
+
+                callback();
             }
         ],
         function(err, results){

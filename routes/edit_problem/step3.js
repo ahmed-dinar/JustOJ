@@ -7,7 +7,6 @@ var path        = require("path");
 var async       = require('async');
 
 
-
 module.exports = function(req,res,next){
 
     var module = {};
@@ -20,8 +19,7 @@ module.exports = function(req,res,next){
 
             if( row.length == 0 ) { return next(new Error('what you r looking for!')); }
 
-
-            res.render('ep3', {
+            res.render('problem/edit/step_3', {
                 title: "editproblem | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
@@ -36,7 +34,6 @@ module.exports = function(req,res,next){
 
     module.post = function(){
 
-
         async.waterfall([
             function(callback) {
 
@@ -48,7 +45,6 @@ module.exports = function(req,res,next){
 
                     callback();
                 });
-
             },
             function(callback) {
 
@@ -63,14 +59,8 @@ module.exports = function(req,res,next){
                         cpu: parseInt(parseFloat(cpu)*1000.0),
                         memory: memory
                     };
-                    var inserts = {
-                        attributes: limits,
-                        where:{
-                            id: req.params.pid
-                        }
-                    };
 
-                    Problems.updateLimits(inserts,function(err,row){
+                    Problems.updateLimits(req.params.pid,limits,function(err,row){
 
                         if(err){
                             console.log('Set limit db error');
@@ -80,7 +70,6 @@ module.exports = function(req,res,next){
 
                         callback();
                     });
-
                     return;
                 }
                 callback({field: 'Invalid Or Empty Field' });
@@ -105,10 +94,3 @@ module.exports = function(req,res,next){
 
     return module;
 };
-
-function toSecond(milisecond){
-    if(milisecond===null){
-        return milisecond;
-    }
-    return parseFloat(parseFloat(milisecond)/1000.0).toFixed(2);
-}

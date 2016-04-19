@@ -3,9 +3,9 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/config/database/justoj schema/constraints.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/config/database/justoj schema/insert.sql" dialect="H2" />
+    <file url="file://$PROJECT_DIR$/config/database/justoj schema/justojdb.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/config/database/justoj schema/keys.sql" dialect="H2" />
     <file url="file://$PROJECT_DIR$/config/database/justoj schema/querys.sql" dialect="H2" />
     <file url="file://$PROJECT_DIR$/config/database/justoj schema/tables.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/config/database/justojdb.sql" dialect="MySQL" />
   </component>
 </project>

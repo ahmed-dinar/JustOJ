@@ -19,6 +19,21 @@ ADD PRIMARY KEY (`id`);
 ALTER TABLE `users`
 ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `contest`
+ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `contest_participants`
+ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `contest_problems`
+ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `contest_submissions`
+ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `contest_clarifications`
+ADD PRIMARY KEY (`id`);
+
 
 
 

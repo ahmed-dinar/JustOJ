@@ -37,31 +37,23 @@ module.exports = function(req,res,next){
               var empty = [];
               if( err ){
 
-                  if( err.code === 'ENOENT' ){
-                      return callback(null,empty);
-                  }
+                  if( err.code === 'ENOENT' ){ return callback(null,empty); }
 
                   console.log('getTestCases error:: ');
                   console.log(err);
                   return callback('getTestCases error');
               }
 
-              if(files){
-                  return callback(null,files);
-              }
+              if(files){ return callback(null,files); }
 
               callback(null,empty);
-
           });
-
       }
     ], function (error, row) {
 
-        if( error ) {
-            return next(error);
-        }
+        if( error ) { return next(error); }
 
-        res.render('ep2', {
+        res.render('problem/edit/step_2', {
           title: "editproblem | JUST Online Judge",
           locals: req.app.locals,
           isLoggedIn: req.isAuthenticated(),
@@ -80,7 +72,6 @@ module.exports = function(req,res,next){
   };
 
   module.post = function(){
-
 
     var busboy = new Busboy({ headers: req.headers });
     var uniquename =  uuid.v4();
@@ -110,7 +101,7 @@ module.exports = function(req,res,next){
         }
 
         req.flash('tcUpSuccess', 'Test Case added!');
-        res.redirect('/ep/' + req.params.pid + '/2');
+        res.redirect('/problems/edit/' + req.params.pid + '/2');
 
     });
 

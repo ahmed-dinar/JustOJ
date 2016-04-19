@@ -14,7 +14,7 @@ module.exports = function isLoggedIn(auth) {
              return next();
          }
          else{
-             res.redirect('/');
+             res.redirect('/login');
          }
 
      };
