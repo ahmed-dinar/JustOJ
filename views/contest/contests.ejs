@@ -33,23 +33,112 @@
 
 
 <!-- Main Content -->
-<div class="container c-h">
+<div class="container c-h" >
 
     <div class="row">
 
-        <div class="col-md-8">
+        <div class="col-md-9">
             <div class="panel panel-default">
                 <div class="panel-body">
 
-                    <h4>Hey Bro! 21</h4>
+                    <h4>Contests</h4>
 
+                    <% if(running.length){ %>
+                        <h4 class = "list-group-item grey-back">
+                            <i class="fa fa-hourglass-half" aria-hidden="true"></i> Running Contests
+                        </h4>
+                        <div class = "list-group">
+                            <% for(var i=0; i<running.length; i++){ %>
+                                <a href = "/contest/<%= running[i].id %>" class = "list-group-item clearfix">
+                                    <div class="pull-left">
+                                        <h4 class = "list-group-item-heading"><%= running[i].title %></h4>
+                                        <p class = "list-group-item-text">
 
+                                                Ends <%= moment(running[i].end).from() %>
+
+                                        </p>
+                                    </div>
+                                    <div class="pull-right">
+                                        <span class = "badge">
+                                            <i class="fa fa-user" aria-hidden="true">
+                                                x <%= running[i].users %>
+                                            </i>
+                                        </span>
+                                    </div>
+                                </a>
+                            <% } %>
+                        </div>
+                    <% } %>
+
+                    <% if(future.length){ %>
+                        <h4 class = "list-group-item grey-back">
+                            <i class="fa fa-hourglass-o" aria-hidden="true"></i> Future Contests
+                        </h4>
+                        <div class = "list-group">
+                            <% for(var i=0; i<future.length; i++){ %>
+                            <a href = "/contest/<%= future[i].id %>" class = "list-group-item clearfix">
+                                <div class="pull-left">
+                                    <h4 class = "list-group-item-heading"><%= future[i].title %></h4>
+                                    <p class = "list-group-item-text">
+
+                                            Starts <%= moment(future[i].begin).from() %>
+
+                                    </p>
+                                </div>
+                                <div class="pull-right">
+                                    <span class = "badge">
+                                        <i class="fa fa-user" aria-hidden="true">
+                                            x <%= future[i].users %>
+                                        </i>
+                                    </span>
+                                </div>
+                            </a>
+                            <% } %>
+                        </div>
+                    <% } %>
+
+                    <% if(ended.length){ %>
+                        <h4 class = "list-group-item grey-back">
+                            <i class="fa fa-hourglass-end" aria-hidden="true"></i> Past Contests
+                        </h4>
+                        <div class = "list-group">
+                            <% for(var i=0; i<ended.length; i++){ %>
+
+                            <a href = "/contest/<%= ended[i].id %>" class = "list-group-item clearfix">
+                                <div class="pull-left">
+                                    <h4 class = "list-group-item-heading"><%= ended[i].title %></h4>
+                                    <p class = "list-group-item-text">
+
+                                            <%= moment(ended[i].begin).from() %>
+
+                                    </p>
+                                </div>
+                                <div class="pull-right">
+                                    <span class = "badge">
+                                        <i class="fa fa-user" aria-hidden="true">
+                                            x <%= ended[i].users %>
+                                        </i>
+                                    </span>
+                                </div>
+                            </a>
+
+                            <% } %>
+                        </div>
+                    <% } %>
 
                 </div>
             </div>
         </div>
 
-
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Contest Hosting</h3>
+                    <p>Want to host a contest on JUSTOJ for your organization or university?</p>
+                    <a href="/contest/host" class="btn btn-sm btn-primary">Click Me!</a>
+                </div>
+            </div>
+        </div>
 
     </div>
 

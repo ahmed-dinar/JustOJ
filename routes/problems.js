@@ -321,8 +321,8 @@ var findProblems = function(req,cb){
 
     Paginate.paginate({
             cur_page: cur_page,
-            sql: Query.select(['id','title','submissions','solved','difficulty']).from('problems'),
-            sqlCount: Query.count('id as count').from('problems'),
+            sql: Query.select(['id','title','submissions','solved','difficulty']).from('problems').where('isContest',0),
+            sqlCount: Query.count('id as count').from('problems').where('isContest',0),
             limit: 5
         },
         function(err,rows,pagination) {

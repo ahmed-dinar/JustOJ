@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <script type="text/javascript" src="/javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../../templates/header.ejs %>
+<% if(!isUser){ %>
+<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
+<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
+<% } else{ %>
+<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
+<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.username %> </a></li>
+<% } %>
+<% include ../../templates/headerend.ejs %>
+
+
+<!-- Main Content -->
+<div class="container c-h" >
+    <div class="row">
+
+        <div class="col-md-12 text-center">
+            <h1><%= contest.title %></h1>
+            <br>
+            <p>STARTS IN</p>
+            <div id="countdown" style="font-size: 24px; font-weight: 200"></div><br>
+
+            <table class="table table-striped table-condensed">
+                <tbody>
+                    <tr>
+                        <td class="text-right">STARTS AT:</td>
+                        <td class="text-left"><b><%= moment(contest.begin).format("MMMM Do YYYY, HH:mm:ss") %></b></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">ENDS AT:</td>
+                        <td class="text-left"><b><%= moment(contest.end).format("MMMM Do YYYY, HH:mm:ss") %></b></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">LENGTH:</td>
+                        <td class="text-left"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
+
+            <% if(contest.privacy){ %>
+                <% if(!isUser){ %>
+                    <a class="btn btn-primary" href="/login">LOGIN TO RESISTER</a>
+                <% }else if(!registered){ %>
+                    <a class="btn btn-primary" href="/contest/<%= contest.id %>/resister">RESISTER</a>
+                <% }else{ %>
+                    <h5>You Are Perticipating in this contest</h5>
+                <% } %>
+            <% }else{ %>
+                <h4>It's a Private Contest. Only invited participants are allowed.</h4>
+            <% } %>
+
+        </div>
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    window.onload = function () {
+        CountDownTimer('<%= contest.begin %>');
+    };
+
+    function CountDownTimer(begin) {
+
+        var end = new Date(begin);
+
+        var _second = 1000;
+        var _minute = _second * 60;
+        var _hour = _minute * 60;
+        var _day = _hour * 24;
+        var timer;
+        var running = false;
+        var doc =  document.getElementById("countdown");
+
+        function showRemaining() {
+            var now = new Date();
+
+            var distance = end - now;
+
+            if (distance < 0) {
+
+                clearInterval(timer);
+                doc.innerHTML = '00:00:00:00';
+
+                if( running ) {
+                    alert('Contest Started!');
+                }
+                return;
+            }
+            var days = Math.floor(distance / _day);
+            var hours = Math.floor((distance % _day) / _hour);
+            var minutes = Math.floor((distance % _hour) / _minute);
+            var seconds = Math.floor((distance % _minute) / _second);
+
+
+            doc.innerHTML = days + 'd ';
+            doc.innerHTML += Math.floor(hours/10) + '' +  hours%10 + ':';
+            doc.innerHTML += Math.floor(minutes/10) + '' +  minutes%10 + ':';
+            doc.innerHTML += Math.floor(seconds/10) + '' +  seconds%10;
+
+
+            running = true;
+        }
+        showRemaining();
+        timer = setInterval(showRemaining, 1000);
+    }
+
+</script>
+
+<!-- footer -->
+<% include ../../templates/footer.ejs %>
+
+</body>
+</html>

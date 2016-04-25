@@ -37,7 +37,6 @@ CREATE TABLE `submissions` (
   `id` INT(11) NOT NULL,
   `pid` INT(11) NOT NULL,
   `uid` INT(11) NOT NULL,
-  `isContest` TINYINT(1) NOT NULL DEFAULT 0,
   `language` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `status` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `submittime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -83,28 +82,47 @@ CREATE TABLE `contest` (
   `end` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` TINYINT(1) NOT NULL,
   `privacy` TINYINT(1) NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `contest_participants` (
   `id` INT(11) NOT NULL,
   `cid` INT(11) NOT NULL,
   `uid` INT(11) NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=MyISAM;
 
 
-CREATE TABLE `contest_problems` (
+CREATE TABLE `contest_problems`
+(
+  `cid` INT(11) NOT NULL,
+  `pname` INT(11) NOT NULL,
+  `pid` INT(11) NOT NULL
+) ENGINE=MyISAM;
+
+
+CREATE TABLE `contest_rank`
+(
   `id` INT(11) NOT NULL,
   `cid` INT(11) NOT NULL,
-  `pid` INT(11) NOT NULL
-) ENGINE=InnoDB;
+  `uid` INT(11) NOT NULL,
+  `pid` INT(11) NOT NULL,
+  `status` TINYINT(1) NOT NULL,
+  `penalty` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `tried` INT(11) NOT NULL
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `contest_submissions` (
   `id` INT(11) NOT NULL,
   `cid` INT(11) NOT NULL,
-  `sid` INT(11) NOT NULL
-) ENGINE=InnoDB;
+  `pid` INT(11) NOT NULL,
+  `uid` INT(11) NOT NULL,
+  `language` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `status` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `submittime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `cpu` INT(11) NOT NULL,
+  `memory` INT(11) NOT NULL
+) ENGINE=MyISAM;
 
 
 CREATE TABLE `contest_clarifications` (
@@ -115,7 +133,7 @@ CREATE TABLE `contest_clarifications` (
   `status` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `request` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `response` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=MyISAM;
 
 
 

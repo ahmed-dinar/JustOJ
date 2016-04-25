@@ -1089,6 +1089,10 @@ body {
   line-height: 1.42857143;
   color: #333;
 
+  background: #FFFFFF;
+
+
+
   /*background-image: url("../../images/diamond.png");
   background-repeat: repeat-x repeat-y;*/
 }
@@ -4217,7 +4221,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar {
   position: relative;
-  min-height: 30px;
+  min-height: 50px;
   margin-bottom: 20px;
   border: none;
 }
@@ -4333,7 +4337,6 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   line-height: 20px;
   margin-right: 25px;
   margin-top: 6px;
-
 }
 .navbar-brand:hover,
 .navbar-brand:focus {

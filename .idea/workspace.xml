@@ -5,951 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2efb35df-b041-49fd-bf66-80b228f9caa0" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/diamond.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/extend/.jscs.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/.jshintrc" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/.jshintrc" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/extend/.npmignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/.npmignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/.npmignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/graceful-readlink/.npmignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/.npmignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/.npmignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pg-connection-string/.npmignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/simple-backoff/.npmignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/v8flags/.npmignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/extend/.travis.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/.travis.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/graceful-readlink/.travis.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/.travis.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/.travis.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/.travis.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pg-connection-string/.travis.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/.travis.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/extend/CHANGELOG.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/hashmap/CHANGELOG.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/interpret/CHANGELOG" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/CHANGELOG" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config/database/knex/DB.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/commander/History.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/LICENSE-MIT" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/commander/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/extend/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/glob/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/minimatch/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/graceful-readlink/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/hashmap/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/interpret/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pg-connection-string/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/v8flags/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/LazyWrapper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/LodashWrapper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/MapCache.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/extend/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/glob/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/minimatch/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/graceful-readlink/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/interpret/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pg-connection-string/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pool2/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/simple-backoff/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/v8flags/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/commander/Readme.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/hashmap/Readme.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/SetCache.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/UPGRADING.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/lib/_stream_duplex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/lib/_stream_passthrough.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/lib/_stream_readable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/lib/_stream_transform.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/lib/_stream_writable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/precedence/aaa.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/math/add.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/after.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/all.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/all_bool.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/all_bool.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/pathfilter/deep_ref/node_modules/deep/alt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/any.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/any.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/appveyor.yml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayConcat.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayCopy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayEach.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayEachRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayEvery.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayExtremum.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayFilter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayMap.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayPush.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayReduce.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arrayReduceRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arraySome.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/arraySum.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/ary.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/assert.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/assign.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/assignDefaults.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/assignOwnDefaults.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/assignWith.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/async.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/example/async.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/lib/async.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/at.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/attempt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/backflow.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseAssign.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseAt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseCallback.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseClone.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseCompareAscending.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseCopy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseCreate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseDelay.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseDifference.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseEach.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseEachRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseEvery.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseExtremum.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseFill.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseFilter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseFind.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseFindIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseFlatten.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseFor.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseForIn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseForOwn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseForOwnRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseForRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseFunctions.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseGet.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseIndexOf.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseIsEqual.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseIsEqualDeep.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseIsFunction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseIsMatch.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseLodash.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseMap.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseMatches.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseMatchesProperty.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseMerge.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseMergeDeep.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseProperty.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/basePropertyDeep.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/basePullAt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseRandom.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseReduce.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseSetData.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseSlice.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseSome.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseSortBy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseSortByOrder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseSum.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseToString.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseUniq.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseValues.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseWhile.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/baseWrapperValue.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/precedence/bbb.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/before.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/binaryIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/binaryIndexBy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/bind.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/bind.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/bindAll.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/bindCallback.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/bindKey.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/browser/bluebird.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/bluebird.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/util/bluebird.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/util/bluebird.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/browser/bluebird.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/bool.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/bool.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/hashmap/bower.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/minimatch/browser.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/bufferClone.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/lib/build_config_name.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/query/builder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/schema/builder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/query/builder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/schema/builder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/cacheIndexOf.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/cachePush.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/call_get.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/callback.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/lib/caller.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/camelCase.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/cancel.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/capitalize.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/captured_trace.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/catch_filter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/math/ceil.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/chain.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/changelog.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/charsLeftIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/charsRightIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/chunk.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/bin/cli.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/bin/cli.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/user-home/cli.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/client.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/client.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/clone.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/cloneDeep.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pool2/lib/cluster.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/stub/coffee.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/seed/stub/coffee.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/stub/coffee.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/seed/stub/coffee.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/collect.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/schema/columnbuilder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/schema/columnbuilder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/schema/columnbuilder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/schema/columnbuilder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mssql/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mysql/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/postgres/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/sqlite3/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mssql/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mysql/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/postgres/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/sqlite3/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/schema/columncompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/commit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/glob/common.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/compact.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/compareAscending.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/compareMultiple.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mssql/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mssql/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mysql/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mysql/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/postgres/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/postgres/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/sqlite3/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/sqlite3/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mssql/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mssql/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mysql/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mysql/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/postgres/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/postgres/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/sqlite3/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/sqlite3/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/query/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/schema/compiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/extend/component.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/compose.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/composeArgs.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/composeArgsRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/concat.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/constant.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/contains.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/contest.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/contest.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/context.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/lib/core.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/core.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/lib/core.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/countBy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/create.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/create.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createAggregator.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createAssigner.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createBaseEach.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createBaseFor.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createBindWrapper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createCache.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createCompounder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createCtorWrapper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createCurry.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createDefaults.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createExtremum.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createFind.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createFindIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createFindKey.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createFlow.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createForEach.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createForIn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createForOwn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createHybridWrapper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createObjectMapper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createPadDir.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createPadding.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createPartial.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createPartialWrapper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createReduce.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createRound.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createSortedIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/createWrapper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/cup.coffee" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/curry.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/curryRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/dash.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/dash.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/date.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config/database/myConfig/dbConnectionPool.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/sqlite3/schema/ddl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/sqlite3/schema/ddl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/debounce.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/debuggability.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/deburr.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/deburrLetter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/default_bool.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/default_bool.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/defaults.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/defaultsDeep.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/defer.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/delay.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/detect.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/difference.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/direct_resolve.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/baz/doom.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/dotdot.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/dotted.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/dotted.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/drop.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/dropRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/dropRightWhile.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/dropWhile.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/duplex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/each.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/each.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/eachRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/edit/edit.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/stub/eg.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/seed/stub/eg.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/stub/eg.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/seed/stub/eg.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/endsWith.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/problem/edit/ep.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/eq.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/equalArrays.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/equalByTag.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/equalObjects.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/errors.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/es5.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/escape.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/escapeHtmlChar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/escapeRegExp.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/escapeRegExpChar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/escapeStringChar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/every.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/test/bin/exit_code.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/extend.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/faulty_basedir.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/lib/file_search.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/fill.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/filter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/filter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/filter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/filter_sync.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/finally.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/find.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/findIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/findKey.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/findLast.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/findLastIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/findLastKey.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/findWhere.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/lib/find_config.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/lib/find_cwd.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/lib/findup-sync.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/first.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/flatten.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/flattenDeep.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/float.patch" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/math/floor.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/flow.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/flowRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/foldl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/foldr.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/foo.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/forEach.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/forEachRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/forIn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/forInRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/forOwn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/forOwnRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/formatter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mssql/formatter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/formatter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/formatter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mssql/formatter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/formatter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/functionhelper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/functionhelper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/functions.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/generators.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/get.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/getData.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/getFuncName.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/getLength.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/getMatchData.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/getNative.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/getView.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/glob/glob.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/groupBy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/gt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/gte.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/has.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/hashmap/hashmap.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/head.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/files/temp/header.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/helpers.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/schema/helpers.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/helpers.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/schema/helpers.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/identity.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/number/inRange.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/include.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/includes.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/commander/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/extend/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/test/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/graceful-readlink/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/interpret/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/connection/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/maria/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mssql/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mysql/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mysql2/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/postgres/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/sqlite3/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/strong-oracle/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/websql/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/seed/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/connection/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/maria/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mssql/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mysql/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mysql2/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/postgres/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/sqlite3/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/strong-oracle/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/websql/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/seed/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pg-connection-string/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pool2/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/dotdot/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/dotdot/abc/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/module_dir/xmodules/aaa/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/module_dir/ymodules/aaa/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/node_path/x/aaa/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/node_path/x/ccc/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/node_path/y/bbb/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/node_path/y/ccc/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/precedence/aaa/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/bar/node_modules/foo/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/biz/node_modules/garply/lib/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/biz/node_modules/grux/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/biz/node_modules/tiv/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/incorrect_main/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/punycode/node_modules/punycode/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/quux/foo/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/tildify/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/user-home/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/v8flags/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/indexBy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/indexOf.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/indexOfNaN.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/initCloneArray.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/initCloneByTag.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/initCloneObject.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/initial.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/inject.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/interface.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/interface.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/intersection.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/invert.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/invoke.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/invokePath.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isArguments.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isArray.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/isArrayLike.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isBoolean.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isDate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isElement.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isEmpty.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isEqual.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isError.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isFinite.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isFunction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/isIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/isIterateeCall.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/isKey.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/isLaziable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/isLength.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isMatch.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isNaN.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isNative.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isNull.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isNumber.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isObject.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/isObjectLike.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isPlainObject.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isRegExp.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/isSpace.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/isStrictComparable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isString.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isTypedArray.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/isUndefined.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/iteratee.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/join.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/query/joinclause.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/query/joinclause.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/stub/js.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/seed/stub/js.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/stub/js.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/seed/stub/js.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/kebabCase.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/keys.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/keysIn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/knex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/build/knex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/.bin/knex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/stub/knexfile-coffee.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/stub/knexfile-coffee.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/stub/knexfile-eg.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/stub/knexfile-eg.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/stub/knexfile-js.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/stub/knexfile-js.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/stub/knexfile-ls.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/stub/knexfile-ls.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/last.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/lastIndexOf.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/lazyClone.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/lazyReverse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/lazyValue.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/user-home/license" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/lodash.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/long.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/long.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/stub/ls.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/seed/stub/ls.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/stub/ls.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/seed/stub/ls.stub" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/lt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/lte.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/module_dir/zmodules/bbb/main.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/pathfilter/deep_ref/main.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/precedence/aaa/main.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/precedence/bbb/main.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/without_basedir/main.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/util/make-client.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/util/make-client.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/util/make-knex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/util/make-knex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/map.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/map.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/mapDelete.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/mapGet.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/mapHas.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/mapKeys.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/mapSet.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/mapValues.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/matches.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/matchesProperty.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/math.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/max.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/math/max.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/memoize.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/merge.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/mergeData.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/mergeDefaults.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/metaMap.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/method.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/method.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/methodOf.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/query/methods.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/methods.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/query/methods.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/migrate/migrate-stub.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/migrate/migrate-stub.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/math/min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/minimatch/minimatch.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/mixin.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/mock.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/mock_sync.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/modArgs.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/module_dir.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/mug.coffee" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/mug.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/without_basedir/node_modules/mymodule.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/negate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/edit/problems/new.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/lib/node-modules-paths.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/node_path.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/nodeify.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/nonstring.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/util/noop.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/noop.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/util/noop.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/date/now.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/num.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/num.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/number.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/object.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/omit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/once.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/other_path/lib/other-lib.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/commander/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/extend/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/glob/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/minimatch/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/graceful-readlink/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/hashmap/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/interpret/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pg-connection-string/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pool2/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/module_dir/zmodules/bbb/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/pathfilter/deep_ref/node_modules/deep/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/baz/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/biz/node_modules/garply/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/incorrect_main/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/subdirs/node_modules/a/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/simple-backoff/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/tildify/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/user-home/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/v8flags/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/pad.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/padLeft.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/padRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/pairs.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/util/parse-connection.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/util/parse-connection.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/example/parse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/parse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/example/parse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/parse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pg-connection-string/test/parse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/parseInt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/parse_modified.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/parse_modified.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/lib/parse_options.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/partial.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/partialRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/partition.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/passthrough.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/pathfilter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/pick.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/pickByArray.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/pickByCallback.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/plant.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/pluck.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pool2/lib/pool.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/precedence.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/progress.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/promise.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/promise.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/promise.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/promise_array.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/promise_resolver.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/promisify.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/property.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/propertyOf.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/props.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/pull.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/pullAt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config/database/knex/query.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/queue.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/baz/quux.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/race.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/number/random.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/range.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/raw.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/raw.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/reEscape.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/reEvaluate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/reInterpolate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/readable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/readme.markdown" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/readme.markdown" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/readme.markdown" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/tildify/readme.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/user-home/readme.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/realNames.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/rearg.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/reduce.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/reduce.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/reduceRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/pathfilter/deep_ref/node_modules/deep/ref.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/pathfilter/deep_ref/node_modules/deep/deeper/ref.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/reject.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/remove.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/lib/reorder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/reorder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/repeat.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/replaceHolders.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver_sync.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/pool2/lib/resource-request.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/lib/respawn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/test/bin/respawner.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/rest.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/restParam.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/result.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/reverse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/resolver/other_path/root.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/math/round.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/run.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/runner.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/runner.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/sample.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/schedule.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/seed/seed-stub.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/seed/seed-stub.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/select.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/set.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/setData.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/settle.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/shimKeys.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/short.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/short.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/shuffle.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/flagged-respawn/test/bin/signal.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/lib/silent_require.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/simple-backoff/simple-backoff.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/simple-backoff/simple-backoff.test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/size.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/slice.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/snakeCase.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/some.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/some.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/sortBy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/sortByAll.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/sortByOrder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/sortedIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/sortedLastIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/sortedUniq.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/spread.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/startCase.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/startsWith.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/statement.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/status/status.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/edit/problems/step_1.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/edit/problems/step_2.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/edit/problems/step_3.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/stop_early.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/stop_early.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/stream.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/stream.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/query/string.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/query/string.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/subdirs.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/sum.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/math/sum.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/support.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/findup-sync/node_modules/glob/sync.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/example/sync.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/lib/sync.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/synchronous_inspection.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/schema/tablebuilder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/schema/tablebuilder.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mssql/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mysql/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/postgres/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/sqlite3/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mssql/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mysql/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/postgres/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/sqlite3/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/schema/tablecompiler.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/tail.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/take.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/takeRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/takeRightWhile.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/takeWhile.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/tap.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/template.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/templateSettings.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/thenables.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/throttle.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/thru.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/timers.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/times.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/toArray.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/toIterable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/toJSON.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/toObject.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/toPath.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/lang/toPlainObject.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/toString.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/maria/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mssql/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mysql/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/mysql2/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/websql/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/maria/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mssql/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mysql/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/mysql2/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/websql/transaction.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/transform.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/transform.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/trim.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/trimLeft.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/trimRight.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/trimmedLeftIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/trimmedRightIndex.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/trunc.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/unescape.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/unescapeHtmlChar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/union.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/uniq.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/unique.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility/uniqueId.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/unknown.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/unknown.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/unzip.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/unzipWith.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/.bin/user-home" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/using.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/bluebird/js/main/util.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/utility.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/oracle/utils.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/lib/dialects/postgres/utils.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/oracle/utils.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/src/dialects/postgres/utils.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/value.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/valueOf.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/values.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/object/valuesIn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/collection/where.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/minimist/test/whitespace.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/liftoff/node_modules/minimist/test/whitespace.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/without.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/string/words.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/function/wrap.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/wrapperChain.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/internal/wrapperClone.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/wrapperCommit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/wrapperConcat.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/wrapperPlant.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/wrapperReverse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/wrapperToString.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/chain/wrapperValue.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/readable-stream/writable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/resolve/test/subdirs/node_modules/a/b/c/x.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/xor.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/zip.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/zipObject.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/knex/node_modules/lodash/array/zipWith.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/routes/ep.js" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/config/database/database.js" afterPath="$PROJECT_DIR$/config/database/myConfig/database.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/config/database/dbConnectionPool.js" afterPath="$PROJECT_DIR$/config/database/knex/pool.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/config/database/justojdb.sql" afterPath="$PROJECT_DIR$/config/database/justoj schema/justojdb.sql" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/config/database/query.js" afterPath="$PROJECT_DIR$/config/database/myConfig/query.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/config/database/where.js" afterPath="$PROJECT_DIR$/config/database/myConfig/where.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/ep.ejs" afterPath="$PROJECT_DIR$/node_modules/knex/src/statement.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/ep1.ejs" afterPath="$PROJECT_DIR$/views/problem/edit/step_1.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/ep2.ejs" afterPath="$PROJECT_DIR$/views/problem/edit/step_2.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/ep3.ejs" afterPath="$PROJECT_DIR$/views/problem/edit/step_3.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/epN.ejs" afterPath="$PROJECT_DIR$/views/problem/create/new.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/problem_rank.ejs" afterPath="$PROJECT_DIR$/views/problem/rank.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/problems.ejs" afterPath="$PROJECT_DIR$/views/problem/problems.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/status.ejs" afterPath="$PROJECT_DIR$/views/contest/contests.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/u_problem_status.ejs" afterPath="$PROJECT_DIR$/views/status/user_status.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/viewproblem.ejs" afterPath="$PROJECT_DIR$/views/problem/view.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/view/announcement.ejs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/view/clarifications.ejs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/helpers/compiler/sandbox/contestJudge.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/contestSubmit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/templates/contest_header.ejs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/edit/contest_list.ejs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/view/dashboard.ejs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/view/my_submissions.ejs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/view/problem.ejs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/view/standings.ejs" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/view/submissions.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" afterPath="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/bootstrap/css/bootstrap.css" afterPath="$PROJECT_DIR$/public/bootstrap/css/bootstrap.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database/justoj schema/constraints.sql" afterPath="$PROJECT_DIR$/config/database/justoj schema/constraints.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/contest.js" afterPath="$PROJECT_DIR$/models/contest.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/contest.js" afterPath="$PROJECT_DIR$/routes/contest.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/contests.ejs" afterPath="$PROJECT_DIR$/views/contest/contests.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/templates/footer.ejs" afterPath="$PROJECT_DIR$/views/templates/footer.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/files/temp/header.ejs" afterPath="$PROJECT_DIR$/files/temp/header.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/templates/header.ejs" afterPath="$PROJECT_DIR$/views/templates/header.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middlewares/isLoggedIn.js" afterPath="$PROJECT_DIR$/middlewares/isLoggedIn.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers/compiler/sandbox/judge.js" afterPath="$PROJECT_DIR$/helpers/compiler/sandbox/judge.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/templates/headerend.ejs" afterPath="$PROJECT_DIR$/views/templates/headerend.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database/justoj schema/insert.sql" afterPath="$PROJECT_DIR$/config/database/justoj schema/insert.sql" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database/justoj schema/keys.sql" afterPath="$PROJECT_DIR$/config/database/justoj schema/keys.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/login.ejs" afterPath="$PROJECT_DIR$/views/login.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers/paginate.js" afterPath="$PROJECT_DIR$/helpers/paginate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middlewares/passport.js" afterPath="$PROJECT_DIR$/middlewares/passport.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/problems.js" afterPath="$PROJECT_DIR$/models/problems.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problem/problems.ejs" afterPath="$PROJECT_DIR$/views/problem/problems.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/problems.js" afterPath="$PROJECT_DIR$/routes/problems.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database/justoj schema/querys.sql" afterPath="$PROJECT_DIR$/config/database/justoj schema/querys.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/ranks.ejs" afterPath="$PROJECT_DIR$/views/ranks.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/ranks.js" afterPath="$PROJECT_DIR$/routes/ranks.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/edit_problem/removeTestCase.js" afterPath="$PROJECT_DIR$/routes/edit_problem/removeTestCase.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/s3.js" afterPath="$PROJECT_DIR$/routes/s3.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers/problemSetter/settersJudge.js" afterPath="$PROJECT_DIR$/helpers/problemSetter/settersJudge.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/status.js" afterPath="$PROJECT_DIR$/routes/status.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/edit_problem/step1.js" afterPath="$PROJECT_DIR$/routes/edit_problem/step1.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/edit_problem/step2.js" afterPath="$PROJECT_DIR$/routes/edit_problem/step2.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/edit_problem/step3.js" afterPath="$PROJECT_DIR$/routes/edit_problem/step3.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/style.css" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/submission.js" afterPath="$PROJECT_DIR$/models/submission.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/submit.js" afterPath="$PROJECT_DIR$/routes/submit.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database/justoj schema/tables.sql" afterPath="$PROJECT_DIR$/config/database/justoj schema/tables.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/tempuser.js" afterPath="$PROJECT_DIR$/models/tempuser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/ucheck.js" afterPath="$PROJECT_DIR$/routes/ucheck.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/user.js" afterPath="$PROJECT_DIR$/models/user.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/db/where-test.js" afterPath="$PROJECT_DIR$/test/db/where-test.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/status/user_status.ejs" afterPath="$PROJECT_DIR$/views/status/user_status.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problem/view.ejs" afterPath="$PROJECT_DIR$/views/problem/view.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="justoj.iws" />
@@ -973,39 +58,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="contest.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="contest.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/contest.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="79" column="19" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="edit.ejs" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/views/contest/edit/edit.ejs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="66" column="29" selection-start-line="66" selection-start-column="29" selection-end-line="66" selection-end-column="29" />
-              <folding>
-                <marker date="1461013537407" expanded="true" signature="14243:14278" placeholder="..." />
-                <marker date="1461013537407" expanded="true" signature="14598:14623" placeholder="..." />
-                <marker date="1461013537407" expanded="true" signature="14660:14685" placeholder="..." />
-                <marker date="1461013537407" expanded="true" signature="14744:14756" placeholder="..." />
-                <marker date="1461013537407" expanded="true" signature="14800:14812" placeholder="..." />
-                <marker date="1461013537407" expanded="true" signature="14925:14937" placeholder="..." />
-                <marker date="1461013537407" expanded="true" signature="15055:15067" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="problems.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/problems.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="185" column="29" selection-start-line="185" selection-start-column="21" selection-end-line="185" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.43837753">
+              <caret line="758" column="29" selection-start-line="758" selection-start-column="29" selection-end-line="758" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -1015,7 +72,27 @@
         <entry file="file://$PROJECT_DIR$/models/contest.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="32" column="40" selection-start-line="32" selection-start-column="40" selection-end-line="32" selection-end-column="40" />
+              <caret line="411" column="0" selection-start-line="411" selection-start-column="0" selection-end-line="411" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="standings.ejs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/contest/view/standings.ejs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-8.666667">
+              <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="submissions.ejs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/contest/view/submissions.ejs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-18.11111">
+              <caret line="65" column="76" selection-start-line="0" selection-start-column="0" selection-end-line="222" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -1042,32 +119,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/routes/login.js" />
-        <option value="$PROJECT_DIR$/middlewares/isLoggedIn.js" />
-        <option value="$PROJECT_DIR$/routes/submit.js" />
-        <option value="$PROJECT_DIR$/models/submission.js" />
-        <option value="$PROJECT_DIR$/helpers/compiler/sandbox/judge.js" />
-        <option value="$PROJECT_DIR$/config/database/justoj schema/keys.sql" />
-        <option value="$PROJECT_DIR$/models/tempuser.js" />
-        <option value="$PROJECT_DIR$/config/database/justoj schema/constraints.sql" />
-        <option value="$PROJECT_DIR$/views/problem/problem_rank.ejs" />
-        <option value="$PROJECT_DIR$/routes/ranks.js" />
-        <option value="$PROJECT_DIR$/views/problem/u_problem_status.ejs" />
-        <option value="$PROJECT_DIR$/routes/status.js" />
-        <option value="$PROJECT_DIR$/views/problem/viewproblem.ejs" />
-        <option value="$PROJECT_DIR$/views/problem/create/epN.ejs" />
-        <option value="$PROJECT_DIR$/views/problem/edit/ep1.ejs" />
-        <option value="$PROJECT_DIR$/routes/edit_problem/step3.js" />
-        <option value="$PROJECT_DIR$/views/problem/edit/ep2.ejs" />
-        <option value="$PROJECT_DIR$/views/problem/edit/ep3.ejs" />
-        <option value="$PROJECT_DIR$/routes/ep.js" />
-        <option value="$PROJECT_DIR$/views/contest/create/new.ejs" />
-        <option value="$PROJECT_DIR$/views/problem/create/new.ejs" />
-        <option value="$PROJECT_DIR$/views/problem/edit/step_1.ejs" />
         <option value="$PROJECT_DIR$/views/problem/edit/step_3.ejs" />
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/routes/edit_problem/removeTestCase.js" />
-        <option value="$PROJECT_DIR$/routes/problems.js" />
         <option value="$PROJECT_DIR$/routes/edit_problem/step1.js" />
         <option value="$PROJECT_DIR$/routes/edit_problem/step2.js" />
         <option value="$PROJECT_DIR$/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" />
@@ -1075,24 +129,47 @@
         <option value="$PROJECT_DIR$/views/login.ejs" />
         <option value="$PROJECT_DIR$/views/contest/create.ejs" />
         <option value="$PROJECT_DIR$/models/Contest.js" />
-        <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" />
-        <option value="$PROJECT_DIR$/public/stylesheets/style.css" />
-        <option value="$PROJECT_DIR$/views/contest/contests.ejs" />
-        <option value="$PROJECT_DIR$/views/problem/problems.ejs" />
         <option value="$PROJECT_DIR$/views/ranks.ejs" />
-        <option value="$PROJECT_DIR$/views/status/status.ejs" />
         <option value="$PROJECT_DIR$/views/contest/edit.ejs" />
         <option value="$PROJECT_DIR$/views/contest/edit/problems/new.ejs" />
-        <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap.css" />
         <option value="$PROJECT_DIR$/views/contest/edit/problems/step_1.ejs" />
         <option value="$PROJECT_DIR$/views/contest/edit/problems/step_2.ejs" />
         <option value="$PROJECT_DIR$/views/problem/edit/step_2.ejs" />
         <option value="$PROJECT_DIR$/views/contest/edit/problems/step_3.ejs" />
         <option value="$PROJECT_DIR$/models/problems.js" />
+        <option value="$PROJECT_DIR$/views/contest/edit/edit.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/edit/contest_list.ejs" />
+        <option value="$PROJECT_DIR$/routes/problems.js" />
+        <option value="$PROJECT_DIR$/helpers/paginate.js" />
+        <option value="$PROJECT_DIR$/views/problem/problems.ejs" />
+        <option value="$PROJECT_DIR$/views/problem/view.ejs" />
+        <option value="$PROJECT_DIR$/views/templates/footer.ejs" />
+        <option value="$PROJECT_DIR$/views/status/user_status.ejs" />
+        <option value="$PROJECT_DIR$/views/status/status.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/contests.ejs" />
+        <option value="$PROJECT_DIR$/views/templates/headerend.ejs" />
+        <option value="$PROJECT_DIR$/views/templates/header.ejs" />
+        <option value="$PROJECT_DIR$/config/database/justoj schema/insert.sql" />
+        <option value="$PROJECT_DIR$/views/contest/view/announcement.ejs" />
+        <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap.css" />
+        <option value="$PROJECT_DIR$/files/temp/header.ejs" />
+        <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" />
+        <option value="$PROJECT_DIR$/views/templates/contest_header.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/view/dashboard.ejs" />
+        <option value="$PROJECT_DIR$/public/stylesheets/style.css" />
+        <option value="$PROJECT_DIR$/views/contest/view/problem.ejs" />
+        <option value="$PROJECT_DIR$/routes/submit.js" />
+        <option value="$PROJECT_DIR$/views/contest/view/submissions.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/view/my_submissions.ejs" />
+        <option value="$PROJECT_DIR$/config/database/justoj schema/keys.sql" />
+        <option value="$PROJECT_DIR$/config/database/justoj schema/constraints.sql" />
+        <option value="$PROJECT_DIR$/models/contestSubmit.js" />
         <option value="$PROJECT_DIR$/config/database/justoj schema/tables.sql" />
+        <option value="$PROJECT_DIR$/helpers/compiler/sandbox/contestJudge.js" />
+        <option value="$PROJECT_DIR$/config/database/justoj schema/querys.sql" />
+        <option value="$PROJECT_DIR$/views/contest/view/standings.ejs" />
         <option value="$PROJECT_DIR$/models/contest.js" />
         <option value="$PROJECT_DIR$/routes/contest.js" />
-        <option value="$PROJECT_DIR$/views/contest/edit/edit.ejs" />
       </list>
     </option>
   </component>
@@ -1120,9 +197,9 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="47" />
-    <option name="y" value="24" />
+    <option name="y" value="-4" />
     <option name="width" value="1319" />
-    <option name="height" value="744" />
+    <option name="height" value="772" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -1163,6 +240,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1227,50 +305,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="problem" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="JustOJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="problem" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="create" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="JustOJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="contest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1293,33 +327,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="edit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="JustOJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="contest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="problems" />
+              <option name="myItemId" value="view" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1334,24 +342,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="routes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="JustOJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="routes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="edit_problem" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1366,6 +356,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="justoj" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JustOJ" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="stylesheets" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1433,6 +441,60 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="helpers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="justoj" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JustOJ" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="helpers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="compiler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="justoj" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JustOJ" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="helpers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="compiler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sandbox" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="justoj" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JustOJ" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="files" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1451,7 +513,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="tc" />
+              <option name="myItemId" value="temp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1512,7 +574,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -1977,7 +1038,17 @@
       <workItem from="1460578014787" duration="3065000" />
       <workItem from="1460915370915" duration="11561000" />
       <workItem from="1461001713958" duration="11090000" />
-      <workItem from="1461067493164" duration="59000" />
+      <workItem from="1461067493164" duration="21325000" />
+      <workItem from="1461145536521" duration="5981000" />
+      <workItem from="1461271349523" duration="5068000" />
+      <workItem from="1461361536855" duration="622000" />
+      <workItem from="1461340885318" duration="17918000" />
+      <workItem from="1461411833435" duration="24341000" />
+      <workItem from="1461444427766" duration="3210000" />
+      <workItem from="1461503882587" duration="13318000" />
+      <workItem from="1461521780612" duration="9473000" />
+      <workItem from="1461533192545" duration="1920000" />
+      <workItem from="1461576195305" duration="37665000" />
     </task>
     <task id="LOCAL-00001" summary="big changes">
       <created>1453266267328</created>
@@ -1989,7 +1060,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1140799000" />
+    <option name="totallyTimeSpent" value="1281581000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2001,7 +1072,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="47" y="24" width="1319" height="744" extended-state="6" />
+    <frame x="47" y="-4" width="1319" height="772" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2011,6 +1082,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39344263" sideWeight="0.4969325" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.52011925" sideWeight="0.49431387" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25230062" sideWeight="0.15716752" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27868852" sideWeight="0.49079755" order="8" side_tool="false" content_ui="tabs" />
@@ -2019,13 +1091,12 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295626" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24412434" sideWeight="0.84283245" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24412434" sideWeight="0.84283245" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3457526" sideWeight="0.52342606" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3353204" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39344263" sideWeight="0.4969325" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26976743" sideWeight="0.52349484" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -2059,292 +1130,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/models/contest.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="40" selection-start-line="32" selection-start-column="40" selection-end-line="32" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/myConfig/query.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46645865">
-          <caret line="287" column="0" selection-start-line="287" selection-start-column="0" selection-end-line="287" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/compiler/sandbox/judge.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.4602184">
-          <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/querys.sql">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.43373495">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/insert.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/keys.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="34" column="23" selection-start-line="34" selection-start-column="23" selection-end-line="34" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/constraints.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="43" selection-start-line="1" selection-start-column="43" selection-end-line="1" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/problem/rank.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-19.333334">
-          <caret line="92" column="20" selection-start-line="92" selection-start-column="20" selection-end-line="92" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/status.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="69" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/status/user_status.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6666667">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.1513261">
-          <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22464898">
-          <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/test-build.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.5054602">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/validate-form.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3369735">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/login.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5054602">
-          <caret line="18" column="3" selection-start-line="18" selection-start-column="3" selection-end-line="18" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/submit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28081122">
-          <caret line="30" column="34" selection-start-line="30" selection-start-column="34" selection-end-line="30" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/tempuser.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.7971919">
-          <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/bfy.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/login.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23778501">
-          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="47" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/submission.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.47737908">
-          <caret line="17" column="33" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/create.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.0">
-          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/ranks.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="3" selection-start-line="23" selection-start-column="3" selection-end-line="23" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/stylesheets/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.758621">
-          <caret line="176" column="0" selection-start-line="176" selection-start-column="0" selection-end-line="176" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/contests.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5863192">
-          <caret line="35" column="25" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/ranks.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.0">
-          <caret line="36" column="25" selection-start-line="36" selection-start-column="25" selection-end-line="36" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/status/status.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.333333">
-          <caret line="35" column="25" selection-start-line="35" selection-start-column="25" selection-end-line="35" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1557377">
-          <caret line="351" column="22" selection-start-line="351" selection-start-column="22" selection-end-line="351" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/edit_problem/editProblem.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/problem/create/new.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.029315962">
-          <caret line="59" column="11" selection-start-line="0" selection-start-column="0" selection-end-line="285" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/problem/view.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.9364821">
-          <caret line="17" column="7" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.12622951">
-          <caret line="1078" column="33" selection-start-line="1078" selection-start-column="33" selection-end-line="1078" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/edit_problem/step1.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="46" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/edit/problems/step_1.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.15798046">
-          <caret line="41" column="21" selection-start-line="41" selection-start-column="21" selection-end-line="41" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/edit_problem/step2.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="107" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/edit_problem/removeTestCase.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/edit/problems/new.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.029315962">
-          <caret line="162" column="0" selection-start-line="162" selection-start-column="0" selection-end-line="162" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/problems.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.028081123">
-          <caret line="86" column="23" selection-start-line="86" selection-start-column="23" selection-end-line="86" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/problem/edit/step_3.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.029315962">
-          <caret line="168" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="233" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/problem/edit/step_2.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.029315962">
-          <caret line="1" column="36" selection-start-line="1" selection-start-column="36" selection-end-line="1" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/contest/edit/problems/step_2.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.85016286">
@@ -2380,24 +1165,265 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/views/problem/rank.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2931596">
+          <caret line="62" column="106" selection-start-line="62" selection-start-column="66" selection-end-line="62" selection-end-column="106" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/paginate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8143526">
+          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/views/problem/problems.ejs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.814815">
-          <caret line="71" column="74" selection-start-line="71" selection-start-column="40" selection-end-line="71" selection-end-column="74" />
+        <state vertical-scroll-proportion="-14.0">
+          <caret line="43" column="86" selection-start-line="43" selection-start-column="86" selection-end-line="43" selection-end-column="86" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/tables.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.034483">
-          <caret line="83" column="9" selection-start-line="83" selection-start-column="3" selection-end-line="83" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/contest.js">
+    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap.css.map">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="40" selection-start-line="32" selection-start-column="40" selection-end-line="32" selection-end-column="40" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+      <provider editor-type-id="sourcemapFileViewerProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/status/user_status.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.70358306">
+          <caret line="43" column="88" selection-start-line="43" selection-start-column="88" selection-end-line="43" selection-end-column="88" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/templates/footer.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.6666667">
+          <caret line="1" column="45" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/create.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.6400652">
+          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/view/clarifications.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/edit/edit.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.3333334">
+          <caret line="363" column="0" selection-start-line="363" selection-start-column="0" selection-end-line="415" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/ranks.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.43837753">
+          <caret line="23" column="3" selection-start-line="23" selection-start-column="3" selection-end-line="23" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/templates/header.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.0">
+          <caret line="21" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/templates/headerend.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/view/announcement.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="58" column="24" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.83871">
+          <caret line="334" column="21" selection-start-line="334" selection-start-column="21" selection-end-line="334" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4281" column="1" selection-start-line="4281" selection-start-column="1" selection-end-line="4281" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/files/temp/header.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.407408">
+          <caret line="20" column="39" selection-start-line="20" selection-start-column="39" selection-end-line="20" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/templates/contest_header.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-44.0">
+          <caret line="66" column="6" selection-start-line="66" selection-start-column="6" selection-end-line="66" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/edit/contest_list.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.70358306">
+          <caret line="60" column="58" selection-start-line="60" selection-start-column="58" selection-end-line="60" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/contests.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5863192">
+          <caret line="62" column="44" selection-start-line="62" selection-start-column="44" selection-end-line="64" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/insert.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.413794">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.7691108">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/problems.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/view/dashboard.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.0">
+          <caret line="27" column="21" selection-start-line="0" selection-start-column="0" selection-end-line="135" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/status/status.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.6666665">
+          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="147" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/stylesheets/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="4.229329">
+          <caret line="180" column="0" selection-start-line="180" selection-start-column="0" selection-end-line="180" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/problem/view.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.074074">
+          <caret line="259" column="0" selection-start-line="259" selection-start-column="0" selection-end-line="267" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/view/problem.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-55.333332">
+          <caret line="158" column="0" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/ucheck.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/compiler/sandbox/judge.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="163" column="19" selection-start-line="0" selection-start-column="0" selection-end-line="448" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/submission.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="31" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/view/my_submissions.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.5555553">
+          <caret line="54" column="31" selection-start-line="54" selection-start-column="31" selection-end-line="54" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/status.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="39" column="42" selection-start-line="39" selection-start-column="37" selection-end-line="39" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/constraints.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.448276">
+          <caret line="24" column="34" selection-start-line="24" selection-start-column="34" selection-end-line="24" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/keys.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.793103">
+          <caret line="30" column="25" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="25" />
           <folding />
         </state>
       </provider>
@@ -2405,32 +1431,91 @@
     <entry file="file://$PROJECT_DIR$/models/problems.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="185" column="29" selection-start-line="185" selection-start-column="21" selection-end-line="185" selection-end-column="29" />
+          <caret line="137" column="3" selection-start-line="137" selection-start-column="3" selection-end-line="137" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/submit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/tables.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.103448">
+          <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/contestSubmit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/myutil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/compiler/sandbox/contestJudge.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/querys.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.7833333">
+          <caret line="142" column="33" selection-start-line="142" selection-start-column="33" selection-end-line="142" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/view/submissions.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.11111">
+          <caret line="65" column="76" selection-start-line="0" selection-start-column="0" selection-end-line="222" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/view/standings.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.666667">
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/contest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="411" column="0" selection-start-line="411" selection-start-column="0" selection-end-line="411" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/contest.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="79" column="19" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.43837753">
+          <caret line="758" column="29" selection-start-line="758" selection-start-column="29" selection-end-line="758" selection-end-column="29" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/edit/edit.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="66" column="29" selection-start-line="66" selection-start-column="29" selection-end-line="66" selection-end-column="29" />
-          <folding>
-            <marker date="1461013537407" expanded="true" signature="14243:14278" placeholder="..." />
-            <marker date="1461013537407" expanded="true" signature="14598:14623" placeholder="..." />
-            <marker date="1461013537407" expanded="true" signature="14660:14685" placeholder="..." />
-            <marker date="1461013537407" expanded="true" signature="14744:14756" placeholder="..." />
-            <marker date="1461013537407" expanded="true" signature="14800:14812" placeholder="..." />
-            <marker date="1461013537407" expanded="true" signature="14925:14937" placeholder="..." />
-            <marker date="1461013537407" expanded="true" signature="15055:15067" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>

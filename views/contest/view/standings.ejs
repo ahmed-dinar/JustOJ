@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <script type="text/javascript" src="/javascripts/jquery-2.1.4.min.js"></script>
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+
+<body style="background: #fcfcfc;">
+
+<% include ../../templates/contest_header.ejs %>
+
+<!-- Main Content -->
+<div class="container c-h" >
+
+    <div class="row">
+
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <% if(status.length){ %>
+                    <table class="table">
+                        <thead>
+                        <tr>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% for(var i=0; i<status.length; i++){ %>
+                        <tr>
+
+                        </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-body text-center">
+                    <h5 id="cd-h">ENDS IN</h5>
+                    <div id="countdown" style="font-size: 20px; font-weight: 200"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    window.onload = function () {
+        CountDownTimer('<%= contest.end %>');
+    };
+
+    function CountDownTimer(begin) {
+
+        var end = new Date(begin);
+
+        var _second = 1000;
+        var _minute = _second * 60;
+        var _hour = _minute * 60;
+        var _day = _hour * 24;
+        var timer;
+        var running = false;
+        var doc =  document.getElementById("countdown");
+
+        function showRemaining() {
+            var now = new Date();
+
+            var distance = end - now;
+
+            if (distance < 0) {
+
+                clearInterval(timer);
+                document.getElementById("cd-h").innerHTML = '';
+                doc.innerHTML = 'Finished<br>' + "<p style='font-size:14px;'><%= moment(contest.end).from() %></p>";
+
+
+                if( running ) {
+                    alert('Contest Finished!');
+                }
+                return;
+            }
+            var days = Math.floor(distance / _day);
+            var hours = Math.floor((distance % _day) / _hour);
+            var minutes = Math.floor((distance % _hour) / _minute);
+            var seconds = Math.floor((distance % _minute) / _second);
+
+
+            doc.innerHTML = days <=0 ? '' : days + 'd ';
+            doc.innerHTML += Math.floor(hours/10) + '' +  hours%10 + ':';
+            doc.innerHTML += Math.floor(minutes/10) + '' +  minutes%10 + ':';
+            doc.innerHTML += Math.floor(seconds/10) + '' +  seconds%10;
+
+
+            running = true;
+        }
+        showRemaining();
+        timer = setInterval(showRemaining, 1000);
+    }
+
+</script>
+
+<!-- footer -->
+<% include ../../templates/footer.ejs %>
+
+</body>
+</html>

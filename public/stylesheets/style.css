@@ -8,6 +8,10 @@ html{
   font-family: 'Maven Pro', sans-serif;
 }
 
+html, body{
+  margin:0px !important;
+}
+
 body {
   padding-top: 70px;
   margin: 0px;
@@ -31,9 +35,15 @@ footer{
 
 #mainNavbar ul > li > a{
   font-size: 12px;
-  color: #000;
+  color: #000000;
+  text-shadow: none;
 }
 
+
+#mainNavbar ul > li > a:hover{
+
+  text-decoration: underline;
+}
 
 
 input.val-error,
@@ -82,6 +92,7 @@ pre{
   position: relative;
   overflow: hidden;
 }
+
 .btn-file input[type=file] {
   position: absolute;
   top: 0;
@@ -144,37 +155,76 @@ hr {
 }
 
 
-.navbar-default .navbar-brand,
-.navbar-default .navbar-nav li a {
-  height: 30px;
-  padding-top: 5px;
-}
-
-.navbar-default{
-  height: 42px;
-  background: #FFFFFF;
-}
-
-.navbar-default .navbar-nav li a {
-  margin-top: 6px;
-}
-
-.navbar-default .nav-menu li a {
-  border: 1px solid #ddd;
-  margin-right: 5px;
-  font-size: 11px !important;
-  padding: 5px 8px;
-}
-
-.navbar-default .nav-menu li a:hover {
-  background: #777474 !important;
-  color: #fff !important;
-}
-
-@media only screen and (max-width: 766px) {
-  .collapsing, .in {background-color: #fff;}
-}
 
 .c-h{
   min-height: 530px;
 }
+
+th {
+  background-color: #E1E1E1;
+  color: #000;
+}
+
+.list-group-item {
+  padding: 6px 10px !important;
+  display:inherit !important;
+}
+
+.list-group-item-heading {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.grey-back{
+  background: #EEEEEE !important;
+}
+
+.table-condensed > tbody > tr > td {
+  vertical-align: middle;
+  width: 25%;
+}
+
+.contest-nav{
+  min-height: 62px !important;
+}
+
+.main-nav{
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.main-nav > ul > li > a{
+
+}
+
+.main-nav > ul > li > a:hover,
+#contest-main-nav > ul > li > a:hover{
+  text-decoration: underline;
+}
+
+#contest-main-nav{
+  font-size: 11px;
+  min-height: 30px;
+}
+
+#contest-main-nav > ul > li > a{
+  color: #000;
+  padding: 0px 2.3em 0px 0px;
+  text-shadow:0px 1px 0px #ffffff;
+  display: block;
+  line-height: 3.2em;
+}
+
+.ac{
+  color: #43AC6A;
+}
+
+.wa{
+  color: indianred;
+}
+
+.list-group-item{
+  margin-bottom: 5px !important;
+}
+
+
