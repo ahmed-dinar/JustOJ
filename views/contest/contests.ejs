@@ -44,9 +44,9 @@
                     <h4>Contests</h4>
 
                     <% if(running.length){ %>
-                        <h4 class = "list-group-item grey-back">
+                        <h5 class = "list-group-item grey-back">
                             <i class="fa fa-hourglass-half" aria-hidden="true"></i> Running Contests
-                        </h4>
+                        </h5>
                         <div class = "list-group">
                             <% for(var i=0; i<running.length; i++){ %>
                                 <a href = "/contest/<%= running[i].id %>" class = "list-group-item clearfix">
@@ -71,9 +71,9 @@
                     <% } %>
 
                     <% if(future.length){ %>
-                        <h4 class = "list-group-item grey-back">
+                        <h5 class = "list-group-item grey-back">
                             <i class="fa fa-hourglass-o" aria-hidden="true"></i> Future Contests
-                        </h4>
+                        </h5>
                         <div class = "list-group">
                             <% for(var i=0; i<future.length; i++){ %>
                             <a href = "/contest/<%= future[i].id %>" class = "list-group-item clearfix">
@@ -98,9 +98,9 @@
                     <% } %>
 
                     <% if(ended.length){ %>
-                        <h4 class = "list-group-item grey-back">
+                        <h5 class = "list-group-item grey-back">
                             <i class="fa fa-hourglass-end" aria-hidden="true"></i> Past Contests
-                        </h4>
+                        </h5>
                         <div class = "list-group">
                             <% for(var i=0; i<ended.length; i++){ %>
 

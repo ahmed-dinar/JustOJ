@@ -55,6 +55,7 @@ CREATE TABLE `submission_code` (
 CREATE TABLE `temp_user` (
   `id` INT(11) NOT NULL,
   `username` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `name` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `password` VARCHAR(60) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `created` DATETIME NOT NULL,
@@ -69,8 +70,7 @@ CREATE TABLE `users` (
   `password` VARCHAR(60) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `joined` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `firstname` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `lastname` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `institute` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
 

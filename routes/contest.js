@@ -33,9 +33,9 @@ router.get('/', function(req, res, next) {
         if(err){ return next(new Error(err)); }
 
 
-       //console.log(running);
-        //console.log(future);
-        //console.log(ended);
+       console.log(running);
+        console.log(future);
+        console.log(ended);
 
 
         res.render('contest/contests',{
@@ -288,7 +288,7 @@ router.get('/edit/:cid/publish', function(req, res, next) {
         if( err ){ return next(new Error(err)); }
 
 
-        console.log('Updated');
+        console.log('published!');
         res.redirect('/contest/edit');
     });
 
@@ -300,6 +300,8 @@ router.get('/:cid', function(req, res, next) {
     var cid = req.params.cid;
     var isAuthenticated = req.isAuthenticated();
     var user = req.user;
+
+    var notStarted = false, ended = false;
 
     async.waterfall([
         function(callback) {
@@ -327,8 +329,8 @@ router.get('/:cid', function(req, res, next) {
         },
         function(details,registered,callback) {
 
-            //not started yet
-            if( moment().isBefore(details.begin) ){ return callback(null,details,registered); }
+            notStarted = moment().isBefore(details.begin);
+            if( notStarted ){ return callback(null,details,registered); }
 
             var uid = isAuthenticated ? user.id : -1;
             Contest.getDashboardProblems(cid,uid,function(err,rows){
@@ -345,7 +347,7 @@ router.get('/:cid', function(req, res, next) {
         console.log('resitered? : ' + registered);
         console.log(problems);
 
-        if( moment().isBefore(details.begin) ){ // not started
+        if( notStarted) { // not started
 
             res.render('contest/view/announcement',{
                 isUser: req.isAuthenticated(),
@@ -356,34 +358,209 @@ router.get('/:cid', function(req, res, next) {
                 moment: moment
             });
 
-        }else if( moment().isAfter(details.end)  ){ //ended
+        }else {
 
-            res.render('contest/view/dashboard',{
+            res.render('contest/view/dashboard', {
                 isUser: req.isAuthenticated(),
                 user: req.user,
                 errors: req.flash('err'),
                 contest: details,
                 registered: registered,
-                running: false,
+                running: moment().isAfter(details.end) ? false : true,
                 moment: moment,
                 problems: problems
             });
+        }
+    });
+});
 
-        }else{ //running
 
-            res.render('contest/view/dashboard',{
+router.get('/:cid/clarifications/view/:clid', function(req, res, next) {
+
+    var cid = req.params.cid;
+    var clid = req.params.clid;
+    var notStarted = false;
+
+    async.waterfall([
+        function(callback) {
+            Contest.getDetailsAndProblemList(cid,function(err,rows){
+                if(err){ return callback(err); }
+
+                if(!rows.length){ return callback('No Contest Found'); }
+
+                callback(null,rows[0]);
+            });
+        },
+        function(contest,callback){
+            notStarted = moment().isBefore(contest.begin);
+            if( notStarted ){ return callback(null,contest); }
+
+            Contest.getClarification(cid,clid,function(err,rows){
+                if(err){ return callback(err); }
+
+                callback(null,contest,rows[0]);
+            });
+        }
+    ], function (error,contest,clarification) {
+        if( error ){ return next(new Error(error)); }
+
+        console.log(clarification);
+
+        if( notStarted ){ // not started
+            req.flash('err','Contest not started yet');
+            res.redirect('/contest/' + cid);
+        }else {
+
+            res.render('contest/view/clarifications/view',{
                 isUser: req.isAuthenticated(),
                 user: req.user,
-                errors: req.flash('err'),
-                contest: details,
-                registered: registered,
-                running: true,
                 moment: moment,
-                problems: problems
+                contest: contest,
+                clarification: _.isUndefined(clarification) ? [] : clarification
             });
+        }
+    });
 
+});
+
+router.get('/:cid/clarifications/request', function(req, res, next) {
+
+    var cid = req.params.cid;
+    var isAuthenticated = req.isAuthenticated();
+    var user = req.user;
+    var notStarted = false;
+
+    if( !isAuthenticated ){
+        res.redirect('/login');
+        return;
+    }
+
+    var usrid = isAuthenticated ? user.id : -1;
+
+    Contest.getDetailsIsReg(cid,usrid,function(err,rows){
+        if(err){ return next(new Error(err)); }
+
+        if( !rows.length ){ return next(new Error('no contest found')); }
+
+        var contest = rows[0];
+
+        if( moment().isBefore(contest.begin) ){
+            req.flash('err','Contest not started yet');
+            res.redirect('/contest/' + cid);
+            return;
         }
 
+        if( contest.isReg === -1 ){
+            req.flash('err','You are not participating in this contest');
+            res.redirect('/contest/' + cid);
+            return;
+        }
+
+        var problems;
+        if( _.isUndefined(contest.problemList) || contest.problemList === null ){
+            problems = {};
+        }else{
+            problems = JSON.parse('{' + contest.problemList + '}');
+        }
+
+        res.render('contest/view/clarifications/request', {
+            title: "Problems | JUST Online Judge",
+            isUser: isAuthenticated,
+            user: user,
+            contest: contest,
+            moment: moment,
+            problems: problems,
+            _: _
+        });
+    });
+});
+
+
+
+router.get('/:cid/clarifications/:q', function(req, res, next) {
+
+    var cur_page = req.query.page;
+    var cid = req.params.cid;
+    var isAuthenticated = req.isAuthenticated();
+    var user = req.user;
+    var qid = req.params.q;
+
+
+    if( _.isUndefined(qid) || (qid !== 'all' && qid !== 'general' && !MyUtil.isNumeric(qid)) ){
+        return next(new Error('LOL!'));
+    }
+
+
+    if( _.isUndefined(cur_page) ){
+        cur_page = 1;
+    }else{
+        cur_page = parseInt(cur_page);
+    }
+
+    if( cur_page<1 ) {
+        return next(new Error('What you are looking for?'));
+    }
+
+
+    var notStarted = false;
+
+    async.waterfall([
+        function(callback) {
+            Contest.getDetailsAndProblemList(cid,function(err,rows){
+                if(err){ return callback(err); }
+
+                if(!rows.length){ return callback('No Contest Found'); }
+
+                callback(null,rows[0]);
+            });
+        },
+        function(contest,callback){
+
+            notStarted = moment().isBefore(contest.begin);
+
+            //not started yet
+            if( notStarted ){ return callback(null,contest); }
+
+            Contest.getClarifications(cid,qid,cur_page,function(err,rows,pagination){
+                if(err){ return callback(err); }
+
+                callback(null,contest,rows,pagination);
+            });
+        }
+    ], function (error,contest,clarifications,pagination) {
+        if( error ){ return next(new Error(error)); }
+
+        console.log(contest);
+        console.log(clarifications);
+
+
+        if( notStarted ){ // not started
+            req.flash('err','Contest not started yet');
+            res.redirect('/contest/' + cid);
+        }else {
+
+            var problems;
+            if( _.isUndefined(contest.problemList) || contest.problemList === null ){
+                problems = {};
+            }else{
+                problems = JSON.parse('{' + contest.problemList + '}');
+            }
+
+            console.log(problems);
+
+            res.render('contest/view/clarifications/clarifications', {
+                title: "Problems | JUST Online Judge",
+                isUser: isAuthenticated,
+                user: user,
+                moment: moment,
+                contest: contest,
+                problems: problems,
+                _: _,
+                selected: MyUtil.isNumeric(qid) ? parseInt(qid) : qid,
+                clarifications: clarifications,
+                pagination: _.isUndefined(pagination) ? {} : pagination
+            });
+        }
 
     });
 
@@ -409,6 +586,7 @@ router.get('/:cid/submissions', function(req, res, next) {
         return next(new Error('What you are looking for?'));
     }
 
+    var notStarted = false;
     async.waterfall([
         function(callback) {
             Contest.getDetails(cid,function(err,rows){
@@ -421,18 +599,26 @@ router.get('/:cid/submissions', function(req, res, next) {
         },
         function(contest,callback){
 
-            //not started yet
-            if( moment().isBefore(contest.begin) ){ return callback(null,contest); }
+            notStarted = moment().isBefore(contest.begin);
+            if( notStarted ){ return callback(null,contest); }
 
-
-            var sql = Query.select(['submissions.status','submissions.language','submissions.submittime','submissions.cpu','submissions.memory','submissions.pid','users.username','problems.title'])
+            var sql = Query.select([
+                'submissions.status',
+                'submissions.language',
+                'submissions.submittime',
+                'submissions.cpu',
+                'submissions.memory',
+                'submissions.pid',
+                'users.username',
+                'problems.title'
+            ])
                 .from('contest_submissions as submissions')
                 .orderBy('submissions.submittime', 'desc')
                 .leftJoin('users', 'submissions.uid', 'users.id')
                 .leftJoin('problems', 'submissions.pid', 'problems.id')
                 .where('submissions.cid',cid);
 
-            var sqlCount = Query.countDistinct('uid as count')
+            var sqlCount = Query.countDistinct('id as count')
                 .from('contest_submissions')
                 .where('cid',cid);
 
@@ -454,17 +640,8 @@ router.get('/:cid/submissions', function(req, res, next) {
 
         if( error ){ return next(new Error(error)); }
 
-        if( moment().isBefore(contest.begin) ){ // not started
-
-            res.render('contest/view/announcement',{
-                isUser: req.isAuthenticated(),
-                user: req.user,
-                errors: req.flash('err'),
-                contest: contest,
-                registered: registered,
-                moment: moment
-            });
-
+        if( notStarted ){
+            res.redirect('/contest/' + cid);
         }else {
 
             res.render('contest/view/submissions', {
@@ -507,6 +684,7 @@ router.get('/:cid/submissions/my', function(req, res, next) {
         return next(new Error('What you are looking for?'));
     }
 
+    var notStarted = false;
     async.waterfall([
         function(callback) {
             Contest.getDetails(cid,function(err,rows){
@@ -519,9 +697,8 @@ router.get('/:cid/submissions/my', function(req, res, next) {
         },
         function(contest,callback){
 
-            //not started yet
-            if( moment().isBefore(contest.begin) ){ return callback(null,contest); }
-
+            notStarted = moment().isBefore(contest.begin);
+            if( notStarted ){ return callback(null,contest); }
 
             var sql = Query.select(['submissions.status','submissions.language','submissions.submittime','submissions.cpu','submissions.memory','submissions.pid','problems.title'])
                 .from('contest_submissions as submissions')
@@ -557,17 +734,8 @@ router.get('/:cid/submissions/my', function(req, res, next) {
 
         if( error ){ return next(new Error(error)); }
 
-        if( moment().isBefore(contest.begin) ){ // not started
-
-            res.render('contest/view/announcement',{
-                isUser: req.isAuthenticated(),
-                user: req.user,
-                errors: req.flash('err'),
-                contest: contest,
-                registered: registered,
-                moment: moment
-            });
-
+        if( notStarted ){ // not started
+            res.redirect('/contest/' + cid);
         }else {
 
             res.render('contest/view/my_submissions', {
@@ -596,6 +764,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
     var pid = req.params.pid;
     var isAuthenticated = req.isAuthenticated();
     var user = req.user;
+    var notStarted = false;
 
     async.waterfall([
         function(callback) {
@@ -609,7 +778,10 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
         },
         function(details,callback) {
 
-            if(!details.privacy){ return callback(null,details,false); }
+            notStarted = moment().isBefore(details.begin);
+            if(notStarted){ return callback(null,details,false); }
+
+            //if(!details.privacy){ return callback(null,details,false); } for private contest
 
             if(!isAuthenticated){ return callback(null,details,false); }
 
@@ -624,8 +796,8 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
             });
         },
         function(details,registered,callback) {
-            //not started yet or not resitered
-            if( !registered || moment().isBefore(details.begin) ){ return callback(null,details,registered); }
+
+            if( !registered || notStarted ){ return callback(null,details,registered); }
 
             Contest.getUserSubmissions(cid,pid,user.id,function(err,rows){
                 if(err){ return callback(err); }
@@ -641,20 +813,11 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
         console.log('res? : ' + registered);
         console.log(submissions);
 
-        contest = Problems.decodeToHTML(contest);
-
-        if( moment().isBefore(contest.begin) ){ // not started
-
-            res.render('contest/view/announcement',{
-                isUser: req.isAuthenticated(),
-                user: req.user,
-                errors: req.flash('err'),
-                contest: contest,
-                registered: registered,
-                moment: moment
-            });
-
+        if( notStarted ){
+            res.redirect('/contest/' + cid);
         }else if( moment().isAfter(contest.end)  ){ //ended
+
+            contest = Problems.decodeToHTML(contest);
 
             res.render('contest/view/problem',{
                 isUser: req.isAuthenticated(),
@@ -668,10 +831,12 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
 
         }else{ //running
 
+            contest = Problems.decodeToHTML(contest);
             res.render('contest/view/problem',{
                 isUser: req.isAuthenticated(),
                 user: req.user,
                 errors: req.flash('err'),
+                formError: req.flash('formError'),
                 contest: contest,
                 registered: registered,
                 running: true,
@@ -679,10 +844,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
                 submissions: submissions,
                 runStatus: MyUtil.runStatus()
             });
-
         }
-
-
     });
 
 });
@@ -742,42 +904,31 @@ router.get('/:cid/standings', function(req, res, next) {
         return next(new Error('what are u looking for!'));
     }
 
-    Contest.getRank(cid,function(err,ranks){
+    Contest.getRank(cid,cur_page,function(err,contest,problemStats,ranks,pagination){
 
         if(err){ return next(new Error(err)); }
 
 
-        var problems = JSON.parse('{' + ranks[0].problems + '}');
-
-        console.log( problems );
-        console.log( problems['1'] );
-        console.log( problems['8'] );
+        console.log(contest);
+        console.log(ranks);
+        console.log(problemStats);
 
 
-        res.end(JSON.stringify(ranks));
-
-        /*var finalRank = [];
-
-        _.forEach(ranks,function(rank) {
-
-            var tempRank = rank;
-            var tempProblems = [];
-            var problems = _.split(rank.problems, '-');
-
-            _.forEach(problems,function(problem) {
-                tempProblems.push(JSON.parse(problem));
-            });
-
-            tempRank.problems = tempProblems;
-            finalRank.push(tempRank);
+        res.render('contest/view/standings',{
+            isUser: req.isAuthenticated(),
+            user: req.user,
+            errors: req.flash('err'),
+            contest: contest,
+            problemStats: problemStats,
+            ranks: ranks,
+            running: true,
+            moment: moment,
+            _: _,
+            pagination: pagination
         });
 
-        console.log(JSON.stringify(finalRank));
 
-        res.end(JSON.stringify(finalRank));*/
     });
-
-
 
 });
 
@@ -1075,5 +1226,85 @@ router.post('/:cid/submit/:pid', function(req, res, next) {
 
 });
 
+router.post('/:cid/clarifications/request', function(req, res, next) {
+
+    var problem = req.body.problem;
+    var reqText = req.body.request;
+    var cid = req.params.cid;
+
+    if( !req.isAuthenticated() ){
+        res.redirect('/login');
+        return;
+    }
+
+    if( reqText === '' ){
+        req.flash('err','empty request');
+        res.redirect('/contest/' + cid + '/clarifications/request');
+        return;
+    }
+
+    var notStarted = false, isEnded = false;
+    async.waterfall([
+        function(callback) {
+            Contest.getDetailsIsReg(cid,req.user.id,function(err,rows){
+                if(err){ return callback(err); }
+
+                if(!rows.length){ return callback('No contest dude!'); }
+
+                callback(null,rows[0]);
+            });
+        },
+        function(contest,callback){
+
+            if( contest.isReg === -1 ){ return callback(null,contest); }
+
+            notStarted = moment().isBefore(contest.begin);
+            if( notStarted ){ return callback(null,contest); }
+
+            isEnded = moment().isAfter(contest.end);
+            if( isEnded ){ return callback(null,contest); }
+
+
+            if(problem === 'general'){
+                problem = 0;
+            }
+            Contest.insertClarification({
+                cid: cid,
+                pid: problem,
+                uid: req.user.id,
+                request: reqText,
+                status: ''
+            },function(err,rows){
+                if(err){ return callback(err) };
+
+                callback(null,contest);
+            });
+        }
+    ], function (error,contest) {
+
+        if( error ){ return next(new Error(error)); }
+
+        if( contest.isReg === -1 ){
+            req.flash('err','You Are Not Participation in This Contest');
+            res.redirect('/contest/' + cid);
+            return;
+        }
+
+        if( notStarted ){
+            res.redirect('/contest/' + cid);
+            return;
+        }
+
+        if( isEnded ){
+            req.flash('err','Contest Ended');
+            res.redirect('/contest/' + cid);
+            return;
+        }
+
+        res.redirect('/contest/' + cid + '/clarifications/all');
+
+    });
+
+});
 
 module.exports = router;

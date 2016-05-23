@@ -5,6 +5,7 @@ var DB          = require('../config/database/knex/DB');
 var Query       = require('../config/database/knex/query');
 var moment      = require("moment");
 var Paginate    = require('../helpers/paginate');
+var MyUtil      = require('../helpers/myutil');
 
 exports.create = function(inserts,cb){
 
@@ -19,7 +20,6 @@ exports.create = function(inserts,cb){
 
 
 exports.getPublic = function(cb){
-
     async.waterfall([
         function(callback) {
             getRunning(callback);
@@ -152,8 +152,78 @@ function getDetails(cid,cb){
             cb(err,rows);
         });
 }
-
 exports.getDetails = getDetails;
+
+
+exports.getDetailsIsReg = function (cid,uid,cb){
+
+    var sql;
+
+
+    if(uid<1) {
+         sql = Query.select([
+             'c.*',
+             Query.raw("GROUP_CONCAT( '\"' , `list`.`pid` , '\":{' , '\"pid\":' , `list`.`pid` , ',\"name\":' ,`list`.`pname` , ',\"title\":\"' , `list`.`title` , '\"}' ORDER BY `list`.`pname` SEPARATOR ',' ) as `problemList`")
+         ]).from('contest as c')
+             .where('c.id', cid)
+             .joinRaw('  LEFT JOIN('+
+             'SELECT `cp`.`cid`,`cp`.`pid`,`cp`.`pname`,`p`.`title`'+
+             'FROM `contest_problems` as `cp`'+
+             ' LEFT JOIN `problems` as `p` ON `cp`.`pid`=`p`.`id`'+
+             'GROUP BY `cp`.`pid`'+
+             ') AS `list` ON `c`.`id` = `list`.`cid`'
+         )
+             .limit(1);
+    }else{
+        sql = Query.select([
+            'c.*',
+            Query.raw('ifnull(`cp`.`id`,-1) as `isReg`'),
+            Query.raw("GROUP_CONCAT( '\"' , `list`.`pid` , '\":{' , '\"pid\":' , `list`.`pid` , ',\"name\":' ,`list`.`pname` , ',\"title\":\"' , `list`.`title` , '\"}' ORDER BY `list`.`pname` SEPARATOR ',' ) as `problemList`")
+        ])
+            .from('contest as c')
+            .joinRaw('left join `contest_participants` as `cp` on `c`.`id`=`cp`.`cid` and `cp`.`uid`=?',[uid])
+            .joinRaw('  LEFT JOIN('+
+            'SELECT `cp`.`cid`,`cp`.`pid`,`cp`.`pname`,`p`.`title`'+
+            'FROM `contest_problems` as `cp`'+
+            ' LEFT JOIN `problems` as `p` ON `cp`.`pid`=`p`.`id`'+
+            'GROUP BY `cp`.`pid`'+
+            ') AS `list` ON `c`.`id` = `list`.`cid`'
+        )
+            .where('c.id', cid)
+            .limit(1);
+    }
+
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            cb(err,rows);
+        });
+};
+
+exports.getDetailsAndProblemList = function(cid,cb){
+
+    var sql = Query.select([
+        'c.*',
+        Query.raw("GROUP_CONCAT( '\"' , `list`.`pid` , '\":{' , '\"pid\":' , `list`.`pid` , ',\"name\":' ,`list`.`pname` , ',\"title\":\"' , `list`.`title` , '\"}' ORDER BY `list`.`pname` SEPARATOR ',' ) as `problemList`")
+    ])
+        .from('contest as c')
+        .joinRaw('  LEFT JOIN('+
+                    'SELECT `cp`.`cid`,`cp`.`pid`,`cp`.`pname`,`p`.`title`'+
+                             'FROM `contest_problems` as `cp`'+
+                              ' LEFT JOIN `problems` as `p` ON `cp`.`pid`=`p`.`id`'+
+                             'GROUP BY `cp`.`pid`'+
+                    ') AS `list` ON `c`.`id` = `list`.`cid`'
+        )
+        .where('c.id', cid)
+        .limit(1);
+
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            cb(err,rows);
+        });
+
+};
 
 exports.getProblems = function(cid,cb){
 
@@ -174,28 +244,34 @@ exports.getDashboardProblems = function(cid,uid,cb){
 
     var sql;
     if(uid!==-1){
+
         sql = Query.select([
             'cp.pid','cp.pname',
             'prob.title',
-            Query.raw('ifnull(`solved`.`totalsolved`,0) AS `accepted`'),
-            Query.raw('ifnull(`usaclj`.`pid`,0) AS `uac`'),
-            Query.raw('ifnull(`uswalj`.`pid`,0) AS `uwa`')
+            Query.raw('COUNT(DISTINCT `solved`.`uacc`) as `accepted`'),
+            Query.raw('ifnull(`isac`.`isuac`,-1) as `yousolved`'),
+            Query.raw('ifnull(`iswa`.`isuwa`,-1) as `youtried`')
         ])
             .from('contest_problems as cp')
             .leftJoin('problems as prob', 'cp.pid', 'prob.id')
-            .joinRaw('  left join (SELECT `cs`.`pid`,COUNT(DISTINCT `cs`.`uid`) AS `totalsolved` FROM `contest_submissions` as `cs` WHERE `cs`.`cid`=? AND 	`cs`.`status`=?) as `solved` ON `cp`.`pid` = `solved`.`pid`',[cid,'0'])
-            .leftJoin('problems as problemslist', 'cp.pid', 'problemslist.id')
+            .joinRaw('left join (SELECT `cr`.`pid` as `ppid`,`cr`.`uid` as `uacc` FROM `contest_rank` as `cr` WHERE `cr`.`cid` = ? AND `cr`.`status`=0) as `solved` ON `cp`.`pid` = `solved`.`ppid`',[cid])
+            .joinRaw('left JOIN(SELECT `cr3`.`pid` as `isuwa` FROM `contest_rank` as `cr3` WHERE `cr3`.`cid` = ? AND NOT `cr3`.`status`=0 AND `cr3`.`uid`=?) as `iswa` on `cp`.`pid`=`iswa`.`isuwa`',[cid,uid])
+            .joinRaw('left JOIN(SELECT `cr2`.`pid` as `isuac` FROM `contest_rank` as `cr2` WHERE `cr2`.`cid` = ? AND `cr2`.`status`=0 AND `cr2`.`uid`=?) as `isac` on `cp`.`pid`=`isac`.`isuac`',[cid,uid])
             .where('cp.cid', cid)
             .as('ignored_alias')
-            .joinRaw(' left join (SELECT `usac`.`pid` FROM `contest_submissions` as `usac` WHERE `usac`.`cid`=? AND `usac`.`uid`=? AND `usac`.`status`=? LIMIT 1) as `usaclj` ON `cp`.`pid` = `usaclj`.`pid`',[cid,uid,'0'])
-            .joinRaw(' left join (SELECT `uswa`.`pid` FROM `contest_submissions` as `uswa` WHERE `uswa`.`cid`=? AND `uswa`.`uid`=? AND NOT `uswa`.`status`=? LIMIT 1) as `uswalj` ON `cp`.`pid` = `uswalj`.`pid`',[cid,uid,'0'])
-            .groupBy('cp.pid')
+            .groupBy('cp.pid');
+
     }else{
-        sql = Query.select(['cp.pid','cp.pname','prob.title',Query.raw('ifnull(`solved`.`totalsolved`,0) AS `accepted`')])
+
+        sql = Query.select([
+            'cp.pid',
+            'cp.pname',
+            'prob.title',
+            Query.raw('COUNT(DISTINCT `solved`.`uac`) as `accepted`')
+        ])
             .from('contest_problems as cp')
             .leftJoin('problems as prob', 'cp.pid', 'prob.id')
-            .joinRaw('  left join (SELECT `cs`.`pid`,COUNT(DISTINCT `cs`.`uid`) AS `totalsolved` FROM `contest_submissions` as `cs` WHERE `cs`.`cid`=? AND 	`cs`.`status`=?) as `solved` ON `cp`.`pid` = `solved`.`pid`',[cid,'0'])
-            .leftJoin('problems as problemslist', 'cp.pid', 'problemslist.id')
+            .joinRaw('left join (SELECT `cr`.`pid` as `ppid`,`cr`.`uid` as `uac` FROM `contest_rank` as `cr` WHERE `cr`.`cid` =? AND `cr`.`status`=0) as `solved` ON `cp`.`pid` = `solved`.`ppid`',[cid])
             .where('cp.cid', cid)
             .as('ignored_alias')
             .groupBy('cp.pid');
@@ -226,6 +302,8 @@ exports.getDetailsandProblem = function(cid,pid,cb){
             cb(err,rows);
         });
 };
+
+
 
 exports.getUserSubmissions = function(cid,pid,uid,cb){
 
@@ -381,7 +459,49 @@ exports.UpdateRank = function(cid,uid,pid,finalCode,cb){
 };
 
 
-exports.getRank = function(cid,cb){
+
+function getProblemStats(cid,withTried,cb){
+
+    var sql;
+
+    //with tried team count
+    if(withTried){
+        sql = Query.select([
+            'cp.pid',
+            Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`'),
+            Query.raw('ifnull(`wa`.`tried`,0) as `triedBy`')
+        ]).joinRaw('  LEFT JOIN( ' +
+                        'SELECT COUNT(DISTINCT `cs2`.`uid`) as `tried`,`cs2`.`pid` ' +
+                        'FROM `contest_submissions` as `cs2` ' +
+                        'WHERE `cs2`.`cid`=? ' +
+                        'GROUP BY `cs2`.`pid` ' +
+                     ') as `wa` on `cp`.`pid` = `wa`.`pid`',[cid]);
+    }else{
+        sql = Query.select([
+            'cp.pid',
+            Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`')
+        ]);
+    }
+
+    sql = sql.from('contest_problems as cp')
+        .joinRaw('  LEFT JOIN( ' +
+                        'SELECT COUNT(DISTINCT `cs`.`uid`) as `solved`,`cs`.`pid` ' +
+                        'FROM `contest_submissions` as `cs` ' +
+                        'WHERE `cs`.`status` = 0 AND `cs`.`cid`=? ' +
+                        'GROUP BY `cs`.`pid` ' +
+                    ') as `ac` on `cp`.`pid` = `ac`.`pid`',[cid])
+        .where('cp.cid', cid)
+        .groupBy('cp.pid')
+        .as('ignored_alias');
+
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            cb(err,rows);
+        });
+}
+
+exports.getRank = function(cid,cur_page,cb){
 
     async.waterfall([
         function(callback) {
@@ -395,38 +515,144 @@ exports.getRank = function(cid,cb){
         },
         function(contest,callback){
 
-            var sql = Query.select([
-                'rank.uid',
-                'usr.username',
-                'usr.username',
-                Query.raw("COALESCE(SUM(`rank`.`tried`) * 20,0)  + COALESCE(SUM(TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`)),0) AS `penalty`",[contest.begin]),
+            getProblemStats(cid,true,function(err,rows){
+
+                if(err){ return callback(err); }
+
+                callback(null,contest,rows);
+
+            });
+
+        },
+        function(contest,problemStats,callback){
+
+
+            var sqlInner = Query.select([
+                'rank.uid as ruid',
+                Query.raw("SUM(CASE WHEN `rank`.`status`=0 THEN ifnull(`rank`.`tried`,1)-1 ELSE 0 END) * 20 + ifnull(SUM(CASE WHEN `rank`.`status`=0 THEN TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ELSE 0 END),0) AS `penalty`",[contest.begin]),
                 Query.raw("COUNT(CASE WHEN `rank`.`status`=0 THEN `rank`.`status` ELSE NULL END) as `solved`"),
-                //Query.raw("GROUP_CONCAT( '{ \"pid\":' , `rank`.`pid` , ',\"status\":' , `rank`.`status` , ',\"tried\":' ,`rank`.`tried` , ',\"penalty\":' ,TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) , '}' ORDER BY `rank`.`pid` SEPARATOR '-') as `problems`",[contest.begin]),
                 Query.raw("GROUP_CONCAT( '\"' ,`rank`.`pid` , '\":{' , '\"status\":' , `rank`.`status` , ',\"tried\":' , `rank`.`tried` , ',\"penalty\":' , TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ,'}'  ORDER BY `rank`.`pid` SEPARATOR ',') as `problems`",[contest.begin]),
             ])
                 .from('contest_rank as rank')
-                .leftJoin('users as usr','rank.uid','usr.id')
                 .where('rank.cid',cid)
                 .groupBy('rank.uid')
-                .orderByRaw('`solved` desc,`penalty`');
+                .as('ignored_alias');
 
-            console.log(sql.toString());
+            var sql = Query.select([
+                'cp.uid',
+                'csu.username',
+                'csu.name',
+                'r.penalty',
+                'r.problems',
+                'r.solved'
+            ])
+                    .from('contest_participants as cp')
+                    .leftJoin('users as csu','cp.uid','csu.id')
+                    .joinRaw('left join(' + sqlInner.toString() + ')AS `r` ON `cp`.`uid` = `r`.`ruid`')
+                    .where('cp.cid',cid)
+                    .groupBy('cp.uid')
+                    .orderByRaw('r.solved DESC,r.penalty')
+                    .as('ignored_alias');
 
-            DB.execute(
-                sql.toString()
-                ,function(err,rows){
-                    callback(err,rows);
+
+            var sqlCount = Query('contest_participants').countDistinct('uid as count')
+                .where('cid',cid);
+
+
+            Paginate.paginate({
+                    cur_page: cur_page,
+                    sql: sql,
+                    sqlCount: sqlCount,
+                    limit: 5
+                },
+                function(err,rows,pagination) {
+                    callback(err,contest,problemStats,rows,pagination);
                 });
+
         }
-    ], function (error, rank) {
-
-
-        cb(error,rank);
-
+    ], function (error,contest,problemStats,rank,pagination) {
+        cb(error,contest,problemStats,rank,pagination);
     });
 
 };
 
 
 
+exports.getClarification = function(cid,clid,cb){
 
+    var sql = Query.select([
+        'cc.request',
+        'cc.response',
+        'cu.username',
+        Query.raw("ifnull(`pp`.`title`,'') as `title`"),
+        Query.raw("ifnull(`cp`.`pname`,'General') as `pname`")
+    ])
+        .from('contest_clarifications as cc')
+        .leftJoin('users as cu','cc.uid','cu.id')
+        .leftJoin('problems as pp', 'cc.pid', 'pp.id')
+        .leftJoin('contest_problems as cp', 'cc.pid', 'cp.pid')
+        .where({
+            'cc.id': clid,
+            'cc.cid': cid
+        }).limit(1);
+
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            cb(err,rows);
+        });
+};
+
+exports.getClarifications = function(cid,qid,cur_page,cb){
+
+    var sql = Query.select([
+        'cc.id',
+        'cc.request',
+        'cc.response',
+        Query.raw("ifnull(`pp`.`title`,'') as `title`"),
+        Query.raw("ifnull(`cp`.`pname`,'General') as `pname`")
+    ])
+        .from('contest_clarifications as cc')
+        .leftJoin('problems as pp', 'cc.pid', 'pp.id')
+        .leftJoin('contest_problems as cp', 'cc.pid', 'cp.pid');
+
+
+    if( MyUtil.isNumeric(qid)  ){
+        sql = sql.where({
+            'cc.cid': cid,
+            'cc.pid': qid
+        });
+    }else if( qid === 'general' ){
+        sql = sql.where({
+            'cc.cid':cid,
+            'cc.pid': 0
+    });
+    }else{
+        sql = sql.where('cc.cid',cid);
+    }
+
+    var sqlCount = Query.countDistinct('id as count')
+        .from('contest_clarifications')
+        .where('cid',cid);
+
+    Paginate.paginate({
+            cur_page: cur_page,
+            sql: sql,
+            limit: 5,
+            sqlCount: sqlCount
+        },
+        function(err,rows,pagination) {
+            cb(err,rows,pagination);
+        });
+};
+
+exports.insertClarification = function (inserts,cb){
+
+    var sql = Query.insert(inserts).into('contest_clarifications');
+
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            cb(err,rows);
+        });
+};

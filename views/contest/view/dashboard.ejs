@@ -29,16 +29,16 @@
 
         <div class="col-md-9">
             <div class="panel panel-default">
-                <div class="panel-body">
+                <div class="panel-body" id="db-lg">
                     <h4>Problems</h4>
                     <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
 
                     <% for(var i= 0; i<problems.length; i++){ %>
 
                         <% if(isUser && registered){ %>
-                            <% if(problems[i].uac){ %>
+                            <% if(problems[i].yousolved !== -1){ %>
                                 <a href="/contest/<%= contest.id %>/problem/<%= (i+1) %>" class="list-group-item" style="border-left: 3px solid lawngreen">
-                            <% }else if(problems[i].uwa){ %>
+                            <% }else if(problems[i].youtried !== -1){ %>
                                 <a href="/contest/<%= contest.id %>/problem/<%= (i+1) %>" class="list-group-item" style="border-left: 3px solid indianred">
                             <% }else{ %>
                                 <a href="/contest/<%= contest.id %>/problem/<%= (i+1) %>" class="list-group-item">

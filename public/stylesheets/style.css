@@ -155,7 +155,6 @@ hr {
 }
 
 
-
 .c-h{
   min-height: 530px;
 }
@@ -223,8 +222,25 @@ th {
   color: indianred;
 }
 
-.list-group-item{
+#db-lg .list-group-item{
   margin-bottom: 5px !important;
 }
 
 
+.st-labels{
+  display: table-cell !important;
+  width: 40px !important;
+}
+
+.st-table th{
+  background: #FFFFFF !important;
+}
+
+.st-table span{
+  padding: .5em .6em !important;
+  border-radius: 0px;
+}
+
+hr {
+  border-color: #ddd !important;
+}

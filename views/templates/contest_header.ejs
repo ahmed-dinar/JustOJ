@@ -36,7 +36,7 @@
 
 <div class="container-fluid" style="background: #E5E7E8; margin-top: -8px;">
     <div class="container">
-        <h5><%= contest.title %></h5>
+        <h4><%- contest.title %></h4>
     </div>
 </div>
 
@@ -56,7 +56,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="/contest/<%= contest.id %>">PROBLEMS</a></li>
                 <li>
-                    <a href="/contest/<%= contest.id %>/clarifications">CLARIFICATIONS <sup><span class="badge">4</span></sup></a>
+                    <a href="/contest/<%= contest.id %>/clarifications/all">CLARIFICATIONS <sup><span class="badge">4</span></sup></a>
 
                 </li>
                 <li><a href="/contest/<%= contest.id %>/standings">STANDINGS</a></li>

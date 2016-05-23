@@ -153,6 +153,220 @@ GROUP BY `cp`.`uid`
 
 
 
+//select all problems of contest and also total team solved and tried of every problem
+SELECT `cp`.`pid`,ifnull(`ac`.`solved`,0) as `solvedBy`,ifnull(`wa`.`tried`,0) as `triedby`
+FROM `contest_problems` as `cp`
+  LEFT JOIN(
+             SELECT COUNT(DISTINCT `cs`.`uid`) as `solved`,`cs`.`pid`
+             FROM `contest_submissions` as `cs`
+             WHERE `cs`.`status` = 0 AND `cs`.`cid`=1
+             GROUP BY `cs`.`pid`
+           ) as `ac` on `cp`.`pid` = `ac`.`pid`
+  LEFT JOIN(
+             SELECT COUNT(DISTINCT `cs2`.`uid`) as `tried`,`cs2`.`pid`
+             FROM `contest_submissions` as `cs2`
+             WHERE `cs2`.`cid`=1
+             GROUP BY `cs2`.`pid`
+           ) as `wa` on `cp`.`pid` = `wa`.`pid`
+WHERE `cp`.`cid` = 1
+GROUP BY `cp`.`pid`
+
+
+//count how many team solved a problem
+SELECT SUM(`ac`) AS `accepted` FROM (
+          SELECT COUNT(DISTINCT `status`) AS `ac` FROM `contest_submissions`
+          WHERE `status` = 0 AND `cid`=1
+            GROUP BY `uid`
+) `solved`
+
+
+SELECT DISTINCT (`cp`.`pid`),COUNT(`ac`.`pid`)
+FROM `contest_problems` as `cp`
+  LEFT JOIN(
+             SELECT `cs`.`pid`
+             FROM `contest_submissions` as `cs`
+             WHERE `cs`.`status` = 0 AND `cs`.`cid`=1
+             GROUP BY `cs`.`uid`
+           ) as `ac` on `cp`.`pid` = `ac`.`pid`
+WHERE `cp`.`cid` = 1
+GROUP BY `cp`.`pid`
+
+
+
+SELECT GROUP_CONCAT(`cs`.`pid`),`cs`.`uid`
+FROM `contest_submissions` as `cs`
+WHERE `cs`.`status` = 0 AND `cs`.`cid`=1
+GROUP BY `cs`.`uid`
+
+
+select `usr`.`username`, `usr`.`name`,
+  SUM(CASE WHEN `rank`.`status`=0 THEN ifnull(`rank`.`tried`,1)-1 ELSE 0 END) * 20 + ifnull(SUM(CASE WHEN `rank`.`status`=0 THEN TIMESTAMPDIFF(MINUTE, '2016-04-26 02:00:00.000', `rank`.`penalty`) ELSE 0 END),0) AS `penalty`,
+  COUNT(CASE WHEN `rank`.`status`=0 THEN `rank`.`status` ELSE NULL END) as `solved`, GROUP_CONCAT( '"' ,`rank`.`pid` , '":{' , '"status":' , `rank`.`status` , ',"tried":' , `rank`.`tried` , ',"penalty":' , TIMESTAMPDIFF(MINUTE, '2016-04-26 02:00:00.000', `rank`.`penalty`) ,'}'  ORDER BY `rank`.`pid` SEPARATOR ',') as `problems`
+from `contest_rank` as `rank`
+left join `users` as `usr` on `rank`.`uid` = `usr`.`id`
+where `rank`.`cid` = '1'
+group by `rank`.`uid`
+order by `solved` desc,`penalty`
+
+
+
+//final rank of all user and their stats
+SELECT `cp`.`uid`,`csu`.`username`,`csu`.`name`,`r`.`penalty`,`r`.`problems`,`r`.`solved`
+FROM `contest_participants` as `cp`
+  LEFT JOIN `users` AS `csu` ON `cp`.`uid` = `csu`.`id`
+  LEFT JOIN(
+
+          select `rank`.`uid` as `ruid`,
+          SUM(CASE WHEN `rank`.`status`=0 THEN ifnull(`rank`.`tried`,1)-1 ELSE 0 END) * 20 + ifnull(SUM(CASE WHEN `rank`.`status`=0 THEN TIMESTAMPDIFF(MINUTE, '2016-04-26 02:00:00.000', `rank`.`penalty`) ELSE 0 END),0) AS `penalty`,
+          COUNT(CASE WHEN `rank`.`status`=0 THEN `rank`.`status` ELSE NULL END) as `solved`,
+          GROUP_CONCAT( '"' ,`rank`.`pid` , '":{' , '"status":' , `rank`.`status` , ',"tried":' , `rank`.`tried` , ',"penalty":' , TIMESTAMPDIFF(MINUTE, '2016-04-26 02:00:00.000', `rank`.`penalty`) ,'}'  ORDER BY `rank`.`pid` SEPARATOR ',') as `problems`
+
+          from `contest_rank` as `rank`
+          where `rank`.`cid` = 1
+          group by `rank`.`uid`
+
+    )AS `r` ON `cp`.`uid` = `r`.`ruid`
+WHERE `cp`.`cid`=1
+GROUP BY `cp`.`uid`
+ORDER BY `r`.`solved` DESC,`r`.`penalty`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//problem list and ac user count final!!!!!!!!
+select `cp`.`pid`, `cp`.`pname`, `prob`.`title`,COUNT(DISTINCT `solved`.`uac`)
+from `contest_problems` as `cp`
+  left join `problems` as `prob` on `cp`.`pid` = `prob`.`id`
+  left join (
+              SELECT `cr`.`pid` as `ppid`,`cr`.`uid` as `uac`
+              FROM `contest_rank` as `cr`
+              WHERE `cr`.`cid` = 1 AND `cr`.`status`=0
+            ) as `solved` ON `cp`.`pid` = `solved`.`ppid`
+where `cp`.`cid` = '1'
+group by `cp`.`pid`
+
+
+select `cp`.`pid`, `cp`.`pname`, `prob`.`title`,COUNT(DISTINCT `solved`.`uac`),ifnull(`isac`.`isuac`,-1) as `yousolved`,ifnull(`iswa`.`isuwa`,-1) as `youtried`
+from `contest_problems` as `cp`
+  left join `problems` as `prob` on `cp`.`pid` = `prob`.`id`
+  left join (
+              SELECT `cr`.`pid` as `ppid`,`cr`.`uid` as `uac`
+              FROM `contest_rank` as `cr`
+              WHERE `cr`.`cid` = 1 AND `cr`.`status`=0
+            ) as `solved` ON `cp`.`pid` = `solved`.`ppid`
+  left JOIN(
+             SELECT `cr2`.`pid` as `isuac`
+             FROM `contest_rank` as `cr2`
+             WHERE `cr2`.`cid` = 1 AND `cr2`.`status`=0 AND `cr2`.`uid`=4
+           ) as `isac` on `cp`.`pid`=`isac`.`isuac`
+  left JOIN(
+             SELECT `cr3`.`pid` as `isuwa`
+             FROM `contest_rank` as `cr3`
+             WHERE `cr3`.`cid` = 1 AND NOT `cr3`.`status`=0 AND `cr3`.`uid`=4
+             LIMIT 1
+           ) as `iswa` on `cp`.`pid`=`iswa`.`isuwa`
+where `cp`.`cid` = '1'
+group by `cp`.`pid`
+
+
+
+
+select `cp`.`pid`, `cp`.`pname`, `prob`.`title`,
+  COUNT(DISTINCT `solved`.`uac`) AS `accepted`,
+  ifnull(`isac`.`isuac`,-1) as AS `uac`,
+ifnull(`iswa`.`isuwa`,-1) AS `uwa`
+from `contest_problems` as `cp`
+left join `problems` as `prob` on `cp`.`pid` = `prob`.`id`
+left join (
+SELECT `cr`.`pid` as `ppid`,`cr`.`uid` as `uac`
+FROM `contest_rank` as `cr`
+WHERE `cr`.`cid` = '1' AND `cr`.`status`=0
+) as `solved` ON `cp`.`pid` = `solved`.`ppid`
+left JOIN(
+SELECT `cr3`.`pid` as `isuwa`
+FROM `contest_rank` as `cr3`
+WHERE `cr3`.`cid` = '1' AND NOT `cr3`.`status`=0 AND `cr3`.`uid`=4
+LIMIT 1
+) as `iswa` on `cp`.`pid`=`iswa`.`isuwa`
+left JOIN(
+SELECT `cr2`.`pid` as `isuac`
+FROM `contest_rank` as `cr2`
+WHERE `cr2`.`cid` = '1' AND `cr2`.`status`=0 AND `cr2`.`uid`=4
+LIMIT 1
+) as `isac` on `cp`.`pid`=`isac`.`isuac`
+where `cp`.`cid` = '1'
+group by `cp`.`pid`
+
+
+
+
+
+
+
+
+
+
+
+SELECT `c`.*,
+  GROUP_CONCAT( '"' , `list`.`pid` , '":{' , ',pid:' , `list`.`pid` , ',name:' ,`list`.`pname` , ',title:' , `list`.`title` , '}' ) as `problemList`
+FROM `contest` AS `c`
+  LEFT JOIN(
+             SELECT `cp`.`cid`,`cp`.`pid`,`cp`.`pname`,`p`.`title`
+             FROM `contest_problems` as `cp`
+               LEFT JOIN `problems` as `p` ON `cp`.`pid`=`p`.`id`
+             GROUP BY `cp`.`pid`
+           ) AS `list` ON `c`.`id` = `list`.`cid`
+WHERE `c`.`id` = 1
+LIMIT 1
+
+
+
+
+/*******************************/
+select `running`.*,`future`.*,`ended`.*,(
+                                    select `cnts`.`id`,`cnts`.`title`,`cnts`.`begin`,`cnts`.`end`,`cnts`.`status`,`cnts`.`privacy`, count(`usr`.`id`) as `users`
+                                         from `contest` as `cnts`
+                                           left join `contest_participants` as `usr` on `usr`.`cid` = `cnts`.`id`
+                                         where `cnts`.`status` = 2 AND `cnts`.`begin`<=NOW() AND `cnts`.`end` > NOW()
+                                         group by `cnts`.`id`
+                                         order by `cnts`.`begin` desc ) as `running`,
+
+
+(select `cnts`.`id`,`cnts`.`title`,`cnts`.`begin`,`cnts`.`end`,`cnts`.`status`,`cnts`.`privacy`, count(`usr`.`id`) as `users`
+                                    from `contest` as `cnts` left join `contest_participants` as `usr` on `usr`.`cid` = `cnts`.`id`
+                                    where `cnts`.`status` = 2 AND `cnts`.`begin` > NOW()
+                                    group by `cnts`.`id`
+                                    order by `cnts`.`begin` asc) as `future`,
+
+
+
+(select `cnts`.`id`,`cnts`.`title`,`cnts`.`begin`,`cnts`.`end`,`cnts`.`status`,`cnts`.`privacy`, count(`usr`.`id`) as `users`
+                                    from `contest` as `cnts` left join `contest_participants` as `usr` on `usr`.`cid` = `cnts`.`id`
+                                    where `cnts`.`status` = 2 AND `cnts`.`end` <= NOW()
+                                    group by `cnts`.`id`
+                                    order by `cnts`.`begin` desc) as `ended`
+
+
+
+
+
+
+
+
+
+
+
 
 
 

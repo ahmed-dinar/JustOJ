@@ -27,16 +27,23 @@
 
     <div class="row">
 
-        <div class="col-md-10">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="col-md-12 text-center">
+            <div id="countdown" style="font-size: 20px; font-weight: 200"></div>
+        </div>
+        <br>
+        <br>
 
+        <div class="col-md-12">
+            <div class="panel panel-default">
+
+                    <div class="panel-body">
                     <div class="pull-left"><h4>Submissions</h4></div>
                     <div class="pull-right">
                         <div class="btn-group-sm" role="group" >
                             <a href="/contest/<%= contest.id %>/submissions" class="btn btn-sm btn-default">ALL</a>
                             <a href="/contest/<%= contest.id %>/submissions/my" class="btn btn-sm btn-default disabled">MY</a>
                         </div>
+                    </div>
                     </div>
 
                     <% if(status.length){ %>
@@ -97,7 +104,7 @@
 
                             <% if( pagination.hasPrevPage() ){ %>
                             <li>
-                                <a href="<%= locals.site.url %>problems?page=<%= pagination.prevPage() %>" aria-label="Previous">
+                                <a href="/contest/<%= contest.id %>/submissions/my?page=<%= pagination.prevPage() %>" aria-label="Previous">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
@@ -112,7 +119,7 @@
                             <li>
                                 <% } %>
 
-                                <a href="<%= locals.site.url %>status?page=<%= i+1 %>">
+                                <a href="/contest/<%= contest.id %>/submissions/my?page=<%= i+1 %>">
                                     <%= i+1 %>
                                 </a>
                             </li>
@@ -120,7 +127,7 @@
 
                             <% if( pagination.hasNextPage() ){ %>
                             <li>
-                                <a href="<%= locals.site.url %>status?page=<%= pagination.nextPage() %>" aria-label="Next">
+                                <a href="/contest/<%= contest.id %>/submissions/my?page=<%= pagination.nextPage() %>" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
@@ -138,18 +145,9 @@
                     <% } %>
 
 
-                </div>
             </div>
         </div>
 
-        <div class="col-md-2">
-            <div class="panel panel-default">
-                <div class="panel-body text-center">
-                    <h5 id="cd-h">ENDS IN</h5>
-                    <div id="countdown" style="font-size: 20px; font-weight: 200"></div>
-                </div>
-            </div>
-        </div>
 
     </div>
 </div>

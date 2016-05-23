@@ -27,7 +27,9 @@ jQuery(document).ready(function(){
                     }
                 }
             },
-
+            name:{
+                rangelength: [3,250]
+            },
             email : {
                 email: true,
                 remote: {

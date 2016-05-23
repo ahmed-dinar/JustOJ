@@ -23,10 +23,11 @@ var Query       = require('../config/database/knex/query');
 exports.resister = function (req, res, next) {
 
     var username = req.body.username;
+    var name = req.body.name;
     var password = req.body.password;
     var email    = req.body.email;
 
-    if (!username || !password || !email){
+    if (!username || !password || !email || !name){
         return next(new Error('Form Error'));
     }
 
@@ -55,6 +56,7 @@ exports.resister = function (req, res, next) {
 
             var sql = Query.insert({
                 username: username,
+                name: name,
                 password: hash,
                 email   : email,
                 created : created,
@@ -142,7 +144,7 @@ exports.verify = function (req, res, next) {
 
         function(callback) {
 
-            var sql = Query.select(['username','password','email'])
+            var sql = Query.select(['name','username','password','email'])
                 .from('temp_user')
                 .where({ 'token': token })
                 .limit(1);
@@ -161,6 +163,7 @@ exports.verify = function (req, res, next) {
 
             var sql = Query.insert({
                 username : rows.username,
+                name : rows.name,
                 password : rows.password,
                 email    : rows.email
             })
