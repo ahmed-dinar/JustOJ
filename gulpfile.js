@@ -25,6 +25,7 @@ gulp.task('test-view', ['test'], function() {
         .pipe(livereload());
 });
 
+
 gulp.task('watch', function() {
     livereload.listen();
     gulp.watch('./test/**/*.js', ['test-view']);

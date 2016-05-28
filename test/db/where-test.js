@@ -89,7 +89,7 @@ describe("DATABASE", function () {
 
                 });
 
-                describe("BETWEEN , NOT BETWEEN", function () {
+              /*  describe("BETWEEN , NOT BETWEEN", function () {
 
                     it("should pass", function (){
                         var s = where.where({
@@ -105,7 +105,7 @@ describe("DATABASE", function () {
                         expect(s).equal("((`age` BETWEEN 25 AND 30) AND (`roll` NOT BETWEEN 100 AND 200))");
                     });
 
-                });
+                });*/
 
                 describe("LIKE , NOT LIKE", function () {
 
