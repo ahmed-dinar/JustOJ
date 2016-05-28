@@ -35,7 +35,7 @@
 
                     <% for(var i= 0; i<problems.length; i++){ %>
 
-                        <% if(isUser && registered){ %>
+                        <% if(isLoggedIn && registered){ %>
                             <% if(problems[i].yousolved !== -1){ %>
                                 <a href="/contest/<%= contest.id %>/problem/<%= (i+1) %>" class="list-group-item" style="border-left: 3px solid lawngreen">
                             <% }else if(problems[i].youtried !== -1){ %>

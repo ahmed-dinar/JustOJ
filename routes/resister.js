@@ -24,7 +24,8 @@ router.get('/', isLoggedIn(false) , function(req, res, next) {
         res.render('resister', {
             layout: true,
             recaptcha_form: recaptcha.toHTML(),
-            errors: req.flash('resFailure')
+            errors: req.flash('resFailure'),
+            isLoggedIn: false
         });
 });
 

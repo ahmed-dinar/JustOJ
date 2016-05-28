@@ -1,17 +1,16 @@
 
 var exec  = require('child_process').exec;
 
-var colors      = require('colors');
+var colors = require('colors');
 
 
 /**
  *
  * @param codeDir    -> name of the program folder created by uuid. example: 89e99d8b-4552-41f1-8a12-76668334328d
- * @param inputPath  -> example:
+ * @param inputPath  -> judge data inputfile path
  * @param fn
  */
 exports.run = function run(opts,testCase,fn){
-
 
     var command =  './helpers/compiler/sandbox/safe ';
     command += opts.runName + '/code ';
@@ -23,15 +22,9 @@ exports.run = function run(opts,testCase,fn){
     command += String(opts.memoryLimit);
 
 
-    console.log(command.cyan);
+    console.log('[CODE-RUN]: '.red + command.cyan);
 
-    exec(command,{
-            env: process.env
-        },
-        function(err, stdout, stderr) {
-            fn(err,stdout,stderr);
-    });
-
+    exec(command,{ env: process.env }, fn);
 };
 
 
@@ -58,14 +51,16 @@ exports.compile = function compile(opts,fn){
             return fn('invalid language','');
     }
 
-    console.log(('Code to Compile: ' + opts.codeDir).magenta);
+    console.log('[CODE-COMPILE]: '.red +  (opts.codeDir).cyan);
 
-    exec(command, {
+    var cnfg = {
         env: process.env,
         timeout: 0,
         maxBuffer: 1000*1024,
         cwd: opts.codeDir
-    }, function(err, stdout, stderr) {
+    };
+
+    exec(command, cnfg, function(err, stdout, stderr) {
         if (err) {
             return fn(err,stderr);
         }

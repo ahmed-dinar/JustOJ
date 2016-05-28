@@ -39,7 +39,7 @@ router.get('/', function(req, res, next) {
 
 
         res.render('contest/contests',{
-            isUser: req.isAuthenticated(),
+            isLoggedIn: req.isAuthenticated(),
             user: req.user,
             running: running,
             future: future,
@@ -53,7 +53,7 @@ router.get('/', function(req, res, next) {
 router.get('/create', function(req, res, next) {
 
     res.render('contest/create',{
-        isUser: req.isAuthenticated(),
+        isLoggedIn: req.isAuthenticated(),
         user: req.user,
         errors: req.flash('err')
     });
@@ -71,7 +71,7 @@ router.get('/edit', function(req, res, next) {
 
 
         res.render('contest/edit/contest_list',{
-            isUser: req.isAuthenticated(),
+            isLoggedIn: req.isAuthenticated(),
             user: req.user,
             contests: rows,
             moment: moment
@@ -112,7 +112,7 @@ router.get('/edit/:cid', function(req, res, next) {
 
 
         res.render('contest/edit/edit',{
-            isUser: req.isAuthenticated(),
+            isLoggedIn: req.isAuthenticated(),
             user: req.user,
             cid: req.params.cid,
             errors: req.flash('err'),
@@ -350,7 +350,7 @@ router.get('/:cid', function(req, res, next) {
         if( notStarted) { // not started
 
             res.render('contest/view/announcement',{
-                isUser: req.isAuthenticated(),
+                isLoggedIn: req.isAuthenticated(),
                 user: req.user,
                 errors: req.flash('err'),
                 contest: details,
@@ -361,7 +361,7 @@ router.get('/:cid', function(req, res, next) {
         }else {
 
             res.render('contest/view/dashboard', {
-                isUser: req.isAuthenticated(),
+                isLoggedIn: req.isAuthenticated(),
                 user: req.user,
                 errors: req.flash('err'),
                 contest: details,
@@ -412,7 +412,7 @@ router.get('/:cid/clarifications/view/:clid', function(req, res, next) {
         }else {
 
             res.render('contest/view/clarifications/view',{
-                isUser: req.isAuthenticated(),
+                isLoggedIn: req.isAuthenticated(),
                 user: req.user,
                 moment: moment,
                 contest: contest,
@@ -465,7 +465,7 @@ router.get('/:cid/clarifications/request', function(req, res, next) {
 
         res.render('contest/view/clarifications/request', {
             title: "Problems | JUST Online Judge",
-            isUser: isAuthenticated,
+            isLoggedIn: isAuthenticated,
             user: user,
             contest: contest,
             moment: moment,
@@ -550,7 +550,7 @@ router.get('/:cid/clarifications/:q', function(req, res, next) {
 
             res.render('contest/view/clarifications/clarifications', {
                 title: "Problems | JUST Online Judge",
-                isUser: isAuthenticated,
+                isLoggedIn: isAuthenticated,
                 user: user,
                 moment: moment,
                 contest: contest,
@@ -647,7 +647,7 @@ router.get('/:cid/submissions', function(req, res, next) {
             res.render('contest/view/submissions', {
                 title: "Problems | JUST Online Judge",
                 locals: req.app.locals,
-                isUser: isAuthenticated,
+                isLoggedIn: isAuthenticated,
                 user: user,
                 moment: moment,
                 status: rows,
@@ -741,7 +741,7 @@ router.get('/:cid/submissions/my', function(req, res, next) {
             res.render('contest/view/my_submissions', {
                 title: "Problems | JUST Online Judge",
                 locals: req.app.locals,
-                isUser: isAuthenticated,
+                isLoggedIn: isAuthenticated,
                 user: user,
                 moment: moment,
                 status: rows,
@@ -820,7 +820,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
             contest = Problems.decodeToHTML(contest);
 
             res.render('contest/view/problem',{
-                isUser: req.isAuthenticated(),
+                isLoggedIn: req.isAuthenticated(),
                 user: req.user,
                 errors: req.flash('err'),
                 contest: contest,
@@ -833,7 +833,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
 
             contest = Problems.decodeToHTML(contest);
             res.render('contest/view/problem',{
-                isUser: req.isAuthenticated(),
+                isLoggedIn: req.isAuthenticated(),
                 user: req.user,
                 errors: req.flash('err'),
                 formError: req.flash('formError'),
@@ -915,7 +915,7 @@ router.get('/:cid/standings', function(req, res, next) {
 
 
         res.render('contest/view/standings',{
-            isUser: req.isAuthenticated(),
+            isLoggedIn: req.isAuthenticated(),
             user: req.user,
             errors: req.flash('err'),
             contest: contest,

@@ -362,9 +362,7 @@ fieldset[disabled] .btn-danger.active {
   border-radius: 0px;
 
   background: #f7f7f7;
-  background: -moz-linear-gradient(left,  #f7f7f7 0%, #d4d4d4 89%);
-  background: -webkit-linear-gradient(left,  #f7f7f7 0%,#d4d4d4 89%);
-  background: linear-gradient(to right,  #f7f7f7 0%,#d4d4d4 89%);
+
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#d4d4d4',GradientType=1 );
 
   border-bottom: 1px solid #e5e5e5;

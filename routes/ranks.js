@@ -17,7 +17,7 @@ router.get('/', function(req, res, next) {
 
     res.render('ranks', {
         title: "JUST Online Judge - Ranks",
-        isUser: req.isAuthenticated(),
+        isLoggedIn: req.isAuthenticated(),
         user: req.user
     });
 

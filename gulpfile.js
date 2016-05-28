@@ -45,8 +45,8 @@ gulp.task('nodemon_restart', function () {
         })
         .on('restart', function () {
             gulp.src('bin/www')
-                .pipe(livereload())
-                .pipe(notify('Page Reloading...'));
+                .pipe(livereload());
+                //.pipe(notify('Page Reloading...'));
         });
 
 });

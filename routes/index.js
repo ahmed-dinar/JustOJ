@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
 
 
     res.render('index',{
-        isUser: req.isAuthenticated(),
+        isLoggedIn: req.isAuthenticated(),
         user: req.user
     });
 });

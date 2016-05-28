@@ -2,35 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JUST Online Judge - login</title>
+    <title>JUST Online Judge</title>
 
-    <script type="text/javascript" src="javascripts/jquery-2.1.4.min.js"></script>
+    <% include templates/head.ejs %>
 
-    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.js"></script>
 
-    <link rel="stylesheet" href="stylesheets/style.css">
-
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.css">
-    <!-- Latest compiled and minified JavaScript -->
-    <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" src="javascripts/jquery.validate.js"></script>
-
-    <!-- tooltipster popup plugin -->
-    <link rel="stylesheet" href="tooltipster/tooltipster.css">
-    <link rel="stylesheet" href="tooltipster/theme/tooltipster-shadow.css">
-    <script type="text/javascript" src="tooltipster/js/jquery.tooltipster.min.js" charset="utf-8"></script>
-
-
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-shadow.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
 </head>
 <body>
 
 
+<!-- header and menu -->
 <% include templates/header.ejs %>
-    <li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
-<% include templates/headerend.ejs %>
+
+
+
 
 <!-- Main Content -->
 <div class="container" style="min-height: 550px;">
@@ -60,7 +49,7 @@
 
         <div class="col-md-4 col-md-offset-4">
 
-            <div class="panel panel-default" style="margin-top: 80px;border: none; " >
+            <div class="panel panel-default" style="margin-top: 80px; " >
 
                 <div class="panel-body">
 

@@ -1,31 +1,60 @@
 
-<nav class="navbar navbar-inverse navbar-fixed-top clearfix" role = "navigation">
+<div class="navbar navbar-default navbar-fixed-top">
+
     <div class="container">
 
         <!-- Web heading/logo -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavbar">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#Navbar-main">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/"  class="navbar-brand" style="font-family: 'Hammersmith One', sans-serif; color: #747474"  >
+            <a href="/"  class="navbar-brand"  >
                 JustOj<sup>&beta;</sup>
             </a>
         </div>
 
 
         <!-- Main Menus -->
-        <div class="collapse navbar-collapse" id="mainNavbar">
+        <div class="collapse navbar-collapse" id="Navbar-main">
 
             <!-- left menu -->
             <ul class="nav navbar-nav nav-menu">
-                <li><a href="/problems">PROBLEMS</a></li>
-                <li><a href="/ranks">RANKS</a></li>
-                <li><a href="/status">STATUS</a></li>
-                <li><a href="/contest">CONTEST</a></li>
+                <li><a href="/problems"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Problems</a></li>
+                <li><a href="/ranks"><i class="fa fa-trophy" aria-hidden="true"></i> Ranks</a></li>
+                <li><a href="/status"><i class="fa fa-dot-circle-o" aria-hidden="true"></i> Status</a></li>
+                <li><a href="/contest"><i class="fa fa-hourglass" aria-hidden="true"></i> Contest</a></li>
             </ul>
 
 
             <!-- Right menu login/profile -->
-            <ul class="nav navbar-nav navbar-right">
+
+                <% if(!isLoggedIn){ %>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
+                        <li><a href="/resister"><i class="fa fa-user-plus" aria-hidden="true"></i> Resister</a></li>
+                    </ul>
+                <% } else{ %>
+
+                    <ul class="nav navbar-right navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                                <%= user.username %> <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
+                                <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i> Edit</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Log Out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                <% } %>
+
+
+        </div>
+
+    </div>
+</div>

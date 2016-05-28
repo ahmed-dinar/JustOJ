@@ -4,26 +4,14 @@
     <meta charset="UTF-8">
     <title>JUST Online Judge</title>
 
-    <script type="text/javascript" src="../../javascripts/jquery-2.1.4.min.js"></script>
+    <% include ../templates/head.ejs %>
 
-    <link rel="stylesheet" href="../stylesheets/style.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
 
-    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
 
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap-theme.css">
-    <!-- Latest compiled and minified JavaScript -->
-    <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
-
-
-    <script type="text/javascript" src="../../javascripts/moment.min.js"></script>
-    <script type="text/javascript" src="../bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-    <link rel="stylesheet" href="../bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
-
-
-    <script type="text/javascript" src="../javascripts/jquery.validate.js"></script>
-
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.js"></script>
 
 </head>
 <body>
@@ -31,14 +19,8 @@
 
 <!-- header and menu -->
 <% include ../templates/header.ejs %>
-<% if(!isUser){ %>
-<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
-<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
-<% } else{ %>
-<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
-<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.username %> </a></li>
-<% } %>
-<% include ../templates/headerend.ejs %>
+
+
 
 
 <!-- Main Content -->

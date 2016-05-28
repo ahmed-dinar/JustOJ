@@ -6,8 +6,6 @@
 
 module.exports = function isLoggedIn(auth) {
 
-
-
      return function isLoggedIn(req, res, next) {
 
          if(req.isAuthenticated() == auth){

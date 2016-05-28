@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/views/login.ejs" description="                            &lt;label for=&quot;iUsername&quot;..." line="73" />
+    <bookmark url="file://$PROJECT_DIR$/views/login.ejs" description="                            &lt;label for=&quot;iUsername&quot;..." line="62" />
+    <bookmark url="file://$PROJECT_DIR$/views/templates/header.ejs" line="42" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2efb35df-b041-49fd-bf66-80b228f9caa0" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/view/clarifications/clarifications.ejs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/contest/view/clarifications/view.ejs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/contest/view/clarifications.ejs" afterPath="$PROJECT_DIR$/views/contest/view/clarifications/request.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/contest.js" afterPath="$PROJECT_DIR$/models/contest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/templates/head.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database/knex/DB.js" afterPath="$PROJECT_DIR$/config/database/knex/DB.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/view/announcement.ejs" afterPath="$PROJECT_DIR$/views/contest/view/announcement.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" afterPath="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers/compiler/sandbox/compiler.js" afterPath="$PROJECT_DIR$/helpers/compiler/sandbox/compiler.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/contest.js" afterPath="$PROJECT_DIR$/routes/contest.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers/compiler/sandbox/contestJudge.js" afterPath="$PROJECT_DIR$/helpers/compiler/sandbox/contestJudge.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/templates/contest_header.ejs" afterPath="$PROJECT_DIR$/views/templates/contest_header.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/edit/contest_list.ejs" afterPath="$PROJECT_DIR$/views/contest/edit/contest_list.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/contests.ejs" afterPath="$PROJECT_DIR$/views/contest/contests.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/create.ejs" afterPath="$PROJECT_DIR$/views/contest/create.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/view/dashboard.ejs" afterPath="$PROJECT_DIR$/views/contest/view/dashboard.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/view/my_submissions.ejs" afterPath="$PROJECT_DIR$/views/contest/view/my_submissions.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/view/problem.ejs" afterPath="$PROJECT_DIR$/views/contest/view/problem.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database/justoj schema/querys.sql" afterPath="$PROJECT_DIR$/config/database/justoj schema/querys.sql" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/edit/edit.ejs" afterPath="$PROJECT_DIR$/views/contest/edit/edit.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/templates/footer.ejs" afterPath="$PROJECT_DIR$/views/templates/footer.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gulpfile.js" afterPath="$PROJECT_DIR$/gulpfile.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/templates/header.ejs" afterPath="$PROJECT_DIR$/views/templates/header.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/templates/headerend.ejs" afterPath="$PROJECT_DIR$/views/templates/headerend.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/index.ejs" afterPath="$PROJECT_DIR$/views/index.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/index.js" afterPath="$PROJECT_DIR$/routes/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middlewares/isLoggedIn.js" afterPath="$PROJECT_DIR$/middlewares/isLoggedIn.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/login.ejs" afterPath="$PROJECT_DIR$/views/login.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/login.js" afterPath="$PROJECT_DIR$/routes/login.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/edit/problems/new.ejs" afterPath="$PROJECT_DIR$/views/contest/edit/problems/new.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problem/create/new.ejs" afterPath="$PROJECT_DIR$/views/problem/create/new.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problem/problems.ejs" afterPath="$PROJECT_DIR$/views/problem/problems.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problem/rank.ejs" afterPath="$PROJECT_DIR$/views/problem/rank.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/ranks.ejs" afterPath="$PROJECT_DIR$/views/ranks.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/ranks.js" afterPath="$PROJECT_DIR$/routes/ranks.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/resister.ejs" afterPath="$PROJECT_DIR$/views/resister.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/view/standings.ejs" afterPath="$PROJECT_DIR$/views/contest/view/standings.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/resister.js" afterPath="$PROJECT_DIR$/routes/resister.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/status/status.ejs" afterPath="$PROJECT_DIR$/views/status/status.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/edit/problems/step_1.ejs" afterPath="$PROJECT_DIR$/views/contest/edit/problems/step_1.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problem/edit/step_1.ejs" afterPath="$PROJECT_DIR$/views/problem/edit/step_1.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/edit/problems/step_2.ejs" afterPath="$PROJECT_DIR$/views/contest/edit/problems/step_2.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problem/edit/step_2.ejs" afterPath="$PROJECT_DIR$/views/problem/edit/step_2.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/edit/problems/step_3.ejs" afterPath="$PROJECT_DIR$/views/contest/edit/problems/step_3.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problem/edit/step_3.ejs" afterPath="$PROJECT_DIR$/views/problem/edit/step_3.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/style.css" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/contest/view/submissions.ejs" afterPath="$PROJECT_DIR$/views/contest/view/submissions.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/database/justoj schema/tables.sql" afterPath="$PROJECT_DIR$/config/database/justoj schema/tables.sql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/tempuser.js" afterPath="$PROJECT_DIR$/models/tempuser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/validate-form.js" afterPath="$PROJECT_DIR$/public/javascripts/validate-form.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/status/user_status.ejs" afterPath="$PROJECT_DIR$/views/status/user_status.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/problem/view.ejs" afterPath="$PROJECT_DIR$/views/problem/view.ejs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/www" afterPath="$PROJECT_DIR$/bin/www" />
     </list>
     <ignored path="justoj.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -46,11 +70,43 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="bfy.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/helpers/bfy.js">
+      <file leaf-file-name="index.ejs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/index.ejs">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.11232449">
-              <caret line="4" column="2" selection-start-line="4" selection-start-column="2" selection-end-line="4" selection-end-column="2" />
+            <state vertical-scroll-proportion="-6.6666665">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="head.ejs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/templates/head.ejs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.6666667">
+              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="header.ejs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/views/templates/header.ejs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.35504887">
+              <caret line="44" column="19" selection-start-line="44" selection-start-column="19" selection-end-line="44" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/stylesheets/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-16.758621">
+              <caret line="211" column="29" selection-start-line="211" selection-start-column="29" selection-end-line="211" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -77,57 +133,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/models/Contest.js" />
-        <option value="$PROJECT_DIR$/views/ranks.ejs" />
-        <option value="$PROJECT_DIR$/views/contest/edit.ejs" />
-        <option value="$PROJECT_DIR$/views/contest/edit/problems/new.ejs" />
-        <option value="$PROJECT_DIR$/views/contest/edit/problems/step_1.ejs" />
-        <option value="$PROJECT_DIR$/views/contest/edit/problems/step_2.ejs" />
-        <option value="$PROJECT_DIR$/views/problem/edit/step_2.ejs" />
-        <option value="$PROJECT_DIR$/views/contest/edit/problems/step_3.ejs" />
-        <option value="$PROJECT_DIR$/models/problems.js" />
-        <option value="$PROJECT_DIR$/views/contest/edit/edit.ejs" />
-        <option value="$PROJECT_DIR$/views/contest/edit/contest_list.ejs" />
-        <option value="$PROJECT_DIR$/routes/problems.js" />
-        <option value="$PROJECT_DIR$/helpers/paginate.js" />
-        <option value="$PROJECT_DIR$/views/problem/problems.ejs" />
-        <option value="$PROJECT_DIR$/views/problem/view.ejs" />
-        <option value="$PROJECT_DIR$/views/templates/footer.ejs" />
-        <option value="$PROJECT_DIR$/views/status/user_status.ejs" />
-        <option value="$PROJECT_DIR$/views/status/status.ejs" />
-        <option value="$PROJECT_DIR$/views/templates/headerend.ejs" />
-        <option value="$PROJECT_DIR$/views/templates/header.ejs" />
-        <option value="$PROJECT_DIR$/config/database/justoj schema/insert.sql" />
-        <option value="$PROJECT_DIR$/views/contest/view/announcement.ejs" />
-        <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap.css" />
-        <option value="$PROJECT_DIR$/files/temp/header.ejs" />
-        <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" />
-        <option value="$PROJECT_DIR$/routes/submit.js" />
-        <option value="$PROJECT_DIR$/config/database/justoj schema/keys.sql" />
-        <option value="$PROJECT_DIR$/config/database/justoj schema/constraints.sql" />
-        <option value="$PROJECT_DIR$/models/contestSubmit.js" />
-        <option value="$PROJECT_DIR$/helpers/compiler/sandbox/contestJudge.js" />
-        <option value="$PROJECT_DIR$/config/database/justoj schema/tables.sql" />
-        <option value="$PROJECT_DIR$/public/javascripts/validate-form.js" />
-        <option value="$PROJECT_DIR$/views/resister.ejs" />
-        <option value="$PROJECT_DIR$/models/tempuser.js" />
-        <option value="$PROJECT_DIR$/views/contest/view/standings.ejs" />
-        <option value="$PROJECT_DIR$/views/templates/contest_header.ejs" />
-        <option value="$PROJECT_DIR$/views/contest/view/clarifications.ejs" />
-        <option value="$PROJECT_DIR$/views/contest/view/clarification_view.ejs" />
         <option value="$PROJECT_DIR$/views/contest/view/clarifications/clarification_view.ejs" />
         <option value="$PROJECT_DIR$/views/contest/view/clarifications/request.ejs" />
         <option value="$PROJECT_DIR$/views/contest/view/clarifications/view.ejs" />
         <option value="$PROJECT_DIR$/views/contest/view/clarifications/clarifications.ejs" />
         <option value="$PROJECT_DIR$/config/database/justoj schema/querys.sql" />
-        <option value="$PROJECT_DIR$/views/contest/view/dashboard.ejs" />
-        <option value="$PROJECT_DIR$/views/contest/contests.ejs" />
         <option value="$PROJECT_DIR$/views/contest/view/problem.ejs" />
-        <option value="$PROJECT_DIR$/public/stylesheets/style.css" />
         <option value="$PROJECT_DIR$/models/contest.js" />
         <option value="$PROJECT_DIR$/views/contest/view/submissions.ejs" />
         <option value="$PROJECT_DIR$/views/contest/view/my_submissions.ejs" />
+        <option value="$PROJECT_DIR$/middlewares/isLoggedIn.js" />
+        <option value="$PROJECT_DIR$/bin/www" />
+        <option value="$PROJECT_DIR$/config/database/knex/DB.js" />
+        <option value="$PROJECT_DIR$/helpers/compiler/sandbox/compiler.js" />
+        <option value="$PROJECT_DIR$/helpers/compiler/sandbox/contestJudge.js" />
+        <option value="$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css" />
+        <option value="$PROJECT_DIR$/views/templates/headerend.ejs" />
+        <option value="$PROJECT_DIR$/views/templates/head.js" />
+        <option value="$PROJECT_DIR$/routes/index.js" />
+        <option value="$PROJECT_DIR$/views/ranks.ejs" />
+        <option value="$PROJECT_DIR$/routes/ranks.js" />
+        <option value="$PROJECT_DIR$/routes/resister.js" />
+        <option value="$PROJECT_DIR$/gulpfile.js" />
+        <option value="$PROJECT_DIR$/views/contest/contests.ejs" />
         <option value="$PROJECT_DIR$/routes/contest.js" />
+        <option value="$PROJECT_DIR$/views/templates/head.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/create.ejs" />
+        <option value="$PROJECT_DIR$/views/resister.ejs" />
+        <option value="$PROJECT_DIR$/views/templates/contest_header.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/view/dashboard.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/edit/contest_list.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/edit/edit.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/edit/problems/new.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/edit/problems/step_1.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/edit/problems/step_2.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/edit/problems/step_3.ejs" />
+        <option value="$PROJECT_DIR$/views/contest/view/announcement.ejs" />
+        <option value="$PROJECT_DIR$/views/problem/problems.ejs" />
+        <option value="$PROJECT_DIR$/views/problem/create/new.ejs" />
+        <option value="$PROJECT_DIR$/views/problem/edit/step_1.ejs" />
+        <option value="$PROJECT_DIR$/views/problem/edit/step_2.ejs" />
+        <option value="$PROJECT_DIR$/views/problem/edit/step_3.ejs" />
+        <option value="$PROJECT_DIR$/views/problem/view.ejs" />
+        <option value="$PROJECT_DIR$/views/problem/rank.ejs" />
+        <option value="$PROJECT_DIR$/views/status/status.ejs" />
+        <option value="$PROJECT_DIR$/views/status/user_status.ejs" />
+        <option value="$PROJECT_DIR$/views/templates/footer.ejs" />
+        <option value="$PROJECT_DIR$/views/index.ejs" />
+        <option value="$PROJECT_DIR$/routes/login.js" />
+        <option value="$PROJECT_DIR$/views/login.ejs" />
+        <option value="$PROJECT_DIR$/public/stylesheets/style.css" />
+        <option value="$PROJECT_DIR$/views/templates/header.ejs" />
       </list>
     </option>
   </component>
@@ -198,9 +254,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -219,22 +273,10 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="justoj" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="JustOJ" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="helpers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -445,6 +487,38 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="ScalaTestRunConfiguration" factoryName="ScalaTest">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <extension name="scalaCoverage" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Specs2RunConfiguration" factoryName="Specs2">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <extension name="scalaCoverage" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <envs />
+      <method />
+    </configuration>
     <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -492,6 +566,22 @@
       <method />
     </configuration>
     <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
+      <method />
+    </configuration>
+    <configuration default="true" type="uTestRunConfiguration" factoryName="utest">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <extension name="scalaCoverage" />
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="" />
+      <setting name="testKind" value="Class" />
+      <setting name="showProgressMessages" value="true" />
+      <envs />
       <method />
     </configuration>
     <list size="1">
@@ -727,6 +817,9 @@
       <workItem from="1463083536860" duration="951000" />
       <workItem from="1463923100329" duration="64000" />
       <workItem from="1463923198432" duration="638000" />
+      <workItem from="1464111133646" duration="4730000" />
+      <workItem from="1464447329167" duration="7729000" />
+      <workItem from="1464460091494" duration="14525000" />
     </task>
     <task id="LOCAL-00001" summary="big changes">
       <created>1453266267328</created>
@@ -738,7 +831,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1347105000" />
+    <option name="totallyTimeSpent" value="1374089000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -751,7 +844,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="47" y="24" width="1319" height="744" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328152" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -760,23 +853,23 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295626" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27868852" sideWeight="0.49079755" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3457526" sideWeight="0.52342606" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.8539493" sideWeight="0.5056861" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28658074" sideWeight="0.84283245" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22441243" sideWeight="0.84283245" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25230062" sideWeight="0.15716752" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39344263" sideWeight="0.4969325" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39344263" sideWeight="0.4969325" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26976743" sideWeight="0.52349484" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3457526" sideWeight="0.52342606" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3353204" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -835,58 +928,68 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/views/templates/header.ejs">
+    <entry file="file://$PROJECT_DIR$/config/database/knex/DB.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.0">
-          <caret line="21" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.2527301">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/database/knex/pool.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22464898">
+          <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/compiler/compiler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.1060843">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/compiler/sandbox/compiler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5226209">
+          <caret line="59" column="25" selection-start-line="59" selection-start-column="25" selection-end-line="59" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/compiler/sandbox/contestJudge.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.22464898">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/contest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.56162244">
+          <caret line="395" column="2" selection-start-line="395" selection-start-column="2" selection-end-line="395" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.74590164">
+          <caret line="364" column="0" selection-start-line="364" selection-start-column="0" selection-end-line="364" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/templates/headerend.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap-theme.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.83871">
-          <caret line="334" column="21" selection-start-line="334" selection-start-column="21" selection-end-line="334" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap.css">
+    <entry file="file://$PROJECT_DIR$/routes/logout.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="4281" column="1" selection-start-line="4281" selection-start-column="1" selection-end-line="4281" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/files/temp/header.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.407408">
-          <caret line="20" column="39" selection-start-line="20" selection-start-column="39" selection-end-line="20" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/edit/contest_list.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.70358306">
-          <caret line="60" column="58" selection-start-line="60" selection-start-column="58" selection-end-line="60" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/insert.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.413794">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/user.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.7691108">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
@@ -894,305 +997,372 @@
     <entry file="file://$PROJECT_DIR$/routes/problems.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/status/status.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.6666665">
-          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="147" selection-end-column="27" />
+          <caret line="52" column="22" selection-start-line="52" selection-start-column="12" selection-end-line="52" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/ucheck.js">
+    <entry file="file://$PROJECT_DIR$/views/error.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/compiler/sandbox/judge.js">
+    <entry file="file://$PROJECT_DIR$/routes/ranks.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="163" column="19" selection-start-line="0" selection-start-column="0" selection-end-line="448" selection-end-column="1" />
+        <state vertical-scroll-proportion="0.64586586">
+          <caret line="23" column="3" selection-start-line="23" selection-start-column="3" selection-end-line="23" selection-end-column="3" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/submission.js">
+    <entry file="file://$PROJECT_DIR$/views/ranks.ejs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="31" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/status.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="39" column="42" selection-start-line="39" selection-start-column="37" selection-end-line="39" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/constraints.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.448276">
-          <caret line="24" column="34" selection-start-line="24" selection-start-column="34" selection-end-line="24" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/keys.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.793103">
-          <caret line="30" column="25" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/problems.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="137" column="3" selection-start-line="137" selection-start-column="3" selection-end-line="137" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/submit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/compiler/sandbox/contestJudge.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="82" column="0" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/tables.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.7058824">
-          <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/validate-form.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="42" selection-start-line="14" selection-start-column="42" selection-end-line="14" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.38110748">
+          <caret line="13" column="34" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/resister.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/tempuser.js">
+    <entry file="file://$PROJECT_DIR$/gulpfile.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="150" column="0" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/resister.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.074074">
-          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/ranks.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.99348533">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/ranks.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="71" column="58" selection-start-line="71" selection-start-column="50" selection-end-line="71" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/problem/rank.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.666667">
-          <caret line="60" column="55" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/pagination.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/paginate.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/view/standings.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.0">
-          <caret line="116" column="29" selection-start-line="0" selection-start-column="0" selection-end-line="238" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/templates/contest_header.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/myutil.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="17" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/login.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.6710098">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/view/clarifications/view.ejs">
+    <entry file="file://$PROJECT_DIR$/public/bootstrap/css/bootstrap.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.333333">
-          <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/view/clarifications/request.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.0">
-          <caret line="46" column="30" selection-start-line="46" selection-start-column="30" selection-end-line="46" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/view/clarifications/clarifications.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.6666667">
-          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/database/justoj schema/querys.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.2833333">
-          <caret line="336" column="0" selection-start-line="336" selection-start-column="0" selection-end-line="357" selection-end-column="76" />
-        </state>
-      </provider>
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/view/dashboard.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.5555553">
-          <caret line="31" column="44" selection-start-line="31" selection-start-column="44" selection-end-line="31" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/view/announcement.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-22.666666">
-          <caret line="58" column="24" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.39313573">
+          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/contest/contests.ejs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.592592">
-          <caret line="102" column="28" selection-start-line="102" selection-start-column="28" selection-end-line="102" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/contestSubmit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="75" column="36" selection-start-line="75" selection-start-column="27" selection-end-line="75" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/stylesheets/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="222" column="1" selection-start-line="222" selection-start-column="1" selection-end-line="222" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/view/problem.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/problem/view.ejs">
-      <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.17589577">
-          <caret line="43" column="14" selection-start-line="43" selection-start-column="14" selection-end-line="43" selection-end-column="14" />
+          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/moment.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/jquery.validate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3" column="31" selection-start-line="3" selection-start-column="3" selection-end-line="3" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/templates/contest_header.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.074074">
+          <caret line="23" column="33" selection-start-line="23" selection-start-column="23" selection-end-line="23" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/contest/view/submissions.ejs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.6221498">
-          <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.3327616">
+          <caret line="38" column="53" selection-start-line="38" selection-start-column="51" selection-end-line="38" selection-end-column="53" />
+          <folding>
+            <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/contest/view/my_submissions.ejs">
+    <entry file="file://$PROJECT_DIR$/views/contest/view/dashboard.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.732899">
+          <caret line="37" column="40" selection-start-line="37" selection-start-column="40" selection-end-line="37" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/edit/contest_list.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="135" column="29" selection-start-line="135" selection-start-column="29" selection-end-line="135" selection-end-column="29" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="13" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/stylesheets/summernote.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/edit/problems/step_1.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.0">
+          <caret line="18" column="43" selection-start-line="18" selection-start-column="43" selection-end-line="18" selection-end-column="43" />
+          <folding>
+            <marker date="1464469199555" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464469199555" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464469199555" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464469199555" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464469199555" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/edit/problems/step_2.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.6666665">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/edit/problems/step_3.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.6666665">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/create.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="20" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/edit/edit.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.23452769">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+          <folding>
+            <marker date="1464468761519" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464468761519" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464468761519" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464468761519" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464468761519" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464468761519" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464468761519" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/contest.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="850" column="0" selection-start-line="850" selection-start-column="0" selection-end-line="850" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.3650546">
+          <caret line="1125" column="31" selection-start-line="1125" selection-start-column="31" selection-end-line="1125" selection-end-column="31" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/contest.js">
+    <entry file="file://$PROJECT_DIR$/views/contest/view/announcement.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3327616">
+          <caret line="46" column="33" selection-start-line="46" selection-start-column="33" selection-end-line="46" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/problem/problems.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.23452769">
+          <caret line="26" column="37" selection-start-line="26" selection-start-column="37" selection-end-line="26" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/contest/edit/problems/new.ejs">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="515" column="22" selection-start-line="515" selection-start-column="22" selection-end-line="515" selection-end-column="22" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
+    <entry file="file://$PROJECT_DIR$/views/problem/edit/ep.ejs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42121685">
-          <caret line="15" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/helpers/bfy.js">
+    <entry file="file://$PROJECT_DIR$/views/problem/create/new.ejs">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11232449">
-          <caret line="4" column="2" selection-start-line="4" selection-start-column="2" selection-end-line="4" selection-end-column="2" />
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="18" selection-end-column="40" />
+          <folding>
+            <marker date="1464470059095" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470059095" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470059095" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470059095" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470059095" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470059095" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470059095" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/problem/edit/step_2.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.0">
+          <caret line="18" column="40" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/problem/edit/step_1.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.0">
+          <caret line="18" column="40" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="40" />
+          <folding>
+            <marker date="1464470732479" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470732479" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470732479" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470732479" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1464470732479" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/problem/edit/step_3.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-12.0">
+          <caret line="18" column="40" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/problem/view.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.666667">
+          <caret line="13" column="14" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/problem/rank.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.666667">
+          <caret line="13" column="14" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/status/status.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="13" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/templates/footer.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.6666667">
+          <caret line="4" column="9" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+          <folding>
+            <element signature="n#style#0;n#footer#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#footer#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/status/user_status.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.49837133">
+          <caret line="17" column="49" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="49" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/templates/head.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.6666667">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/login.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="8.0">
+          <caret line="51" column="69" selection-start-line="51" selection-start-column="69" selection-end-line="51" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/resister.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="18" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.6666665">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/stylesheets/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.758621">
+          <caret line="211" column="29" selection-start-line="211" selection-start-column="29" selection-end-line="211" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/templates/header.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35504887">
+          <caret line="44" column="19" selection-start-line="44" selection-start-column="19" selection-end-line="44" selection-end-column="19" />
           <folding />
         </state>
       </provider>
