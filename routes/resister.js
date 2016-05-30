@@ -11,15 +11,12 @@ var isLoggedIn  = require('../middlewares/isLoggedIn');
 var TempUser    = require('../models/tempuser');
 var User        = require('../models/user');
 
-
-//recapctcha keys
-var SITE_KEY  = '6LfADw4TAAAAADvBjKLdmd_tuxnFteqwA5WC6eLH';
-var SECRET_KEY = '6LfADw4TAAAAAIIN_0gvzzAW4bW0RCS7JUAwz239';
+var Secrets     = require('../files/secrets/Secrets');
 
 
 router.get('/', isLoggedIn(false) , function(req, res, next) {
 
-        var recaptcha = new Recaptcha(SITE_KEY, SECRET_KEY);
+        var recaptcha = new Recaptcha(Secrets.recaptcha.SITE_KEY, Secrets.recaptcha.SECRET_KEY);
 
         res.render('resister', {
             layout: true,
@@ -39,7 +36,7 @@ router.post('/', isLoggedIn(false) , function(req, res, next) {
         response:  req.body.recaptcha_response_field
     };
 
-    var recaptcha = new Recaptcha(SITE_KEY, SECRET_KEY, recaptchaData);
+    var recaptcha = new Recaptcha(Secrets.recaptcha.SITE_KEY, Secrets.recaptcha.SECRET_KEY, recaptchaData);
 
     recaptcha.verify(function(success, error_code) {
         if (success) {

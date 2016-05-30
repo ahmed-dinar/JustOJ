@@ -21,7 +21,7 @@
     %>
 
 <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped scoreboard">
         <thead>
             <tr>
                 <th class="fixed-cell"></th>
@@ -52,7 +52,7 @@
 
                         <tr>
                             <td rowspan="2" class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
-                            <td colspan="<%= colspan %>"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td colspan="<%= colspan %>" class="scoreboard-name"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
                             <td class="text-center" rowspan="2" style="vertical-align: middle">0</td>
                             <td class="text-center" rowspan="2" style="vertical-align: middle">0</td>
                         </tr>
@@ -70,7 +70,7 @@
                         <tr>
                             <td rowspan="2" class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
 
-                            <td colspan="<%= colspan %>"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td colspan="<%= colspan %>" class="scoreboard-name"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
                             <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].solved %></td>
                             <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].penalty %></td>
                         </tr>
@@ -151,60 +151,11 @@
     </div>
 </div>
 
+<script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>
 <script type="text/javascript">
-
-
-    window.onload = function () {
-        CountDownTimer('<%= contest.end %>');
-    };
-
-    function CountDownTimer(begin) {
-
-        var end = new Date(begin);
-
-        var _second = 1000;
-        var _minute = _second * 60;
-        var _hour = _minute * 60;
-        var _day = _hour * 24;
-        var timer;
-        var running = false;
-        var doc =  document.getElementById("countdown");
-
-        function showRemaining() {
-            var now = new Date();
-
-            var distance = end - now;
-
-            if (distance < 0) {
-
-                clearInterval(timer);
-                document.getElementById("cd-h").innerHTML = '';
-                doc.innerHTML = 'Finished<br>' + "<p style='font-size:14px;'><%= moment(contest.end).from() %></p>";
-
-
-                if( running ) {
-                    alert('Contest Finished!');
-                }
-                return;
-            }
-            var days = Math.floor(distance / _day);
-            var hours = Math.floor((distance % _day) / _hour);
-            var minutes = Math.floor((distance % _hour) / _minute);
-            var seconds = Math.floor((distance % _minute) / _second);
-
-
-            doc.innerHTML = days <=0 ? '' : days + 'd ';
-            doc.innerHTML += Math.floor(hours/10) + '' +  hours%10 + ':';
-            doc.innerHTML += Math.floor(minutes/10) + '' +  minutes%10 + ':';
-            doc.innerHTML += Math.floor(seconds/10) + '' +  seconds%10;
-
-
-            running = true;
-        }
-        showRemaining();
-        timer = setInterval(showRemaining, 1000);
-    }
-
+    $( document ).ready(function() {
+        CountDownTimer('<%= contest.end %>',document.getElementById("countdown"));
+    });
 </script>
 
 <!-- footer -->

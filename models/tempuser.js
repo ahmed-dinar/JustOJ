@@ -14,6 +14,8 @@ var async       = require('async');
 var DB          = require('../config/database/knex/DB');
 var Query       = require('../config/database/knex/query');
 
+var Secrets     = require('../files/secrets/Secrets');
+
 /**
  *
  * @param req
@@ -79,8 +81,8 @@ exports.resister = function (req, res, next) {
             var transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user: 'testjudge.me@gmail.com ',
-                    pass: 'just8864264'
+                    user: Secrets.gmail.username,
+                    pass: Secrets.gmail.password
                 }
             });
 

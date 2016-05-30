@@ -58,70 +58,76 @@ exports.run = function(opts,cb){
         }
     ], function (error, runs) {
 
-        cleanSubmit(opts.runDir);
+        //clean up submitted code and run files
+        rimraf(opts.runDir, function (errs) {
+            if( errs ){ console.log(errs); }
 
-        if( error ){
+            console.log('cleaned!'.green);
 
-            if( _.isUndefined(runs) ){
+            if( error ){
 
-                Contest.UpdateSubmission(opts.sID, { status: '8' }, function(err){
-                    if(err){
-                        console.log('What the hell updating run status!'.red);
-                        console.log(err);
-                    }
-                    return cb(error);
-                });
-            }
-            else if( runs.compiler ){
+                if( _.isUndefined(runs) ){
 
-                async.parallel([
-                        function(callback){
-                            Contest.UpdateRank(opts.cID,opts.uID,opts.pID,7,function(err,rows){
-                                if(err){ return callback(err); }
-
-                                console.log('rank updated!');
-                                callback();
-                            });
-                        },
-                        function(callback){
-                            Contest.UpdateSubmission(opts.sID, { status: '7' }, function(err){
-                                if(err){
-                                    console.log('What the hell updating run status!'.red);
-                                    console.log(err);
-                                    return callback(err);
-                                }
-                                callback();
-                            });
+                    Contest.UpdateSubmission(opts.sID, { status: '8' }, function(err){
+                        if(err){
+                            console.log('What the hell updating run status!'.red);
+                            console.log(err);
                         }
-                    ],
-                    function(err, results){
-
-                        cb(null,runs);
+                        return cb(error);
                     });
+                }
+                else if( runs.compiler ){
 
+                    async.parallel([
+                            function(callback){
+                                Contest.UpdateRank(opts.cID,opts.uID,opts.pID,7,function(err,rows){
+                                    if(err){ return callback(err); }
+
+                                    console.log('rank updated!');
+                                    callback();
+                                });
+                            },
+                            function(callback){
+                                Contest.UpdateSubmission(opts.sID, { status: '7' }, function(err){
+                                    if(err){
+                                        console.log('What the hell updating run status!'.red);
+                                        console.log(err);
+                                        return callback(err);
+                                    }
+                                    callback();
+                                });
+                            }
+                        ],
+                        function(err, results){
+
+                            cb(null,runs);
+                        });
+
+                    return;
+                }
+                else if( _.isUndefined(runs[0]) ){
+
+                    Contest.UpdateSubmission(opts.sID, { status: '8' }, function(err){
+                        if(err){
+                            console.log('What the hell updating run status!'.red);
+                            console.log(err);
+                        }
+                        return cb(error);
+                    });
+                }
+                else{
+                    console.log('Error but runs exists');
+                    console.log(runs);
+                    getFinalResult(runs,opts,cb);
+                }
                 return;
             }
-            else if( _.isUndefined(runs[0]) ){
 
-                Contest.UpdateSubmission(opts.sID, { status: '8' }, function(err){
-                    if(err){
-                        console.log('What the hell updating run status!'.red);
-                        console.log(err);
-                    }
-                    return cb(error);
-                });
-            }
-            else{
-                console.log('Error but runs exists');
-                console.log(runs);
-                getFinalResult(runs,opts,cb);
-            }
-            return;
-        }
+            getFinalResult(runs,opts,cb);
 
-        getFinalResult(runs,opts,cb);
+
+        });
     });
-
 };
 
 var getFinalResult = function(runs,opts,cb){
@@ -432,16 +438,3 @@ var makeTempDir = function(saveTo,cb){
         cb();
     });
 };
-
-
-//clean up submitted code and run files
-function cleanSubmit(codeDir){
-    rimraf(codeDir, function (err) {
-        if( err ){
-            console.log(err);
-            return;
-        }
-
-        console.log('success clean submit!'.green);
-    });
-}

@@ -218,11 +218,28 @@ td,th{
   display: table-cell !important;
 }
 
+
+.scoreboard{
+  font-size: 14px !important;
+}
+
+.scoreboard .scoreboard-name a {
+  color: #334d00 !important;
+}
+
+.scoreboard >tbody>tr:nth-child(odd) > td{
+  padding: 8px 8px 2px 8px !important;
+}
+
+.scoreboard >tbody>tr:nth-child(even) > td{
+  padding: 2px 8px 8px 8px !important;
+}
+
 .standings-cell > .label{
   min-width: 40px;
   max-width: 64px;
   display: block;
-  padding: 5px 6px;
+  padding: 3px 6px;
   margin: 0 0;
   font-weight: normal;
   font-size: 11px;
@@ -236,13 +253,14 @@ td,th{
 
 .table-striped>tbody>tr:nth-child(4n+3)>td,
 .table-striped>tbody>tr:nth-child(4n+4)>td {
-  background-color: #f5f5f5 !important;
+  background-color: #fff !important;
 }
 
 
 .table-striped>tbody>tr:nth-child(even) > td{
   border-top: none 0px !important;
 }
+
 
 
 .fixed-cell{
@@ -252,4 +270,12 @@ td,th{
 
 .last-border{
   margin-top: 0px;
+}
+
+.bootstrap-filestyle > input[type="text"] {
+  padding: 0px 5px !important;
+}
+
+.alert{
+  border: none !important;
 }

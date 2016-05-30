@@ -25,25 +25,18 @@ var colors      = require('colors');
  */
 exports.run = function(opts,cb){
 
-
-    Submission.update(opts.sID, { status: '6' }, function(err){
-        if(err){
-            console.log('What the hell updating run status!'.red);
-            console.log(err);
-        }
-    });
-
-
     opts['runName'] = opts.sID;
     opts['runDir']  = MyUtil.RUN_DIR + '/' + opts.runName;
     opts['tcDir']   = MyUtil.TC_DIR + '/' + opts.pID;
-
 
     console.log(opts);
     console.log('runDir: ' + opts.runDir);
     console.log('tcDir: ' + opts.tcDir);
 
     async.waterfall([
+        function(callback) {
+            Submission.update(opts.sID, { status: '6' }, callback);
+        },
         function(callback) {
             makeTempDir(opts.runDir,callback);
         },

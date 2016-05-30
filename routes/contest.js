@@ -470,6 +470,7 @@ router.get('/:cid/clarifications/request', function(req, res, next) {
             contest: contest,
             moment: moment,
             problems: problems,
+            err: req.flash('err'),
             _: _
         });
     });

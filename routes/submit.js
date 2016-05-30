@@ -81,36 +81,64 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
         }
     ], function (error, opts, sid) {
 
-        fse.removeSync(uploadFile);
+        fse.remove(uploadFile, function (errs) {
+            if (errs) { console.log(errs); }
 
-        if( error ){
-            if( error.formError ){
-                req.flash('formError',error.formError);
-                res.redirect('/problems/JOP0' + pID);
-                return;
+
+            if( error ){
+
+                console.log(error);
+
+                // user form empty errors
+                if( error.formError ){
+
+                    req.flash('formError',error.formError);
+                    res.redirect('/problems/JOP0' + pID);
+
+                }else if( error.sysError ){ //system errors
+
+                    var inserts = {
+                        pid: pID,
+                        uid: uID,
+                        language: opts.language,
+                        status: '8',
+                        cpu: '0',
+                        memory: '0'
+                    };
+                    Submission.insert(inserts,function(err,sid){
+
+                        if( err ){
+                            console.log('Submit inserting error!'.bold.red);
+                            console.log(err.red);
+                            return next(new Error(err));
+                        }
+
+                        res.redirect('/status/u/' + pID);
+                    });
+
+                }else {
+                    return next(new Error(error));
+                }
+            }else{
+
+                console.log('Submit Successfull'.green);
+
+                res.redirect('/status/u/' + pID);
+
+                Judge.run(opts,function(err,runs){
+
+                    if( err ){
+                        console.log('Judge Error! damn u'.red);
+                        return;
+                    }
+
+                    console.log('successfully run!'.green);
+                    console.log(runs);
+                });
             }
-            return next(new Error(error));
-        }
 
-        console.log('Submit Successfull'.green);
-
-        res.redirect('/status/u/' + pID);
-
-
-        Judge.run(opts,function(err,runs){
-
-            if( err ){
-                console.log('Judge Error! damn u'.red);
-                return;
-            }
-
-            console.log('successfully run!'.green);
-            console.log(runs);
         });
-
-
     });
-
 });
 
 
@@ -131,12 +159,17 @@ var getLimits = function(pid,callback){
 
         if(err){ return callback(err); }
 
-        if( rows.length === 0 ){ return callback({ formError: 'What are u looking for?'});  }
+        if( rows.length === 0 ){ return callback({ formError: '404, no problem found'});  }
 
         var opts = {
             timeLimit: rows[0].cpu,
             memoryLimit: rows[0].memory
         };
+
+        if( rows === null || rows[0].cpu === null || rows[0].memory === null ){
+            opts['sysError'] = true;
+        }
+
         callback(null,opts);
     });
 };
@@ -205,6 +238,9 @@ var getForm = function(uploadFile,req,opts,cb){
 
             if( language  ){
                 opts['language'] = language;
+
+                if( opts.sysError ){ return cb({sysError: 'no limits found!'},opts); }
+
                 return cb(null,opts);
             }
 

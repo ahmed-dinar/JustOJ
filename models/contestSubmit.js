@@ -69,36 +69,57 @@ exports.submit = function(req, res, next){
         }
     ], function (error, opts, sid) {
 
-        fse.removeSync(uploadFile);
+        fse.remove(uploadFile, function (errs) {
+            if (errs) return console.error(errs);
 
-        if( error ){
-            if( error.formError ){
-                req.flash('formError',error.formError);
-                res.redirect('/contest/' + cid + '/problem/' + pid);
-                return;
+            if( error ){
+
+                console.log(error);
+
+                if( error.formError ) {
+                    req.flash('formError', error.formError);
+                    res.redirect('/contest/' + cid + '/problem/' + pid);
+                }else if( error.sysErr ){
+
+                    var inserts = {
+                        cid: cid,
+                        pid: pid,
+                        uid: uid,
+                        language: opts.language,
+                        status: '8',
+                        cpu: '0',
+                        memory: '0'
+                    };
+                    Contest.InsertSubmission(inserts,function(err,sid){
+                        if( err ){
+                            console.log('Submit inserting error!'.bold.red);
+                            console.log(err.red);
+                            return next(new Error(error));
+                        }
+                        res.redirect('/contest/' + cid + '/problem/' + pid);
+                    });
+                }else {
+                    return next(new Error(error));
+                }
+            }else{
+
+                console.log('Submit Successfull'.green);
+
+                res.redirect('/contest/' + cid + '/submissions/my');
+
+                Judge.run(opts,function(err,runs){
+
+                    if( err ){
+                        console.log('Judge Error! damn u'.red);
+                        return;
+                    }
+
+                    console.log('successfully run!'.green);
+                    console.log(runs);
+                });
             }
-            return next(new Error(error));
-        }
-
-        console.log('Submit Successfull'.green);
-
-        res.redirect('/contest/' + cid + '/submissions/my');
-
-
-        Judge.run(opts,function(err,runs){
-
-            if( err ){
-                console.log('Judge Error! damn u'.red);
-                return;
-            }
-
-            console.log('successfully run!'.green);
-            console.log(runs);
         });
-
-
     });
-
 };
 
 
@@ -187,6 +208,9 @@ var getForm = function(uploadFile,req,opts,cb){
 
             if( language  ){
                 opts['language'] = language;
+
+                if(opts.sysErr){ return cb({ sysErr: 'System Error yo' },opts); }
+
                 return cb(null,opts);
             }
 
@@ -214,6 +238,11 @@ var getLimits = function(pid,callback){
             timeLimit: rows[0].cpu,
             memoryLimit: rows[0].memory
         };
+
+        if( rows[0].cpu === null || rows[0].memory === null ){
+            opts['sysErr'] = true;
+        }
+
         callback(null,opts);
     });
 };

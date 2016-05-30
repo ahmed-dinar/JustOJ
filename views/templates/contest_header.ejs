@@ -1,6 +1,6 @@
 <div class="container-fluid contest-container">
     <div class="row">
-        <div class="container" style="padding: 0px; font-family: 'PT Sans', sans-serif;">
+        <div class="container" style="font-family: 'PT Sans', sans-serif;">
             <h3 style="margin: 10px 0px 5px 0px"><%= contest.title %></h3>
             <div id="countdown" style="font-size: 18px; font-weight: 200; margin-bottom: 8px; "></div>
         </div>
@@ -28,7 +28,7 @@
                         <ul class="nav navbar-nav" id="contest-navbar">
                             <li><a href="/contest/<%= contest.id %>">Problems</a></li>
                             <li>
-                                <a href="/contest/<%= contest.id %>/clarifications/all">Clarifications <sup><span class="badge">4</span></sup></a>
+                                <a href="/contest/<%= contest.id %>/clarifications/all">Clarifications</a>
 
                             </li>
                             <li><a href="/contest/<%= contest.id %>/standings">Standings</a></li>
