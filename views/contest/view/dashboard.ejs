@@ -4,31 +4,16 @@
     <meta charset="UTF-8">
     <title>JUST Online Judge</title>
 
-    <script type="text/javascript" src="/javascripts/jquery-2.1.4.min.js"></script>
-
-    <link rel="stylesheet" href="/stylesheets/style.css">
-
-    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
-
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
-    <!-- Latest compiled and minified JavaScript -->
-    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
-
+    <% include ../../templates/head.ejs %>
+    <link href='https://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
 </head>
+<body>
 
-<body style="background: #fcfcfc;">
+<!-- header and menu -->
+<% include ../../templates/header.ejs %>
 
 <% include ../../templates/contest_header.ejs %>
 
-<!-- Main Content -->
-<div class="container c-h" >
-
-    <div class="row">
-
-        <div class="col-md-9">
-            <div class="panel panel-default">
                 <div class="panel-body" id="db-lg">
                     <h4>Problems</h4>
                     <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
@@ -37,14 +22,14 @@
 
                         <% if(isLoggedIn && registered){ %>
                             <% if(problems[i].yousolved !== -1){ %>
-                                <a href="/contest/<%= contest.id %>/problem/<%= (i+1) %>" class="list-group-item" style="border-left: 3px solid lawngreen">
+                                <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item" style="border-left: 3px solid lawngreen">
                             <% }else if(problems[i].youtried !== -1){ %>
-                                <a href="/contest/<%= contest.id %>/problem/<%= (i+1) %>" class="list-group-item" style="border-left: 3px solid indianred">
+                                <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item" style="border-left: 3px solid indianred">
                             <% }else{ %>
-                                <a href="/contest/<%= contest.id %>/problem/<%= (i+1) %>" class="list-group-item">
+                                <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
                             <% } %>
                         <% }else{ %>
-                            <a href="/contest/<%= contest.id %>/problem/<%= (i+1) %>" class="list-group-item">
+                            <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
                         <% } %>
 
                             <span class="label label-default pull-right">
@@ -58,18 +43,8 @@
                     <% } %>
 
                 </div>
-            </div>
-        </div>
 
-        <div class="col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-body text-center">
-                    <h5 id="cd-h">ENDS IN</h5>
-                    <div id="countdown" style="font-size: 20px; font-weight: 200"></div>
-                </div>
-            </div>
         </div>
-
     </div>
 </div>
 

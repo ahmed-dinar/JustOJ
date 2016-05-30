@@ -4,10 +4,10 @@ body {
   padding-top: 70px;
   margin:0px !important;
 
-  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif !important;
   font-size: 13px !important;
   color: #666666 !important;
-  background: #FFFFFF !important;
+  background: #F5F8F9 !important;
 }
 
 
@@ -98,7 +98,7 @@ hr {
 }
 
 .jl-style{
-  font-family: 'Poiret One', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #fff;
   font-weight: 600;
   background: #4C4F84;
@@ -112,15 +112,9 @@ hr {
 }
 
 
-
 .grey-back{
   background: #2c3e50 !important;
   color: #FFFFFF;
-}
-
-.table-condensed > tbody > tr > td {
-  vertical-align: middle;
-  width: 25%;
 }
 
 
@@ -137,20 +131,6 @@ hr {
 }
 
 
-.st-labels{
-  display: table-cell !important;
-  width: 40px !important;
-}
-
-.st-table th{
-  background: #FFFFFF !important;
-}
-
-.st-table span{
-  padding: .5em .6em !important;
-  border-radius: 0px;
-}
-
 hr {
   border-color: #ddd !important;
 }
@@ -158,8 +138,12 @@ hr {
 
 
 .navbar {
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+
+  -webkit-box-shadow: 0 2px 2px transparent, 0 2px 3px rgba(0, 0, 0, 0.09) !important;
+  box-shadow: 0 2px 2px transparent, 0 2px 3px rgba(0, 0, 0, 0.09) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5) !important;
+
+
   background: #FFFFFF !important;
 }
 
@@ -210,4 +194,62 @@ input[type="text"],input[type="password"],input[type="username"],input[type="ema
   color: #666666 !important;
   white-space: nowrap !important;
   font-size: 13px !important;
+}
+
+
+.contest-container{
+  margin-top: -18px;
+  background: url("../images/pp.png") repeat top;
+  padding: 0px !important;
+  color: #fff;
+}
+
+.navbar-static-top{
+  min-height: 30px !important;
+}
+
+#contest-navbar > li > a{
+  padding: 8px 15px;
+  font-size: 13px;
+}
+
+
+td,th{
+  display: table-cell !important;
+}
+
+.standings-cell > .label{
+  min-width: 40px;
+  max-width: 64px;
+  display: block;
+  padding: 5px 6px;
+  margin: 0 0;
+  font-weight: normal;
+  font-size: 11px;
+}
+
+
+.table-striped>tbody>tr:nth-child(4n+1)>td,
+.table-striped>tbody>tr:nth-child(4n+2)>td {
+  background-color: #fff !important;
+}
+
+.table-striped>tbody>tr:nth-child(4n+3)>td,
+.table-striped>tbody>tr:nth-child(4n+4)>td {
+  background-color: #f5f5f5 !important;
+}
+
+
+.table-striped>tbody>tr:nth-child(even) > td{
+  border-top: none 0px !important;
+}
+
+
+.fixed-cell{
+  max-width: 64px;
+  width: 64px;
+}
+
+.last-border{
+  margin-top: 0px;
 }

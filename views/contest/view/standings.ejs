@@ -4,137 +4,111 @@
     <meta charset="UTF-8">
     <title>JUST Online Judge</title>
 
-    <script type="text/javascript" src="/javascripts/jquery-2.1.4.min.js"></script>
-
-    <link rel="stylesheet" href="/stylesheets/style.css">
-
-    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
-
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
-    <!-- Latest compiled and minified JavaScript -->
-    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+    <% include ../../templates/head.ejs %>
 
 </head>
+<body>
 
-<body style="background: #fcfcfc;">
+<!-- header and menu -->
+<% include ../../templates/header.ejs %>
 
 <% include ../../templates/contest_header.ejs %>
 
-<!-- Main Content -->
-<div class="container c-h" >
 
-    <div class="row">
+    <%
+        var probNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        var colspan = problemStats.length < 15 ? 15 : problemStats.length;
+    %>
 
-        <div class="col-md-12 text-center">
-            <div id="countdown" style="font-size: 20px; font-weight: 200"></div>
-        </div>
-        <br>
-        <br>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="fixed-cell"></th>
 
-        <div class="col-md-12">
-            <div class="panel panel-default">
+                <% for(var i=0; i<problemStats.length; i++){ %>
+                    <th class="text-center fixed-cell"><a href="/contest/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a></th>
+                <% } %>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <th class="text-center">#</th>
 
+                <% for(var i=0; i<problemStats.length; i++){ %>
+                <th class="text-center standings-cell fixed-cell">
+                    <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %>
+                </th>
+                <% }for(var i=problemStats.length; i<colspan; i++){ %>
+                    <th class="fixed-cell"></th>
+                <% } %>
+                <th class="text-center fixed-cell">Solved</th>
+                <th class="text-center fixed-cell">Time</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% for(var i=0; i<ranks.length; i++){ %>
+            <% if( ranks[i].penalty === null || _.isUndefined(ranks[i].penalty) ){ %>
 
-                    <% var probNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; %>
-
-                    <table class="table st-table">
-                        <thead>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <% for(var i=0; i<problemStats.length; i++){ %>
-                                <th style="width: 64px" class="text-center"><a href="/contest/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a></th>
-                            <% } %>
+                            <td rowspan="2" class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
+                            <td colspan="<%= colspan %>"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td class="text-center" rowspan="2" style="vertical-align: middle">0</td>
+                            <td class="text-center" rowspan="2" style="vertical-align: middle">0</td>
                         </tr>
                         <tr>
-                            <th style="border-top: 0px;width: 40px;" class="text-center">#</th>
-                            <th style="border-top: 0px;row-span: 2;">NAME</th>
-                            <th style="border-top: 0px; width: 64px;"></th>
-                            <% for(var i=0; i<problemStats.length; i++){ %>
-                                <th class="text-center">
-                                    <span class="label label-default st-labels">
-                                        <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %>
-                                    </span>
-                                </th>
+                            <% for(var j=0; j<problemStats.length; j++){ %>
+                            <td class="text-center standings-cell" ><span class="label label-default" style="background: #D1D1D1">-</span></td>
                             <% } %>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <% for(var i=0; i<ranks.length; i++){ %>
 
-                            <% if( ranks[i].penalty === null || _.isUndefined(ranks[i].penalty) ){ %>
 
-                                <% if(isUser && user.id === ranks[i].uid){ %>
-                        <tr class="bg-success">
+            <% }else{ %>
+
+                        <% var up = JSON.parse('{' + ranks[i].problems + '}'); %>
+
+                        <tr>
+                            <td rowspan="2" class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
+
+                            <td colspan="<%= colspan %>"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].solved %></td>
+                            <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].penalty %></td>
+                        </tr>
+                        <tr>
+                            <% for(var j=0; j<problemStats.length; j++){ %>
+                            <td class="text-center standings-cell">
+                                <% if( !_.isUndefined(up[problemStats[j].pid]) ){ %>
+                                    <% if(up[problemStats[j].pid].status === 0){ %>
+                                    <span class="label label-success" ><%= up[problemStats[j].pid].tried %> - <%= up[problemStats[j].pid].penalty %></span>
+                                    <% }else{ %>
+                                    <span class="label label-danger"><%= up[problemStats[j].pid].tried %></span>
+                                    <% } %>
                                 <% }else{ %>
-                        <tr>
+                                <span class="label label-default" style="background: #D1D1D1">-</span>
                                 <% } %>
-
-                                <tr>
-                                    <td class="text-center"><span class="label label-primary"><%= pagination.offset() + i + 1 %></span></td>
-                                    <td>
-                                        <a href="/user/<%= ranks[i].username %>" style="font-size: 14px; font-weight: 600; text-shadow: none; color: #000;">
-                                            <%= ranks[i].name %>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <span class="label label-primary st-labels" >0</span><span class="label label-info st-labels">0</span>
-                                    </td>
-                                    <% for(var j=0; j<problemStats.length; j++){ %>
-                                        <td class="text-center"></td>
-                                    <% } %>
-                                </tr>
-
-                            <% }else{ %>
-
-                                <% var up = JSON.parse('{' + ranks[i].problems + '}'); %>
-
-                        <% if(isUser && user.id === ranks[i].uid){ %>
-                        <tr class="bg-success">
-                            <% }else{ %>
-                        <tr>
+                            </td>
                             <% } %>
-
-                                    <td class="text-center">
-                                        <span class="label label-primary"><%= pagination.offset() + i + 1 %></span>
-                                    </td>
-                                    <td>
-                                        <a href="/user/<%= ranks[i].username %>" style="font-size: 14px; font-weight: 600; text-shadow: none; color: #000;">
-                                            <%= ranks[i].name %>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <span class="label label-primary st-labels" ><%= ranks[i].solved %></span><span class="label label-info st-labels"><%= ranks[i].penalty %></span>
-                                    </td>
-                                    <% for(var j=0; j<problemStats.length; j++){ %>
-                                        <td class="text-center st-labels">
-                                            <% if( !_.isUndefined(up[problemStats[j].pid]) ){ %>
-                                                <% if(up[problemStats[j].pid].status === 0){ %>
-                                                    <span class="label label-success" ><%= up[problemStats[j].pid].penalty %> (<%= up[problemStats[j].pid].tried %>)</span>
-                                                <% }else{ %>
-                                                    <span class="label label-danger st-labels"><%= up[problemStats[j].pid].tried %></span>
-                                                <% } %>
-                                            <% } %>
-                                        </td>
-                                    <% } %>
-                                </tr>
-
-
-                            <% } %>
-                        <% } %>
-                        </tbody>
-                    </table>
+                        </tr>
 
 
 
-            </div>
+
+
+
+            <% } %>
+        <% } %>
+        </tbody>
+    </table>
+    <hr class="last-border">
+</div>
+
+
+
+
 
 
             <!-- pagination  -->
-            <nav class="text-center">
+            <div class="text-center">
                 <ul class="pagination">
 
                     <% if( pagination.hasPrevPage() ){ %>
@@ -169,8 +143,9 @@
                     <% } %>
 
                 </ul>
-            </nav>
+            </div>
             <!-- end pagination -->
+
 
         </div>
     </div>

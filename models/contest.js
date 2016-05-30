@@ -288,11 +288,11 @@ exports.getDashboardProblems = function(cid,uid,cb){
 exports.getDetailsandProblem = function(cid,pid,cb){
 
     var sql = Query.select([
-        'cn.*','cp.pid','pb.title as probTitle','pb.statement','pb.input','pb.output','pb.score','pb.cpu','pb.memory'
+        'cn.*','pb.id as pid','pb.title as probTitle','pb.statement','pb.input','pb.output','pb.score','pb.cpu','pb.memory'
     ])
         .from('contest as cn')
         .joinRaw(' left join `contest_problems` as `cp` ON `cn`.`id` = `cp`.`cid` AND `cp`.`pid` = ?',[pid])
-        .leftJoin('problems as pb', 'cp.pid', 'pb.id')
+        .joinRaw(' left join `problems` as `pb` ON `pb`.`id` = ?',[pid])
         .where('cn.id', cid)
         .limit(1);
 

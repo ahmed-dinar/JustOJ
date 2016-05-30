@@ -4,38 +4,19 @@
     <meta charset="UTF-8">
     <title>JUST Online Judge</title>
 
-    <script type="text/javascript" src="/javascripts/jquery-2.1.4.min.js"></script>
-
-    <link rel="stylesheet" href="/stylesheets/style.css">
-
-    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
-
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
-    <!-- Latest compiled and minified JavaScript -->
-    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+    <% include ../../../templates/head.ejs %>
 
 </head>
+<body>
 
-<body style="background: #fcfcfc;">
+<!-- header and menu -->
+<% include ../../../templates/header.ejs %>
 
 <% include ../../../templates/contest_header.ejs %>
 
-<!-- Main Content -->
-<div class="container c-h" >
 
-    <div class="row">
-
-        <div class="col-md-12 text-center">
-            <div id="countdown" style="font-size: 20px; font-weight: 200"></div>
-        </div>
-
-        <br>
-        <br>
         <% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; %>
-        <div class="col-md-12">
-            <div class="panel panel-default">
+
                 <div class="panel-body">
 
                     <h4 class="ellips">
@@ -51,9 +32,9 @@
                     <hr>
                     <p><%= clarification.response %></p>
                 </div>
-            </div>
-        </div>
 
+
+        </div>
     </div>
 </div>
 

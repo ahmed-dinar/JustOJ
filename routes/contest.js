@@ -625,7 +625,7 @@ router.get('/:cid/submissions', function(req, res, next) {
             Paginate.paginate({
                     cur_page: cur_page,
                     sql: sql,
-                    limit: 5,
+                    limit: 25,
                     sqlCount: sqlCount
                 },
                 function(err,rows,pagination) {
@@ -781,7 +781,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
             notStarted = moment().isBefore(details.begin);
             if(notStarted){ return callback(null,details,false); }
 
-            //if(!details.privacy){ return callback(null,details,false); } for private contest
+            //if(!details.privacy){ return callback(null,details,false); } //for private contest
 
             if(!isAuthenticated){ return callback(null,details,false); }
 
@@ -823,6 +823,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
                 isLoggedIn: req.isAuthenticated(),
                 user: req.user,
                 errors: req.flash('err'),
+                formError: req.flash('formError'),
                 contest: contest,
                 registered: registered,
                 running: false,

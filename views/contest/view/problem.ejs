@@ -4,26 +4,15 @@
     <meta charset="UTF-8">
     <title>JUST Online Judge</title>
 
-    <script type="text/javascript" src="/javascripts/jquery-2.1.4.min.js"></script>
-
-    <link rel="stylesheet" href="/stylesheets/style.css">
-
-    <link rel="stylesheet" href="/font-awesome-4.5.0/css/font-awesome.min.css" >
-
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
-    <!-- Latest compiled and minified JavaScript -->
-    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+    <% include ../../templates/head.ejs %>
 
 </head>
+<body>
 
-<body style="background: #fcfcfc;">
+<!-- header and menu -->
+<% include ../../templates/header.ejs %>
 
 <% include ../../templates/contest_header.ejs %>
-
-<!-- Main Content -->
-<div class="container c-h" >
 
     <% if (formError.length) { %>
     <div class="col-md-6 col-md-offset-3">
@@ -34,11 +23,11 @@
     </div>
     <% } %>
 
-    <div class="row">
+<div class="panel-body">
 
         <div class="col-md-9">
-            <div class="panel panel-default">
-                <div class="panel-body">
+        <div class="panel panel-default">
+        <div class="panel-body">
 
                     <h3 id="h3"><%- contest.probTitle %></h3>
 
@@ -69,25 +58,15 @@
                     </table>
 
 
-                </div>
-            </div>
         </div>
-
-        <div class="col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-body text-center">
-                    <h5 id="cd-h">ENDS IN</h5>
-                    <div id="countdown" style="font-size: 20px; font-weight: 200"></div>
-                </div>
-            </div>
+        </div>
         </div>
 
 
-        <% if(running && isUser && registered){ %>
+        <% if(running && isLoggedIn && registered){ %>
             <div class="col-md-3">
                 <div class="panel panel-default">
                     <div class="panel-body">
-
                         <h4>Submit</h4>
 
                         <form method="post" name="contestSubmit" id="contest-pform" action="/contest/<%= contest.id %>/submit/<%= contest.pid %>" enctype="multipart/form-data" >
@@ -99,7 +78,7 @@
                                     <option value="java">JAVA</option>
                                 </select>
                             </div>
-
+2 hours ago	Accepted
                             <div class="form-group">
                                 <input type="file" name="source" >
                             </div>
@@ -146,12 +125,15 @@
                         </table>
                         <% } %>
 
-                    </div>
-                </div>
+            </div>
+            </div>
             </div>
         <% } %>
 
-    </div>
+
+</div>
+</div>
+</div>
 </div>
 
 <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
