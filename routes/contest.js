@@ -20,14 +20,15 @@ var Busboy      = require('busboy');
 var uuid        = require('node-uuid');
 var rimraf      = require('rimraf');
 var MyUtil      = require('../helpers/myutil');
-var isLoggedIn  = require('../middlewares/isLoggedIn');
 var Paginate    = require('../helpers/paginate');
 
+var isLoggedIn  = require('../middlewares/isLoggedIn');
+var roles       = require('../middlewares/userrole');
 
 var Query       = require('../config/database/knex/query');
 
 
-router.get('/', function(req, res, next) {
+router.get('/' , function(req, res, next) {
 
     Contest.getPublic(function(err,running,future,ended){
         if(err){ return next(new Error(err)); }
@@ -50,7 +51,8 @@ router.get('/', function(req, res, next) {
 
 });
 
-router.get('/create', function(req, res, next) {
+
+router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     res.render('contest/create',{
         isLoggedIn: req.isAuthenticated(),
@@ -61,7 +63,7 @@ router.get('/create', function(req, res, next) {
 
 
 
-router.get('/edit', function(req, res, next) {
+router.get('/edit', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     Contest.getEditable(function(err,rows){
 
@@ -81,7 +83,7 @@ router.get('/edit', function(req, res, next) {
 });
 
 
-router.get('/edit/:cid', function(req, res, next) {
+router.get('/edit/:cid',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     async.waterfall([
         function(callback) {
@@ -126,7 +128,7 @@ router.get('/edit/:cid', function(req, res, next) {
 });
 
 
-router.get('/edit/:cid/problems/new', function(req, res, next) {
+router.get('/edit/:cid/problems/new',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     res.render('contest/edit/problems/new',{
         isLoggedIn: req.isAuthenticated(),
@@ -143,7 +145,7 @@ router.get('/edit/:cid/problems/new', function(req, res, next) {
 /**
  *
  */
-router.get('/edit/:cid/problems/:pid/preview', function(req, res, next) {
+router.get('/edit/:cid/problems/:pid/preview', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var cid = req.params.cid;
     var pid = req.params.pid;
@@ -161,7 +163,7 @@ router.get('/edit/:cid/problems/:pid/preview', function(req, res, next) {
 /**
  *
  */
-router.get('/edit/:cid/problems/:pid/step1', function(req, res, next) {
+router.get('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var cid = req.params.cid;
     var pid = req.params.pid;
@@ -187,7 +189,7 @@ router.get('/edit/:cid/problems/:pid/step1', function(req, res, next) {
 });
 
 
-router.get('/edit/:cid/problems/:pid/step2', function(req, res, next) {
+router.get('/edit/:cid/problems/:pid/step2',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
 
     var cid = req.params.cid;
@@ -254,7 +256,7 @@ router.get('/edit/:cid/problems/:pid/step2', function(req, res, next) {
 
 
 
-router.get('/edit/:cid/problems/:pid/step3', function(req, res, next) {
+router.get('/edit/:cid/problems/:pid/step3',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var pid = req.params.pid;
     var cid = req.params.cid;
@@ -280,7 +282,7 @@ router.get('/edit/:cid/problems/:pid/step3', function(req, res, next) {
 });
 
 
-router.get('/edit/:cid/publish', function(req, res, next) {
+router.get('/edit/:cid/publish',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var cid = req.params.cid;
 
@@ -295,7 +297,7 @@ router.get('/edit/:cid/publish', function(req, res, next) {
 });
 
 
-router.get('/:cid', function(req, res, next) {
+router.get('/:cid',  function(req, res, next) {
 
     var cid = req.params.cid;
     var isAuthenticated = req.isAuthenticated();
@@ -375,7 +377,7 @@ router.get('/:cid', function(req, res, next) {
 });
 
 
-router.get('/:cid/clarifications/view/:clid', function(req, res, next) {
+router.get('/:cid/clarifications/view/:clid', isLoggedIn(true), function(req, res, next) {
 
     var cid = req.params.cid;
     var clid = req.params.clid;
@@ -423,7 +425,7 @@ router.get('/:cid/clarifications/view/:clid', function(req, res, next) {
 
 });
 
-router.get('/:cid/clarifications/request', function(req, res, next) {
+router.get('/:cid/clarifications/request', isLoggedIn(true), function(req, res, next) {
 
     var cid = req.params.cid;
     var isAuthenticated = req.isAuthenticated();
@@ -478,7 +480,7 @@ router.get('/:cid/clarifications/request', function(req, res, next) {
 
 
 
-router.get('/:cid/clarifications/:q', function(req, res, next) {
+router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next) {
 
     var cur_page = req.query.page;
     var cid = req.params.cid;
@@ -569,7 +571,7 @@ router.get('/:cid/clarifications/:q', function(req, res, next) {
 
 
 
-router.get('/:cid/submissions', function(req, res, next) {
+router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
 
     var cur_page = req.query.page;
     var cid = req.params.cid;
@@ -663,17 +665,12 @@ router.get('/:cid/submissions', function(req, res, next) {
 
 });
 
-router.get('/:cid/submissions/my', function(req, res, next) {
+router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
 
     var cur_page = req.query.page;
     var cid = req.params.cid;
     var isAuthenticated = req.isAuthenticated();
     var user = req.user;
-
-    if( !isAuthenticated ){
-        res.redirect('/login');
-        return;
-    }
 
     if( _.isUndefined(cur_page) ){
         cur_page = 1;
@@ -936,7 +933,7 @@ router.get('/:cid/standings', function(req, res, next) {
 
 
 
-router.post('/edit/:cid/problems/:pid/step3', function(req, res, next) {
+router.post('/edit/:cid/problems/:pid/step3', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var pid = req.params.pid;
     var cid = req.params.cid;
@@ -1011,7 +1008,7 @@ router.post('/edit/:cid/problems/:pid/step3', function(req, res, next) {
 /**
  *
  */
-router.post('/edit/:cid/problems/:pid/step1', function(req, res, next) {
+router.post('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     if( !req.body ) { return next(new Error(err)); }
 
@@ -1027,7 +1024,7 @@ router.post('/edit/:cid/problems/:pid/step1', function(req, res, next) {
 
 
 
-router.post('/edit/:cid/problems/:pid/step2', function(req, res, next) {
+router.post('/edit/:cid/problems/:pid/step2', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var busboy = new Busboy({ headers: req.headers });
     var uniquename =  uuid.v4();
@@ -1066,7 +1063,7 @@ router.post('/edit/:cid/problems/:pid/step2', function(req, res, next) {
 });
 
 
-router.post('/edit/:cid/problems/rtc', function(req, res, next) {
+router.post('/edit/:cid/problems/rtc', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     if( !req.body.pid || !req.body.casename ){
         return next(new Error('No Request body found'));
@@ -1091,7 +1088,7 @@ router.post('/edit/:cid/problems/rtc', function(req, res, next) {
 /**
  * Add a new problem to a contest
  */
-router.post('/edit/:cid/problems/new', function(req, res, next) {
+router.post('/edit/:cid/problems/new', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
 
     async.waterfall([
@@ -1122,7 +1119,7 @@ router.post('/edit/:cid/problems/new', function(req, res, next) {
 
 
 
-router.post('/edit/detail/:cid', function(req, res, next) {
+router.post('/edit/detail/:cid', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var type = req.body.type;
     var title = req.body.title;
@@ -1173,7 +1170,7 @@ router.post('/edit/detail/:cid', function(req, res, next) {
 });
 
 
-router.post('/create', function(req, res, next) {
+router.post('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var type = req.body.type;
     var title = req.body.title;
@@ -1220,24 +1217,16 @@ router.post('/create', function(req, res, next) {
 });
 
 
-router.post('/:cid/submit/:pid', function(req, res, next) {
-
-    if( !req.isAuthenticated() ){  return next(new Error("I'm not gonna tell you whats going on!"));  }
+router.post('/:cid/submit/:pid',isLoggedIn(true) , function(req, res, next) {
 
     ContestSubmit.submit(req, res, next);
-
 });
 
-router.post('/:cid/clarifications/request', function(req, res, next) {
+router.post('/:cid/clarifications/request',isLoggedIn(true) , function(req, res, next) {
 
     var problem = req.body.problem;
     var reqText = req.body.request;
     var cid = req.params.cid;
-
-    if( !req.isAuthenticated() ){
-        res.redirect('/login');
-        return;
-    }
 
     if( reqText === '' ){
         req.flash('err','empty request');

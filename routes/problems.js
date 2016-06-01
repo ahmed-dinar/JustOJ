@@ -1,3 +1,5 @@
+
+
 /**
  *
  * @type {*|exports|module.exports}
@@ -18,7 +20,11 @@ var User        = require('../models/user');
 var Query       = require('../config/database/knex/query');
 var DB          = require('../config/database/knex/DB');
 
+var isLoggedIn  = require('../middlewares/isLoggedIn');
+var roles       = require('../middlewares/userrole');
+
 var EditProblem = require('./edit_problem/editProblem');
+
 
 
 router.get('/', function(req, res, next) {
@@ -66,7 +72,7 @@ router.get('/', function(req, res, next) {
 
 
 
-router.get('/create', function(req, res, next) {
+router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     res.render('problem/create/new', {
         title: "editproblem | JUST Online Judge",
@@ -82,14 +88,14 @@ router.get('/create', function(req, res, next) {
 /**
  *
  */
-router.get('/edit/:pid/1', function(req, res, next) {
+router.get('/edit/:pid/1', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     EditProblem.step1Get(req,res,next);
 
 });
 
 
-router.get('/edit/:pid/2', function(req, res, next) {
+router.get('/edit/:pid/2', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
     EditProblem.step2Get(req, res, next);
 });
 
@@ -97,7 +103,7 @@ router.get('/edit/:pid/2', function(req, res, next) {
 /**
  *
  */
-router.get('/edit/:pid/3', function(req, res, next) {
+router.get('/edit/:pid/3', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     EditProblem.step3Get(req,res,next);
 
@@ -107,7 +113,7 @@ router.get('/edit/:pid/3', function(req, res, next) {
 /**
  *
  */
-router.post('/create/', function(req, res, next) {
+router.post('/create/', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     if( !req.body ) {
         return next(new Error('REQUEST BODY NOT FOUND'));
@@ -125,7 +131,7 @@ router.post('/create/', function(req, res, next) {
 /**
  *
  */
-router.post('/rtc/', function(req, res, next) {
+router.post('/rtc/', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     EditProblem.removeTestCase(req,res,next);
 
@@ -135,7 +141,7 @@ router.post('/rtc/', function(req, res, next) {
 /**
  *
  */
-router.post('/edit/:pid/1', function(req, res, next) {
+router.post('/edit/:pid/1', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     EditProblem.step1Post(req, res, next);
 
@@ -145,14 +151,14 @@ router.post('/edit/:pid/1', function(req, res, next) {
 /**
  *
  */
-router.post('/edit/:pid/2', function(req, res, next) {
+router.post('/edit/:pid/2', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     EditProblem.step2Post(req, res, next);
 
 });
 
 
-router.post('/edit/:pid/3', function(req, res, next) {
+router.post('/edit/:pid/3', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     EditProblem.step3Post(req, res, next);
 
@@ -162,7 +168,7 @@ router.post('/edit/:pid/3', function(req, res, next) {
 /**
  * Test Judge Solution as well as set limits
  */
-router.post('/edit/:pid/tjs', function(req, res, next) {
+router.post('/edit/:pid/tjs', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     EditProblem.testJudgeSolution(req, res, next);
 

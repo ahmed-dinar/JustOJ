@@ -8,6 +8,7 @@ var expressSession   = require('express-session');
 var passport         = require('passport');
 var flash            = require('connect-flash');
 var io               = require('socket.io')();
+var roles            = require('./middlewares/userrole');
 
 //testing ubuntu commit
 
@@ -67,15 +68,16 @@ app.use(expressSession({
 }));
 
 
+
 //passport authenticator
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(roles.middleware());
 app.use(flash());
 
 
 //authenticate login data
 require('./middlewares/passport')(passport);
-
 
 
 //routes

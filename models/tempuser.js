@@ -28,6 +28,7 @@ exports.resister = function (req, res, next) {
     var name = req.body.name;
     var password = req.body.password;
     var email    = req.body.email;
+    var role     = 'user';
 
     if (!username || !password || !email || !name){
         return next(new Error('Form Error'));
@@ -63,7 +64,8 @@ exports.resister = function (req, res, next) {
                 email   : email,
                 created : created,
                 expire  : expire,
-                token   : token
+                token   : token,
+                role    : role
             })
                 .into('temp_user');
 
@@ -146,7 +148,7 @@ exports.verify = function (req, res, next) {
 
         function(callback) {
 
-            var sql = Query.select(['name','username','password','email'])
+            var sql = Query.select(['name','username','password','email','role'])
                 .from('temp_user')
                 .where({ 'token': token })
                 .limit(1);
@@ -167,7 +169,8 @@ exports.verify = function (req, res, next) {
                 username : rows.username,
                 name : rows.name,
                 password : rows.password,
-                email    : rows.email
+                email    : rows.email,
+                role     : rows.role
             })
                 .into('users');
 

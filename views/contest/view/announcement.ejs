@@ -15,7 +15,7 @@
 
 
 <!-- Main Content -->
-<div class="container c-h" >
+<div class="container c-h" style="font-family: 'PT Sans', sans-serif;" >
     <div class="row">
 
         <div class="col-md-12 text-center">
@@ -46,6 +46,8 @@
             <% if(contest.privacy){ %>
                 <% if(!isLoggedIn){ %>
                     <a class="btn btn-primary" href="/login">LOGIN TO RESISTER</a>
+                <% }else if(user.role === 'admin'){ %>
+                    <a class="btn btn-primary" href="/contest/edit/<%= contest.id %>">EDIT</a>
                 <% }else if(!registered){ %>
                     <a class="btn btn-primary" href="/contest/<%= contest.id %>/resister">RESISTER</a>
                 <% }else{ %>
@@ -64,7 +66,7 @@
 <script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>
 <script type="text/javascript">
     $( document ).ready(function() {
-        CountDownTimer('<%= contest.end %>',document.getElementById("countdown"));
+        CountDownTimer('<%= contest.begin %>',document.getElementById("countdown"));
     });
 </script>
 

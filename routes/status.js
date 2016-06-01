@@ -43,7 +43,7 @@ router.get('/' , function(req, res, next) {
     Paginate.paginate({
             cur_page: cur_page,
             sql: sql,
-            limit: 5,
+            limit: 25,
             sqlCount: sqlCount
         },
         function(err,rows,pagination) {
@@ -124,7 +124,7 @@ router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
                         cur_page: cur_page,
                         sql: sql,
                         sqlCount: sqlCount,
-                        limit: 5
+                        limit: 25
                     },
                     function(err,rows,pagination) {
                         if( err ){ return callback(err); }

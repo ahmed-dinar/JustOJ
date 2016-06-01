@@ -39,7 +39,8 @@ module.exports = function(passport) {
             .from('users')
             .where({
                 'id': id
-            });
+            })
+            .limit(1);
 
         DB.execute(
             sql.toString()
@@ -47,7 +48,7 @@ module.exports = function(passport) {
 
                 if( err ){ return done(err); }
 
-                if( !rows.length ){ return done('empty user'); }
+                if( !rows.length ){ return done('404,no user'); }
 
                 done(err, rows[0]);
             });
