@@ -14,7 +14,7 @@
 
 <% include ../../../templates/contest_header.ejs %>
 
-        <% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; %>
+        <% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; var i; %>
 
                 <div class="panel-body">
                 <div class="col-md-10">
@@ -34,15 +34,15 @@
                         <% } %>
 
 
-                    <% _.forEach(problems,function(value, key){ %>
+                    <% i=0; _.forEach(problems,function(value, key){ %>
 
                         <% if(selected===value.pid){ %>
                         <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
-                            <%= ch.charAt(parseInt(key)-1) %>.<%= value.title %>
+                            <%= ch.charAt(i++) %>.<%= value.title %>
                         </option>
                         <% }else{ %>
                         <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>">
-                            <%= ch.charAt(parseInt(key)-1) %>.<%= value.title %>
+                            <%= ch.charAt(i++) %>.<%= value.title %>
                         </option>
                         <% } %>
 
@@ -55,8 +55,7 @@
 
                     <div class="list-group">
 
-
-                        <% for(var i=0; i<clarifications.length; i++){ %>
+                        <% for(i=0; i<clarifications.length; i++){ %>
                             <a href="/contest/<%= contest.id %>/clarifications/view/<%= clarifications[i].id %>" class="list-group-item">
                                 <h4 class="ellips">
                                     <% if(clarifications[i].pname==='General'){ %>
@@ -69,45 +68,8 @@
                         <% } %>
 
 
-                        <!-- pagination  -->
-                        <nav class="text-center">
-                            <ul class="pagination">
+                        <% include ../../../templates/pagination.ejs %>
 
-
-                                <% if( pagination.hasPrevPage() ){ %>
-                                <li>
-                                    <a href="/contest/<%= contest.id %>/clarifications/<%= selected %>?page=<%= pagination.prevPage() %>" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <% } %>
-
-
-                                <% for(var i=0; i<pagination.totalPages(); i++){ %>
-
-                                <% if( pagination.cur_page == i+1 ){ %>
-                                <li class="active">
-                                    <% }else{ %>
-                                <li>
-                                    <% } %>
-
-                                    <a href="/contest/<%= contest.id %>/clarifications/<%= selected %>?page=<%= i+1 %>">
-                                        <%= i+1 %>
-                                    </a>
-                                </li>
-                                <% } %>
-
-                                <% if( pagination.hasNextPage() ){ %>
-                                <li>
-                                    <a href="/contest/<%= contest.id %>/clarifications/<%= selected %>?page=<%= pagination.nextPage() %>" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                                <% } %>
-
-                            </ul>
-                        </nav>
-                        <!-- end pagination -->
                     </div>
                 </div>
                 </div>

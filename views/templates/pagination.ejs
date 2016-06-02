@@ -1,0 +1,35 @@
+
+<div class="text-center">
+    <ul class="pagination">
+
+        <% if( pagination.hasPrevPage() ){ %>
+        <li>
+            <a href="<%= locals.site.url %>problems?page=<%= pagination.prevPage() %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <% } %>
+
+        <% for(var i=0; i<pagination.totalPages(); i++){ %>
+            <% if( pagination.cur_page == i+1 ){ %>
+                    <li class="active">
+                <% }else{ %>
+                    <li>
+                <% } %>
+
+                        <a href="<%= locals.site.url %>problems?page=<%= i+1 %>">
+                            <%= i+1 %>
+                        </a>
+                    </li>
+        <% } %>
+
+        <% if( pagination.hasNextPage() ){ %>
+            <li>
+                <a href="<%= locals.site.url %>problems?page=<%= pagination.nextPage() %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        <% } %>
+
+    </ul>
+</div>

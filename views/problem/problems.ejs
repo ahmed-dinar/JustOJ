@@ -9,10 +9,8 @@
 </head>
 <body>
 
-
 <!-- header and menu -->
 <% include ../templates/header.ejs %>
-
 
 
 <!-- Main Content -->
@@ -23,94 +21,51 @@
         <div class="col-md-10">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <h4>Problems</h4>
-
-                    <!-- problem list -->
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Title</th>
-                                <th>Difficulty</th>
-                                <th title="Total Submissions / Accepted">Total/AC</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <% for(var i=0; i<problems.length; i++){ %>
-                                <tr>
-                                    <td class="col-sm-1">
-                                        <a href="problems/JOP0<%= problems[i].id %>" >
-                                            <%= problems[i].id %>
-                                        </a>
-                                    </td>
-                                    <td class="ellips" style="max-width: 100px;">
-                                        <b><%= problems[i].title %></b>
-                                    </td>
-
-                                    <td class="col-md-1">
-                                        <span class="label label-default">
-                                            <%= problems[i].difficulty %>
-                                        </span>
-                                    </td>
-
-                                    <td class="col-md-1">
-                                        <span class="label label-info">
-                                            <%= problems[i].submissions %> / <%= problems[i].solved %>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <% } %>
-
-                        </tbody>
-                    </table>
-
-                    <hr class="last-border">
-
-
-                    <!-- pagination  -->
-                    <div class="text-center">
-                        <ul class="pagination">
-
-
-                            <% if( pagination.hasPrevPage() ){ %>
-                                <li>
-                                    <a href="<%= locals.site.url %>problems?page=<%= pagination.prevPage() %>" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                            <% } %>
-
-
-                            <% for(var i=0; i<pagination.totalPages(); i++){ %>
-
-                                <% if( pagination.cur_page == i+1 ){ %>
-                                    <li class="active">
-                                <% }else{ %>
-                                    <li>
-                                <% } %>
-
-                                        <a href="<%= locals.site.url %>problems?page=<%= i+1 %>">
-                                            <%= i+1 %>
-                                        </a>
-                                    </li>
-                            <% } %>
-
-                            <% if( pagination.hasNextPage() ){ %>
-                                <li>
-                                    <a href="<%= locals.site.url %>problems?page=<%= pagination.nextPage() %>" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            <% } %>
-
-                        </ul>
-                    </div>
-                    <!-- end pagination -->
-
-
                 </div>
+
+                <!-- problem list -->
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th style="padding-left: 15px;">Title</th>
+                        <th>Difficulty</th>
+                        <th title="Total Submissions / Accepted">Stat.</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <% for(var i=0; i<problems.length; i++){ %>
+                    <tr>
+                        <td class="ellips" style="max-width: 100px;padding-left: 15px;">
+                            <a href="problems/JOP0<%= problems[i].id %>" ><b><%= problems[i].title %></b></a>
+                        </td>
+
+                        <td class="col-md-1">
+                                            <span class="label label-default">
+                                                <%= problems[i].difficulty %>
+                                            </span>
+                        </td>
+
+                        <td class="col-md-1">
+                                            <span class="label label-info">
+                                                <%= problems[i].submissions %> / <%= problems[i].solved %>
+                                            </span>
+                        </td>
+                    </tr>
+                    <% } %>
+
+                    </tbody>
+
+                </table>
+
+
+
+                <hr class="last-border">
+
+
+                <% include ../templates/pagination.ejs %>
+
             </div>
         </div>
 

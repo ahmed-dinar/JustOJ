@@ -14,126 +14,82 @@
 
 <% include ../../templates/contest_header.ejs %>
 
-        <div class="panel-body">
-            <div class="pull-left">
-                <h4>Submissions</h4>
-            </div>
-            <div class="pull-right">
-                <div class="btn-group-sm" role="group" >
-                    <a href="/contest/<%= contest.id %>/submissions" class="btn btn-sm btn-default disabled">ALL</a>
-                    <a href="/contest/<%= contest.id %>/submissions/my" class="btn btn-sm btn-default">MY</a>
-                </div>
-            </div>
-        </div>
-
-        <% if(status.length){ %>
-            <table class="table">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>User</th>
-                            <th>Problem</th>
-                            <th>Time</th>
-                            <th>Language</th>
-                            <th>CPU</th>
-                            <th>Memory</th>
-                            <th>Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <% for(var i=0; i<status.length; i++){ %>
-                        <tr>
-                            <td><%= pagination.offset() + (i+1) %></td>
-                            <td class="ellips" style="max-width: 100px;">
-                                <a href="/user/<%= status[i].username %>">
-                                    <%= status[i].username %>
-                                </a>
-                            </td>
-                            <td class="ellips" style="max-width: 100px;">
-                                <a href="/contest/<%= contest.id %>/problem/<%= status[i].pid %>" title="<%= status[i].title %>">
-                                    <%= status[i].title %>
-                                </a>
-                            </td>
-                            <td title="<%= status[i].submittime %>" class="ellips" style="max-width: 100px;">
-                                <%= moment(status[i].submittime).from() %>
-                            </td>
-                            <td><%= langNames[status[i].language] %></td>
-                            <td><%= parseFloat(status[i].cpu/1000.0).toFixed(2) %>s</td>
-                            <td><%= status[i].memory %>KB</td>
-                            <td>
-                                <% var st = parseInt(status[i].status); %>
-                                <% if(st === 0){ %>
-                                <span class="label label-success">
-                                    <% }else if(st === 5){ %>
-                                    <span class="label label-default">
-                                        <% }else if(st === 6){ %>
-                                        <span class="label label-info">
-                                            <% }else if(st === 8){ %>
-                                            <span class="label label-warning">
-                                                <% }else{ %>
-                                                <span class="label label-danger">
-                                                    <% } %>
-                                                    <%= runStatus[st] %>
-                                                </span>
-                            </td>
-                        </tr>
-                        <% } %>
-                        </tbody>
-                    </table>
-
-                    <hr class="last-border">
-
-                    <!-- pagination  -->
-                    <div class="text-center">
-                        <ul class="pagination">
-
-
-                            <% if( pagination.hasPrevPage() ){ %>
-                            <li>
-                                <a href="/contest/<%= contest.id %>/submissions?page=<%= pagination.prevPage() %>" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <% } %>
-
-
-                            <% for(var i=0; i<pagination.totalPages(); i++){ %>
-
-                            <% if( pagination.cur_page == i+1 ){ %>
-                            <li class="active">
-                                <% }else{ %>
-                            <li>
-                                <% } %>
-
-                                <a href="/contest/<%= contest.id %>/submissions?page=<%= i+1 %>">
-                                    <%= i+1 %>
-                                </a>
-                            </li>
-                            <% } %>
-
-                            <% if( pagination.hasNextPage() ){ %>
-                            <li>
-                                <a href="/contest/<%= contest.id %>/submissions?page=<%= pagination.nextPage() %>" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                            <% } %>
-
-                        </ul>
-                    </div>
-                    <!-- end pagination -->
-
-
-
-
-
-
-                    <% } %>
-
-
-
+<div class="panel-body">
+    <div class="pull-left">
+        <h4>Submissions</h4>
+    </div>
+    <div class="pull-right">
+        <div class="btn-group-sm" role="group" >
+            <a href="/contest/<%= contest.id %>/submissions" class="btn btn-sm btn-default disabled">ALL</a>
+            <a href="/contest/<%= contest.id %>/submissions/my" class="btn btn-sm btn-default">MY</a>
         </div>
     </div>
+</div>
+
+    <% if(status.length){ %>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>User</th>
+            <th>Problem</th>
+            <th>Time</th>
+            <th>Language</th>
+            <th>CPU</th>
+            <th>Memory</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(var i=0; i<status.length; i++){ %>
+        <tr>
+            <td><%= pagination.offset() + (i+1) %></td>
+            <td class="ellips" style="max-width: 100px;">
+                <a href="/user/<%= status[i].username %>">
+                    <%= status[i].username %>
+                </a>
+            </td>
+            <td class="ellips" style="max-width: 100px;">
+                <a href="/contest/<%= contest.id %>/problem/<%= status[i].pid %>" title="<%= status[i].title %>">
+                    <%= status[i].title %>
+                </a>
+            </td>
+            <td title="<%= status[i].submittime %>" class="ellips" style="max-width: 100px;">
+                <%= moment(status[i].submittime).from() %>
+            </td>
+            <td><%= langNames[status[i].language] %></td>
+            <td><%= parseFloat(status[i].cpu/1000.0).toFixed(2) %>s</td>
+            <td><%= status[i].memory %>KB</td>
+            <td>
+                <% var st = parseInt(status[i].status); %>
+                <% if(st === 0){ %>
+                <span class="label label-success">
+                    <% }else if(st === 5){ %>
+                    <span class="label label-default">
+                        <% }else if(st === 6){ %>
+                        <span class="label label-info">
+                            <% }else if(st === 8){ %>
+                            <span class="label label-warning">
+                                <% }else{ %>
+                                <span class="label label-danger">
+                                    <% } %>
+                                    <%= runStatus[st] %>
+                                                    </span>
+            </td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <hr class="last-border">
+
+    <% include ../../templates/pagination.ejs %>
+
+
+    <% } %>
+
+</div>
+</div>
 </div>
 
 <script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>

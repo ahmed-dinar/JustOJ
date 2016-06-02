@@ -16,39 +16,39 @@
 
 <% include ../../templates/contest_header.ejs %>
 
-                <div class="panel-body" id="db-lg">
-                    <div class="col-md-10">
-                    <h4>Problems</h4>
-                    <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
+<div class="panel-body" id="db-lg">
+    <div class="col-md-10 contest-p-list">
+        <h4>Problems</h4>
+        <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
 
-                    <% for(var i= 0; i<problems.length; i++){ %>
+        <% for(var i= 0; i<problems.length; i++){ %>
 
-                        <% if(isLoggedIn && registered){ %>
-                            <% if(problems[i].yousolved !== -1){ %>
-                                <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item" style="border-left: 3px solid lawngreen">
-                            <% }else if(problems[i].youtried !== -1){ %>
-                                <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item" style="border-left: 3px solid indianred">
-                            <% }else{ %>
-                                <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
-                            <% } %>
+        <% if(isLoggedIn && registered){ %>
+            <% if(problems[i].yousolved !== -1){ %>
+                <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item" style="border-left: 2px solid lawngreen; ">
+                    <% }else if(problems[i].youtried !== -1){ %>
+                    <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item" style="border-left: 2px solid indianred">
                         <% }else{ %>
-                            <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
+                        <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
+                            <% } %>
+        <% }else{ %>
+                    <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
                         <% } %>
 
-                            <span class="label label-default pull-right">
+                        <span class="label label-default pull-right">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                                     x <%= problems[i].accepted %>
                             </span>
-                            <h5 style="font-weight: 600">
-                                <%= ch.charAt(i).toUpperCase() %>. <%= problems[i].title %>
-                            </h5>
-                        </a>
-                    <% } %>
-                    </div>
-                </div>
-
-        </div>
+                        <h5 style="font-weight: 600">
+                            <%= ch.charAt(i).toUpperCase() %>. <%= problems[i].title %>
+                        </h5>
+                    </a>
+         <% } %>
     </div>
+</div>
+
+</div>
+</div>
 </div>
 
 
