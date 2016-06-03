@@ -12,6 +12,7 @@ var _           = require('lodash');
 var async       = require('async');
 var moment      = require("moment");
 var colors      = require('colors');
+var url         = require('url');
 
 var Paginate    = require('../helpers/paginate');
 var MyUtil      = require('../helpers/myutil');
@@ -329,7 +330,8 @@ var findProblems = function(req,cb){
             cur_page: cur_page,
             sql: Query.select(['id','title','submissions','solved','difficulty']).from('problems').where('isContest',0),
             sqlCount: Query.count('id as count').from('problems').where('isContest',0),
-            limit: 5
+            limit: 5,
+            url: url.parse(req.originalUrl).pathname
         },
         function(err,rows,pagination) {
             if( err ){ return cb(err); }

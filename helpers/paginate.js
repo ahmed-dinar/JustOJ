@@ -40,7 +40,7 @@ var count = function(sqlCount,callback){
 
 var find = function(opts, total_count, callback){
 
-    var pagination = new Pagination(opts.cur_page,opts.limit,total_count);
+    var pagination = new Pagination(opts.cur_page,opts.limit,total_count,opts.url);
 
     var sql = opts.sql
         .limit(pagination.page_limit)

@@ -3,6 +3,7 @@ var user        = require('../models/user');
 var router      = express.Router();
 
 var _           = require('lodash');
+var url         = require('url');
 
 var isLoggedIn  = require('../middlewares/isLoggedIn');
 var MyUtil      = require('../helpers/myutil');
@@ -44,7 +45,8 @@ router.get('/' , function(req, res, next) {
             cur_page: cur_page,
             sql: sql,
             limit: 25,
-            sqlCount: sqlCount
+            sqlCount: sqlCount,
+            url: url.parse(req.originalUrl).pathname
         },
         function(err,rows,pagination) {
 
@@ -124,7 +126,8 @@ router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
                         cur_page: cur_page,
                         sql: sql,
                         sqlCount: sqlCount,
-                        limit: 25
+                        limit: 25,
+                        url: url.parse(req.originalUrl).pathname
                     },
                     function(err,rows,pagination) {
                         if( err ){ return callback(err); }

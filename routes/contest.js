@@ -3,12 +3,12 @@
  * @type {*|exports|module.exports}
  */
 
-var express     = require('express');
-var User        = require('../models/user');
-var Contest     = require('../models/contest');
-var ContestSubmit     = require('../models/contestSubmit');
-var Problems    = require('../models/problems');
-var router      = express.Router();
+var express         = require('express');
+var User            = require('../models/user');
+var Contest         = require('../models/contest');
+var ContestSubmit   = require('../models/contestSubmit');
+var Problems        = require('../models/problems');
+var router          = express.Router();
 
 var _           = require('lodash');
 var moment      = require("moment");
@@ -19,6 +19,8 @@ var fs          = require('fs');
 var Busboy      = require('busboy');
 var uuid        = require('node-uuid');
 var rimraf      = require('rimraf');
+var url         = require('url');
+
 var MyUtil      = require('../helpers/myutil');
 var Paginate    = require('../helpers/paginate');
 
@@ -524,7 +526,8 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
             //not started yet
             if( notStarted ){ return callback(null,contest); }
 
-            Contest.getClarifications(cid,qid,cur_page,function(err,rows,pagination){
+            var URL = url.parse(req.originalUrl).pathname;
+            Contest.getClarifications(cid,qid,cur_page,URL,function(err,rows,pagination){
                 if(err){ return callback(err); }
 
                 callback(null,contest,rows,pagination);
@@ -625,11 +628,14 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
                 .from('contest_submissions')
                 .where('cid',cid);
 
+
+
             Paginate.paginate({
                     cur_page: cur_page,
                     sql: sql,
                     limit: 25,
-                    sqlCount: sqlCount
+                    sqlCount: sqlCount,
+                    url: url.parse(req.originalUrl).pathname
                 },
                 function(err,rows,pagination) {
 
@@ -671,6 +677,7 @@ router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
     var cid = req.params.cid;
     var isAuthenticated = req.isAuthenticated();
     var user = req.user;
+
 
     if( _.isUndefined(cur_page) ){
         cur_page = 1;
@@ -714,11 +721,13 @@ router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
                     'uid':user.id
                 });
 
+
             Paginate.paginate({
                     cur_page: cur_page,
                     sql: sql,
-                    limit: 5,
-                    sqlCount: sqlCount
+                    limit: 20,
+                    sqlCount: sqlCount,
+                    url: url.parse(req.originalUrl).pathname
                 },
                 function(err,rows,pagination) {
 
@@ -903,7 +912,8 @@ router.get('/:cid/standings', function(req, res, next) {
         return next(new Error('what are u looking for!'));
     }
 
-    Contest.getRank(cid,cur_page,function(err,contest,problemStats,ranks,pagination){
+    var URL = url.parse(req.originalUrl).pathname;
+    Contest.getRank(cid,cur_page,URL,function(err,contest,problemStats,ranks,pagination){
 
         if(err){ return next(new Error(err)); }
 

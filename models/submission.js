@@ -5,6 +5,7 @@ var DB          = require('../config/database/knex/DB');
 var Query       = require('../config/database/knex/query');
 
 
+
 exports.insert = function(inserts,cb){
 
     var sql = Query.insert(inserts)

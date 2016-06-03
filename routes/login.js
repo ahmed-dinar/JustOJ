@@ -11,21 +11,24 @@ var router          = express.Router();
 
 router.get('/' , isLoggedIn(false) ,function(req, res, next) {
 
+
     res.render('login',{
         errors: req.flash('loginFailure'),
         success: req.flash('success'),
-        isLoggedIn: false
+        isLoggedIn: false,
+        postUrl: req.originalUrl
     });
 
 });
 
 
-router.post('/' ,passport.authenticate('local-login', {
-        successRedirect: '/',
-        failureRedirect: '/login',
-        failureFlash : true
-    })
-);
+router.post('/', passport.authenticate('local-login', {
+            failureRedirect: '/login',
+            failureFlash: true
+        }), function (req, res) {
+            var ref_page = req.query.redirect ? req.query.redirect : '/';
+            res.redirect(ref_page);
+        });
 
 
 module.exports = router;

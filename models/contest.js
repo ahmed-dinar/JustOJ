@@ -1,9 +1,10 @@
 var _           = require('lodash');
 var async       = require('async');
 
+var moment      = require("moment");
+
 var DB          = require('../config/database/knex/DB');
 var Query       = require('../config/database/knex/query');
-var moment      = require("moment");
 var Paginate    = require('../helpers/paginate');
 var MyUtil      = require('../helpers/myutil');
 
@@ -501,7 +502,7 @@ function getProblemStats(cid,withTried,cb){
         });
 }
 
-exports.getRank = function(cid,cur_page,cb){
+exports.getRank = function(cid,cur_page,url,cb){
 
     async.waterfall([
         function(callback) {
@@ -563,7 +564,8 @@ exports.getRank = function(cid,cur_page,cb){
                     cur_page: cur_page,
                     sql: sql,
                     sqlCount: sqlCount,
-                    limit: 5
+                    limit: 5,
+                    url: url
                 },
                 function(err,rows,pagination) {
                     callback(err,contest,problemStats,rows,pagination);
@@ -603,7 +605,7 @@ exports.getClarification = function(cid,clid,cb){
         });
 };
 
-exports.getClarifications = function(cid,qid,cur_page,cb){
+exports.getClarifications = function(cid,qid,cur_page,url,cb){
 
     var sql = Query.select([
         'cc.id',
@@ -638,8 +640,9 @@ exports.getClarifications = function(cid,qid,cur_page,cb){
     Paginate.paginate({
             cur_page: cur_page,
             sql: sql,
-            limit: 5,
-            sqlCount: sqlCount
+            limit: 20,
+            sqlCount: sqlCount,
+            url: url
         },
         function(err,rows,pagination) {
             cb(err,rows,pagination);

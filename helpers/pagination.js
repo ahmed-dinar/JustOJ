@@ -11,14 +11,16 @@ var _          = require('lodash');
  *
  * @type {Function}
  */
-var Pagination = exports.Pagination = function Pagination(cur_page,page_limit,total) {
+var Pagination = exports.Pagination = function Pagination(cur_page,page_limit,total,url) {
 
-    this.cur_page = parseInt(cur_page);
-    this.page_limit = parseInt(page_limit);
-    this.total = parseInt(total);
+    var _this = this;
+    _this.cur_page = parseInt(cur_page);
+    _this.page_limit = parseInt(page_limit);
+    _this.total = parseInt(total);
+    _this.url = url;
 
-    return this;
-}
+    return _this;
+};
 
 
 /**

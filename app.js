@@ -32,6 +32,7 @@ var sockettest    = require('./routes/sockettest');
 
 var app = express();
 
+app.disable('x-powered-by');
 
 app.locals.site = {
     title: 'JUST OJ',
