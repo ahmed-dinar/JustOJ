@@ -62,6 +62,27 @@ User.login = function(username, password, fn) {
 };
 
 
+User.available = function(username,email,fn){
+
+    if( username && email ){
+        var sql = Query.select('username')
+            .from('users')
+            .where('username', username)
+            .orWhere('email',email)
+            .limit(1);
+        DB.execute(sql.toString(),fn);
+    }
+    else if( username ){
+        var sql = Query.select('username').from('users').where('username',username).limit(1);
+        DB.execute(sql.toString(),fn);
+    }else if( email ){
+        var sql = Query.select('email').from('users').where('email', email).limit(1);
+        DB.execute(sql.toString(),fn);
+    }else{
+        fn('empty fields');
+    }
+};
+
 User.problemStatus = function(id,callback){
 
     var sql = Query.select()

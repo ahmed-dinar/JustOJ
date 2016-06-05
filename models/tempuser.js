@@ -22,17 +22,13 @@ var Secrets     = require('../files/secrets/Secrets');
  * @param res
  * @param next
  */
-exports.resister = function (req, res, next) {
+exports.resister = function (req, cb) {
 
     var username = req.body.username;
     var name = req.body.name;
     var password = req.body.password;
     var email    = req.body.email;
     var role     = 'user';
-
-    if (!username || !password || !email || !name){
-        return next(new Error('Form Error'));
-    }
 
     async.waterfall([
 
@@ -112,17 +108,7 @@ exports.resister = function (req, res, next) {
         }
 
 
-    ], function (err, result) {
-
-        if (err) {
-            req.flash('resFailure', err);
-            res.redirect('/resister');
-        } else {
-            req.flash('success', 'Successfully resisterd! A varification link sent to ' + email + '.Please follow the link to activate account in 24 hours.');
-            res.redirect('/login');
-        }
-
-    });
+    ], cb);
 
 };
 

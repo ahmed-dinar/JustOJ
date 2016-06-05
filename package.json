@@ -17,6 +17,7 @@
     "debug": "^2.2.0",
     "ejs": "~2.3.3",
     "express": "~4.13.1",
+    "express-validator": "^2.20.5",
     "fs-extra": "^0.26.5",
     "knex": "^0.10.0",
     "lodash": "^4.6.1",

@@ -8,6 +8,8 @@ var expressSession   = require('express-session');
 var passport         = require('passport');
 var flash            = require('connect-flash');
 var io               = require('socket.io')();
+var expressValidator = require('express-validator');
+
 var roles            = require('./middlewares/userrole');
 
 //testing ubuntu commit
@@ -56,6 +58,7 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
