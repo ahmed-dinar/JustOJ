@@ -1,33 +1,44 @@
+
+var async      = require('async');
 var dbPool     = require('./pool');
+
 
 var colors      = require('colors');
 
-exports.execute = function(sql,callback){
+exports.execute = function(sql,cb){
 
-    console.log('[SQL-QUERY]: '.red + sql.blue);
+    console.log('[SQL-QUERY]: '.red + sql.cyan);
 
-    dbPool.getConnection(function(err, connection) {
+    async.waterfall([
+        function(callback) {
+
+            dbPool.getConnection(function(err, connection) {
+                if(err){
+                    console.log('Error establishing connection with database'.red);
+                    return callback(err);
+                }
+                callback(null,connection);
+            });
+        },
+        function(connection,callback) {
+
+            connection.query(sql, function(err, rows) {
+
+                connection.release();
+
+                if(err){ return callback(err); }
+
+                return callback(null,rows);
+            });
+        }
+    ], function (err, rows) {
 
         if(err){
-            console.log('[SQL-STAT]: Failed. '.red + 'Error establishing connection with database');
-            console.log(err);
-            return callback('Error establishing connection with database!');
+            console.log('[SQL-STAT]: Failed'.red);
+            console.error(err);
+            return cb(err);
         }
 
-        connection.query(sql, function(err, rows) {
-
-            connection.release();
-
-            if(err){
-                console.log('[SQL-STAT]: Failed'.red);
-                console.log(err);
-                return callback('database error!',null);
-            }
-
-            console.log('[SQL-STAT]: '.red + 'Success!'.green);
-
-            return callback(null,rows);
-
-        });
+        cb(null,rows);
     });
 };

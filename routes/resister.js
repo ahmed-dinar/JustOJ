@@ -13,6 +13,7 @@ var isLoggedIn  = require('../middlewares/isLoggedIn');
 var TempUser    = require('../models/tempuser');
 var User        = require('../models/user');
 var Schema      = require('../config/form-validation-schema');
+var CustomError = require('../helpers/custom-error');
 
 var Secrets     = require('../files/secrets/Secrets');
 
@@ -47,10 +48,21 @@ router.post('/', isLoggedIn(false) , function(req, res, next) {
     ], function (err, result) {
 
         if(err){
-            console.log(err);
 
-            req.flash('resFailure', err);
-            res.redirect('/resister');
+            console.error(err);
+
+            switch (err.name){
+                case 'captcha':
+                    req.flash('resFailure', err);
+                    res.redirect('/resister');
+                    break;
+                case 'form':
+                    req.flash('resFailure', err);
+                    res.redirect('/resister');
+                    break;
+                default:
+                    next(err);
+            }
             return;
         }
 
@@ -69,7 +81,7 @@ var validateForm = function(req,cb){
 
     var formErrors = req.validationErrors();
 
-    if (formErrors) { return cb(formErrors); }
+    if (formErrors) { return cb(new CustomError(formErrors,'form')); }
 
      User.available(req.body.username,req.body.email,function(err,rows){
          if(err){ return cb(err); }
@@ -81,7 +93,7 @@ var validateForm = function(req,cb){
                  msg: rows[0].username ? 'Username already taken' : 'Email already taken',
                  value: rows[0].username ? req.body.username : req.body.email
              });
-             return cb(formErrors);
+             return cb(new CustomError(formErrors,'form'));
          }
 
          cb();
@@ -98,7 +110,7 @@ var verifyRecaptcha = function(req,cb){
     var recaptcha = new Recaptcha(Secrets.recaptcha.SITE_KEY, Secrets.recaptcha.SECRET_KEY, recaptchaData);
 
     recaptcha.verify(function(success, error_code) {
-        if(!success){ return cb('Captcha does not match'); }
+        if(!success){ return cb(new CustomError('Captcha does not match','captcha')); }
 
         cb();
     });

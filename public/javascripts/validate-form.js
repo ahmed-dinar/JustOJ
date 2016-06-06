@@ -6,10 +6,8 @@ jQuery(document).ready(function(){
         trigger: 'custom', // default is 'hover' which is no good here
         onlyOne: false,    // allow multiple tips to be open at a time
         position: 'right',  // display the tips to the right of the element
-
         theme: 'tooltipster-shadow'
     });
-
 
 
     var validator = $("#resform").validate({
@@ -56,12 +54,11 @@ jQuery(document).ready(function(){
         messages: {
             conpassword: "password doesnot match",
             username: {
-                remote: "username not avialable"
+                remote: "username already taken"
             },
             email: {
-                remote: "Email not avialable"
+                remote: "Email already taken"
             }
-
         },
 
         highlight: function(element) {

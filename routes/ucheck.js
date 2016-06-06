@@ -19,9 +19,12 @@ router.post('/', function(req, res){
     var email = req.body.email;
 
     User.available(username,email,function(err,rows){
-        if( err || rows.length ){
+        if( err ){
+            res.send(true);
+        }else if(rows.length){
             res.send(false);
-        }else{
+        }
+        else{
             res.send(true);
         }
     });
