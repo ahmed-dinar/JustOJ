@@ -227,12 +227,14 @@ td,th{
   color: #334d00 !important;
 }
 
+
 .scoreboard >tbody>tr:nth-child(odd) > td{
   padding: 8px 8px 2px 8px !important;
 }
 
-.scoreboard >tbody>tr:nth-child(even) > td{
-  padding: 2px 8px 8px 8px !important;
+.scoreboard > thead > tr > th,.scoreboard > thead > tr > td {
+  padding: 0px !important;
+  margin: 0px !important;
 }
 
 .standings-cell > .label{

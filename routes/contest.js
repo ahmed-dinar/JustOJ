@@ -54,6 +54,16 @@ router.get('/' , function(req, res, next) {
 });
 
 
+router.get('/host' , function(req, res, next) {
+
+        res.render('contest/host',{
+            isLoggedIn: req.isAuthenticated(),
+            user: req.user
+        });
+
+});
+
+
 router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     res.render('contest/create',{
