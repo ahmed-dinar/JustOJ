@@ -16,7 +16,7 @@
 
 
 <!-- Main Content -->
-<div class="container">
+<div class="content container">
 
     <!-- errors -->
     <% if (formError.length) { %>
@@ -121,7 +121,7 @@
         <% if(isLoggedIn){ %>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h4>Submit</h4>
+                    <h4><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h4>
 
                     <form method="post" action="/submit/<%= problem.id %>" name="usc" id="usc" enctype="multipart/form-data" >
 
@@ -181,7 +181,17 @@
 
                 </div>
             </div>
-        <% } %>
+        <% }else{ %>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h4>
+                    <h5>Login To Submit</h5>
+                    <a class="btn btn-primary" href="/login" >Login</a>
+                </div>
+            </div>
+
+         <% } %>
 
 
             <div class="panel panel-default" style="background: transparent;">

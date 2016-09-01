@@ -13,8 +13,19 @@
 <% include ../templates/header.ejs %>
 
 
+<script type="text/javascript">
+
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.document.location = $(this).data("href");
+        });
+    });
+
+
+</script>
+
 <!-- Main Content -->
-<div class="container c-h">
+<div class="content container c-h">
 
     <div class="row">
 
@@ -25,7 +36,7 @@
                 </div>
 
                 <!-- problem list -->
-                <table class="table">
+                <table class="table problem-list">
                     <thead>
                     <tr>
                         <th style="padding-left: 15px;">Title</th>
@@ -36,9 +47,9 @@
                     <tbody>
 
                     <% for(var i=0; i<problems.length; i++){ %>
-                    <tr>
+                    <tr class='clickable-row' data-href='problems/JOP0<%= problems[i].id %>' >
                         <td class="ellips" style="max-width: 100px;padding-left: 15px;">
-                            <a href="problems/JOP0<%= problems[i].id %>" ><b><%= problems[i].title %></b></a>
+                            <b><%= problems[i].title %></b>
                         </td>
 
                         <td class="col-md-1">

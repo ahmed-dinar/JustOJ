@@ -32,7 +32,7 @@ function CountDownTimer(begin,selector) {
          var hours = Math.floor((distance % _day) / _hour);
          var minutes = Math.floor((distance % _hour) / _minute);
          var seconds = Math.floor((distance % _minute) / _second);
-
+        
         selector.innerHTML = days <=0 ? '' : days + 'd ';
         selector.innerHTML += Math.floor(hours/10) + '' +  hours%10 + ':';
         selector.innerHTML += Math.floor(minutes/10) + '' +  minutes%10 + ':';
