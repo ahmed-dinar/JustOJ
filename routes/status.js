@@ -57,6 +57,7 @@ router.get('/' , function(req, res, next) {
 
 
             res.render('status/status' , {
+                active_nav: "status",
                 title: "Problems | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
@@ -148,6 +149,7 @@ router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
             }
 
             res.render('status/user_status' , {
+                active_nav: "status",
                 title: "Problems | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),

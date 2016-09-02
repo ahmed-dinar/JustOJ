@@ -23,6 +23,7 @@ router.get('/', isLoggedIn(false) , function(req, res, next) {
         var recaptcha = new Recaptcha(Secrets.recaptcha.SITE_KEY, Secrets.recaptcha.SECRET_KEY);
 
         res.render('resister', {
+            active_nav: "",
             layout: true,
             recaptcha_form: recaptcha.toHTML(),
             errors: req.flash('resFailure'),

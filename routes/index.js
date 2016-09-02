@@ -11,6 +11,7 @@ var roles       = require('../middlewares/userrole');
 
 router.get('/',function(req, res, next) {
     res.render('index',{
+        active_nav: "",
         isLoggedIn: req.isAuthenticated(),
         user: req.user
     });

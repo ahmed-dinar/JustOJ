@@ -16,6 +16,7 @@ router.get('/:username',function(req, res, next) {
     var username = req.params.username;
 
     res.render('user/profile',{
+        active_nav: "",
         isLoggedIn: req.isAuthenticated(),
         user: req.user,
         username: username

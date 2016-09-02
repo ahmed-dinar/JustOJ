@@ -54,7 +54,10 @@ router.get('/', function(req, res, next) {
         if( error ){ return next(new Error(error)); }
 
 
+        console.log(status);
+
         res.render('problem/problems', {
+            active_nav: "problems",
             title: "Problems | JUST Online Judge",
             locals: req.app.locals,
             isLoggedIn: req.isAuthenticated(),
@@ -76,6 +79,7 @@ router.get('/', function(req, res, next) {
 router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     res.render('problem/create/new', {
+        active_nav: "problems",
         title: "editproblem | JUST Online Judge",
         locals: req.app.locals,
         isLoggedIn: req.isAuthenticated(),
@@ -207,6 +211,7 @@ router.get('/:pid', function(req, res, next) {
 
 
             res.render('problem/view' , {
+                active_nav: "problems",
                 title: "Problems | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
@@ -290,7 +295,7 @@ var findRank = function(pid,problem,cb){
 
 var findUserSubmissions = function(pid,uid,problem,rank,cb){
 
-    var sql = Query.select(['status','submittime'])
+    var sql = Query.select(['status','submittime','language'])
             .from('submissions')
             .where({
                 'pid': pid,

@@ -21,7 +21,7 @@
 
         <div class="col-md-9">
             <div  style="font-family: 'PT Sans', sans-serif;">
-                <div class="panel-body">
+
 
                     <h4>Contests</h4>
 
@@ -32,8 +32,8 @@
                         <div class = "list-group">
                             <% for(var i=0; i<running.length; i++){ %>
                                 <a href = "/contest/<%= running[i].id %>" class = "list-group-item clearfix">
-                                    <div class="pull-left">
-                                        <h4 class = "list-group-item-heading"><%= running[i].title %></h4>
+                                    <div class="pull-left contest-list">
+                                        <h5 class = "list-group-item-heading"><%= running[i].title %></h5>
                                         <p class = "list-group-item-text">
 
                                                 Ends <%= moment(running[i].end).from() %>
@@ -57,8 +57,8 @@
                         <div class = "list-group">
                             <% for(var i=0; i<future.length; i++){ %>
                             <a href = "/contest/<%= future[i].id %>" class = "list-group-item clearfix">
-                                <div class="pull-left">
-                                    <h4 class = "list-group-item-heading"><%= future[i].title %></h4>
+                                <div class="pull-left contest-list">
+                                    <h5 class = "list-group-item-heading"><%= future[i].title %></h5>
                                     <p class = "list-group-item-text">
 
                                             Starts <%= moment(future[i].begin).from() %>
@@ -83,8 +83,8 @@
                             <% for(var i=0; i<ended.length; i++){ %>
 
                             <a href = "/contest/<%= ended[i].id %>" class = "list-group-item clearfix">
-                                <div class="pull-left">
-                                    <h4 class = "list-group-item-heading"><%= ended[i].title %></h4>
+                                <div class="pull-left contest-list">
+                                    <h5 class = "list-group-item-heading"><%= ended[i].title %></h5>
                                     <p class = "list-group-item-text">
 
                                             <%= moment(ended[i].begin).from() %>
@@ -103,7 +103,7 @@
                     <% } %>
 
                 </div>
-            </div>
+
         </div>
 
         <div class="col-md-3">

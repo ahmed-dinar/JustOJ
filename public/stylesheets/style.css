@@ -1,17 +1,24 @@
 
 
 body {
-  padding-top: 54px;
+  padding-top: 53px;
   margin:0px ;
 
-  font-family: Robota, 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px ;
+  font-family: 'PT Sans', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px ;
   color: #333 ;
-  background: #E9EBEE;
+  background: #FFFFFF;
+}
+
+
+
+a{
+  color: #1D906A;
 }
 
 .main-wraper > .container{
   background: #FFFFFF;
+  box-shadow: none;
 }
 
 .content{
@@ -19,8 +26,9 @@ body {
 }
 
 .contest-navbar{
-   box-shadow: none !important;
+  box-shadow: none !important;
   background: #e2e2e2 !important;
+  margin-bottom: 20px !important;
 }
 
 .contest-container{
@@ -48,11 +56,31 @@ footer{
   padding: 20px 0px;
 }
 
+.problem-list tr td:nth-child(1),.problem-list tr td:nth-child(3),.problem-list tr td:nth-child(4){
+  width:6%;
+}
+
+.panel-body  {
+
+  word-wrap: break-word;
+}
+
+.problem-list tr td:nth-child(2){
+  width:72%;
+}
+
+
+.problem-list .pl-title{
+  color: #1D906A;
+  max-width: 100px;
+}
+
 .problem-list > tbody > tr{
   cursor: pointer;
 }
 
-.problem-list > tbody > tr:hover{
+
+.pl-title:hover{
   text-decoration: underline;
 }
 
@@ -68,6 +96,9 @@ footer{
   border: 1px solid #ccc;
 }
 
+.contest-list > p{
+    font-size: 12px;
+}
 
 .preview{
   background-color: #f5f5f5;
@@ -149,21 +180,27 @@ hr {
 
 
 .c-h{
-  min-height: 530px;
+  min-height: 545px;
 }
 
 
 .grey-back{
 
-
+/*
   background-image: linear-gradient(45deg, #155676, #4892B7);
   background-image: -webkit-linear-gradient(45deg, #155676, #4892B7);
   background-image: -moz-linear-gradient(45deg, #155676, #4892B7) ;
   background-image: -ms-linear-gradient(45deg, #155676, #4892B7) ;
   background-image: -o-linear-gradient(45deg, #155676, #4892B7) ;
+*/
 
+  background-image: linear-gradient(45deg, #DDDDDD, #EEEEEE);
+  background-image: -webkit-linear-gradient(45deg, #DDDDDD, #EEEEEE);
+  background-image: -moz-linear-gradient(45deg, #DDDDDD, #EEEEEE) ;
+  background-image: -ms-linear-gradient(45deg, #DDDDDD, #EEEEEE) ;
+  background-image: -o-linear-gradient(45deg, #DDDDDD, #EEEEEE) ;
 
-  color: #FFFFFF;
+  color: #333;
 }
 
 
@@ -199,12 +236,13 @@ hr {
   background: #FFFFFF;
 
   margin-bottom: 0px;
+  border: 0px;
+  box-shadow: none;
 }
 
 .navbar-default {
-  background-color: #FFFFFF;
-  border-bottom: 1px solid #CCEBFB;
-
+  background-color: #F1F1F1;
+  border-bottom: 1px solid #eeeeee;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -224,9 +262,13 @@ hr {
   font-size: 28px;
 }
 
-input[type="text"],input[type="password"],input[type="username"],input[type="email"]{
+input[type="text"],input[type="password"],input[type="username"],input[type="email"], select{
   border-radius: 1px;
   padding: 20px 14px ;
+}
+
+.form-control {
+  border-radius: 1px;
 }
 
 .form-control:focus {
@@ -276,9 +318,7 @@ td,th{
   font-size: 14px ;
 }
 
-.scoreboard .scoreboard-name a {
-  color: #334d00 ;
-}
+
 
 
 .scoreboard >tbody>tr:nth-child(odd) > td{
@@ -298,6 +338,7 @@ td,th{
   margin: 0 0;
   font-weight: normal;
   font-size: 11px;
+  border-radius: 1px;
 }
 
 
@@ -355,3 +396,49 @@ td,th{
 position: relative;
   overflow: hidden;
 }
+
+.table>thead>tr>th {
+  border-bottom: 1px solid #ddd;
+}
+
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+  border-top: 1px solid #eeeeee;
+}
+
+
+
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.open>a {
+  background-image: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-top: 2px solid #297FB8;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+  color: inherit;
+  background-color: transparent;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

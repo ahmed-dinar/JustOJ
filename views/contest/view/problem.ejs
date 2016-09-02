@@ -23,11 +23,9 @@
 </div>
 <% } %>
 
-<div class="panel-body">
 
     <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-body">
+
 
                 <h3 id="h3"><%- contest.probTitle %></h3>
 
@@ -57,79 +55,106 @@
                     </tbody>
                 </table>
 
-            </div>
-        </div>
     </div>
 
 
-    <% if(running && isLoggedIn && registered){ %>
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <h4>Submit</h4>
+    <% if(running){ %>
+        <% if(isLoggedIn){ %>
 
-                <form method="post" name="contestSubmit" id="contest-pform" action="/contest/<%= contest.id %>/submit/<%= contest.pid %>" enctype="multipart/form-data" >
+                <% if(registered){ %>
 
-                    <div class="form-group">
-                        <select class="form-control" id="language"  >
-                            <option value="c">C</option>
-                            <option value="cpp">C++</option>
-                            <option value="java">JAVA</option>
-                        </select>
+                    <div class="col-md-3">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+                                <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
+
+                                    <form method="post" name="contestSubmit" id="contest-pform" action="/contest/<%= contest.id %>/submit/<%= contest.pid %>" enctype="multipart/form-data" >
+
+                                        <div class="form-group">
+                                            <select class="form-control" id="language"  >
+                                                <option value="c">C</option>
+                                                <option value="cpp">C++</option>
+                                                <option value="java">JAVA</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="file" name="source" >
+                                        </div>
+
+                                        <input type='submit' class="btn btn-primary" style="padding: 6px 10px;" value="Submit" >
+
+                                    </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <input type="file" name="source" >
+
+                    <div class="col-md-3">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h5><i class="fa fa-clock-o" aria-hidden="true"></i> My Last Submissions</h5>
+
+
+                                    <% if(submissions.length){ %>
+                            </div>
+                                                <table class="table" style="font-size: 12px;">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Language</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <% for(var i=0; i<submissions.length; i++){   %>
+                                                    <tr>
+                                                        <td title="<%= submissions[i].submittime %>"><%= moment(submissions[i].submittime).from() %></td>
+                                                        <td><%= submissions[i].language %></td>
+                                                        <td>
+
+                                                            <% var st = parseInt(submissions[i].status); console.log(st); %>
+                                                            <% if(st === 0){ %>
+                                                            <span class="label label-success">
+                                                                <% }else if(st === 5){ %>
+                                                                <span class="label label-default">
+                                                                    <% }else if(st === 6){ %>
+                                                                    <span class="label label-info">
+                                                                        <% }else if(st === 8){ %>
+                                                                        <span class="label label-warning">
+                                                                            <% }else{ %>
+                                                                            <span class="label label-danger">
+                                                                                <% } %>
+                                                                                <%= runStatus[st] %>
+                                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                                    </tbody>
+                                                </table>
+
+                                <% }else{ %>
+                                    <span class="label label-default">No Submission Found</span>
+                        </div>
+                                <% } %>
+
+
+                        </div>
                     </div>
-
-                    <input type='submit' class="btn btn-primary" style="padding: 6px 10px;" value="Submit" >
-
-                </form>
-
-
-                <% if(submissions.length){ %>
-
-                <br>
-                <table class="table" style="font-size: 12px;">
-                    <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% for(var i=0; i<submissions.length; i++){ %>
-                    <tr>
-                        <td title="<%= submissions[i].submittime %>"><%= moment(submissions[i].submittime).from() %></td>
-                        <td>
-
-                            <% var st = parseInt(submissions[i].status); console.log(st); %>
-                            <% if(st === 0){ %>
-                            <span class="label label-success">
-                                <% }else if(st === 5){ %>
-                                <span class="label label-default">
-                                    <% }else if(st === 6){ %>
-                                    <span class="label label-info">
-                                        <% }else if(st === 8){ %>
-                                        <span class="label label-warning">
-                                            <% }else{ %>
-                                            <span class="label label-danger">
-                                                <% } %>
-                                                <%= runStatus[st] %>
-                                            </span>
-                        </td>
-                    </tr>
-                    <% } %>
-                    </tbody>
-                </table>
                 <% } %>
 
-            </div>
-        </div>
-    </div>
+        <% }else{ %>
+                <div class="col-md-3">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
+                            <a class="btn btn-primary" href="/login">Login</a>
+                        </div>
+                    </div>
+                </div>
+        <% } %>
     <% } %>
 
 
-</div>
 </div>
 </div>
 </div>

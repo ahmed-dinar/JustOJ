@@ -20,6 +20,7 @@ module.exports = function(req,res,next){
 
 
             res.render('problem/edit/step_1', {
+                active_nav: "problems",
                 title: "editproblem | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),

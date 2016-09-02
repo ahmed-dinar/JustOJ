@@ -31,8 +31,7 @@
     <div class="row">
 
         <div class="col-md-9">
-            <div class="panel panel-default">
-                <div class="panel-body">
+
 
                     <h3 id="h3"><%- problem.title %></h3>
 
@@ -47,9 +46,11 @@
 
                     <h3 id="h3">Sample</h3>
 
+
+
                     <table class="table" style="padding: 0px; margin: 0px">
                         <thead>
-                            <tr>
+                            <tr style="border-bottom: 1px solid;">
                                 <th style="border: none">Input</th>
                                 <th style="border: none">Output</th>
                             </tr>
@@ -62,7 +63,7 @@
                         </tbody>
                     </table>
 
-                </div>
+
 
                 <table class="table" style="background: #f3f3f3">
                     <tbody>
@@ -97,7 +98,7 @@
                     </tbody>
                 </table>
 
-            </div>
+
         </div>
 
 
@@ -107,7 +108,7 @@
 
 
             <div class="panel-body">
-                <h4><i class="fa fa-tags" ></i> Tags</h4>
+                <h5><i class="fa fa-tags" ></i> Tags</h5>
                     <% if(tags.length){ %>
                         <% for(var i=0; i<tags.length; i++){ %>
                         <span class="label label-primary"><%= tagName[tags[i]] %></span>
@@ -119,9 +120,10 @@
 
 
         <% if(isLoggedIn){ %>
+
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h4><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h4>
+                    <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
 
                     <form method="post" action="/submit/<%= problem.id %>" name="usc" id="usc" enctype="multipart/form-data" >
 
@@ -140,53 +142,69 @@
                         <input type='submit' class="btn btn-primary" style="padding: 6px 10px;" value="SUBMIT" >
 
                     </form>
+                </div>
+            </div>
+
+
+
+            <div class="panel panel-default">
+                    <div class="panel-body">
+                            <h5><i class="fa fa-clock-o" aria-hidden="true"></i> My Last Submissions</h5>
+
 
                     <% if(userSubmissions.length){ %>
-
-                    <br>
-                        <table class="table" style="font-size: 12px;">
-                            <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <% for(var i=0; i<userSubmissions.length; i++){ %>
+                    </div>
+                            <table class="table" style="font-size: 12px;">
+                                <thead>
                                 <tr>
-                                    <td title="<%= userSubmissions[i].submittime %>"><%= moment(userSubmissions[i].submittime).from() %></td>
-                                    <td>
-
-                                        <% var st = parseInt(userSubmissions[i].status); %>
-                                        <% if(st === 0){ %>
-                                        <span class="label label-success">
-                                            <% }else if(st === 5){ %>
-                                            <span class="label label-default">
-                                                <% }else if(st === 6){ %>
-                                                <span class="label label-info">
-                                                    <% }else if(st === 8){ %>
-                                                    <span class="label label-warning">
-                                                        <% }else{ %>
-                                                        <span class="label label-danger">
-                                                            <% } %>
-                                                            <%= runStatus[st] %>
-                                            </span>
-                                    </td>
+                                    <th>Date</th>
+                                    <th>Language</th>
+                                    <th>Status</th>
                                 </tr>
-                            <% } %>
-                            </tbody>
-                        </table>
-                        <span class="pull-right"><a href="/status/u/<%= problem.id %>">View All</a></span>
+                                </thead>
+                                <tbody>
+                                <% for(var i=0; i<userSubmissions.length; i++){ %>
+                                    <tr>
+                                        <td title="<%= userSubmissions[i].submittime %>"><%= moment(userSubmissions[i].submittime).from() %></td>
+                                        <td><%= userSubmissions[i].language %></td>
+                                        <td>
+
+                                            <% var st = parseInt(userSubmissions[i].status); %>
+                                            <% if(st === 0){ %>
+                                            <span class="label label-success">
+                                                <% }else if(st === 5){ %>
+                                                <span class="label label-default">
+                                                    <% }else if(st === 6){ %>
+                                                    <span class="label label-info">
+                                                        <% }else if(st === 8){ %>
+                                                        <span class="label label-warning">
+                                                            <% }else{ %>
+                                                            <span class="label label-danger">
+                                                                <% } %>
+                                                                <%= runStatus[st] %>
+                                                </span>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                                </tbody>
+                            </table>
+                    <div class="panel-body">
+                            <span class="pull-right"><a href="/status/u/<%= problem.id %>">View All</a></span>
+                        </div>
+                    <% }else{ %>
+                        <span class="label label-default">No Submission Found!</span>
+                        </div>
                     <% } %>
 
                 </div>
-            </div>
+
+
+
         <% }else{ %>
 
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <h4><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h4>
-                    <h5>Login To Submit</h5>
+                    <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
                     <a class="btn btn-primary" href="/login" >Login</a>
                 </div>
             </div>
@@ -194,14 +212,14 @@
          <% } %>
 
 
-            <div class="panel panel-default" style="background: transparent;">
+            <div class="panel panel-default">
                 <div class="panel-body">
+                    <h5><i class="fa fa-trophy" ></i> Rank</h5>
 
-                    <h4><i class="fa fa-trophy" ></i> Rank</h4>
 
                     <% if(rank.length){ %>
-
-                        <table class="table">
+                </div>
+                        <table class="table"  style="font-size: 12px;">
                             <thead>
                             <tr>
                                 <th>User</th>
@@ -209,7 +227,7 @@
                                 <th>CPU</th>
                             </tr>
                             </thead>
-                            <tbody style="font-size: 12px;">
+                            <tbody>
                             <%
                                 var langName = {
                                     cpp: 'C++',
@@ -219,21 +237,25 @@
                             %>
                             <% for(var i=0; i<rank.length; i++){ %>
                             <tr>
-                                <td><a href="#"><%= rank[i].username %></a></td>
+                                <td class="ellips"><a href="#"><%= rank[i].username %></a></td>
                                 <td><%= langName[rank[i].language] %></td>
                                 <td><%= parseFloat(rank[i].cpu/1000.0).toFixed(2) %>s</td>
                             </tr>
                             <% } %>
                             </tbody>
                         </table>
+                <div class="panel-body">
                         <span class="pull-right"><a href="/ranks/p/<%= problem.id %>">View All</a></span>
+                    </div>
 
 
                     <% }else{ %>
-                    <span class="label label-default">0 Submission</span>
+
+                    <span class="label label-default">Nobody solved it yet!</span>
+                    </div>
                     <% } %>
 
-                </div>
+
             </div>
         </div>
 

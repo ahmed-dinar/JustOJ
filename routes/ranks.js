@@ -17,6 +17,7 @@ var Query       = require('../config/database/knex/query');
 router.get('/', function(req, res, next) {
 
     res.render('ranks', {
+        active_nav: "ranks",
         title: "JUST Online Judge - Ranks",
         isLoggedIn: req.isAuthenticated(),
         user: req.user
@@ -103,6 +104,7 @@ router.get('/p/:pid', function(req, res, next) {
             console.log(rank);
 
             res.render('problem/rank' , {
+                active_nav: "ranks",
                 title: "Problems | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),

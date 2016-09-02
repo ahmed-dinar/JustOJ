@@ -13,6 +13,7 @@ router.get('/' , isLoggedIn(false) ,function(req, res, next) {
 
 
     res.render('login',{
+        active_nav: "",
         errors: req.flash('loginFailure'),
         success: req.flash('success'),
         isLoggedIn: false,

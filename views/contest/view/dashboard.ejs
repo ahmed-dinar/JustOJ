@@ -16,33 +16,38 @@
 
 <% include ../../templates/contest_header.ejs %>
 
-<div class="panel-body" id="db-lg">
+<div id="db-lg">
     <div class="col-md-10 contest-p-list">
-        <h4>Problems</h4>
+        <h4>Problems</h4><br/>
         <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
+
+        <% var problem_label = "default"; %>
 
         <% for(var i= 0; i<problems.length; i++){ %>
 
-        <% if(isLoggedIn && registered){ %>
-            <% if(problems[i].yousolved !== -1){ %>
-                <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item" style="border-left: 2px solid lawngreen; ">
-                    <% }else if(problems[i].youtried !== -1){ %>
-                    <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item" style="border-left: 2px solid indianred">
-                        <% }else{ %>
-                        <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
-                            <% } %>
-        <% }else{ %>
-                    <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
-                        <% } %>
+             <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
 
-                        <span class="label label-default pull-right">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                                    x <%= problems[i].accepted %>
-                            </span>
-                        <h5 style="font-weight: 600">
-                            <%= ch.charAt(i).toUpperCase() %>. <%= problems[i].title %>
-                        </h5>
-                    </a>
+                <%
+                    if(isLoggedIn && registered){
+                        if(problems[i].yousolved !== -1){
+                            problem_label = "success";
+                        }else if(problems[i].youtried !== -1){
+                            problem_label = "danger";
+                        }else{
+                            problem_label = "default";
+                        }
+                    }
+                %>
+
+                 <span class="label label-<%= problem_label %> pull-right">
+                     <i class="fa fa-user" aria-hidden="true"></i> x <%= problems[i].accepted %>
+                 </span>
+                 <h5 style="font-weight: 600">
+                     <%= ch.charAt(i).toUpperCase() %>. <%= problems[i].title %>
+                 </h5>
+
+             </a>
+
          <% } %>
     </div>
 </div>

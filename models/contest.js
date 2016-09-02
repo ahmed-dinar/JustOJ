@@ -8,6 +8,12 @@ var Query       = require('../config/database/knex/query');
 var Paginate    = require('../helpers/paginate');
 var MyUtil      = require('../helpers/myutil');
 
+
+/**
+ *
+ * @param inserts
+ * @param cb
+ */
 exports.create = function(inserts,cb){
 
     var sql = Query.insert(inserts).into('contest');
@@ -20,6 +26,10 @@ exports.create = function(inserts,cb){
 };
 
 
+/**
+ *
+ * @param cb
+ */
 exports.getPublic = function(cb){
     async.waterfall([
         function(callback) {
@@ -37,6 +47,10 @@ exports.getPublic = function(cb){
 };
 
 
+/**
+ *  Get running contest list [pagination not yet added]
+ * @param cb
+ */
 var getRunning = function(cb){
 
         var sql = Query.select(['cnts.*'])
@@ -59,6 +73,12 @@ var getRunning = function(cb){
         });
 };
 
+
+/**
+ * Get scheduled contest list [pagination not yet added]
+ * @param running
+ * @param cb
+ */
 var getFuture = function(running,cb){
 
     var sql = Query.select(['cnts.*'])
@@ -81,6 +101,13 @@ var getFuture = function(running,cb){
         });
 };
 
+
+/**
+ * Get past contest list [pagination not yet added]
+ * @param running
+ * @param future
+ * @param cb
+ */
 var getEnded = function(running,future,cb){
 
     var sql = Query.select(['cnts.*'])
@@ -103,6 +130,11 @@ var getEnded = function(running,future,cb){
 };
 
 
+/**
+ * Get contest that is still running or not yet started for edit by admin/moderator
+ *  [should change the logic, make it more dynamic]
+ * @param cb
+ */
 exports.getEditable = function(cb){
 
     var sql = Query.select().from('contest').where(Query.raw('`end` > NOW()'));
@@ -115,6 +147,12 @@ exports.getEditable = function(cb){
 };
 
 
+/**
+ * Update contest information
+ * @param inserts
+ * @param cid
+ * @param cb
+ */
 exports.update = function(inserts,cid,cb){
 
     var sql = Query('contest').update(inserts)
@@ -127,6 +165,13 @@ exports.update = function(inserts,cid,cb){
         });
 };
 
+
+/**
+ * Update contest problem
+ * @param inserts
+ * @param pid
+ * @param cb
+ */
 exports.updateProblem = function(inserts,pid,cb){
 
     var sql = Query('problems').update(inserts)
@@ -142,7 +187,11 @@ exports.updateProblem = function(inserts,pid,cb){
 };
 
 
-
+/**
+ * Get details of a specific contest
+ * @param cid
+ * @param cb
+ */
 function getDetails(cid,cb){
 
     var sql = Query.select().from('contest').where('id', cid).limit(1);
@@ -153,9 +202,15 @@ function getDetails(cid,cb){
             cb(err,rows);
         });
 }
-exports.getDetails = getDetails;
+exports.getDetails = getDetails; //for using in this file
 
 
+/**
+ * Get details of a specific contest also check is a specific user resistered for this contest
+ * @param cid
+ * @param uid
+ * @param cb
+ */
 exports.getDetailsIsReg = function (cid,uid,cb){
 
     var sql;
@@ -201,6 +256,12 @@ exports.getDetailsIsReg = function (cid,uid,cb){
         });
 };
 
+
+/**
+ * Get details of a specific contest also all problems of this contest
+ * @param cid
+ * @param cb
+ */
 exports.getDetailsAndProblemList = function(cid,cb){
 
     var sql = Query.select([
@@ -226,6 +287,12 @@ exports.getDetailsAndProblemList = function(cid,cb){
 
 };
 
+
+/**
+ * Get problem list of a specific contest
+ * @param cid
+ * @param cb
+ */
 exports.getProblems = function(cid,cb){
 
     var sql = Query.select(['contest_problems.pid','contest_problems.pname','problems.title','problems.status'])
@@ -241,10 +308,17 @@ exports.getProblems = function(cid,cb){
         });
 };
 
+
+/**
+ * Get problem list of a specific contest including statictis of problems
+ * @param cid
+ * @param uid
+ * @param cb
+ */
 exports.getDashboardProblems = function(cid,uid,cb){
 
     var sql;
-    if(uid!==-1){
+    if(uid!==-1){ //if user logged in
 
         sql = Query.select([
             'cp.pid','cp.pname',
@@ -286,6 +360,12 @@ exports.getDashboardProblems = function(cid,uid,cb){
 };
 
 
+/**
+ * Get details of a contest and a specific problem of this contest
+ * @param cid
+ * @param pid
+ * @param cb
+ */
 exports.getDetailsandProblem = function(cid,pid,cb){
 
     var sql = Query.select([
@@ -305,10 +385,16 @@ exports.getDetailsandProblem = function(cid,pid,cb){
 };
 
 
-
+/**
+ * Get a user submission history of a contest
+ * @param cid
+ * @param pid
+ * @param uid
+ * @param cb
+ */
 exports.getUserSubmissions = function(cid,pid,uid,cb){
 
-    var sql = Query.select(['status','submittime']).from('contest_submissions').where({
+    var sql = Query.select(['status','submittime','language']).from('contest_submissions').where({
         cid: cid,
         pid: pid,
         uid: uid
@@ -324,6 +410,12 @@ exports.getUserSubmissions = function(cid,pid,uid,cb){
 };
 
 
+/**
+ * Check if a user resitered for a specific contest
+ * @param cid
+ * @param uid
+ * @param cb
+ */
 exports.isRegistered = function(cid,uid,cb){
 
     var sql = Query.select(['id']).from('contest_participants').where({
@@ -338,6 +430,13 @@ exports.isRegistered = function(cid,uid,cb){
         });
 };
 
+
+/**
+ * Resister for contest
+ * @param cid
+ * @param uid
+ * @param cb
+ */
 exports.register = function(cid,uid,cb){
 
     var sql = Query.insert({
@@ -352,6 +451,13 @@ exports.register = function(cid,uid,cb){
         });
 };
 
+
+/**
+ * Create problem for a specific contest
+ * @param cid
+ * @param pid
+ * @param cb
+ */
 exports.insertProblem = function(cid,pid,cb){
 
     var sql = Query.insert({
@@ -368,7 +474,12 @@ exports.insertProblem = function(cid,pid,cb){
 };
 
 
-
+/**
+ *
+ * @param inserts
+ * @param cb
+ * @constructor
+ */
 exports.InsertSubmission = function(inserts,cb){
 
     var sql = Query.insert(inserts)
@@ -384,7 +495,13 @@ exports.InsertSubmission = function(inserts,cb){
 };
 
 
-
+/**
+ *
+ * @param sid
+ * @param inserts
+ * @param cb
+ * @constructor
+ */
 exports.UpdateSubmission = function(sid,inserts,cb){
 
     var sql = Query('contest_submissions').update(inserts).where('id',sid);
@@ -396,6 +513,16 @@ exports.UpdateSubmission = function(sid,inserts,cb){
         });
 };
 
+
+/**
+ *
+ * @param cid
+ * @param uid
+ * @param pid
+ * @param finalCode
+ * @param cb
+ * @constructor
+ */
 exports.UpdateRank = function(cid,uid,pid,finalCode,cb){
 
     var sql;
@@ -460,7 +587,12 @@ exports.UpdateRank = function(cid,uid,pid,finalCode,cb){
 };
 
 
-
+/**
+ *
+ * @param cid
+ * @param withTried
+ * @param cb
+ */
 function getProblemStats(cid,withTried,cb){
 
     var sql;
@@ -502,6 +634,14 @@ function getProblemStats(cid,withTried,cb){
         });
 }
 
+
+/**
+ *
+ * @param cid
+ * @param cur_page
+ * @param url
+ * @param cb
+ */
 exports.getRank = function(cid,cur_page,url,cb){
 
     async.waterfall([
@@ -579,7 +719,12 @@ exports.getRank = function(cid,cur_page,url,cb){
 };
 
 
-
+/**
+ *
+ * @param cid
+ * @param clid
+ * @param cb
+ */
 exports.getClarification = function(cid,clid,cb){
 
     var sql = Query.select([

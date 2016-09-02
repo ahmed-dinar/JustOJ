@@ -27,13 +27,10 @@
 
                     <div class="collapse navbar-collapse" id="contest-main-nav" >
                         <ul class="nav navbar-nav" id="contest-navbar">
-                            <li><a href="/contest/<%= contest.id %>">Problems</a></li>
-                            <li>
-                                <a href="/contest/<%= contest.id %>/clarifications/all">Clarifications</a>
-
-                            </li>
-                            <li><a href="/contest/<%= contest.id %>/standings">Standings</a></li>
-                            <li><a href="/contest/<%= contest.id %>/submissions">Submissions</a></li>
+                            <li class="<%= active_contest_nav === "problems" ? 'active' : '' %>"><a href="/contest/<%= contest.id %>">Problems</a></li>
+                            <li class="<%= active_contest_nav === "clarifications" ? 'active' : '' %>"><a href="/contest/<%= contest.id %>/clarifications/all">Clarifications</a></li>
+                            <li class="<%= active_contest_nav === "standings" ? 'active' : '' %>"><a href="/contest/<%= contest.id %>/standings">Standings</a></li>
+                            <li class="<%= active_contest_nav === "submissions" ? 'active' : '' %>"><a href="/contest/<%= contest.id %>/submissions">Submissions</a></li>
                         </ul>
                     </div>
 

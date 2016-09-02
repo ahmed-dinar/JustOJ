@@ -54,6 +54,7 @@ module.exports = function(req,res,next){
         if( error ) { return next(error); }
 
         res.render('problem/edit/step_2', {
+            active_nav: "problems",
           title: "editproblem | JUST Online Judge",
           locals: req.app.locals,
           isLoggedIn: req.isAuthenticated(),

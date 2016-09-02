@@ -14,11 +14,17 @@
 
 <% include ../../templates/contest_header.ejs %>
 
+<div class="text-center">
+    <h4>Standings</h4>
+</div><br/>
+
 
     <%
         var probNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         var colspan = problemStats.length < 15 ? 15 : problemStats.length;
     %>
+
+
 
 <div class="table-responsive">
     <table class="table table-striped scoreboard ">
@@ -70,7 +76,7 @@
                         <tr>
                             <td rowspan="2" class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
 
-                            <td colspan="<%= colspan %>" class="scoreboard-name"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td colspan="<%= colspan %>"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
                             <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].solved %></td>
                             <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].penalty %></td>
                         </tr>
@@ -89,11 +95,6 @@
                             </td>
                             <% } %>
                         </tr>
-
-
-
-
-
 
             <% } %>
         <% } %>

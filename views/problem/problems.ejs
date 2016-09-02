@@ -29,8 +29,6 @@
 
     <div class="row">
 
-        <div class="col-md-10">
-            <div class="panel panel-default">
                 <div class="panel-body">
                     <h4>Problems</h4>
                 </div>
@@ -39,7 +37,8 @@
                 <table class="table problem-list">
                     <thead>
                     <tr>
-                        <th style="padding-left: 15px;">Title</th>
+                        <th style="padding-left: 20px">#</th>
+                        <th>Title</th>
                         <th>Difficulty</th>
                         <th title="Total Submissions / Accepted">Stat.</th>
                     </tr>
@@ -48,17 +47,18 @@
 
                     <% for(var i=0; i<problems.length; i++){ %>
                     <tr class='clickable-row' data-href='problems/JOP0<%= problems[i].id %>' >
-                        <td class="ellips" style="max-width: 100px;padding-left: 15px;">
-                            <b><%= problems[i].title %></b>
+                        <td style="padding-left: 20px">JOP0<%= problems[i].id %></td>
+                        <td class="ellips  pl-title">
+                            <%= problems[i].title %>
                         </td>
 
-                        <td class="col-md-1">
+                        <td>
                                             <span class="label label-default">
                                                 <%= problems[i].difficulty %>
                                             </span>
                         </td>
 
-                        <td class="col-md-1">
+                        <td>
                                             <span class="label label-info">
                                                 <%= problems[i].submissions %> / <%= problems[i].solved %>
                                             </span>
@@ -76,9 +76,6 @@
 
 
                 <% include ../templates/pagination.ejs %>
-
-            </div>
-        </div>
 
 
 

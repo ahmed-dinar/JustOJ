@@ -20,6 +20,7 @@ module.exports = function(req,res,next){
             if( row.length == 0 ) { return next(new Error('what you r looking for!')); }
 
             res.render('problem/edit/step_3', {
+                active_nav: "problems",
                 title: "editproblem | JUST Online Judge",
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),

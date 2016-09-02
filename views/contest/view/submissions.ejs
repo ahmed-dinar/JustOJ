@@ -30,7 +30,7 @@
     <table class="table">
         <thead>
         <tr>
-            <th>#</th>
+            <th style="padding-left: 15px;">#</th>
             <th>User</th>
             <th>Problem</th>
             <th>Time</th>
@@ -43,7 +43,7 @@
         <tbody>
         <% for(var i=0; i<status.length; i++){ %>
         <tr>
-            <td><%= pagination.offset() + (i+1) %></td>
+            <td style="padding-left: 15px;"><%= pagination.offset() + (i+1) %></td>
             <td class="ellips" style="max-width: 100px;">
                 <a href="/user/<%= status[i].username %>">
                     <%= status[i].username %>
