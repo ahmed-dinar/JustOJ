@@ -242,7 +242,7 @@ hr {
 
 .navbar-default {
   background-color: #F1F1F1;
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid #e4e6e8;
 }
 
 .navbar-default .navbar-nav>li>a {
@@ -417,11 +417,11 @@ position: relative;
   background-image: none;
   -webkit-box-shadow: none;
   box-shadow: none;
-  border-top: 2px solid #297FB8;
+ /* border-top: 2px solid #297FB8;*/
 }
 
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
-  color: inherit;
+  color:#4E1B5A;
   background-color: transparent;
 }
 

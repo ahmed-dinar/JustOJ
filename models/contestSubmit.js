@@ -1,21 +1,22 @@
-var Contest     = require('../models/contest');
-var Problems    = require('../models/problems');
-
+var path        = require("path");
+var fs          = require('fs');
 
 var mkdirp      = require('mkdirp');
 var _           = require('lodash');
 var moment      = require("moment");
 var async       = require('async');
-var path        = require("path");
 var fse         = require('fs-extra');
-var fs          = require('fs');
 var Busboy      = require('busboy');
 var uuid        = require('node-uuid');
 var rimraf      = require('rimraf');
+var colors      = require('colors');
+
+var Contest     = require('../models/contest');
+var Problems    = require('../models/problems');
 var MyUtil      = require('../helpers/myutil');
 var Judge       = require('../helpers/compiler/sandbox/contestJudge');
 
-var colors      = require('colors');
+
 
 exports.submit = function(req, res, next){
 
@@ -57,7 +58,7 @@ exports.submit = function(req, res, next){
                 opts['sID'] = String(sid);
                 opts['pID'] = pid;
                 opts['uID'] = uid;
-                opts['codeDir'] = MyUtil.SUBMISSION_DIR + '/' + opts.sID;
+                opts['codeDir'] = MyUtil.SUBMISSION_DIR + '/c/' + opts.sID;
                 callback(null,opts);
             });
         },

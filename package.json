@@ -37,11 +37,14 @@
     "glob": "^6.0.4",
     "gulp": "^3.9.1",
     "gulp-livereload": "^3.8.1",
+    "gulp-node-inspector": "^0.1.0",
     "gulp-rename": "^1.2.2",
     "install": "^0.4.2",
+    "node-inspector": "^0.12.8",
     "npm": "^3.7.1",
     "nyc": "^6.4.4",
     "sloc": "^0.1.10",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "yargs": "^5.0.0"
   }
 }

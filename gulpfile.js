@@ -7,6 +7,11 @@ var glob            = require('glob');
 var nodemon         = require('gulp-nodemon');
 var notify          = require('gulp-notify');
 
+
+var args = require('yargs').argv;
+var nodeInspector = require('gulp-node-inspector');
+
+
 gulp.task('test', function() {
 
     var testFiles = glob.sync('./test/**/*.js');
@@ -32,15 +37,37 @@ gulp.task('watch', function() {
 });
 
 
-gulp.task('nodemon_restart', function () {
+
+gulp.task('debug', function () {
+
+    gulp
+        .src(['bin/www'])
+        .pipe(nodeInspector({
+            debugPort: 5858,
+            webHost: 'localhost',
+            webPort: 8080,
+            preload: false
+        }));
+});
+
+
+gulp.task('dev', (args.debug) ? ['debug'] : null, function () {
 
     livereload.listen();
 
-    nodemon({
-             script: 'bin/www',
-             ext: 'ejs js',
-             exec: 'sudo node'
-        })
+    var options = {
+        script: 'bin/www',
+        ext: 'ejs js',
+        exec: 'sudo node  ',
+        nodeArgs: []
+    };
+
+    if (args.debug) {
+        options.nodeArgs.push('--debug');
+    }
+
+
+    nodemon(options)
         .on('crash', function () {
             console.log('script crashed for some reason');
         })

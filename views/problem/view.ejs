@@ -165,7 +165,7 @@
                                 <tbody>
                                 <% for(var i=0; i<userSubmissions.length; i++){ %>
                                     <tr>
-                                        <td title="<%= userSubmissions[i].submittime %>"><%= moment(userSubmissions[i].submittime).from() %></td>
+                                        <td class="ellips" title="<%= userSubmissions[i].submittime %>"><%= moment(userSubmissions[i].submittime).from() %></td>
                                         <td><%= userSubmissions[i].language %></td>
                                         <td>
 

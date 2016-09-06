@@ -15,23 +15,20 @@
 
 
 <!-- Main Content -->
-<div class="content container" style="min-height: 550px;">
+<div class="content container c-h">
 
     <div class="row">
-        <div class="col-md-10">
-            <div class="panel panel-default">
-                <div class="panel-body" style="white-space: normal">
 
-                    <h4>Your Submissions</h4>
-                    <h5>Problem: <a href="/problems/JOP0<%= pid %>"><%= pName %></a></h5>
-
+                <div class="panel-body">
+                    <h4>My Submissions</h4>
+                    <h5>Problem:  <a href="/problems/JOP0<%= pid %>"><%= pName %></a></h5>
                 </div>
 
                     <!-- problem list -->
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>#</th>
+                            <th style="padding-left: 20px;">#</th>
                             <th>Date</th>
                             <th>Language</th>
                             <th>CPU</th>
@@ -43,8 +40,8 @@
 
                             <% for(var i=0; i<status.length; i++){ %>
                                 <tr>
-                                    <td><%= pagination.offset() + i + 1 %></td>
-                                    <td title="<%= status[i].submittime %>"><%= moment(status[i].submittime).from() %></td>
+                                    <td style="padding-left: 20px;"><%= pagination.offset() + i + 1 %></td>
+                                    <td class="ellips" title="<%= status[i].submittime %>"><%= moment(status[i].submittime).from() %></td>
                                     <td><%= langNames[status[i].language] %></td>
                                     <td><%= parseFloat(status[i].cpu/1000.0).toFixed(2) %>s</td>
                                     <td><%= status[i].memory %>KB</td>
@@ -75,8 +72,7 @@
                     <% include ../templates/pagination.ejs %>
 
 
-            </div>
-        </div>
+
     </div>
 
 </div>

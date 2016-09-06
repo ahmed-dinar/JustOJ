@@ -11,7 +11,7 @@ var async       = require('async');
 var DB          = require('../config/database/knex/DB');
 
 
-exports.paginate = function(opts,cb) {
+ exports.paginate = function(opts,cb) {
     async.waterfall([
         function(callback) {
             count(opts.sqlCount,callback);
