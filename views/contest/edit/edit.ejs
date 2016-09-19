@@ -253,7 +253,7 @@
 
 
         $(document).on('click', '.previewBtn', function () {
-            var pid = $(this).parents('tr').find('input[type="hidden"]').val()
+            var pid = $(this).parents('tr').find('input[type="hidden"]').val();
 
             var URL = '/contest/edit/<%= cid %>/problems/' + pid + '/preview';
 
@@ -344,7 +344,7 @@
 
 
 <script type="text/javascript">
-
+/*
     window.onload = function () {
         CountDownTimer('<%= details.end %>');
     };
@@ -397,7 +397,7 @@
         showRemaining();
         timer = setInterval(showRemaining, 1000);
     }
-
+*/
 
 </script>
 

@@ -41,7 +41,7 @@ router.get('/' , function(req, res, next) {
         console.log(ended);
 
 
-        res.render('contest/contests',{
+        res.render('contest/contests/running',{
             active_nav: "contest",
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
@@ -53,6 +53,7 @@ router.get('/' , function(req, res, next) {
     });
 
 });
+
 
 
 router.get('/host' , function(req, res, next) {

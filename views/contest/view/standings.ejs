@@ -54,6 +54,8 @@
         </thead>
         <tbody>
         <% for(var i=0; i<ranks.length; i++){ %>
+
+
             <% if( ranks[i].penalty === null || _.isUndefined(ranks[i].penalty) ){ %>
 
                         <tr>
@@ -78,14 +80,14 @@
 
                             <td colspan="<%= colspan %>"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
                             <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].solved %></td>
-                            <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].penalty %></td>
+                            <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].penalty < 0 ? 0 : ranks[i].penalty %></td>
                         </tr>
                         <tr>
                             <% for(var j=0; j<problemStats.length; j++){ %>
                             <td class="text-center standings-cell">
                                 <% if( !_.isUndefined(up[problemStats[j].pid]) ){ %>
                                     <% if(up[problemStats[j].pid].status === 0){ %>
-                                    <span class="label label-success" ><%= up[problemStats[j].pid].tried %> - <%= up[problemStats[j].pid].penalty %></span>
+                                    <span class="label label-success" ><%= up[problemStats[j].pid].tried %> - <%= up[problemStats[j].pid].penalty < 0 ? 0 : up[problemStats[j].pid].penalty %></span>
                                     <% }else{ %>
                                     <span class="label label-danger"><%= up[problemStats[j].pid].tried %></span>
                                     <% } %>
