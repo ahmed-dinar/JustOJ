@@ -19,7 +19,6 @@ var colors      = require('colors');
 
 
 /**
- *
  * @param opts
  * @param cb
  */
