@@ -33,7 +33,10 @@ var Query       = require('../config/database/knex/query');
 router.get('/' , function(req, res, next) {
 
     Contest.getPublic(function(err,running,future,ended){
-        if(err){ return next(new Error(err)); }
+        if(err){
+            console.log("Here!?");
+            return next(new Error(err));
+        }
 
 
        console.log(running);

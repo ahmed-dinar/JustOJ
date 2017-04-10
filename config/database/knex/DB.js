@@ -26,7 +26,10 @@ exports.execute = function(sql,cb){
 
                 connection.release();
 
-                if(err){ return callback(err); }
+                if(err){
+                    console.log('Error querying database'.red);
+                    return callback(err);
+                }
 
                 return callback(null,rows);
             });

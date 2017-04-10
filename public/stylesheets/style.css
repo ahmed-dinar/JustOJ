@@ -1,8 +1,9 @@
 
+@import url('https://fonts.googleapis.com/css?family=Lobster|Ranchers');
 
 body {
-  padding-top: 53px;
-  margin:0px ;
+
+  margin: 0px ;
 
   font-family: 'PT Sans', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px ;
@@ -229,10 +230,9 @@ hr {
   border: none;
 }
 
+/*
 .navbar {
-  /*-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
-  -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);*/
+
   background: #FFFFFF;
 
   margin-bottom: 0px;
@@ -261,6 +261,8 @@ hr {
 .navbar-brand {
   font-size: 28px;
 }
+*/
+
 
 input[type="text"],input[type="password"],input[type="username"],input[type="email"], select{
   border-radius: 1px;
@@ -412,18 +414,18 @@ position: relative;
 
 
 
-
+/*
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.open>a {
   background-image: none;
   -webkit-box-shadow: none;
   box-shadow: none;
- /* border-top: 2px solid #297FB8;*/
+
 }
 
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
   color:#4E1B5A;
   background-color: transparent;
-}
+}*/
 
 .badge-info{
   background: #5bc0de;
@@ -431,12 +433,112 @@ position: relative;
 
 
 
+/*wooooooooooooooooo*/
+
+.navbar .navbar-default {
+  border-radius: 0px;
+  border-left: transparent;
+}
+
+#navbar-collapse {
+ /* border-bottom: 1px solid #266080;*/
+}
+
+.top-nav>li>a {
+  text-shadow: none;
+  line-height: 23px;
+  padding: 5px 15px;
+}
+
+
+#brand-logo {
+  text-decoration: none;
+  cursor: pointer;
+  background-size: cover;
+  position: absolute;
+  background: #262f38;
+  width: 100%;
+  padding-left: 21px;
+  padding-top: 3px;
+  padding-bottom: 9px;
+  margin-top: -6px;
+}
+
+#brand-logo h4{
+  letter-spacing: 1px;
+  color: #FFFFFF;
+  font-size: 21px;
+  line-height: 15px;
+  font-family: 'Lobster', cursive;
+  font-weight: bold;
+}
+/*
+
+JUST
+ONLINE
+JUDGE
+
+*/
+
+.navbar-brand {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar-brand {
+    display: block;
+  }
+}
+
+.transparent{
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+
+nav.nopadding, div.nopadding {
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-wrapper{
+  border-top: 1px solid #eee;
+  background-image: url("../images/header_back10.png");
+  margin-top: 5px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+}
 
 
 
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
 
+#brand-logo:before, #brand-logo:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  left: -0.25em;
+  border: 0 solid transparent;
+  border-width: 0.5em 0.25em;
+  color: #262f38; /* set so we only have to have the border color in one place.
+                    if not specified, border color is the same as the text
+                    color. */
+}
 
+#brand-logo:before {
+  border-top: none;
+  border-bottom-color: initial;
+  top: 0;
+}
 
+#brand-logo:after {
+  border-bottom: none;
+  border-top-color: initial;
+  bottom: 0;
+}
 
 
 

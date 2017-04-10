@@ -7,7 +7,7 @@ var path        = require("path");
 
 var _           = require('lodash');
 var Busboy      = require('busboy');
-var uuid        = require('node-uuid');
+var uuidV4      = require('uuid/v4');
 var mkdirp      = require('mkdirp');
 var async       = require('async');
 var moment      = require("moment");
@@ -21,18 +21,16 @@ var User        = require('../models/user');
 
 var colors      = require('colors');
 
-
 router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
+    var uploadFile =  MyUtil.UPLOAD_DIR + '/' + uuidV4() + '.txt';
 
-    var uploadFile =  MyUtil.UPLOAD_DIR + '/' + uuid.v4() + '.txt';
-
-    var pID = req.params.pid;
-    var uID = String(req.user.id);
+    var problemId = req.params.pid;
+    var userId = String(req.user.id);
 
     async.waterfall([
         function(callback){
-            getLimits(pID,callback); //also check valid problem id
+            getLimits(problemId,callback); //also check valid problem id
         },
         function(opts,callback) {
             getForm(uploadFile,req,opts,callback);
@@ -40,15 +38,14 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
         function(opts,callback){
 
             var inserts = {
-                pid: pID,
-                uid: uID,
+                problemId: problemId,
+                userId: userId,
                 language: opts.language,
                 status: '5',
                 cpu: '0',
                 memory: '0'
             };
             Submission.insert(inserts,function(err,sid){
-
                 if( err ){
                     console.log('Submit inserting error!'.bold.red);
                     console.log(err.red);
@@ -56,7 +53,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
                 }
 
                 opts['sID'] = String(sid);
-                opts['pID'] = pID;
+                opts['problemId'] = problemId;
                 opts['codeDir'] = MyUtil.SUBMISSION_DIR + '/' + opts.sID;
                 callback(null,opts);
             });
@@ -64,7 +61,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
         },
         function(opts,callback){
 
-            Problems.updateSubmission(pID, 'submissions', function(err){
+            Problems.updateSubmission(problemId, 'submissions', function(err){
                 if( err ){
                     console.log('Updating submission errr'.red);
                     return callback(err);
@@ -84,7 +81,6 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
         fse.remove(uploadFile, function (errs) {
             if (errs) { console.log(errs); }
 
-
             if( error ){
 
                 console.log(error);
@@ -93,13 +89,13 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
                 if( error.formError ){
 
                     req.flash('formError',error.formError);
-                    res.redirect('/problems/JOP0' + pID);
+                    res.redirect('/problems/JOP0' + problemId);
 
                 }else if( error.sysError ){ //system errors
 
                     var inserts = {
-                        pid: pID,
-                        uid: uID,
+                        problemId: problemId,
+                        userId: userId,
                         language: opts.language,
                         status: '8',
                         cpu: '0',
@@ -113,7 +109,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
                             return next(new Error(err));
                         }
 
-                        res.redirect('/status/u/' + pID);
+                        res.redirect('/status/u/' + problemId);
                     });
 
                 }else {
@@ -123,7 +119,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
                 console.log('Submit Successfull'.green);
 
-                res.redirect('/status/u/' + pID);
+                res.redirect('/status/u/' + problemId);
 
                 Judge.run(opts,function(err,runs){
 
@@ -142,6 +138,12 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 });
 
 
+/**
+ * Move uploaded code to compiling directory
+ * @param uploadFile
+ * @param opts
+ * @param cb
+ */
 var moveSource = function(uploadFile,opts,cb){
     var dest = opts.codeDir + '/code.' + opts.language;
     fse.move(uploadFile, dest, function(err){
@@ -153,9 +155,15 @@ var moveSource = function(uploadFile,opts,cb){
     });
 };
 
-var getLimits = function(pid,callback){
 
-    Problems.findById(pid,['cpu','memory'],function(err,rows){
+/**
+ * Get submitted problem's limits from database
+ * @param problemId
+ * @param callback
+ */
+var getLimits = function(problemId,callback){
+
+    Problems.findById(problemId,['cpu','memory'],function(err,rows){
 
         if(err){ return callback(err); }
 
@@ -175,6 +183,13 @@ var getLimits = function(pid,callback){
 };
 
 
+/**
+ * Get and save multipart form from HTTP request
+ * @param uploadFile
+ * @param req
+ * @param opts
+ * @param cb
+ */
 var getForm = function(uploadFile,req,opts,cb){
 
     var error = 0;
@@ -256,11 +271,11 @@ var getForm = function(uploadFile,req,opts,cb){
 };
 
 
-
-
-
-
-
+/**
+ * Create temporary directory to save uploaded code
+ * @param opts
+ * @param cb
+ */
 var makeTempDir = function(opts,cb){
     mkdirp(opts.codeDir, function (err) {
         if (err) {
