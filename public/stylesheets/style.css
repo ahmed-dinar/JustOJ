@@ -452,6 +452,7 @@ position: relative;
 
 
 #brand-logo {
+  z-index: 1;
   text-decoration: none;
   cursor: pointer;
   background-size: cover;
@@ -459,9 +460,9 @@ position: relative;
   background: #262f38;
   width: 100%;
   padding-left: 21px;
-  padding-top: 3px;
-  padding-bottom: 9px;
-  margin-top: -6px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  margin-top: -7px;
 }
 
 #brand-logo h4{
@@ -472,49 +473,6 @@ position: relative;
   font-family: 'Lobster', cursive;
   font-weight: bold;
 }
-/*
-
-JUST
-ONLINE
-JUDGE
-
-*/
-
-.navbar-brand {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .navbar-brand {
-    display: block;
-  }
-}
-
-.transparent{
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-
-nav.nopadding, div.nopadding {
-  padding: 0;
-  margin: 0;
-}
-
-.navbar-wrapper{
-  border-top: 1px solid #eee;
-  background-image: url("../images/header_back10.png");
-  margin-top: 5px;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 15px;
-}
-
-
-
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
 
 #brand-logo:before, #brand-logo:after {
   content: '';
@@ -523,9 +481,7 @@ nav.nopadding, div.nopadding {
   left: -0.25em;
   border: 0 solid transparent;
   border-width: 0.5em 0.25em;
-  color: #262f38; /* set so we only have to have the border color in one place.
-                    if not specified, border color is the same as the text
-                    color. */
+  color: #262f38;
 }
 
 #brand-logo:before {
@@ -541,6 +497,43 @@ nav.nopadding, div.nopadding {
 }
 
 
+.navbar-brand {
+  display: none;
+}
+
+
+
+.transparent{
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+
+nav.nopadding, div.nopadding {
+  padding: 0;
+  margin: 0;
+}
+
+.navbar-wrapper{
+  border-top: 1px solid #eee;
+  background-image: url("../images/header_back15.png");
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+  border-top: 4px solid #262f38;
+}
+
+
+
+@media (max-width: 768px) {
+  .navbar-brand {
+    display: block;
+  }
+  .navbar-wrapper{
+    background-image: none;
+    background: #FFFFFF;
+  }
+}
 
 
 
