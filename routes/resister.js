@@ -62,6 +62,7 @@ router.post('/', isLoggedIn(false) , function(req, res, next) {
                     res.redirect('/resister');
                     break;
                 default:
+                    console.log('I am in default resister error!');
                     next(err);
             }
             return;

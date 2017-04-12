@@ -77,10 +77,11 @@ exports.resister = function (req, cb) {
         function(token, callback) {
 
             var transporter = nodemailer.createTransport({
-                service: 'gmail',
+                service: 'Gmail',
                 auth: {
+                    type: 'OAuth2',
                     user: Secrets.gmail.username,
-                    pass: Secrets.gmail.password
+                    accessToken: Secrets.gmail.accessToken
                 }
             });
 

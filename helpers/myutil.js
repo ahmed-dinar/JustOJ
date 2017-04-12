@@ -2,7 +2,7 @@
 var myUtils = {
 
     sourceLimit: (1024*1024),
-    RUN_DIR: '/SECURITY/JAIL/home/run',
+    RUN_DIR: '/var/SECURITY/JAIL/home/runs',
     TC_DIR: process.cwd() + '/files/tc/p',
     SUBMISSION_DIR: process.cwd() + '/files/submissions',
     UPLOAD_DIR: process.cwd() + '/files/uploads',

@@ -7,6 +7,7 @@ var fs          = require('fs');
 var path        = require("path");
 var async       = require('async');
 var rimraf      = require('rimraf');
+var mkdirp      = require('mkdirp');
 
 module.exports = function(req,res,next){
   var module = {};
@@ -74,39 +75,55 @@ module.exports = function(req,res,next){
 
   module.post = function(){
 
-    var busboy = new Busboy({ headers: req.headers });
-    var uniquename =  uuid.v4();
-    var namemap = ['i.txt','o.txt'];
-    var noFile = 0;
-    var fname = 0;
+      var uniquename =  uuid.v4();
+      var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename);
+      var namemap = [saveTo + '/i.txt', saveTo + '/o.txt'];
 
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+      async.waterfall([
+          function(callback) {
+              mkdirp(saveTo, function (err) {
+                  if (err) return callback(err);
+                  console.log(namemap[0] + " created!");
+                  callback();
+              });
+          }
+      ], function (error) {
 
-        if( noFile || !filename ){
-            noFile = 1;
-            file.resume();
-            return;
-        }
+          if(error) return next(error);
 
-        var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename + '/' + namemap[fname++]);
-        file.pipe(fse.createOutputStream(saveTo));
-    });
+          var busboy = new Busboy({ headers: req.headers });
+          var noFile = 0;
+          var fname = 0;
 
-    busboy.on('finish', function() {
+          busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 
-        if( noFile || fname!==2 ){
-            clearUpload( path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename) );
-            req.flash('tcUpErr', 'Please Select File');
-            res.redirect('/ep/' + req.params.pid + '/2');
-            return;
-        }
+              if( noFile || !filename ){
+                  noFile = 1;
+                  file.resume();
+                  return;
+              }
 
-        req.flash('tcUpSuccess', 'Test Case added!');
-        res.redirect('/problems/edit/' + req.params.pid + '/2');
+              file.pipe(fs.createWriteStream(namemap[fname++]));
+          });
 
-    });
+          busboy.on('finish', function() {
 
-    req.pipe(busboy);
+              if( noFile || fname!==2 ){
+                  clearUpload( saveTo );
+                  req.flash('tcUpErr', 'Please Select File');
+                  res.redirect('/ep/' + req.params.pid + '/2');
+                  return;
+              }
+
+              req.flash('tcUpSuccess', 'Test Case added!');
+              res.redirect('/problems/edit/' + req.params.pid + '/2');
+
+          });
+
+          req.pipe(busboy);
+
+      });
+
   };
 
   return module;
@@ -121,7 +138,6 @@ var clearUpload = function(remDir){
             console.log(error);
             return;
         }
-
         console.log('Cleaned uploaded TC');
     });
 };

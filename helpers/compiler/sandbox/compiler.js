@@ -12,14 +12,14 @@ var colors = require('colors');
  */
 exports.run = function run(opts,testCase,fn){
 
-    var command =  './helpers/compiler/sandbox/safe ';
+    var command =  './helpers/compiler/sandbox/safejudge ';
     command += opts.runName + '/code ';
-    command += testCase + '/i.txt ';
-    command += '/home/run/' + opts.runName + '/output.txt ';
-    command += '/home/run/' + opts.runName + '/error.txt ';
-    command += opts.runDir + '/result.txt ';
-    command += String(opts.timeLimit) + ' ';
-    command += String(opts.memoryLimit);
+    command += "-i " + testCase + '/i.txt ';
+    command += "-o " + '/home/runs/' + opts.runName + '/output.txt ';
+    command += "-e " + '/home/runs/' + opts.runName + '/error.txt ';
+    command += "-r " + opts.runDir + '/result.txt ';
+    command += "-t " + String(opts.timeLimit) + ' ';
+    command += "-m " + String(opts.memoryLimit);
 
 
     console.log('[CODE-RUN]: '.red + command.cyan);
@@ -51,7 +51,9 @@ exports.compile = function compile(opts,fn){
             return fn('invalid language','');
     }
 
+
     console.log('[CODE-COMPILE]: '.red +  (opts.codeDir).cyan);
+    console.log((command).yellow);
 
     var cnfg = {
         env: process.env,
@@ -61,6 +63,12 @@ exports.compile = function compile(opts,fn){
     };
 
     exec(command, cnfg, function(err, stdout, stderr) {
+
+        console.log("we are in compiler");
+        console.log(err);
+        console.log(stderr);
+        console.log("we are out of compiler");
+
         if (err) {
             return fn(err,stderr);
         }

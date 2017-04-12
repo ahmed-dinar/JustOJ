@@ -20,9 +20,7 @@ module.exports = function(req, res, next) {
 
     var uploadName = uuid.v4();
     var uploadFile =  MyUtil.RUN_DIR + '/' + uploadName;
-
     var pID = req.params.pid;
-
 
     async.waterfall([
         function(callback){
@@ -48,6 +46,7 @@ module.exports = function(req, res, next) {
             opts['tcDir']   = MyUtil.TC_DIR + '/' + pID;
             opts['codeDir'] = uploadFile;
 
+            console.log("calling Judge runner....".green);
 
             Judge.run(opts,function(err,result){
                 callback(err,result);

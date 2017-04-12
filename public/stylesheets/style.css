@@ -8,7 +8,7 @@ body {
   font-family: 'PT Sans', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px ;
   color: #333 ;
-  background: #FFFFFF;
+  background: #F1F1F1;
 }
 
 
@@ -182,6 +182,7 @@ hr {
 
 .c-h{
   min-height: 545px;
+  /*border: 1px solid #ccc;*/
 }
 
 
@@ -540,3 +541,7 @@ nav.nopadding, div.nopadding {
 
 
 
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
+  background-color: #f8f8f8;
+}
