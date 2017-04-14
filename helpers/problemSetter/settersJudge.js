@@ -239,9 +239,7 @@ var checkResult = function (opts,cb) {
             return cb('no result in file');
         }
 
-
-        var resultObj = _.zipObject(['code', 'msg','cpu','memory'], _.split(data,'$',4));
-
+        var resultObj = _.zipObject(['code', 'msg','cpu','memory','whyError'], _.split(data,'$',5));
 
         switch(resultObj.code) {
             case '0':

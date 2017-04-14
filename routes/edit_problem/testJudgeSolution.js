@@ -57,6 +57,7 @@ module.exports = function(req, res, next) {
         cleanSubmit(uploadFile);
 
         if( error ){
+            console.log(error);
             if( error.formError ){
                 res.json(error);
             }
@@ -150,7 +151,7 @@ var getForm = function(uploadFile,req,cb){
             }
 
             console.log('Field Required'.red);
-            cb({ formError: 'Empty Field?' });
+            cb({ formError: 'Time limit and Memory limit required' });
         });
 
 

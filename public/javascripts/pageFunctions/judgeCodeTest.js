@@ -3,18 +3,40 @@
 
 function showRuns(data){
 
+    var res = '<div class="panel panel-default">';
+    res += '<div class="panel-heading">Status</div>';
+    res += '<table class="table">';
+
+    var errorMsg = 'OK';
+
     if( data.system ){
-        $("#ajaxResult").html('<h4><span class="label label-danger">System Error</span></h4>');
-        return;
+        errorMsg = 'System Error';
+       // $("#ajaxResult").html('<h4><span class="label label-danger">System Error</span></h4>');
+      //  return;
+    }
+    else if( data.formError ){
+        errorMsg = data.formError;
+       // $("#ajaxResult").html('<h4><span class="label label-danger">'+ data.formError  +'</span></h4>');
+        //return;
+    }
+    else if( data.compiler ){
+        errorMsg = 'Compiler Error';
+       // $("#ajaxResult").html('<h4><span class="label label-danger">Compiler Error</span></h4>');
+       // return;
     }
 
-    if( data.formError ){
-        $("#ajaxResult").html('<h4><span class="label label-danger">'+ data.error  +'</span></h4>');
-        return;
-    }
-
-    if( data.compiler ){
-        $("#ajaxResult").html('<h4><span class="label label-danger">Compiler Error</span></h4>');
+    if( errorMsg !== 'OK' ) {
+        res += '<tr>';
+        res += '<td style="width: 20%">Status</td>';
+        res += '<td class="danger">Error</td>';
+        res += '</tr>';
+        res += '<tr>';
+        res += '<td style="width: 20%">Error</td>';
+        res += ' <td class="info">' + errorMsg + '</td>';
+        res += '</tr>';
+        res += '</table>';
+        res += '</div>';
+        $("#ajaxResult").html(res);
         return;
     }
 
@@ -22,7 +44,20 @@ function showRuns(data){
     var langName = {c: 'C', cpp: 'C++', java: 'Java'};
     var ac = (data.final.result === 'Accepted');
 
-    var res = '<div class="col-md-6"><h4>Run</h4>';
+
+    res += '<tr>';
+    res += '<td style="width: 20%">Status</td>';
+    if(ac){
+        res += '<td class="success">Success</td>';
+    }else{
+        res += '<td class="danger">Failed</td>';
+    }
+    res += '</tr>';
+    res += '</table>';
+    res += '</div>';
+    res += '<div class="panel panel-default">';
+    res += '<div class="panel-heading">Result</div>';
+
     res += '<table class="table"><thead><tr><th>CPU</th><th>Memory</th><th>Language</th><th>Status</th>';
     if(ac){
         res += '<th>Use</th>';
@@ -47,7 +82,9 @@ function showRuns(data){
     res += '</tr>';
     res += '</tbody>';
     res += '</table>';
-    res += '<h4>Tests</h4>';
+    res += '</div>';
+    res += '<div class="panel panel-default">';
+    res += '<div class="panel-heading">Tests</div>';
     res += '<table class="table">';
     res += '<thead>';
     res += '<tr>';
@@ -78,9 +115,7 @@ function showRuns(data){
 
     res += '</table>';
 
-
     res += '</div>';
-
 
     $("#ajaxResult").html('');
     $("#ajaxResult").append(res);

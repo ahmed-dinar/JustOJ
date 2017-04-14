@@ -21,6 +21,7 @@
 
 <!-- Main Content -->
 <div class="content container c-h">
+<div class="row">
 
 
     <%  if(error.length){ %>
@@ -32,11 +33,12 @@
         </div>
     <% } %>
 
-    <div class="col-md-6">
+    <div class="col-md-7" style="padding-left: 0; padding-right: 15px;">
         <div class="panel panel-default">
+            <div class="panel-heading">Test Limits</div>
             <div class="panel-body">
 
-                <h3>Test Limits</h3>
+
 
 
                 <form method="post" action="#" name="judgesolution" id="judgesolution" enctype="multipart/form-data" >
@@ -172,15 +174,16 @@
     </div>
 
 
-    <div class="col-md-6">
+    <div class="col-md-5" style="padding-left: 0; padding-right: 15px;">
         <div class="panel panel-default">
+            <div class="panel-heading">Final Limits</div>
             <div class="panel-body">
 
 
 
                 <form method="post" action="/problems/edit/<%= pid %>/3" name="limits" >
 
-                    <h3>Final Limits</h3>
+
                     <div class="row form-group">
                         <div class="col-xs-4">
                             <label>Time Limit (S)</label>
@@ -197,7 +200,9 @@
                 </form>
 
 
-                <div id="ajaxResult"></div>
+                <div id="ajaxResult">
+
+                </div>
 
             </div>
         </div>
@@ -206,7 +211,7 @@
 
 
 </div>
-
+</div>
 
 
 
