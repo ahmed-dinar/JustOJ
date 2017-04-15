@@ -35,6 +35,21 @@ module.exports = function(req,res,next){
 
     module.post = function(){
 
+        var cpu = req.body.ftl;
+        var memory = req.body.fml;
+
+        if( parseFloat(cpu) < 0.0 || parseFloat(cpu)>5.0 ){
+            req.flash('error', 'cpu limit should not be less than zero or greater than 5s');
+            res.redirect('/problems/edit/' + req.params.pid + '/3');
+            return;
+        }
+
+        if( parseInt(memory) < 0.0 || parseInt(memory)>256 ){
+            req.flash('error', 'memory limit should not be less than zero or greater than 256mb');
+            res.redirect('/problems/edit/' + req.params.pid + '/3');
+            return;
+        }
+
         async.waterfall([
             function(callback) {
 
@@ -48,9 +63,6 @@ module.exports = function(req,res,next){
                 });
             },
             function(callback) {
-
-                var cpu = req.body.ftl;
-                var memory = req.body.fml;
 
                 if( cpu && memory &&
                     MyUtil.isNumeric(cpu) &&
@@ -81,7 +93,7 @@ module.exports = function(req,res,next){
 
                 if( error.field ){
                     req.flash('error', error.field);
-                    res.redirect('/ep/' + req.params.pid + '/3');
+                    res.redirect('/problems/edit/' + req.params.pid + '/3');
                     return;
                 }
                 return next(new Error(error));

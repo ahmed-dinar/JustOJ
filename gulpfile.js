@@ -51,7 +51,7 @@ gulp.task('debug', function () {
 });
 
 
-gulp.task('dev', (args.debug) ? ['debug'] : null, function () {
+gulp.task('default', (args.debug) ? ['debug'] : null, function () {
 
     livereload.listen();
 
@@ -71,9 +71,13 @@ gulp.task('dev', (args.debug) ? ['debug'] : null, function () {
         .on('crash', function () {
             console.log('script crashed for some reason');
         })
+        .on('start', function () {
+           // console.log('nodemon started!');
+        })
         .on('restart', function () {
+
             gulp.src('bin/www')
-                .pipe(livereload());
+                .pipe(livereload({ auto: false }));
                 //.pipe(notify('Page Reloading...'));
         });
 

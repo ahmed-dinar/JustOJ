@@ -116,7 +116,6 @@
 
                             ev.preventDefault();
 
-
                             $('<input />').attr('type', 'hidden')
                                     .attr('name', "language")
                                     .attr('value',  document.getElementById("language").value)
@@ -126,8 +125,6 @@
                             var form = $('#judgesolution')[0];
                             var formData = new FormData(form);
                             var submitUrl = '/problems/edit/' + <%= pid %> + '/tjs';
-
-
 
                             $("#ajaxResult").html('<h4><img src="/images/hourglass1.gif"> Running Please Wait..</h4>');
 
@@ -139,6 +136,7 @@
                                 contentType: false,
                                 processData: false,
                                 complete: function(){
+                                    $('#judgesolution').children().last().remove();
                                     form.reset();
                                 },
                                 success: function(data) {

@@ -20,7 +20,7 @@ var Problems    = require('../models/problems');
 var User        = require('../models/user');
 var Query       = require('../config/database/knex/query');
 var DB          = require('../config/database/knex/DB');
-
+var entities    = require('entities');
 var isLoggedIn  = require('../middlewares/isLoggedIn');
 var roles       = require('../middlewares/userrole');
 
@@ -65,7 +65,8 @@ router.get('/', function(req, res, next) {
             _: _,
             problems: _.isUndefined(problems) ? {} : problems,
             pagination: _.isUndefined(pagination) ? {} : pagination,
-            status: _.isUndefined(status) ? {} : status
+            status: _.isUndefined(status) ? {} : status,
+            decodeToHTML: entities.decodeHTML
         });
 
 

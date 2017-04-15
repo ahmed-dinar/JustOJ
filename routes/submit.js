@@ -7,153 +7,91 @@ var path        = require("path");
 
 var _           = require('lodash');
 var Busboy      = require('busboy');
-var uuidV4      = require('uuid/v4');
+var uuid        = require('node-uuid');
 var mkdirp      = require('mkdirp');
 var async       = require('async');
 var moment      = require("moment");
+var has         = require('has');
+var mv          = require('mv');
 
 var isLoggedIn  = require('../middlewares/isLoggedIn');
 var Judge       = require('../helpers/compiler/sandbox/judge');
 var MyUtil      = require('../helpers/myutil');
 var Problems    = require('../models/problems');
 var Submission  = require('../models/submission');
-var User        = require('../models/user');
 
 var colors      = require('colors');
 
 router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
-    var uploadFile =  MyUtil.UPLOAD_DIR + '/' + uuidV4() + '.txt';
-
+    var uploadName = uuid.v4();
+    var uploadedFile =  MyUtil.RUN_DIR + '/' + uploadName;
     var problemId = req.params.pid;
     var userId = String(req.user.id);
 
     async.waterfall([
         function(callback){
+            makeTempDir({ codeDir: uploadedFile  }, callback);
+        },
+        function(ignore_please,callback){
             getLimits(problemId,callback); //also check valid problem id
         },
         function(opts,callback) {
-            getForm(uploadFile,req,opts,callback);
+            opts['uploadedFile'] = uploadedFile;
+            opts['problemId'] = problemId;
+            getForm(uploadedFile,req,opts,callback);
         },
         function(opts,callback){
-
-            var inserts = {
-                problemId: problemId,
-                userId: userId,
-                language: opts.language,
-                status: '5',
-                cpu: '0',
-                memory: '0'
-            };
-            Submission.insert(inserts,function(err,sid){
-                if( err ){
-                    console.log('Submit inserting error!'.bold.red);
-                    console.log(err.red);
-                    return callback(err);
-                }
-
-                opts['sID'] = String(sid);
-                opts['problemId'] = problemId;
-                opts['codeDir'] = MyUtil.SUBMISSION_DIR + '/' + opts.sID;
-                callback(null,opts);
-            });
-
+            insertSubmissionIntoDb(problemId,userId,'5',opts,callback);
         },
-        function(opts,callback){
+        incrementSubmission,
+        makeTempDir,
+        moveSource,
+        removeTempUpload
+    ], function (error, opts) {
 
-            Problems.updateSubmission(problemId, 'submissions', function(err){
-                if( err ){
-                    console.log('Updating submission errr'.red);
-                    return callback(err);
-                }
+        if( error ){
 
-                callback(null,opts);
-            });
-        },
-        function(opts,callback){
-            makeTempDir(opts,callback);
-        },
-        function(opts,callback){
-            moveSource(uploadFile,opts,callback);
-        }
-    ], function (error, opts, sid) {
+            console.log(error);
 
-        fse.remove(uploadFile, function (errs) {
-            if (errs) { console.log(errs); }
+            if( typeof error !== 'object' ) return next(new Error(error));
 
-            if( error ){
+            // user form empty errors
+            if( has(error,'formError') ){
+                req.flash('formError',error.formError);
+                res.redirect('/problems/JOP0' + problemId);
+                return;
+            }
 
-                console.log(error);
+            if( has(error,'systemError')  ){
+                return insertSubmissionIntoDb(problemId,userId,'8',opts,function (err) {
+                    if( err ) return next(new Error(error));
 
-                // user form empty errors
-                if( error.formError ){
-
-                    req.flash('formError',error.formError);
-                    res.redirect('/problems/JOP0' + problemId);
-
-                }else if( error.sysError ){ //system errors
-
-                    var inserts = {
-                        problemId: problemId,
-                        userId: userId,
-                        language: opts.language,
-                        status: '8',
-                        cpu: '0',
-                        memory: '0'
-                    };
-                    Submission.insert(inserts,function(err,sid){
-
-                        if( err ){
-                            console.log('Submit inserting error!'.bold.red);
-                            console.log(err.red);
-                            return next(new Error(err));
-                        }
-
-                        res.redirect('/status/u/' + problemId);
-                    });
-
-                }else {
-                    return next(new Error(error));
-                }
-            }else{
-
-                console.log('Submit Successfull'.green);
-
-                res.redirect('/status/u/' + problemId);
-
-                Judge.run(opts,function(err,runs){
-
-                    if( err ){
-                        console.log('Judge Error! damn u'.red);
-                        return;
-                    }
-
-                    console.log('successfully run!'.green);
-                    console.log(runs);
+                    res.redirect('/status/u/' + problemId);
                 });
             }
 
+            return next(new Error(error));
+        }
+
+        console.log('Successfully Submitted'.green);
+        res.redirect('/status/u/' + problemId);
+
+
+
+        Judge.run(opts,function(err,runs){
+
+            if( err ){
+                console.log('Judge Error! damn u'.red);
+                return;
+            }
+
+            console.log('successfully run!'.green);
+            console.log(runs);
         });
     });
 });
 
-
-/**
- * Move uploaded code to compiling directory
- * @param uploadFile
- * @param opts
- * @param cb
- */
-var moveSource = function(uploadFile,opts,cb){
-    var dest = opts.codeDir + '/code.' + opts.language;
-    fse.move(uploadFile, dest, function(err){
-        if(err){
-            console.log('Moving Source Error'.red);
-            return cb(err);
-        }
-        cb(null,opts);
-    });
-};
 
 
 /**
@@ -165,32 +103,30 @@ var getLimits = function(problemId,callback){
 
     Problems.findById(problemId,['cpu','memory'],function(err,rows){
 
-        if(err){ return callback(err); }
+        if(err) return callback(err);
 
-        if( rows.length === 0 ){ return callback({ formError: '404, no problem found'});  }
+        if( rows.length === 0 ) return callback({ formError: '404, no problem found'});
 
-        var opts = {
+        if( rows === null || rows[0].cpu === null || rows[0].memory === null )
+            return callback(null,{ systemError: 'no limit found for this problem!' });
+
+        return callback(null,{
             timeLimit: rows[0].cpu,
             memoryLimit: rows[0].memory
-        };
-
-        if( rows === null || rows[0].cpu === null || rows[0].memory === null ){
-            opts['sysError'] = true;
-        }
-
-        callback(null,opts);
+        });
     });
 };
 
 
+
 /**
  * Get and save multipart form from HTTP request
- * @param uploadFile
+ * @param uploadedFile
  * @param req
  * @param opts
  * @param cb
  */
-var getForm = function(uploadFile,req,opts,cb){
+var getForm = function(uploadedFile,req,opts,cb){
 
     var error = 0;
     var fstream = null;
@@ -206,7 +142,6 @@ var getForm = function(uploadFile,req,opts,cb){
         }
     });
 
-
     busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
         language = val;
         console.log(('[' + fieldname + '] = ' + val).yellow);
@@ -219,7 +154,7 @@ var getForm = function(uploadFile,req,opts,cb){
 
             console.log((filename +' receieved with mimetype: ' + mimetype).yellow);
 
-            fstream = fs.createWriteStream(uploadFile);
+            fstream = fs.createWriteStream(uploadedFile + '/code.txt');
 
             file.on('limit', function() {
                 error = 2;
@@ -253,21 +188,66 @@ var getForm = function(uploadFile,req,opts,cb){
 
             if( language  ){
                 opts['language'] = language;
-
-                if( opts.sysError ){ return cb({sysError: 'no limits found!'},opts); }
+                if( has(opts,'systemError') )
+                    return cb({ systemError: opts.systemError },opts);
 
                 return cb(null,opts);
             }
 
             console.log('language Required'.red);
-            cb({ formError: 'Empty Field?' });
+            cb({ formError: 'empty fields of sumission form' });
         });
-
-
     });
 
     req.pipe(busboy);
+};
 
+
+/**
+ * Insert submission into database
+ * @param problemId
+ * @param userId
+ * @param submissionStatus
+ * @param opts
+ * @param callback
+ */
+var insertSubmissionIntoDb = function (problemId,userId,submissionStatus,opts,callback) {
+
+    Submission.insert({
+        pid: problemId,
+        uid: userId,
+        language: opts.language,
+        status: submissionStatus,
+        cpu: '0',
+        memory: '0'
+    },function(err,sid){
+        if( err ){
+            console.log('Submit inserting error!'.bold.red);
+            console.log(err);
+            return callback(err);
+        }
+
+        opts['submissionId'] = String(sid);
+        opts['problemId'] = problemId;
+        opts['codeDir'] = MyUtil.SUBMISSION_DIR + '/' + opts.submissionId;
+        callback(null,opts);
+    });
+};
+
+
+/**
+ * increment Submission count of this problem
+ * @param opts
+ * @param callback
+ */
+var incrementSubmission = function (opts,callback) {
+    Problems.updateSubmission(opts.problemId, 'submissions', function(err){
+        if( err ){
+            console.log('Updating submission errr'.red);
+            return callback(err);
+        }
+        callback(null,opts);
+    });
 };
 
 
@@ -279,12 +259,41 @@ var getForm = function(uploadFile,req,opts,cb){
 var makeTempDir = function(opts,cb){
     mkdirp(opts.codeDir, function (err) {
         if (err) {
-            console.log('OMG ' + opts.codeDir + ' creation failed! permission denied!!'.underline.red);
+            console.log(opts.codeDir + ' creation failed! permission denied!!'.underline.red);
             return cb(err);
         }
         cb(null,opts);
     });
 };
 
+
+/**
+ * Move uploaded code to compiling directory
+ * @param uploadedFile
+ * @param opts
+ * @param cb
+ */
+var moveSource = function(opts,cb){
+    var dest = opts.codeDir + '/code.' + opts.language;
+    mv(opts.uploadedFile+'/code.txt', dest, function(err){
+        if(err){
+            console.log('Moving Source Error'.red);
+            return cb(err);
+        }
+        cb(null,opts);
+    });
+};
+
+
+/**
+ * Remove our code from our temporary directory after moving to judge run directory , i,e chroot directory
+ * @param opts
+ * @param cb
+ */
+var removeTempUpload = function(opts,cb){
+    fse.remove(opts.uploadedFile, function (errs) {
+        cb(errs,opts);
+    });
+};
 
 module.exports = router;

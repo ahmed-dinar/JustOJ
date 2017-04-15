@@ -66,7 +66,9 @@ exports.compile = function compile(opts,fn){
     exec(command, cnfg, function(err, stdout, stderr) {
 
         console.log("we are in compiler");
+        console.log("err:");
         console.log(err);
+        console.log('stderr:');
         console.log(stderr);
         console.log("we are out of compiler");
 

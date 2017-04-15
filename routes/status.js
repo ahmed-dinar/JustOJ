@@ -4,6 +4,7 @@ var router      = express.Router();
 
 var _           = require('lodash');
 var url         = require('url');
+var entities    = require('entities');
 
 var isLoggedIn  = require('../middlewares/isLoggedIn');
 var MyUtil      = require('../helpers/myutil');
@@ -66,7 +67,8 @@ router.get('/' , function(req, res, next) {
                 status: rows,
                 runStatus: MyUtil.runStatus(),
                 langNames: MyUtil.langNames(),
-                pagination: _.isUndefined(pagination) ? {} : pagination
+                pagination: _.isUndefined(pagination) ? {} : pagination,
+                decodeToHTML: entities.decodeHTML
             });
 
         });
@@ -160,7 +162,8 @@ router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
                 status: status,
                 pName: pName,
                 pid: pID,
-                pagination: _.isUndefined(pagination) ? {} : pagination
+                pagination: _.isUndefined(pagination) ? {} : pagination,
+                decodeToHTML: entities.decodeHTML
             });
 
 

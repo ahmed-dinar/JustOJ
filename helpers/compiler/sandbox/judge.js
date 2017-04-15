@@ -9,7 +9,7 @@ var jsdiff      = require('diff');
 var uuid        = require('node-uuid');
 var rimraf      = require('rimraf');
 var mkdirp      = require('mkdirp');
-
+var has         = require('has');
 var MyUtil      = require('../../myutil');
 var Submission  = require('../../../models/submission');
 var Problems    = require('../../../models/problems');
@@ -24,17 +24,18 @@ var colors      = require('colors');
  */
 exports.run = function(opts,cb){
 
-    opts['runName'] = opts.sID;
+    opts['runName'] = opts.submissionId;
     opts['runDir']  = MyUtil.RUN_DIR + '/' + opts.runName;
-    opts['tcDir']   = MyUtil.TC_DIR + '/' + opts.pID;
+    opts['testCaseDir']   = MyUtil.TC_DIR + '/' + opts.problemId;
 
+    console.log('In judge!');
     console.log(opts);
     console.log('runDir: ' + opts.runDir);
-    console.log('tcDir: ' + opts.tcDir);
+    console.log('testCaseDir: ' + opts.testCaseDir);
 
     async.waterfall([
         function(callback) {
-            Submission.update(opts.sID, { status: '6' }, callback);
+            Submission.update(opts.submissionId, { status: '6' }, callback);
         },
         function(callback) {
             makeTempDir(opts.runDir,callback);
@@ -43,153 +44,96 @@ exports.run = function(opts,cb){
             compileCode(opts,callback);
         },
         function(callback) {
-            getTestCases(opts.tcDir,callback);
+            getTestCases(opts.testCaseDir,callback);
         },
         function(testCases,callback){
             createAdditionalFiles(opts.runDir,testCases,callback);
         },
         function(testCases,callback){
-
             console.log(('Total Test Cases: ' + testCases.length).green);
-
-            async.mapSeries(testCases, runTestCase.bind(null,opts), function(err, results){
-                callback(err,results);
-            });
+            async.mapSeries(testCases, runTestCase.bind(null,opts), callback);
         }
     ], function (error, runs) {
 
-        cleanSubmit(opts.runDir);
+        rimraf(opts.runDir, function (err) {
 
-        if( error ){
+            if( err ) console.log(err);
+            else console.log('success clean submit!'.green);
 
-            if( _.isUndefined(runs) ){
+            if( error ){
 
-                Submission.update(opts.sID, { status: '8' }, function(err){
-                    if(err){
-                        console.log('What the hell updating run status!'.red);
-                        console.log(err);
-                    }
-                    return cb(error);
-                });
-            }
-            else if( runs.compiler ){
+                //runs undefined means we have another issue
+                if( _.isUndefined(runs) )
+                    return Submission.update(opts.submissionId, { status: '8' }, cb);
 
-                Submission.update(opts.sID, { status: '7' }, function(err){
-                    if(err){
-                        console.log('What the hell updating run status!'.red);
-                        console.log(err);
-                    }
-                    return cb(null,runs);
-                });
-            }
-            else if( _.isUndefined(runs[0]) ){
+                //compiler error
+                if( runs !== null && typeof error === 'object' &&  has(runs,'compiler') )
+                    return Submission.update(opts.submissionId, { status: '7' }, cb);
 
-                Submission.update(opts.sID, { status: '8' }, function(err){
-                    if(err){
-                        console.log('What the hell updating run status!'.red);
-                        console.log(err);
-                    }
-                    return cb(error);
-                });
-            }
-            else{
-                console.log('Error but runs exists');
+                //no test case was executed, may be not test case found
+                if( _.isUndefined(runs[0]) )
+                    return Submission.update(opts.submissionId, { status: '8' }, cb);
+
+
+                console.log('Error but runs exists'); //runtime errors!
                 console.log(runs);
-                getFinalResult(runs,opts,cb);
             }
-            return;
-        }
 
-        getFinalResult(runs,opts,cb);
-    });
-
-};
-
-var getFinalResult = function(runs,opts,cb){
-
-
-    var finalCode = 8;
-    var cpu = 0.0;
-    var memory = 0.0;
-
-    _.forEach(runs,function(value) {
-        cpu = Math.max(cpu, parseInt(value.cpu));
-        memory = Math.max(memory, parseInt(value.memory));
-        finalCode = value.code;
-    });
-
-
-    console.log('Final Result '.green);
-    console.log(('Cpu: ' + cpu).green);
-    console.log(('memory: ' + memory).green);
-    console.log(('finalCode: ' + finalCode).green);
-
-
-    async.parallel([
-            function(callback){
-
-                Submission.update(opts.sID, {
-                    status: String(finalCode),
-                    cpu: String(cpu),
-                    memory: String(memory)
-                }, function(err){
-                    if(err){
-                        console.log('What the hell updating run status!');
-                        console.log(err);
-                    }
-
-                    callback();
-                });
-            },
-            //increment total solved
-            function(callback){
-
-                if( finalCode !== '0'){ return callback(); }
-
-                Problems.updateSubmission(opts.pID, 'solved', function(err){
-                    if( err ){
-                        console.log('Updating solved number errr'.red);
-                        console.log(err);
-                    }
-
-                    callback();
-                });
-            },
-            //update user status for this problem
-            function(callback){
-
-                if( finalCode !== '0'){ return callback(); }
-
-                callback();
-            }
-        ],
-        function(err, results){
-
-            cb(null,runs);
+            getFinalResult(runs,opts,cb);
         });
-
+    });
 };
 
-var compileCode = function (opts,cb) {
 
-    Compiler.compile(opts, function (err,stderr, stdout) {
-
-        if(err) {
-            return cb(err,{compiler: 'Compiler Error'});
+/**
+ * Make a tempory directory to run the code, this directory is inside chroot jail environement directory
+ * @param saveTo
+ * @param cb
+ */
+var makeTempDir = function(saveTo,cb){
+    mkdirp(saveTo, function (err) {
+        if (err) {
+            console.log(saveTo + ' creation failed! permission denied!!');
+            return cb(err);
         }
-
-        if(stderr) {
-            return cb(stderr,{ compiler: 'Compiler Error'});
-        }
-
-        console.log(('Compiled Successfully').green);
+        console.log((saveTo + ' Created').green);
         cb();
     });
 };
 
-var getTestCases = function (tcDir,cb) {
 
-    fs.readdir(tcDir, function(err, files) {
+/**
+ *
+ * @param opts
+ * @param cb
+ */
+var compileCode = function (opts,cb) {
+    Compiler.compile(opts, function (err,stderr, stdout) {
+
+        if(err) return cb(err,{compiler: 'Compiler Error'});
+
+        if(stderr) {
+            console.log('stderr');
+            console.log(stderr);
+            console.log('stdout');
+            console.log(stdout);
+            return cb(stderr,{ compiler: 'Compiler Error'})
+        };
+
+        console.log(('Successfully Compiled!').green);
+        cb();
+    });
+};
+
+
+/**
+ * Get all test cases for this problem
+ * @param testCaseDir
+ * @param cb
+ */
+var getTestCases = function (testCaseDir,cb) {
+
+    fs.readdir(testCaseDir, function(err, files) {
 
         if( err ){
             console.log('getTestCases error:: '.red);
@@ -197,9 +141,8 @@ var getTestCases = function (tcDir,cb) {
             return cb(err);
         }
 
-
         if( files.length === 0 ){
-            console.log(('No Test Case Found in ' + tcDir).red);
+            console.log(('No Test Case Found in ' + testCaseDir).red);
             return cb('No Test Case Found');
         }
 
@@ -210,10 +153,37 @@ var getTestCases = function (tcDir,cb) {
 };
 
 
+/**
+ * Create additional files for saving the run status
+ * @param saveTo
+ * @param testCases
+ * @param cb
+ */
+var createAdditionalFiles = function(saveTo,testCases,cb){
+    var files = ['output.txt','error.txt','result.txt'];
+    async.eachSeries(files, function(file, callback) {
+        fs.open(saveTo + '/' + file ,'w',function(err, fd){
+            if( err ){
+                console.log((saveTo + '/' + file + ' creation error').red);
+                return callback(err);
+            }
+            console.log((saveTo + '/' + file + ' created').green);
+            callback();
+        });
+    }, function(err){
+        cb(err,testCases);
+    });
+};
+
+
+/**
+ * Run the program under a specific test case
+ * @param opts
+ * @param testCase
+ * @param cb
+ */
 var runTestCase = function(opts,testCase,cb){
-
-    testCase = opts.tcDir + '/' + testCase;
-
+    testCase = opts.testCaseDir + '/' + testCase;
     async.waterfall([
         function(callback) {
             runCode(opts,testCase,callback);
@@ -222,86 +192,54 @@ var runTestCase = function(opts,testCase,cb){
             checkResult(opts,callback);
         },
         function(resultObj,callback){
-
-            if( resultObj.result !== 'OK' ){
-                return callback(null,resultObj);
-            }
+            if( resultObj.result !== 'OK' ) return callback(null,resultObj);
 
             compareResult(opts,testCase,resultObj,callback);
         }
     ], function (error, result) {
-
         clearRun(opts,error, result,cb);
-
     });
 };
 
 
-var createAdditionalFiles = function(saveTo,testCases,cb){
-
-    var files = ['output.txt','error.txt','result.txt'];
-    async.eachSeries(files, function(file, callback) {
-
-        fs.open(saveTo + '/' + file ,'w',function(err, fd){
-            if( err ){
-                console.log((saveTo + '/' + file + ' creation error').red);
-                return callback(err);
-            }
-
-            console.log((saveTo + '/' + file + ' created').green);
-            callback();
-        });
-
-    }, function(err){
-        if( err ){
-            return cb(err);
-        }
-        cb(null,testCases);
-    });
-
-};
-
+/**
+ * Run a specific test case under sandbox
+ * @param opts
+ * @param testCase
+ * @param cb
+ */
 var runCode = function (opts,testCase,cb) {
-
     Compiler.run(opts, testCase, function (err,stdout, stderr) {
-
-        if(err) {
-            return cb(err);
-        }
+        if(err) return cb(err);
 
         if(stderr) {
-            return cb(stderr);
+            console.log('stderr!');
+            console.log(stderr);
+            return checkResult(opts,cb);  //may be SIGABRT type error
         }
 
         cb();
     });
-
 };
 
 
-
+/**
+ * Check the final result of current run
+ * @param opts
+ * @param cb
+ */
 var checkResult = function (opts,cb) {
 
     var resDir = opts.runDir +'/result.txt';
-
     console.log(('Checking ' + resDir + ' for run result').yellow);
 
     fs.readFile(resDir, 'utf8', function (error,data) {
 
-        if (error ) {
-            console.log('Error reading result file'.red);
-            return cb(error);
-        }
+        if (error ) return cb(error);
 
-        if( data.length === 0 ) {
-            console.log('Why result file empty?'.red);
-            return cb('no result in file');
-        }
+        if( data.length === 0 ) return cb('no result in file');
 
-
-        var resultObj = _.zipObject(['code', 'msg','cpu','memory'], _.split(data,'$',4));
-
-
+        var resultObj = _.zipObject(['code', 'msg','cpu','memory','whyError'], _.split(data,'$',5));
         switch(resultObj.code) {
             case '0':
                 resultObj['result'] = 'OK';
@@ -325,22 +263,27 @@ var checkResult = function (opts,cb) {
                 resultObj['result'] = 'Unknown System Error';
         }
 
-
         console.log(data.magenta);
         console.log(resultObj);
 
-
-        if( resultObj.code !== '0' ){
-            return cb(resultObj.result, resultObj);
-        }
+        if( resultObj.code !== '0' ) return cb(resultObj.result, resultObj);  //not accepted
 
         cb(null,resultObj);
     });
-
 };
 
 
+/**
+ * Compare output with judge data
+ * @param opts
+ * @param testCase
+ * @param resultObj
+ * @param cb
+ */
 var compareResult = function (opts,testCase,resultObj,cb) {
+
+     resultObj['result'] = 'Accepted';
+    return cb(null,resultObj);
 
     var judgeOutput = testCase + '/o.txt';
     var userOutput  = opts.runDir +'/output.txt';
@@ -390,52 +333,79 @@ var compareResult = function (opts,testCase,resultObj,cb) {
 };
 
 
-var clearRun = function(opts,error, result,cb){
-
+/**
+ * truncate files for next test case
+ * @param opts
+ * @param error
+ * @param result
+ * @param cb
+ */
+var clearRun = function(opts,error,result,cb){
     var files = ['output.txt','error.txt','result.txt'];
     async.each(files, function(file, callback) {
-
         fs.truncate(opts.runDir + '/' + file, 0, function(err){
-            if(err){
-                return callback(err);
-            }
+            if(err) return callback(err);
+
             console.log((opts.runDir + '/' + file + ' truncated').green);
             callback();
         });
-
     }, function(err){
-
-        if( err ){
-            console.log('clearRun Error'.red);
-        }
-
         cb(error,result);
-
-    });
-
-};
-
-
-var makeTempDir = function(saveTo,cb){
-    mkdirp(saveTo, function (err) {
-        if (err) {
-            console.log('OMG ' + saveTo + ' creation failed! permission denied!!');
-            return cb(err);
-        }
-        console.log((saveTo + ' Created').green);
-        cb();
     });
 };
 
 
-//clean up submitted code and run files
-function cleanSubmit(codeDir){
-    rimraf(codeDir, function (err) {
-        if( err ){
-            console.log(err);
-            return;
-        }
+/**
+ * Make our final result by checking all test case result
+ * Also update database
+ * @param runs
+ * @param opts
+ * @param cb
+ */
+var getFinalResult = function(runs,opts,cb){
+    var finalCode = '8';
+    var cpu = 0.0;
+    var memory = 0.0;
+    var whyError =  null;
 
-        console.log('success clean submit!'.green);
+    _.forEach(runs,function(value) {
+        cpu = Math.max(cpu, parseFloat(value.cpu));
+        memory = Math.max(memory, parseInt(value.memory));
+        finalCode = String(value.code);
+        if( value.whyError !== 'null' ){
+            whyError = value.whyError;
+        }
     });
-}
+
+    console.log('Final Result '.green);
+    console.log(('Cpu: ' + cpu).green);
+    console.log(('memory: ' + memory).green);
+    console.log(('finalCode: ' + finalCode).green);
+
+    async.parallel([
+            function(callback){
+                Submission.update(opts.submissionId, {
+                    status: finalCode,
+                    cpu: String(parseInt(cpu * 1000)),
+                    memory: String(memory)
+                }, callback);
+            },
+            function(callback){
+                if(finalCode === '0')   //if accepted increment total solved
+                    return Problems.updateSubmission(opts.problemId, 'solved', callback);
+
+                callback();
+            },
+            function(callback){     //TODO: update user status for this problem
+
+                if( finalCode !== '0'){ return callback(); }
+
+                callback();
+            }
+        ],
+        function(err, results){
+            cb(null,runs);
+        });
+};
+
+

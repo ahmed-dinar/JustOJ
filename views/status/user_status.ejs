@@ -21,11 +21,11 @@
 
                 <div class="panel-body">
                     <h4>My Submissions</h4>
-                    <h5>Problem:  <a href="/problems/JOP0<%= pid %>"><%= pName %></a></h5>
+                    <h5>Problem:  <a href="/problems/JOP0<%= pid %>"><%= decodeToHTML(pName) %></a></h5>
                 </div>
 
                     <!-- problem list -->
-                    <table class="table">
+                    <table class="table table-striped">
                         <thead>
                         <tr>
                             <th style="padding-left: 20px;">#</th>
@@ -67,11 +67,7 @@
                         </tbody>
                     </table>
 
-                    <hr class="last-border">
-
                     <% include ../templates/pagination.ejs %>
-
-
 
     </div>
 

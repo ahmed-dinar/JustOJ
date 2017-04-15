@@ -51,7 +51,7 @@ module.exports = function(req,res,next){
           });
       }
     ], function (error, row) {
-
+        console.log(error);
         if( error ) { return next(error); }
 
         res.render('problem/edit/step_2', {
@@ -111,7 +111,7 @@ module.exports = function(req,res,next){
               if( noFile || fname!==2 ){
                   clearUpload( saveTo );
                   req.flash('tcUpErr', 'Please Select File');
-                  res.redirect('/ep/' + req.params.pid + '/2');
+                  res.redirect('/problems/edit/' + req.params.pid + '/2');
                   return;
               }
 
