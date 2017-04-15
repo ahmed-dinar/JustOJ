@@ -51,10 +51,14 @@ exports.run = function(opts,cb){
         },
         function(testCases,callback){
             console.log(('Total Test Cases: ' + testCases.length).green);
+            testCases = testCases.map(function (value, index) {
+                return {index: index+1, value: value};
+            });
             async.mapSeries(testCases, runTestCase.bind(null,opts), callback);
         }
     ], function (error, runs) {
 
+        //remove temporary running directory from chroot directory
         rimraf(opts.runDir, function (err) {
 
             if( err ) console.log(err);
@@ -183,10 +187,10 @@ var createAdditionalFiles = function(saveTo,testCases,cb){
  * @param cb
  */
 var runTestCase = function(opts,testCase,cb){
-    testCase = opts.testCaseDir + '/' + testCase;
+    var testCasePath = opts.testCaseDir + '/' + testCase.value;
     async.waterfall([
         function(callback) {
-            runCode(opts,testCase,callback);
+            runCode(opts,testCasePath,callback);
         },
         function(callback){
             checkResult(opts,callback);
@@ -194,9 +198,29 @@ var runTestCase = function(opts,testCase,cb){
         function(resultObj,callback){
             if( resultObj.result !== 'OK' ) return callback(null,resultObj);
 
-            compareResult(opts,testCase,resultObj,callback);
+            compareResult(opts,testCasePath,resultObj,callback);
         }
     ], function (error, result) {
+
+        console.log('Case ' + testCase.index  + ' results:');
+        console.log(result);
+
+        if( result !== null && typeof result === 'object'){  //insert every run information into database
+            return Submission
+                        .addTestCase({
+                            sid:  opts.submissionId,
+                            name: testCase.value,
+                            status: result.code,
+                            cpu:  String(parseInt(parseFloat(result.cpu) * 1000)),
+                            memory: String(result.memory),
+                            errortype: result.whyError
+                        } , function (err) {
+                                if(err) console.log(err);
+
+                            clearRun(opts,error, result,cb);
+                        });
+        }
+
         clearRun(opts,error, result,cb);
     });
 };
@@ -264,7 +288,7 @@ var checkResult = function (opts,cb) {
         }
 
         console.log(data.magenta);
-        console.log(resultObj);
+      //  console.log(resultObj);
 
         if( resultObj.code !== '0' ) return cb(resultObj.result, resultObj);  //not accepted
 

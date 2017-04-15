@@ -52,6 +52,17 @@ CREATE TABLE `submission_code` (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE `submission_case` (
+  `id` INT(11) NOT NULL,
+  `sid` INT(11) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `status` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `cpu` INT(11) NOT NULL,
+  `memory` INT(11) NOT NULL,
+  `errortype` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB;
+
+
 CREATE TABLE `temp_user` (
   `id` INT(11) NOT NULL,
   `username` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,

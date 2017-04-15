@@ -10,6 +10,9 @@ ADD PRIMARY KEY (`id`);
 ALTER TABLE `submissions`
 ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `submission_case`
+ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `submission_code`
 ADD PRIMARY KEY (`id`);
 

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <% include ../templates/head.ejs %>
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../templates/header2.ejs %>
+
+
+<!-- Main Content -->
+<div class="content container c-h">
+    <div class="row">
+    <div class="col-md-10">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">SUBMISSION STATUS</div>
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Problem</th>
+                        <th>Time</th>
+                        <th>Language</th>
+                        <th>CPU</th>
+                        <th>Memory</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><%= submissionId %></td>
+                            <td>
+                                <a href="/user/<%= user.username %>">
+                                    <%= user.username %>
+                                </a>
+                            </td>
+                            <td class="ellips" style="max-width: 100px;">
+                                <a href="/problems/JOP0<%= runs.pid %>" title="<%= runs.title %>">
+                                    <%= runs.title %>
+                                </a>
+                            </td>
+                            <td class="ellips" title="<%= runs.submittime %>">
+                                <%= moment(runs.submittime).from() %>
+                            </td>
+                            <td><%= langNames[runs.language] %></td>
+                            <td><%= parseFloat( parseInt(runs.cpu) /1000.0).toFixed(2) %>s</td>
+                            <td><%= runs.memory %>KB</td>
+                            <td>
+                                <% var st = parseInt(runs.status); %>
+                                <% if(st === 0){ %>
+                                <span class="label label-success">
+                                    <% }else if(st === 5){ %>
+                                    <span class="label label-default">
+                                        <% }else if(st === 6){ %>
+                                        <span class="label label-info">
+                                            <% }else if(st === 8){ %>
+                                            <span class="label label-warning">
+                                                <% }else{ %>
+                                                <span class="label label-danger">
+                                                    <% } %>
+                                                    <%= runStatus[st] %>
+                                                            </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+        </div>
+
+        <% if(runs.cases.length){ %>
+            <div class="panel panel-default">
+                <div class="panel-heading">TEST CASES</div>
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>CPU</th>
+                            <th>Memory</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <% for(var i=0; i<runs.cases.length; i++){ %>
+
+                            <tr>
+                                <td><%= (i+1) %></td>
+                                <td><%= parseFloat( parseInt(runs.cases[i].cpu)/1000.0).toFixed(2) %>s</td>
+                                <td><%= runs.cases[i].memory %>KB</td>
+                                <td>
+                                    <% var st = parseInt(runs.cases[i].status); %>
+                                    <% if(st === 0){ %>
+                                    <span class="label label-success">
+                                        <% }else if(st === 5){ %>
+                                        <span class="label label-default">
+                                            <% }else if(st === 6){ %>
+                                            <span class="label label-info">
+                                                <% }else if(st === 8){ %>
+                                                <span class="label label-warning">
+                                                    <% }else{ %>
+                                                    <span class="label label-danger">
+                                                        <% } %>
+                                                        <%= runStatus[st] %>
+                                                                </span>
+                                </td>
+                            </tr>
+
+                        <% } %>
+
+                        </tbody>
+                    </table>
+
+            </div>
+        <% } %>
+
+    </div>
+
+    </div>
+    </div>
+</div>
+
+<!-- footer -->
+<% include ../templates/footer.ejs %>
+
+</body>
+</html>

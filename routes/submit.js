@@ -78,11 +78,10 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
         res.redirect('/status/u/' + problemId);
 
 
-
+        //run code against test cases in sandbox
         Judge.run(opts,function(err,runs){
-
             if( err ){
-                console.log('Judge Error! damn u'.red);
+                console.log('Judge Error!'.red);
                 return;
             }
 
