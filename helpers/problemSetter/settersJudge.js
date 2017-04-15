@@ -54,16 +54,15 @@ exports.run = function(opts,cb){
 
         if( error ){
 
-            if( runs.compiler  ){
+            if( runs.compiler  )
                 return cb(error,runs);
-            }else if( !runs || _.isUndefined(runs[0]) ){
+
+            if( !runs || _.isUndefined(runs[0]) )
                 return cb(error,{});
-            }else{
-                console.log('Error but runs exists');
-                console.log(runs);
-                getFinalResult(runs,opts,cb);
-            }
-            return;
+
+            console.log('Error but runs exists');
+            console.log(runs);
+            return getFinalResult(runs,opts,cb);
         }
 
         getFinalResult(runs,opts,cb);
@@ -78,26 +77,29 @@ var getFinalResult = function(runs,opts,cb){
     var cpu = 0.0;
     var memory = 0.0;
     var result = 'Accepted';
+    var whyError =  null;
 
     var fres = {};
     var fparts = [];
 
     _.forEach(runs,function(value) {
-        cpu = Math.max(cpu, parseInt(value.cpu));
+        cpu = Math.max(cpu, parseFloat(value.cpu));
         memory = Math.max(memory, parseInt(value.memory));
         finalCode = value.code;
         result = value.result;
-
+        if( value.whyError != 'null' ){
+            whyError = value.whyError;
+        }
         fparts.push(value);
     });
-
 
     fres['runs'] = fparts;
     fres['final'] = {
         cpu: cpu,
         memory: memory,
         result: result,
-        language: opts['language']
+        language: opts['language'],
+        whyError: whyError
     };
 
     console.log('Final Result '.green);
@@ -206,12 +208,16 @@ var runCode = function (opts,testCase,cb) {
 
     Compiler.run(opts, testCase, function (err,stdout, stderr) {
 
+
+
         if(err) {
             return cb(err);
         }
 
         if(stderr) {
-            return cb(stderr);
+            console.log('stderr occured!');
+            console.log(stderr);
+            return checkResult(opts,cb);
         }
 
         cb();

@@ -39,7 +39,8 @@ exports.compile = function compile(opts,fn){
     var command = null;
     switch(opts.language) {
         case 'c':
-            command = 'gcc -w -O2 -fomit-frame-pointer -lm -o ' + opts.runDir +'/code code.c';
+            //command = 'gcc -w -O2 -fomit-frame-pointer -lm -o ' + opts.runDir +'/code code.c';
+            command = 'gcc -Wall -O2 -fomit-frame-pointer -lm -o ' + opts.runDir +'/code code.c';
             break;
         case 'cpp':
             command =  'g++ -w -O2 -fomit-frame-pointer -lm -o ' + opts.runDir + '/code code.cpp';

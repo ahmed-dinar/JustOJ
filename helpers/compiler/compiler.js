@@ -85,7 +85,7 @@ Compiler.prototype.run = function run(programmPath,codeName,input,fn){
 
     var runCommand = 'cd ' + programmPath + ' & .\\' + codeName + '.exe < "' + input + '"';
 
-   // console.log('Run Command in compile: ' + runCommand);
+    console.log('Run Command in compile: ' + runCommand);
 
     var config = {
         env: process.env,

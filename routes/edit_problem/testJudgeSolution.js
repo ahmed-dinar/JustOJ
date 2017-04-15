@@ -57,6 +57,7 @@ module.exports = function(req, res, next) {
         cleanSubmit(uploadFile);
 
         if( error ){
+            console.log("in tjs:");
             console.log(error);
             if( error.formError ){
                 res.json(error);
@@ -68,6 +69,7 @@ module.exports = function(req, res, next) {
                 res.json({ system: error });
             }
         }else{
+            console.log(runs);
             res.json(runs);
         }
 
