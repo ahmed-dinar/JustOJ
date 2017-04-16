@@ -18,12 +18,11 @@
 <div class="content container c-h">
 
     <div class="row">
+    <div class="col-md-10 nopadding">
 
+        <div class="panel panel-default">
+            <div class="panel-heading">JUDGE STATUS</div>
 
-
-                <div class="panel-body">
-                    <h4>Status</h4>
-                </div>
 
                 <% if(status.length){ %>
                 <table class="table table-striped">
@@ -42,22 +41,32 @@
                     <tbody>
                     <% for(var i=0; i<status.length; i++){ %>
                     <tr>
-                        <td style="padding-left: 20px;"><%= pagination.offset() + (i+1) %></td>
+                        <td style="padding-left: 20px;">
+                            <a href="/status/<%= status[i].id %>" >
+                                <%= status[i].id %>
+                            </a>
+                        </td>
                         <td>
                             <a href="/user/<%= status[i].username %>">
                                 <%= status[i].username %>
                             </a>
                         </td>
-                        <td class="ellips" style="max-width: 100px;">
-                            <a href="/problems/JOP0<%= status[i].pid %>" title="<%= decodeToHTML(status[i].title) %>">
-                                <%= status[i].title %>
+                        <td class="ellips" style="max-width: 100px; ">
+                            <a href="/problems/JOP0<%= status[i].pid %>"  title="<%= decodeToHTML(status[i].title) %>">
+                                <%= decodeToHTML(status[i].title) %>
                             </a>
                         </td>
                         <td class="ellips" title="<%= status[i].submittime %>">
                             <%= moment(status[i].submittime).from() %>
                         </td>
                         <td><%= langNames[status[i].language] %></td>
-                        <td><%= parseFloat(status[i].cpu/1000.0).toFixed(2) %>s</td>
+                        <td>
+                            <% if( parseInt(status[i].cpu) === 0){ %>
+                                0.00s
+                            <% }else{ %>
+                                <%= parseFloat( parseInt(status[i].cpu)/1000.0).toString().match(/^-?\d+(?:\.\d{0,2})?/)[0] %>s
+                            <% } %>
+                        </td>
                         <td><%= status[i].memory %>KB</td>
                         <td>
                             <% var st = parseInt(status[i].status); %>
@@ -87,6 +96,9 @@
                 <% } %>
 
 
+            </div>
+        </div>
+    </div>
     </div>
 
 </div>

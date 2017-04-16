@@ -11,18 +11,26 @@ var MyUtil      = require('../helpers/myutil');
 
 /**
  *
+ * @param cid
+ * @param cb
+ */
+exports.findById = function(cid,cb){
+    var sql = Query
+                .select(['id']).from('contest').where({ 'id': cid }).limit(1);
+
+    DB.execute( sql.toString(), cb);
+};
+
+
+
+/**
+ *
  * @param inserts
  * @param cb
  */
 exports.create = function(inserts,cb){
-
     var sql = Query.insert(inserts).into('contest');
-
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute( sql.toString(), cb);
 };
 
 
@@ -158,11 +166,7 @@ exports.update = function(inserts,cid,cb){
     var sql = Query('contest').update(inserts)
         .where({ 'id': cid });
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 
@@ -466,11 +470,7 @@ exports.insertProblem = function(cid,pid,cb){
     })
         .into('contest_problems');
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 

@@ -11,12 +11,12 @@
 
 
 <!-- header and menu -->
-<% include ../../../templates/header.ejs %>
+<% include ../../../templates/header2.ejs %>
 
 
 <!-- Main Content -->
-<div class="content container">
-
+<div class="content container c-h">
+<div class="row">
 
     <%  if(error.length){ %>
     <div class="col-md-6 col-md-offset-3">
@@ -27,8 +27,9 @@
     </div>
     <% } %>
 
-    <div class="col-md-6">
+    <div class="col-md-7" style="padding-left: 0; padding-right: 15px;">
         <div class="panel panel-default">
+            <div class="panel-heading">TEST LIMITS</div>
             <div class="panel-body">
 
                 <h3>Test Limits</h3>
@@ -160,17 +161,17 @@
 
                 </script>
 
-
+                <div id="ajaxResult"></div>
 
             </div>
         </div>
     </div>
 
 
-    <div class="col-md-6">
+    <div class="col-md-5" style="padding-left: 0; padding-right: 15px;">
         <div class="panel panel-default">
+            <div class="panel-heading">FINAL LIMITS</div>
             <div class="panel-body">
-
 
 
                 <form method="post" action="/contest/edit/<%= cid %>/problems/<%= pid %>/step3" name="limits" >
@@ -192,7 +193,7 @@
                 </form>
 
 
-                <div id="ajaxResult"></div>
+
 
             </div>
         </div>
@@ -200,6 +201,7 @@
 
 
 
+</div>
 </div>
 
 

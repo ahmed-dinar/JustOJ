@@ -18,13 +18,13 @@
 
 
 <!-- header and menu -->
-<% include ../templates/header.ejs %>
+<% include ../templates/header2.ejs %>
 
 
 
 
 <!-- Main Content -->
-<div class="content container" style="min-height: 530px;">
+<div class="content container c-h" >
     <div class="row">
 
         <!-- errors -->
@@ -37,8 +37,11 @@
         </div>
         <% } %>
 
-        <div class="col-md-12">
+        <div class="col-md-10 nopadding">
             <div class="panel panel-default">
+
+                <div class="panel-heading">CREATE CONTEST</div>
+
                 <div class="panel-body">
 
                     <form method="post" action="/contest/create" role="form" id="ccFrom" class="form-horizontal" >

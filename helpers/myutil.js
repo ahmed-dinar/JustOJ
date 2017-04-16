@@ -1,4 +1,6 @@
 
+
+
 var myUtils = {
 
     sourceLimit: (1024*1024),
@@ -31,15 +33,13 @@ var myUtils = {
         return !isNaN(num);
     },
 
-    runStatus: function(){
-
+    runStatus: function(minified){
         //                0             1                 2                        3                     4                  5         6            7               8              9
         var status = ['Accepted','Runtime Error','Time Limit Exceeded','Memory Limit Exceeded','Output Limit Exceeded','In Queue','Running','Compiler Error','System Error', 'Wrong Answer'];
-
-
-
+        var statusMinified = ['Accepted','Runtime Error','TLE','MLE','OLE','In Queue','Running','Compiler Error','System Error', 'Wrong Answer'];
         //  var status: ['In Queue','Running','Compiler Error','Accepted','Wrong Answer','Time Limit Exceeded','Runtime Error','Memory Limit Exceeded','Output Limit Exceeded','System Error'],
 
+        if( typeof minified !== 'undefined' && minified === true ) return statusMinified;
 
         return status;
     },

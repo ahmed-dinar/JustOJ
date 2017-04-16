@@ -11,11 +11,11 @@
 
 
 <!-- header and menu -->
-<% include ../../../templates/header.ejs %>
+<% include ../../../templates/header2.ejs %>
 
 
 <!-- Main Content -->
-<div class="content container">
+<div class="content container c-h">
 
 
     <div class="col-md-12">
@@ -51,19 +51,29 @@
         </div>
         <% } %>
 
+        <% if (noTestCase.length) { %>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <%= noTestCase %>
+            </div>
+        </div>
+        <% } %>
+
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-10 nopadding">
         <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h4>Add Test Cases</h4>
+                <h5> <%= data.length %> Test Case Added</h5>
+            </div>
+
             <div class="panel-body">
 
-                <h3>Add Test Cases</h3>
 
-
-                <h5> <%= data.length %> Test Case Added</h5>
-                <div id="caseremovingDiv"><img src="/images/ajax-loader.gif"> <b>Deleting...</b></div>
-
-                <table class="table">
+                <table class="table table-striped">
                     <tbody id="caselist">
 
                     <% for(var i=0; i<data.length; i++){ %>

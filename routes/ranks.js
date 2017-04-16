@@ -5,6 +5,7 @@ var router      = express.Router();
 var _           = require('lodash');
 var url         = require('url');
 
+var entities    = require('entities');
 var isLoggedIn  = require('../middlewares/isLoggedIn');
 var MyUtil      = require('../helpers/myutil');
 var Problems    = require('../models/problems');
@@ -26,19 +27,21 @@ router.get('/', function(req, res, next) {
 });
 
 
+/**
+ *
+ */
 router.get('/p/:pid', function(req, res, next) {
 
-    var pID = req.params.pid;
+    var problemId = req.params.pid;
 
-    if( MyUtil.isNumeric(pID) ){
+    if( !MyUtil.isNumeric(problemId) )  next(new Error('What R U looking for?'));
 
-
-        async.waterfall([
+    async.waterfall([
             function(callback) {
-                Problems.findById(pID,['title'],function(err,rows){
-                    if(err){ return callback(err); }
+                Problems.findById(problemId,['title'],function(err,rows){
+                    if(err) return callback(err);
 
-                    if(rows.length===0){ return callback('What Are You Looking For?'); }
+                    if(rows.length===0) return callback('What Are You Looking For?');
 
                     callback(null,rows[0].title);
                 });
@@ -65,14 +68,14 @@ router.get('/p/:pid', function(req, res, next) {
                     .min('submissions.cpu as cpu')
                     .groupBy('submissions.uid')
                     .where({
-                        'submissions.pid': pID,
+                        'submissions.pid': problemId,
                         'submissions.status': '0'
                     })
                     .as('ignored_alias');
 
 
                 var sqlCount = Query.min('counted as count').from(function() {
-                    this.count('* as counted').from('submissions').where({pid: pID, status: '0'}).groupBy('uid').as('c');
+                    this.count('* as counted').from('submissions').where({pid: problemId, status: '0'}).groupBy('uid').as('c');
                 }).as('ignored_alias');
 
 
@@ -113,8 +116,8 @@ router.get('/p/:pid', function(req, res, next) {
                 langNames: MyUtil.langNames(),
                 moment: moment,
                 rank: rank,
-                pName: pName,
-                pid: pID,
+                pName: entities.decodeHTML(pName),
+                pid: problemId,
                 pagination: _.isUndefined(pagination) ? {} : pagination
             });
 
@@ -122,9 +125,9 @@ router.get('/p/:pid', function(req, res, next) {
         });
 
         return;
-    }
 
-    next(new Error('What R U looking for?'));
+
+
 });
 
 

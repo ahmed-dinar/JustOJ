@@ -20,6 +20,7 @@ var Busboy      = require('busboy');
 var uuid        = require('node-uuid');
 var rimraf      = require('rimraf');
 var url         = require('url');
+var mkdirp      = require('mkdirp');
 
 var MyUtil      = require('../helpers/myutil');
 var Paginate    = require('../helpers/paginate');
@@ -149,15 +150,23 @@ router.get('/edit/:cid',isLoggedIn(true) , roles.is('admin'), function(req, res,
 });
 
 
+/**
+ *
+ */
 router.get('/edit/:cid/problems/new',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-    res.render('contest/edit/problems/new',{
-        active_nav: "contest",
-        isLoggedIn: req.isAuthenticated(),
-        user: req.user,
-        cid: req.params.cid
-    });
+    Contest.findById(req.params.cid, function (err,rows) {
+        if(err) return next(new Error(err));
 
+        if( rows.length === 0 ) return next(new Error('404, no contest found!'));
+
+        res.render('contest/edit/problems/new',{
+            active_nav: "contest",
+            isLoggedIn: req.isAuthenticated(),
+            user: req.user,
+            cid: req.params.cid
+        });
+    });
 });
 
 
@@ -194,6 +203,8 @@ router.get('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin'
     Problems.findById(pid,[],function(err,rows){
         if(err){ return next(new Error(err)) }
 
+        if( !rows || rows.length === 0 ) return res.end('404!');
+
         console.log(rows);
 
         res.render('contest/edit/problems/step_1', {
@@ -214,48 +225,38 @@ router.get('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin'
 
 router.get('/edit/:cid/problems/:pid/step2',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-
     var cid = req.params.cid;
     var pid = req.params.pid;
 
     async.waterfall([
         function(callback) {
-
             Problems.findById(pid,['id'],function(err,row){
+                if( err ) return callback(err);
 
-                if( err ) { return callback(err); }
-
-                if( row.length == 0 ) { return callback('what you r looking for!'); }
-                //if( row[0].status == 'incomplete' ) { return callback(new Error('what you r looking for!!!')); }
+                if( row.length == 0 ) return callback('what you r looking for!');
 
                 callback();
-
             });
-
         },
         function(callback){
-
             var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + pid);
             fs.readdir(rootDir, function(err, files) {
-
-                var empty = [];
                 if( err ){
+                    if( err.code === 'ENOENT' ) return callback(null,[]);
 
-                    if( err.code === 'ENOENT' ){ return callback(null,empty); }
-
-                    console.log('getTestCases error:: ');
+                    console.log('getTestCases of contest error:: ');
                     console.log(err);
-                    return callback('getTestCases error');
+                    return callback('getTestCases of contest error');
                 }
 
                 if(files){ return callback(null,files); }
 
-                callback(null,empty);
+                callback(null,[]);
             });
         }
     ], function (error, row) {
 
-        if( error ) { return next(error); }
+        if( error ) return next(new Error(error));
 
         res.render('contest/edit/problems/step_2', {
             active_nav: "contest",
@@ -269,27 +270,53 @@ router.get('/edit/:cid/problems/:pid/step2',isLoggedIn(true) , roles.is('admin')
             errMsg: req.flash('tcUpErr'),
             rsuccessMsg:  req.flash('tcRemSuccess'),
             rerrMsg:  req.flash('tcRemErr'),
+            noTestCase: req.flash('noTestCase'),
             data: row
         });
-
     });
-
-
 });
 
 
-
-
+/**
+ *
+ */
 router.get('/edit/:cid/problems/:pid/step3',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-    var pid = req.params.pid;
-    var cid = req.params.cid;
+    async.waterfall([
+        function(callback) {
+            Problems.findById(req.params.pid,['id'],function(err,row){
+                if( err ) return callback(err);
 
-    Problems.findById(pid,['id'],function(err,row){
+                if( row.length === 0 ) return callback('what you r looking for!');
 
-        if( err ) { return next(new Error(err)); }
+                callback();
+            });
+        },
+        function(callback){
+            var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid);
+            fs.readdir(rootDir, function(err, files) {
+                if( err ){
+                    if( err.code === 'ENOENT' ) return callback(null,'Please add test case first');   //no test cases added yet!
 
-        if( row.length == 0 ) { return next(new Error('what you r looking for!')); }
+                    console.log('getTestCases error:: ');
+                    console.log(err);
+                    return callback(err);
+                }
+
+                if(!files || files.length === 0)
+                    return callback(null,'Please add test case first');
+
+                callback();
+            });
+        }
+    ], function (error, noTest) {
+
+        if (error) return next(error);
+
+        if (noTest){
+            req.flash('noTestCase', 'Please add at least one test case');
+            return res.redirect('/contest/edit/' + req.params.cid + '/problems/'+ req.params.pid +'/step2');
+        }
 
         res.render('contest/edit/problems/step_3', {
             active_nav: "contest",
@@ -297,13 +324,11 @@ router.get('/edit/:cid/problems/:pid/step3',isLoggedIn(true) , roles.is('admin')
             locals: req.app.locals,
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
-            pid: pid,
-            cid: cid,
+            pid: req.params.pid,
+            cid: req.params.cid,
             error: req.flash('error')
         });
-
     });
-
 });
 
 
@@ -987,73 +1012,91 @@ router.get('/:cid/standings', function(req, res, next) {
 
 router.post('/edit/:cid/problems/:pid/step3', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-    var pid = req.params.pid;
-    var cid = req.params.cid;
+    var cpu = req.body.ftl;
+    var memory = req.body.fml;
+
+    if( !cpu || !memory || !MyUtil.isNumeric(cpu) || !MyUtil.isNumeric(memory) ){
+        req.flash('error', 'invalid or empty limits, please check again');
+        res.redirect('/contest/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
+        return;
+    }
+
+    if( parseFloat(cpu) < 0.0 || parseFloat(cpu)>5.0 ){
+        req.flash('error', 'cpu limit should not be less than zero or greater than 5s');
+        res.redirect('/contest/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
+        return;
+    }
+
+    if( parseInt(memory) < 0.0 || parseInt(memory)>256 ){
+        req.flash('error', 'memory limit should not be less than zero or greater than 256mb');
+        res.redirect('/contest/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
+        return;
+    }
 
     async.waterfall([
         function(callback) {
+            Problems.findById(req.params.pid,['id'],function(err,row){
+                if( err ) return next(new Error(err));
 
-            Problems.findById(pid,['id'],function(err,row){
+                if( row.length == 0 ) return next(new Error('what you r looking for!'));
 
-                if( err ) { return next(new Error(err)); }
+                callback();
+            });
+        },
+        function(callback){
+            var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid);
+            fs.readdir(rootDir, function(err, files) {
+                if( err ){
+                    if( err.code === 'ENOENT' ) return callback('noTest','Please add test case first');   //no test cases added yet!
 
-                if( row.length == 0 ) { return next(new Error('what you r looking for!')); }
+                    console.log('getTestCases error:: ');
+                    console.log(err);
+                    return callback(err);
+                }
+
+                if(!files || files.length === 0)
+                    return callback('noTest','Please add test case first');
 
                 callback();
             });
         },
         function(callback) {
 
-            var cpu = req.body.ftl;
-            var memory = req.body.fml;
+            var limits = {
+                cpu: parseInt(parseFloat(cpu)*1000.0),
+                memory: memory,
+                status: 'complete'
+            };
 
-            if( cpu && memory &&
-                MyUtil.isNumeric(cpu) &&
-                MyUtil.isNumeric(memory) ){
-
-                var limits = {
-                    cpu: parseInt(parseFloat(cpu)*1000.0),
-                    memory: memory
-                };
-
-                Problems.updateLimits(pid,limits,function(err,row){
-
-                    if(err){
-                        console.log('Set limit db error');
-                        console.log(err);
-                        return callback(err);
-                    }
-
-                    callback();
-                });
-                return;
-            }
-            callback({field: 'Invalid Or Empty Field' });
+            Problems.updateLimits(req.params.pid,limits,function(err,row){
+                if(err){
+                    console.log('Set limit db error');
+                    console.log(err);
+                    return callback(err);
+                }
+                callback();
+            });
         },
-        function(callback){
+        function(callback) {  //TODO: every time changed status to 1, if 2 also turned into 1, please fixed this
 
-            Contest.updateProblem({'status':1},pid, function(err,rows){
-                if(err){ return callback(err) };
+            Contest.update({ status: '1' } , req.params.cid, function (err,rows) {
+                if(err) return callback(err);
 
                 callback();
             });
         }
-    ], function (error, result) {
+    ], function (error, noTest) {
 
-        if( error ){
-
-            if( error.field ){
-                req.flash('error', error.field);
-                res.redirect('/contest/edit/'+ cid +'/problems/'+ pid +'/step3');
-                return;
-            }
+        if( error && !noTest )
             return next(new Error(error));
+
+        if (noTest){
+            req.flash('noTestCase', 'Please add at least one test case');
+            return res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
         }
 
-        res.redirect('/contest/edit/'+ cid);
-
+        res.redirect('/contest/edit/'+ req.params.cid);
     });
-
 });
 
 
@@ -1078,48 +1121,67 @@ router.post('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin
 
 router.post('/edit/:cid/problems/:pid/step2', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-    var busboy = new Busboy({ headers: req.headers });
     var uniquename =  uuid.v4();
-    var namemap = ['i.txt','o.txt'];
-    var noFile = 0;
-    var fname = 0;
+    var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename);
+    var namemap = [saveTo + '/i.txt', saveTo + '/o.txt'];
 
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+    async.waterfall([
+        function(callback) {
+            Problems.findById(req.params.pid,['id'],function(err,row){
+                if( err ) return callback(err);
 
-        if( noFile || !filename ){
-            noFile = 1;
-            file.resume();
-            return;
+                if( row.length == 0 ) { return callback('what you r looking for!'); }
+
+                callback();
+            });
+        },
+        function(callback) {
+            mkdirp(saveTo, function (err) {
+                if (err) return callback(err);
+
+                console.log(namemap[0] + " created!");
+                callback();
+            });
         }
+    ], function (error) {
 
-        var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename + '/' + namemap[fname++]);
-        file.pipe(fse.createOutputStream(saveTo));
+        if(error) return next(error);
+
+        var busboy = new Busboy({ headers: req.headers });
+        var noFile = 0;
+        var fname = 0;
+
+        busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+
+            if( noFile || !filename ){
+                noFile = 1;
+                file.resume();
+                return;
+            }
+
+            file.pipe(fs.createWriteStream(namemap[fname++]));
+        });
+
+        busboy.on('finish', function() {
+
+            if( noFile || fname!==2 ) //clear our created input output files
+                return clearUpload( saveTo , req, res );
+
+            req.flash('tcUpSuccess', 'Test Case added!');
+            res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
+        });
+        req.pipe(busboy);
     });
-
-    busboy.on('finish', function() {
-
-        if( noFile || fname!==2 ){
-            clearUpload( path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename) );
-            req.flash('tcUpErr', 'Please Select File');
-            res.redirect('/ep/' + req.params.pid + '/2');
-            return;
-        }
-
-        req.flash('tcUpSuccess', 'Test Case added!');
-        res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
-
-    });
-
-    req.pipe(busboy);
-
 });
 
 
+/**
+ *
+ */
 router.post('/edit/:cid/problems/rtc', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-    if( !req.body.pid || !req.body.casename ){
+    if( !req.body.pid || !req.body.casename )
         return next(new Error('No Request body found'));
-    }
 
     var TCDir =  path.normalize(process.cwd() + '/files/tc/p/' + req.body.pid +  '/' + req.body.casename);
 
@@ -1133,7 +1195,6 @@ router.post('/edit/:cid/problems/rtc', isLoggedIn(true) , roles.is('admin'), fun
         }
         res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.body.pid +'/step2');
     });
-
 });
 
 
@@ -1142,31 +1203,35 @@ router.post('/edit/:cid/problems/rtc', isLoggedIn(true) , roles.is('admin'), fun
  */
 router.post('/edit/:cid/problems/new', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-
     async.waterfall([
         function(callback) {
+            Contest.findById(req.params.cid, function (err,rows) {
+                if(err) return next(new Error(err));
+
+                if( rows.length === 0 ) return next(new Error('404, no contest found!'));
+
+                callback();
+            });
+        },
+        function(callback) {
             Problems.insertContestProblem(req, function(err,pid){
-                if( err ){ return callback(err); }
+                if( err ) return callback(err);
 
                 callback(null,pid);
             });
         },
         function(pid,callback){
             Contest.insertProblem(req.params.cid,pid,function(err,rows){
-                if( err ){ return callback(err); }
+                if( err ) return callback(err);
 
                 callback(null,pid);
             });
         }
     ], function (error,pid) {
-
-        if( error ){ return next(new Error(error)); }
+        if( error ) return next(new Error(error));
 
         res.redirect('/contest/edit/' + req.params.cid + '/problems/' + pid + '/step2');
-
     });
-
-
 });
 
 
@@ -1224,6 +1289,8 @@ router.post('/edit/detail/:cid', isLoggedIn(true) , roles.is('admin'), function(
 
 router.post('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
+    if( !req.body ) return next(new Error('No request body not found!'));
+
     var type = req.body.type;
     var title = req.body.title;
     var beginDate = req.body.beginDate;
@@ -1235,7 +1302,7 @@ router.post('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, 
         _.isUndefined(lenDay) || _.isUndefined(lenTime) || !type.length || !title.length || !beginDate.length ||
         !beginTime.length || !lenDay.length || !lenTime.length){
 
-        req.flash('err','Invalid or Empty Form');
+        req.flash('err','invalid or empty data, please check again');
         res.redirect('/contest/create');
         return;
     }
@@ -1257,15 +1324,10 @@ router.post('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, 
         status: 0,
         privacy: type === 'public' ? 1 : 0
     }, function(err,rows){
-
-        if(err){
-            return next(new Error(err));
-        }
+        if(err) return next(new Error(err));
 
         res.redirect('/contest/edit/' + rows.insertId);
-
     });
-
 });
 
 
@@ -1349,5 +1411,27 @@ router.post('/:cid/clarifications/request',isLoggedIn(true) , function(req, res,
     });
 
 });
+
+
+/**
+ *
+ * @param remDir
+ * @param req
+ * @param res
+ */
+var clearUpload = function(remDir,req,res){
+
+    rimraf(remDir, function(error){
+        if( error )
+            console.log(error);
+        else
+            console.log('Cleaned uploaded TC');
+
+        req.flash('tcUpErr', 'Please Select File');
+        res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
+    });
+};
+
+
 
 module.exports = router;

@@ -35,14 +35,78 @@ exports.findById = function (pid,attr,callback) {
 };
 
 
+/**
+ * Find rank of a specific problem
+ * @param pid
+ * @param cb
+ */
+exports.findRank = function(pid,cb){
+    var sql = Query.select(['submissions.uid','submissions.language','users.username'])
+        .from('submissions')
+        .where({
+            'pid': pid,
+            'status': '0'
+        })
+        .leftJoin('users', 'submissions.uid', 'users.id')
+        .min('cpu as cpu')
+        .groupBy('uid')
+        .orderBy('cpu')
+        .limit(5);
+
+    DB.execute(sql.toString(),cb);
+};
+
+
 
 /**
- *
+ * Find a problem by id also find its tags
+ * @param pid
+ * @param cb
+ */
+exports.findByIdandTags = function(pid,cb){
+
+    var sql = Query.select(
+        Query.raw('p.*,(SELECT GROUP_CONCAT(`tag`) FROM `problem_tags` pt WHERE p.`id` =  pt.`pid`) AS `tags`')
+    )
+        .from('problems as p')
+        .where({
+            'id': pid
+        })
+        .limit(1);
+
+    DB.execute(sql.toString(),cb);
+};
+
+
+
+/**
+ * Find User Submissions for a specific problem
+ * @param pid
+ * @param uid
+ * @param cb
+ */
+exports.findUserSubmissions = function(pid,uid,cb){
+
+    var sql = Query.select(['status','submittime','language'])
+        .from('submissions')
+        .where({
+            'pid': pid,
+            'uid': uid
+        })
+        .orderBy('submittime','desc')
+        .limit(5);
+
+    DB.execute(sql.toString(),cb);
+};
+
+
+
+/**
+ * Insert a new problem
  * @param req
  * @param fn
  */
 exports.insert = function(req,fn){
-
     async.waterfall([
         function(callback) {
             insertProblem(req,callback);
@@ -50,10 +114,7 @@ exports.insert = function(req,fn){
         function(pid,callback){
             insertTags(req,pid,callback);
         }
-    ], function (error, pid) {
-        fn(error,pid);
-    });
-
+    ], fn);
 };
 
 
@@ -73,8 +134,7 @@ exports.insertContestProblem = function(req,fn){
         author: entities.encodeHTML(req.body.author),
         statement: entities.encodeHTML(req.body.statement),
         score: entities.encodeHTML(req.body.score),
-        difficulty: '',
-        status: 'incomplete'
+        difficulty: ''
     })
         .into('problems');
 

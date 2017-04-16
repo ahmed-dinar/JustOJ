@@ -34,7 +34,7 @@ router.get('/' , function(req, res, next) {
     }
 
 
-    var sql = Query.select(['submissions.status','submissions.language','submissions.submittime','submissions.cpu','submissions.memory','submissions.pid','users.username','problems.title'])
+    var sql = Query.select(['submissions.status','submissions.language','submissions.submittime','submissions.cpu','submissions.memory','submissions.pid','submissions.id','users.username','problems.title'])
         .from('submissions')
         .orderBy('submissions.submittime', 'desc')
         .leftJoin('users', 'submissions.uid', 'users.id')
@@ -57,6 +57,7 @@ router.get('/' , function(req, res, next) {
                 return next(new Error(err));
             }
 
+            console.log(rows);
 
             res.render('status/status' , {
                 active_nav: "status",
@@ -108,7 +109,7 @@ router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
             }
 
 
-            var sql = Query.select(['language','submittime','cpu','memory','status'])
+            var sql = Query.select(['language','submittime','cpu','memory','status','id'])
                 .from('submissions')
                 .orderBy('submittime','desc')
                 .where({
@@ -165,6 +166,8 @@ router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
 });
 
 
+// justoj.com/status/u/problem/submission
+/*
 router.get('/u/:pid/:sid' , isLoggedIn(true),  function(req, res, next) {
 
     var userId = req.user.id;
@@ -173,30 +176,78 @@ router.get('/u/:pid/:sid' , isLoggedIn(true),  function(req, res, next) {
 
     if( !MyUtil.isNumeric(problemId) ) return next(new Error('What R U looking for?'));
 
-    Submission.getTestCase(submissionId,problemId,userId, function (err,rows) {
-        if(err) return next(new Error(err));
+    Submission
+        .getTestCase(submissionId,problemId,userId, function (err,rows) {
+            if(err) return next(new Error(err));
 
-        if(rows.length === 0) return res.end('Nothing found!');
+            if(rows.length === 0) return res.end('Nothing found!');
 
-        var runs = rows[0];
-        runs.cases = JSON.parse('[' + runs.cases + ']');
-        runs.title = entities.decodeHTML(runs.title);
+            var runs = rows[0];
 
-        console.log(runs);
+             if( runs.cases === null || _.isUndefined(runs.cases)  )
+                runs.cases = [];
+             else
+                runs.cases = JSON.parse('[' + runs.cases + ']');
 
-        res.render('status/cases' , {
-            active_nav: "status",
-            title: "Problems | JUST Online Judge",
-            locals: req.app.locals,
-            isLoggedIn: req.isAuthenticated(),
-            user: req.user,
-            runStatus: MyUtil.runStatus(),
-            langNames: MyUtil.langNames(),
-            moment: moment,
-            runs: runs,
-            submissionId: submissionId
+            runs.title = entities.decodeHTML(runs.title);
+
+            console.log(runs);
+
+            res.render('status/cases' , {
+                active_nav: "status",
+                title: "Problems | JUST Online Judge",
+                locals: req.app.locals,
+                isLoggedIn: req.isAuthenticated(),
+                user: req.user,
+                runStatus: MyUtil.runStatus(),
+                langNames: MyUtil.langNames(),
+                moment: moment,
+                runs: runs,
+                submissionId: submissionId
+            });
         });
-    });
+});
+*/
+
+
+router.get('/:sid' ,   function(req, res, next) {
+
+  //  var userId = req.user.id;
+    var submissionId = req.params.sid;
+
+    if( !MyUtil.isNumeric(submissionId) ) return next(new Error('What R U looking for?'));
+
+    Submission
+        .getPublicTestCase(submissionId, function (err,rows) {
+            if(err) return next(new Error(err));
+
+            if(rows.length === 0) return res.end('Nothing found!');
+
+            var runs = rows[0];
+
+            if( runs.cases === null || _.isUndefined(runs.cases)  )
+                runs.cases = [];
+            else
+                runs.cases = JSON.parse('[' + runs.cases + ']');
+
+            runs.title = entities.decodeHTML(runs.title);
+
+            console.log(runs);
+
+            res.render('status/cases' , {
+                active_nav: "status",
+                title: "Problems | JUST Online Judge",
+                locals: req.app.locals,
+                isLoggedIn: req.isAuthenticated(),
+                user: req.user,
+                runStatus: MyUtil.runStatus(),
+                langNames: MyUtil.langNames(),
+                moment: moment,
+                runs: runs,
+                submissionId: submissionId
+            });
+        });
+
 });
 
 

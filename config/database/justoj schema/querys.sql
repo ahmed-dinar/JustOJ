@@ -233,8 +233,11 @@ ORDER BY `r`.`solved` DESC,`r`.`penalty`
 
 
 
-
-
+/* all testcase for a submission [getTestCase()] */
+     SELECT `sid`, GROUP_CONCAT('[\'',`status`, '\',\'' ,`cpu`, '\',\'' ,`memory`, '\',\'' ,`errortype` , '\']' SEPARATOR ',') as `runs`
+     FROM `submission_case`
+     WHERE `sid` = 3
+     GROUP BY `sid`
 
 
 

@@ -30,16 +30,18 @@
 
     <div class="row">
 
-        <div class="col-md-9">
+        <div class="col-md-9 nopadding">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4><%- problem.title %></h4>
+
+                    <p style="font-size: 84%;">CPU: <%= (problem.cpu/1000.0) %>s | Memory: <%= problem.memory %>MB</p>
+                </div>
 
 
-                    <h3 id="h3"><%- problem.title %></h3>
 
-                    <p style="font-size: 84%; line-height: 1.1px;">
-                        CPU: <%= (problem.cpu/1000.0) %>s |
-                        Memory: <%= problem.memory %>MB
-                    </p>
-                    <br>
+                <div class="panel-body">
+
+
 
                     <p>
                         <%- problem.statement %>
@@ -64,7 +66,7 @@
                         </tbody>
                     </table>
 
-
+                </div>
 
                 <table class="table" style="background: #f3f3f3">
                     <tbody>
@@ -100,6 +102,7 @@
                 </table>
 
 
+        </div>
         </div>
 
 
@@ -155,7 +158,7 @@
 
                     <% if(userSubmissions.length){ %>
                     </div>
-                            <table class="table" style="font-size: 12px;">
+                            <table class="table table-striped" style="font-size: 12px;">
                                 <thead>
                                 <tr>
                                     <th>Date</th>
@@ -180,7 +183,7 @@
                                                         <% }else if(st === 8){ %>
                                                         <span class="label label-warning">
                                                             <% }else{ %>
-                                                            <span class="label label-danger">
+                                                            <span class="label label-danger ">
                                                                 <% } %>
                                                                 <%= runStatus[st] %>
                                                 </span>
@@ -206,7 +209,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
-                    <a class="btn btn-primary" href="/login" >Login</a>
+                    <a class="btn btn-primary" href="/login/?redirect=/problems/JOP0<%= problem.id %>" >Login</a>
                 </div>
             </div>
 

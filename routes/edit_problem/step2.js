@@ -16,43 +16,34 @@ module.exports = function(req,res,next){
 
     async.waterfall([
       function(callback) {
+            Problems.findById(req.params.pid,['id'],function(err,row){
+                if( err ) return callback(err);
 
-            var attr = ['id'];
-            Problems.findById(req.params.pid,attr,function(err,row){
-
-                if( err ) { return callback(err); }
-
-                if( row.length == 0 ) { return callback('what you r looking for!'); }
-                //if( row[0].status == 'incomplete' ) { return callback(new Error('what you r looking for!!!')); }
+                if( row.length === 0 ) return callback('what you r looking for!');
 
                 callback();
-
             });
-
       },
       function(callback){
-
           var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid);
           fs.readdir(rootDir, function(err, files) {
 
-              var empty = [];
               if( err ){
-
-                  if( err.code === 'ENOENT' ){ return callback(null,empty); }
+                  if( err.code === 'ENOENT' ) return callback(null,[]);   //no test cases added yet!
 
                   console.log('getTestCases error:: ');
                   console.log(err);
                   return callback('getTestCases error');
               }
 
-              if(files){ return callback(null,files); }
+              if(files) return callback(null,files);
 
-              callback(null,empty);
+              callback(null,[]);
           });
       }
     ], function (error, row) {
-        console.log(error);
-        if( error ) { return next(error); }
+
+        if( error ) return next(error);
 
         res.render('problem/edit/step_2', {
             active_nav: "problems",
@@ -65,13 +56,11 @@ module.exports = function(req,res,next){
           errMsg: req.flash('tcUpErr'),
           rsuccessMsg:  req.flash('tcRemSuccess'),
           rerrMsg:  req.flash('tcRemErr'),
+            noTestCase: req.flash('noTestCase'),
           data: row
         });
-
     });
-
-
-  };
+  }; //end module.get
 
   module.post = function(){
 
@@ -81,8 +70,18 @@ module.exports = function(req,res,next){
 
       async.waterfall([
           function(callback) {
+              Problems.findById(req.params.pid,['id'],function(err,row){
+                  if( err ) return callback(err);
+
+                  if( row.length == 0 ) { return callback('what you r looking for!'); }
+
+                  callback();
+              });
+          },
+          function(callback) {
               mkdirp(saveTo, function (err) {
                   if (err) return callback(err);
+
                   console.log(namemap[0] + " created!");
                   callback();
               });
@@ -108,36 +107,35 @@ module.exports = function(req,res,next){
 
           busboy.on('finish', function() {
 
-              if( noFile || fname!==2 ){
-                  clearUpload( saveTo );
-                  req.flash('tcUpErr', 'Please Select File');
-                  res.redirect('/problems/edit/' + req.params.pid + '/2');
-                  return;
-              }
+              if( noFile || fname!==2 ) //clear our created input output files
+                  return clearUpload( saveTo , req, res );
 
               req.flash('tcUpSuccess', 'Test Case added!');
               res.redirect('/problems/edit/' + req.params.pid + '/2');
-
           });
-
           req.pipe(busboy);
-
       });
-
   };
 
   return module;
 };
 
 
-var clearUpload = function(remDir){
+/**
+ *
+ * @param remDir
+ * @param req
+ * @param res
+ */
+var clearUpload = function(remDir,req,res){
 
     rimraf(remDir, function(error){
-        if( error ){
-            console.log('Clean up upload error::');
+        if( error )
             console.log(error);
-            return;
-        }
-        console.log('Cleaned uploaded TC');
+        else
+            console.log('Cleaned uploaded TC');
+
+        req.flash('tcUpErr', 'Please Select File');
+        res.redirect('/problems/edit/' + req.params.pid + '/2');
     });
 };

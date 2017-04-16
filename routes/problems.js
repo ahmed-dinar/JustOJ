@@ -30,29 +30,29 @@ var EditProblem = require('./edit_problem/editProblem');
 
 router.get('/', function(req, res, next) {
 
-
     async.waterfall([
         function(callback) {
             findProblems(req,callback);
         },
         function(rows,pagination,callback){
-            if( !req.isAuthenticated() ){
+
+            return callback(null,rows,pagination);
+
+            /*if( !req.isAuthenticated() ){
                 return callback(null,rows,pagination);
             }
 
+            //TODO: currenty disabled, implement it! , NOTE: USE Left join insted of separate query
             User.problemStatus(req.user.id, function(err,status){
 
                 if( err ){ return callback(err); }
 
                 callback(null,rows,pagination,status);
 
-            });
+            });*/
         }
     ], function (error, problems, pagination, status) {
-
-
         if( error ){ return next(new Error(error)); }
-
 
         console.log(status);
 
@@ -68,11 +68,7 @@ router.get('/', function(req, res, next) {
             status: _.isUndefined(status) ? {} : status,
             decodeToHTML: entities.decodeHTML
         });
-
-
     });
-
-
 });
 
 
@@ -92,27 +88,27 @@ router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, n
 
 
 /**
- *
+ * First step of editing a problem
  */
 router.get('/edit/:pid/1', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-
     EditProblem.step1Get(req,res,next);
-
 });
 
 
+/**
+ * Second step of editing a problem
+ */
 router.get('/edit/:pid/2', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
     EditProblem.step2Get(req, res, next);
 });
 
 
+
 /**
- *
+ * Third and final step of editing a problem
  */
 router.get('/edit/:pid/3', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-
     EditProblem.step3Get(req,res,next);
-
 });
 
 
@@ -121,12 +117,10 @@ router.get('/edit/:pid/3', isLoggedIn(true) , roles.is('admin'), function(req, r
  */
 router.post('/create/', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-    if( !req.body ) {
+    if( !req.body )
         return next(new Error('REQUEST BODY NOT FOUND'));
-    }
 
     Problems.insert(req, function(err,pid){
-
         if( err ){ return next(new Error(err)); }
 
         res.redirect('/problems/edit/' + pid + '/2');
@@ -135,12 +129,10 @@ router.post('/create/', isLoggedIn(true) , roles.is('admin'), function(req, res,
 
 
 /**
- *
+ * rtc = remove test case
  */
 router.post('/rtc/', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-
     EditProblem.removeTestCase(req,res,next);
-
 });
 
 
@@ -148,9 +140,7 @@ router.post('/rtc/', isLoggedIn(true) , roles.is('admin'), function(req, res, ne
  *
  */
 router.post('/edit/:pid/1', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-
     EditProblem.step1Post(req, res, next);
-
 });
 
 
@@ -158,43 +148,42 @@ router.post('/edit/:pid/1', isLoggedIn(true) , roles.is('admin'), function(req, 
  *
  */
 router.post('/edit/:pid/2', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-
     EditProblem.step2Post(req, res, next);
-
-});
-
-
-router.post('/edit/:pid/3', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-
-    EditProblem.step3Post(req, res, next);
-
 });
 
 
 /**
- * Test Judge Solution as well as set limits
+ *
  */
-router.post('/edit/:pid/tjs', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-
-    EditProblem.testJudgeSolution(req, res, next);
-
+router.post('/edit/:pid/3', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
+    EditProblem.step3Post(req, res, next);
 });
 
 
+/**
+ * tjs = Test Judge Solution, as well as set limits
+ */
+router.post('/edit/:pid/tjs', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
+    EditProblem.testJudgeSolution(req, res, next);
+});
+
+
+/**
+ *
+ */
 router.get('/:pid', function(req, res, next) {
     var pid = getPID(req.params.pid);
 
+    if( pid === null ) return next(new Error('Invalid problem?'));
 
-    if( pid ){
-
-        async.waterfall([
+    async.waterfall([
             function(callback) {
                 findProblem(pid,callback);
             },
-            function(problem,callback){
+            function(problem,callback){    //TODO: use left join insted of separte query
                 findRank(pid,problem,callback);
             },
-            function(problem,rank,callback){
+            function(problem,rank,callback){  //TODO: may be left join??
 
                 if( !req.isAuthenticated() ){
                     return callback(null,problem,rank,{});
@@ -204,12 +193,22 @@ router.get('/:pid', function(req, res, next) {
             }
         ], function (error, problem, rank, userSubmissions) {
 
-            if( error ){ return next(new Error(error)); }
+            if( error && !problem ){
+                return next(new Error(error));
+            }
 
+            if( problem.length === 0 ){
+                res.status(404);
+                return next(new Error('404 No problem found!'));
+            }
+
+            if( problem[0].status !== 'public' ){
+                res.status(403);
+                return next(new Error('403 problem not found!'));
+            }
 
             var tags = _.split(problem[0].tags, ',', 20);
             tags = (tags[0]==='') ? [] : tags;
-
 
             res.render('problem/view' , {
                 active_nav: "problems",
@@ -222,103 +221,79 @@ router.get('/:pid', function(req, res, next) {
                 tags: tags,
                 userSubmissions: userSubmissions,
                 tagName: MyUtil.tagNames(),
-                runStatus: MyUtil.runStatus(),
+                runStatus: MyUtil.runStatus(true),
                 _: _,
                 moment: moment,
                 formError: req.flash('formError')
             });
-
         });
-
-        return;
-    }
-
-     console.log('OOPSSS' );
-     next(new Error('Invaild problem?'));
-
 });
 
 
 
-
-
-
+/**
+ * Find a Problem with tags
+ * @param pid
+ * @param cb
+ */
 var findProblem = function(pid,cb){
+    Problems.findByIdandTags(pid,function(err,rows){
+        if( err ) { return cb(err); }
 
-    var sql = Query.select(
-            Query.raw('p.*,(SELECT GROUP_CONCAT(`tag`) FROM `problem_tags` pt WHERE p.`id` =  pt.`pid`) AS `tags`')
-        )
-        .from('problems as p')
-        .where({
-            'id': pid
-        })
-        .limit(1);
+        if( !rows || rows.length == 0 ) { return cb('problem row lenght 0!',[]); }
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            if( err ) { return cb(err); }
-
-            if( rows.length == 0 ) { return cb('probelem row lenth 0?'); }
-
-            cb(null,rows);
-        });
+        cb(null,rows);
+    });
 };
 
 
+/**
+ *
+ * @param pid
+ * @param problem
+ * @param cb
+ */
 var findRank = function(pid,problem,cb){
+    Problems.findRank(pid,function(err,rows){
+        if( err ) { return cb(err); }
 
-    var sql = Query.select(['submissions.uid','submissions.language','users.username'])
-            .from('submissions')
-            .where({
-                'pid': pid,
-                'status': '0'
-            })
-            .leftJoin('users', 'submissions.uid', 'users.id')
-            .min('cpu as cpu')
-            .groupBy('uid')
-            .orderBy('cpu')
-            .limit(5);
+        if( _.isUndefined(rows) || rows.length === 0 ){
+            return cb(null,problem,{});
+        }
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            if( err ) { return cb(err); }
-
-            if( _.isUndefined(rows) || rows.length === 0 ){
-                return cb(null,problem,{});
-            }
-
-            cb(null,problem,rows);
-        });
+        cb(null,problem,rows);
+    });
 };
 
 
+/**
+ *
+ * @param pid
+ * @param uid
+ * @param problem
+ * @param rank
+ * @param cb
+ */
 var findUserSubmissions = function(pid,uid,problem,rank,cb){
 
-    var sql = Query.select(['status','submittime','language'])
-            .from('submissions')
-            .where({
-                'pid': pid,
-                'uid': uid
-            })
-            .orderBy('submittime','desc')
-            .limit(5);
+    Problems.findUserSubmissions(pid,uid,function(err,rows){
+        if( err ) return cb(err);
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            if( err ) { return cb(err); }
+        if( _.isUndefined(rows) || rows.length === 0 ){
+            return cb(null,problem,rank,{});
+        }
 
-            if( _.isUndefined(rows) || rows.length === 0 ){
-                return cb(null,problem,rank,{});
-            }
-
-            cb(null,problem,rank,rows);
-        });
+        cb(null,problem,rank,rows);
+    });
 };
 
 
+/**
+ * Find some public problems
+ * @param req
+ * @param cb
+ * @returns {*}
+ */
 var findProblems = function(req,cb){
 
     var cur_page = req.query.page;
@@ -329,25 +304,28 @@ var findProblems = function(req,cb){
         cur_page = parseInt(cur_page);
     }
 
-    if( cur_page<1 ) { return cb('what are u looking for!'); }
-
+    if( cur_page<1 ) return cb('what are u looking for!');
 
     Paginate.paginate({
             cur_page: cur_page,
-            sql: Query.select(['id','title','submissions','solved','difficulty']).from('problems').where('isContest',0),
-            sqlCount: Query.count('id as count').from('problems').where('isContest',0),
+            sql: Query.select(['id','title','submissions','solved','difficulty']).from('problems').where('status','public'),
+            sqlCount: Query.count('id as count').from('problems').where('status','public'),
             limit: 5,
             url: url.parse(req.originalUrl).pathname
         },
         function(err,rows,pagination) {
             if( err ){ return cb(err); }
 
-
             cb(null,rows,pagination);
         });
 };
 
 
+/**
+ * Decode the JOP0 formated problem code
+ * @param pid
+ * @returns {*}
+ */
 function getPID(pid){
     if( _.isString(pid) ){
         var h = '',i;

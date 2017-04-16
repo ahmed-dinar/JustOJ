@@ -13,25 +13,15 @@
 <% include ../templates/header2.ejs %>
 
 
-<script type="text/javascript">
-
-    jQuery(document).ready(function($) {
-        $(".clickable-row").click(function() {
-            window.document.location = $(this).data("href");
-        });
-    });
-
-
-</script>
 
 <!-- Main Content -->
 <div class="content container c-h">
 
     <div class="row">
+            <div class="col-md-10 nopadding">
+        <div class="panel panel-default">
+            <div class="panel-heading">PROBLEMS</div>
 
-                <div class="panel-body">
-                    <h4>Problems</h4>
-                </div>
 
                 <!-- problem list -->
                 <table class="table problem-list table-striped">
@@ -39,27 +29,30 @@
                     <tr>
                         <th style="padding-left: 20px">#</th>
                         <th>Title</th>
-                        <th>Difficulty</th>
+
                         <th title="Total Submissions / Accepted">Stat.</th>
                     </tr>
                     </thead>
                     <tbody>
 
                     <% for(var i=0; i<problems.length; i++){ %>
-                    <tr class='clickable-row' data-href='problems/JOP0<%= problems[i].id %>' >
+                    <tr >
                         <td style="padding-left: 20px">JOP0<%= problems[i].id %></td>
                         <td class="ellips  pl-title">
-                            <%= decodeToHTML(problems[i].title) %>
+                            <a href="problems/JOP0<%= problems[i].id %>" >
+                                <%= decodeToHTML(problems[i].title) %>
+                            </a>
                         </td>
 
+                        <!--
                         <td>
                                             <span class="label label-default">
                                                 <%= problems[i].difficulty %>
                                             </span>
-                        </td>
+                        </td> -->
 
                         <td>
-                                            <span class="label label-info">
+                                            <span class="label label-default">
                                                 <%= problems[i].submissions %> / <%= problems[i].solved %>
                                             </span>
                         </td>
@@ -79,6 +72,9 @@
 
 
 
+            </div>
+        </div>
+    </div>
     </div>
 
 </div>

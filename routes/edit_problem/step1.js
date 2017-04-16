@@ -44,7 +44,6 @@ module.exports = function(req,res,next){
             if( row.length == 0 ) { return next(new Error('something went wrong with updating! :(')); }
 
             res.redirect('/problems/edit/' + req.params.pid + '/2');
-
         });
     };
 

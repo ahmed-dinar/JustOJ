@@ -46,13 +46,6 @@ exports.addTestCase = function(inserts,cb){
 
 exports.getTestCase = function(submissionId,problemId,userId,cb){
 
-    /*
-     SELECT `sid`, GROUP_CONCAT('[\'',`status`, '\',\'' ,`cpu`, '\',\'' ,`memory`, '\',\'' ,`errortype` , '\']' SEPARATOR ',') as `runs`
-     FROM `submission_case`
-     WHERE `sid` = 3
-     GROUP BY `sid`
-     */
-
     var sql = Query.select(['sub.*','prob.title','cas.cases'])
         .from('submissions as sub')
         .joinRaw('  LEFT JOIN('+
@@ -73,7 +66,33 @@ exports.getTestCase = function(submissionId,problemId,userId,cb){
             'sub.id': submissionId,
             'sub.pid': problemId,
             'sub.uid': userId
-        });
+        })
+        .limit(1);
+
+
+    DB.execute(
+        sql.toString()
+        ,cb);
+};
+
+
+exports.getPublicTestCase = function(submissionId,cb){
+
+    var sql = Query.select(['sub.*','prob.title','cas.cases','usr.username'])
+        .from('submissions as sub')
+        .leftJoin('problems as prob','sub.pid','prob.id')
+        .leftJoin('users as usr','sub.uid','usr.id')
+        .joinRaw( '  LEFT JOIN( '+
+            "SELECT `sc`.`sid`, GROUP_CONCAT('{\"status\":\"',`sc`.`status`, '\",\"cpu\":\"' ,`sc`.`cpu`, '\",\"memory\":\"' ,`sc`.`memory`, '\",\"errortype\":\"' ,`sc`.`errortype` , '\"}' SEPARATOR ',') as `cases` " +
+            'FROM `submission_case` as `sc` '+
+            'WHERE `sc`.`sid` = ? '+
+            'GROUP BY `sc`.`sid` ) AS `cas` ON `sub`.`id` = `cas`.`sid` '
+            ,[submissionId]
+        )
+        .where({
+            'sub.id': submissionId
+        })
+        .limit(1);
 
 
     DB.execute(

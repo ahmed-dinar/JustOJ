@@ -11,7 +11,6 @@ var router          = express.Router();
 
 router.get('/' , isLoggedIn(false) ,function(req, res, next) {
 
-
     res.render('login',{
         active_nav: "",
         errors: req.flash('loginFailure'),
@@ -19,7 +18,6 @@ router.get('/' , isLoggedIn(false) ,function(req, res, next) {
         isLoggedIn: false,
         postUrl: req.originalUrl
     });
-
 });
 
 

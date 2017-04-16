@@ -35,6 +35,7 @@
     "express-validator": "^2.20.5",
     "fs-extra": "^0.30.0",
     "has": "^1.0.1",
+    "hashids": "^1.1.1",
     "knex": "^0.12.6",
     "lodash": "^4.6.1",
     "mkdirp": "^0.5.1",

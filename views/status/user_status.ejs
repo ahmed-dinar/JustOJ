@@ -19,10 +19,11 @@
 
     <div class="row">
 
-                <div class="panel-body">
-                    <h4>My Submissions</h4>
-                    <h5>Problem:  <a href="/problems/JOP0<%= pid %>"><%= decodeToHTML(pName) %></a></h5>
-                </div>
+            <div class="col-md-10 nopadding">
+        <div class="panel panel-default">
+            <div class="panel-heading">MY SUBMISSIONS</div>
+            <div class="panel-heading"><h4><a href="/problems/JOP0<%= pid %>"><%= decodeToHTML(pName) %></a></h4></div>
+
 
                     <!-- problem list -->
                     <table class="table table-striped">
@@ -40,10 +41,20 @@
 
                             <% for(var i=0; i<status.length; i++){ %>
                                 <tr>
-                                    <td style="padding-left: 20px;"><%= pagination.offset() + i + 1 %></td>
+                                    <td style="padding-left: 20px;">
+                                        <a href="/status/<%= status[i].id %>">
+                                            <%= status[i].id %>
+                                        </a>
+                                    </td>
                                     <td class="ellips" title="<%= status[i].submittime %>"><%= moment(status[i].submittime).from() %></td>
                                     <td><%= langNames[status[i].language] %></td>
-                                    <td><%= parseFloat(status[i].cpu/1000.0).toFixed(2) %>s</td>
+                                    <td>
+                                        <% if( parseInt(status[i].cpu) === 0){ %>
+                                            0.00s
+                                        <% }else{ %>
+                                            <%= parseFloat( parseInt(status[i].cpu)/1000.0).toString().match(/^-?\d+(?:\.\d{0,2})?/)[0] %>s
+                                        <% } %>
+                                    </td>
                                     <td><%= status[i].memory %>KB</td>
                                     <td>
                                         <% var st = parseInt(status[i].status); %>
@@ -69,6 +80,9 @@
 
                     <% include ../templates/pagination.ejs %>
 
+            </div>
+        </div>
+        </div>
     </div>
 
 </div>

@@ -53,7 +53,7 @@ gulp.task('debug', function () {
 
 gulp.task('default', (args.debug) ? ['debug'] : null, function () {
 
-    livereload.listen();
+  //  livereload.listen();
 
     var options = {
         script: 'bin/www',
@@ -76,8 +76,8 @@ gulp.task('default', (args.debug) ? ['debug'] : null, function () {
         })
         .on('restart', function () {
 
-            gulp.src('bin/www')
-                .pipe(livereload({ auto: false }));
+            gulp.src('bin/www');
+               // .pipe(livereload({ auto: false }));
                 //.pipe(notify('Page Reloading...'));
         });
 
