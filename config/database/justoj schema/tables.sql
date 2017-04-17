@@ -135,7 +135,25 @@ CREATE TABLE `contest_submissions` (
   `submittime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `cpu` INT(11) NOT NULL,
   `memory` INT(11) NOT NULL
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
+
+
+CREATE TABLE `c_submission_case` (
+  `id` INT(11) NOT NULL,
+  `sid` INT(11) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `status` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `cpu` INT(11) NOT NULL,
+  `memory` INT(11) NOT NULL,
+  `errortype` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB;
+
+
+CREATE TABLE `c_submission_code` (
+  `id` INT(11) NOT NULL,
+  `sid` INT(11) NOT NULL,
+  `code` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB;
 
 
 CREATE TABLE `contest_clarifications` (
@@ -147,6 +165,7 @@ CREATE TABLE `contest_clarifications` (
   `request` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `response` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=MyISAM;
+
 
 
 

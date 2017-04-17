@@ -25,7 +25,7 @@ var colors      = require('colors');
 router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
     var uploadName = uuid.v4();
-    var uploadedFile =  MyUtil.RUN_DIR + '/' + uploadName;
+    var uploadedFile =  MyUtil.UPLOAD_DIR + '/' + uploadName;
     var problemId = req.params.pid;
     var userId = String(req.user.id);
 
@@ -65,7 +65,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
             if( has(error,'systemError')  ){
                 return insertSubmissionIntoDb(problemId,userId,'8',opts,function (err) {
-                    if( err ) return next(new Error(error));
+                    if( err ) return next(new Error(err));
 
                     res.redirect('/status/u/' + problemId);
                 });
@@ -84,7 +84,6 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
                 console.log('Judge Error!'.red);
                 return;
             }
-
             console.log('successfully run!'.green);
             console.log(runs);
         });
@@ -261,6 +260,7 @@ var makeTempDir = function(opts,cb){
             console.log(opts.codeDir + ' creation failed! permission denied!!'.underline.red);
             return cb(err);
         }
+        console.log((opts.codeDir + ' Created').green);
         cb(null,opts);
     });
 };
@@ -279,6 +279,7 @@ var moveSource = function(opts,cb){
             console.log('Moving Source Error'.red);
             return cb(err);
         }
+        console.log(('source moved from "' + opts.uploadedFile+'/code.txt"  to "' +  dest + '"').green);
         cb(null,opts);
     });
 };

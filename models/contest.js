@@ -478,6 +478,23 @@ exports.insertProblem = function(cid,pid,cb){
  *
  * @param inserts
  * @param cb
+ */
+exports.addTestCase = function(inserts,cb){
+    var sql = Query.insert(inserts)
+        .into('c_submission_case');
+
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            cb(err);
+        });
+};
+
+
+/**
+ *
+ * @param inserts
+ * @param cb
  * @constructor
  */
 exports.InsertSubmission = function(inserts,cb){

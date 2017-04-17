@@ -30,13 +30,11 @@ module.exports = function(req, res, next) {
             getForm(uploadFile,req,callback);
         },
         function(opts,callback){
-
             fs.rename(uploadFile+'/code.txt', uploadFile+'/code.' + opts['language'], function(err){
                 if(err ){ return callback(err); }
 
                 callback(null,opts);
             });
-
         },
         function(opts,callback){
 

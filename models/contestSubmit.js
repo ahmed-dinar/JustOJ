@@ -10,6 +10,8 @@ var Busboy      = require('busboy');
 var uuid        = require('node-uuid');
 var rimraf      = require('rimraf');
 var colors      = require('colors');
+var mv          = require('mv');
+var has         = require('has');
 
 var Contest     = require('../models/contest');
 var Problems    = require('../models/problems');
@@ -20,154 +22,195 @@ var Judge       = require('../helpers/compiler/sandbox/contestJudge');
 
 exports.submit = function(req, res, next){
 
-    var cid = req.params.cid;
-    var pid = req.params.pid;
+    var contestId = req.params.cid;
+    var problemId = req.params.pid;
     var user = req.user;
 
-    var uploadFile =  MyUtil.UPLOAD_DIR + '/' + uuid.v4() + '.txt';
-    var uid = req.user.id;
+    var uploadName = uuid.v4();
+    var uploadedFile =  MyUtil.UPLOAD_DIR + '/' + uploadName;
+    var userId = req.user.id;
 
     async.waterfall([
         function(callback){
-            getLimits(pid,callback); //also check valid problem id
+            makeTempDir({ codeDir: uploadedFile  }, callback);
+        },
+        function(ignore_please,callback){
+            getLimits(problemId,callback); //also check valid problem id
         },
         function(opts,callback) {
-            getForm(uploadFile,req,opts,callback);
+            opts['uploadedFile'] = uploadedFile;
+            opts['problemId'] = problemId;
+            opts['userId'] = userId;
+            opts['contestId'] = contestId;
+            getForm(req,opts,callback);
         },
         function(opts,callback){
-
-            var inserts = {
-                cid: cid,
-                pid: pid,
-                uid: uid,
-                language: opts.language,
-                status: '5',
-                cpu: '0',
-                memory: '0'
-            };
-
-            Contest.InsertSubmission(inserts,function(err,sid){
-
-                if( err ){
-                    console.log('Submit inserting error!'.bold.red);
-                    console.log(err.red);
-                    return callback(err);
-                }
-
-                opts['cID'] = cid;
-                opts['sID'] = String(sid);
-                opts['pID'] = pid;
-                opts['uID'] = uid;
-                opts['codeDir'] = MyUtil.SUBMISSION_DIR + '/c/' + opts.sID;
-                callback(null,opts);
-            });
+            insertSubmissionIntoDb('5',opts,callback);
         },
-        function(opts,callback){
-            makeTempDir(opts,callback);
-        },
-        function(opts,callback){
-            moveSource(uploadFile,opts,callback);
-        }
-    ], function (error, opts, sid) {
+        makeTempDir,
+        moveSource,
+        removeTempUpload
+    ], function (error, opts, submissionId) {
 
-        fse.remove(uploadFile, function (errs) {
-            if (errs) return console.error(errs);
+        if( error ){
 
-            if( error ){
+            console.log(error);
 
-                console.log(error);
+            if( typeof error !== 'object' ) return next(new Error(error));
 
-                if( error.formError ) {
-                    req.flash('formError', error.formError);
-                    res.redirect('/contest/' + cid + '/problem/' + pid);
-                }else if( error.sysErr ){
+            // user form empty errors
+            if( has(error,'formError') ){
+                req.flash('formError',error.formError);
+                res.redirect('/contest/' + contestId + '/problem/' + problemId);
+                return;
+            }
 
-                    var inserts = {
-                        cid: cid,
-                        pid: pid,
-                        uid: uid,
-                        language: opts.language,
-                        status: '8',
-                        cpu: '0',
-                        memory: '0'
-                    };
-                    Contest.InsertSubmission(inserts,function(err,sid){
-                        if( err ){
-                            console.log('Submit inserting error!'.bold.red);
-                            console.log(err.red);
-                            return next(new Error(error));
-                        }
-                        res.redirect('/contest/' + cid + '/problem/' + pid);
-                    });
-                }else {
-                    return next(new Error(error));
-                }
-            }else{
+            if( has(error,'systemError')  ){
+               return insertSubmissionIntoDb('8',opts,function (err) {
+                    if( err ) return next(new Error(err));
 
-                console.log('Submit Successfull'.green);
-
-                res.redirect('/contest/' + cid + '/submissions/my');
-
-                Judge.run(opts,function(err,runs){
-
-                    if( err ){
-                        console.log('Judge Error! damn u'.red);
-                        return;
-                    }
-
-                    console.log('successfully run!'.green);
-                    console.log(runs);
+                    res.redirect('/contest/' + contestId + '/problem/' + problemId);
                 });
             }
+
+            return next(new Error(error));
+        }
+
+        console.log('Submit Successfull'.green);
+        res.redirect('/contest/' + contestId + '/submissions/my');
+
+        //run code against test cases in sandbox
+        Judge.run(opts,function(err,runs){
+            if( err ){
+                console.log(' contest Judge Error!'.red);
+                return;
+            }
+            console.log('successfully run!'.green);
+            console.log(runs);
         });
     });
 };
 
 
-var moveSource = function(uploadFile,opts,cb){
+/**
+ * Remove our code from our temporary directory after moving to judge run directory , i,e chroot directory
+ * @param opts
+ * @param cb
+ */
+var removeTempUpload = function(opts,cb){
+    fse.remove(opts.uploadedFile, function (errs) {
+        cb(errs,opts);
+    });
+};
+
+
+
+/**
+ *
+ * @param submissionStatus
+ * @param opts
+ * @param callback
+ */
+var insertSubmissionIntoDb = function (submissionStatus, opts,  callback) {
+    var inserts = {
+        cid: opts.contestId,
+        pid: opts.problemId,
+        uid: opts.userId,
+        language: opts.language,
+        status: submissionStatus,
+        cpu: '0',
+        memory: '0'
+    };
+    Contest.InsertSubmission(inserts,function(err,submissionId){
+        if( err ){
+            console.log('Submit inserting error!'.bold.red);
+            console.log(err);
+            return callback(err);
+        }
+        opts['submissionId'] = String(submissionId);
+        opts['codeDir'] = MyUtil.SUBMISSION_DIR + '/c/' + opts.submissionId;
+        callback(null,opts);
+    });
+};
+
+
+/**
+ *
+ * @param opts
+ * @param cb
+ */
+var moveSource = function(opts,cb){
     var dest = opts.codeDir + '/code.' + opts.language;
-    fse.move(uploadFile, dest, function(err){
+    mv(opts.uploadedFile+'/code.txt', dest, function(err){
         if(err){
             console.log('Moving Source Error'.red);
             return cb(err);
         }
+        console.log(('source moved from "' + opts.uploadedFile+'/code.txt"  to "' +  dest + '"').green);
         cb(null,opts);
     });
 };
 
 
+/**
+ *
+ * @param opts
+ * @param cb
+ */
 var makeTempDir = function(opts,cb){
     mkdirp(opts.codeDir, function (err) {
         if (err) {
-            console.log('OMG ' + opts.codeDir + ' creation failed! permission denied!!'.underline.red);
+            console.log(opts.codeDir + ' creation failed! permission denied!!'.underline.red);
             return cb(err);
         }
+        console.log((opts.codeDir + ' Created').green);
         cb(null,opts);
     });
 };
 
-var getForm = function(uploadFile,req,opts,cb){
+
+/**
+ *
+ * @param req
+ * @param opts
+ * @param cb
+ */
+var getForm = function(req,opts,cb){
 
     var error = 0;
     var fstream = null;
     var language = null;
+    var problemId = null;
+    var contestId = null;
 
     var busboy = new Busboy({
         headers: req.headers,
         limits:{
             files: 1,               //only user code file
-            fields: 1,              //only language
-            parts: 2,               //code and language
+            fields: 3,              // language, contestId, problemId
+            parts: 4,               //code , language, contestId, problemId
             fileSize: 50000         // (in bytes)
         }
     });
 
-
     busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
-        language = val;
+
+        switch (fieldname){
+            case 'problem':
+                problemId = val;
+                break;
+            case 'contest':
+                contestId = val;
+                break;
+            case 'language':
+                language = val;
+                break;
+            default:
+             //   language = null;
+        }
+
         console.log(('[' + fieldname + '] = ' + val).yellow);
     });
-
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 
@@ -175,7 +218,7 @@ var getForm = function(uploadFile,req,opts,cb){
 
             console.log((filename +' receieved with mimetype: ' + mimetype).yellow);
 
-            fstream = fs.createWriteStream(uploadFile);
+            fstream = fs.createWriteStream(opts.uploadedFile + '/code.txt');
 
             file.on('limit', function() {
                 error = 2;
@@ -202,7 +245,6 @@ var getForm = function(uploadFile,req,opts,cb){
             return cb({ formError: 'Source Size Limit Exceeded' });
         }
 
-
         fstream.on('close', function () {
 
             console.log('fstream closed');
@@ -210,40 +252,38 @@ var getForm = function(uploadFile,req,opts,cb){
             if( language  ){
                 opts['language'] = language;
 
-                if(opts.sysErr){ return cb({ sysErr: 'System Error yo' },opts); }
+                if( has(opts,'systemError') )
+                     return cb({ systemError: opts.systemError },opts);
 
                 return cb(null,opts);
             }
 
             console.log('language Required'.red);
-            cb({ formError: 'Empty Field?' });
+            cb({ formError: 'empty fields of sumission form' });
         });
-
-
     });
-
     req.pipe(busboy);
-
 };
 
 
-var getLimits = function(pid,callback){
+/**
+ *
+ * @param problemId
+ * @param callback
+ */
+var getLimits = function(problemId,callback){
+    Problems.findById(problemId,['cpu','memory'],function(err,rows){
 
-    Problems.findById(pid,['cpu','memory'],function(err,rows){
+        if(err) return callback(err);
 
-        if(err){ return callback(err); }
+        if( rows.length === 0 ) return callback({ formError: '404, no problem found'});
 
-        if( rows.length === 0 ){ return callback({ formError: 'What are u looking for?'});  }
+        if( rows === null || rows[0].cpu === null || rows[0].memory === null )
+            return callback(null,{ systemError: 'no limit found for this problem!' });
 
-        var opts = {
+        return callback(null,{
             timeLimit: rows[0].cpu,
             memoryLimit: rows[0].memory
-        };
-
-        if( rows[0].cpu === null || rows[0].memory === null ){
-            opts['sysErr'] = true;
-        }
-
-        callback(null,opts);
+        });
     });
 };

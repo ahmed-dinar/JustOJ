@@ -71,10 +71,10 @@ exports.run = function(opts,cb){
                     return Submission.update(opts.submissionId, { status: '8' }, cb);
 
                 //compiler error
-                if( runs !== null && typeof error === 'object' &&  has(runs,'compiler') )
+                if( runs !== null && typeof runs === 'object' &&  has(runs,'compiler') )
                     return Submission.update(opts.submissionId, { status: '7' }, cb);
 
-                //no test case was executed, may be not test case found
+                //no test case was executed, may be no test case found
                 if( _.isUndefined(runs[0]) )
                     return Submission.update(opts.submissionId, { status: '8' }, cb);
 
@@ -114,7 +114,7 @@ var makeTempDir = function(saveTo,cb){
 var compileCode = function (opts,cb) {
     Compiler.compile(opts, function (err,stderr, stdout) {
 
-        if(err) return cb(err,{compiler: 'Compiler Error'});
+        if(err) return cb(err,{compiler: 'Compiler Error'});  //TODO: isn't it system error!?
 
         if(stderr) {
             console.log('stderr');
@@ -136,7 +136,6 @@ var compileCode = function (opts,cb) {
  * @param cb
  */
 var getTestCases = function (testCaseDir,cb) {
-
     fs.readdir(testCaseDir, function(err, files) {
 
         if( err ){
@@ -410,7 +409,7 @@ var getFinalResult = function(runs,opts,cb){
             function(callback){
                 Submission.update(opts.submissionId, {
                     status: finalCode,
-                    cpu: String(parseInt(cpu * 1000)),
+                    cpu:  String(parseInt(parseFloat(cpu) * 1000)),
                     memory: String(memory)
                 }, callback);
             },
@@ -428,6 +427,7 @@ var getFinalResult = function(runs,opts,cb){
             }
         ],
         function(err, results){
+
             cb(null,runs);
         });
 };

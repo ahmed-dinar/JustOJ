@@ -1332,7 +1332,6 @@ router.post('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, 
 
 
 router.post('/:cid/submit/:pid',isLoggedIn(true) , function(req, res, next) {
-
     ContestSubmit.submit(req, res, next);
 });
 

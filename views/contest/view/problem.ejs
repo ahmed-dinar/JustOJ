@@ -81,7 +81,8 @@
                                         <div class="form-group">
                                             <input type="file" name="source" >
                                         </div>
-
+                                        <input type="hidden" name="problem" value="<%= contest.pid %>" >
+                                        <input type="hidden" name="contest" value="<%= contest.id %>" >
                                         <input type='submit' class="btn btn-primary" style="padding: 6px 10px;" value="Submit" >
 
                                     </form>
@@ -147,7 +148,7 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
-                            <a class="btn btn-primary" href="/login">Login</a>
+                            <a class="btn btn-primary" href="/login/?redirect=/contest/<%= contest.id %>/problem/<%= contest.pid %>">Login</a>
                         </div>
                     </div>
                 </div>

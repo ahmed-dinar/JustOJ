@@ -25,6 +25,7 @@ var colors      = require('colors');
  */
 exports.run = function(opts,cb){
 
+   // opts['runDir']  = MyUtil.RUN_DIR + '/' + opts.runName;
 
     console.log(opts);
     console.log('runDir: ' + opts.runDir);

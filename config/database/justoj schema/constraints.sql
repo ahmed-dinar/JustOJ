@@ -13,7 +13,13 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `submission_case`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE `c_submission_case`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `submission_code`
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `c_submission_code`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `temp_user`
@@ -60,5 +66,25 @@ ADD CONSTRAINT `fk_submission_case`
 FOREIGN KEY(`sid`)
 REFERENCES `submissions`(`id`)
 ON DELETE CASCADE;
+
+ALTER TABLE `submission_code`
+ADD CONSTRAINT `fk_submission_code`
+FOREIGN KEY(`sid`)
+REFERENCES `submissions`(`id`)
+ON DELETE CASCADE;
+
+
+ALTER TABLE `c_submission_case`
+ADD CONSTRAINT `fk_c_submission_case`
+FOREIGN KEY(`sid`)
+REFERENCES `contest_submissions`(`id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `c_submission_code`
+ADD CONSTRAINT `fk_c_submission_code`
+FOREIGN KEY(`sid`)
+REFERENCES `contest_submissions`(`id`)
+ON DELETE CASCADE;
+
 
 

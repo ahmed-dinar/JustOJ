@@ -13,7 +13,13 @@ ADD PRIMARY KEY (`id`);
 ALTER TABLE `submission_case`
 ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `c_submission_case`
+ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `submission_code`
+ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `c_submission_code`
 ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `temp_user`
