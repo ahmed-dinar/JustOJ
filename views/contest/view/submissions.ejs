@@ -43,7 +43,11 @@
         <tbody>
         <% for(var i=0; i<status.length; i++){ %>
         <tr>
-            <td style="padding-left: 15px;"><%= pagination.offset() + (i+1) %></td>
+            <td style="padding-left: 15px;">
+                <a href="/contest/<%= contest.id %>/submissions/<%= status[i].id %>" >
+                    <%= status[i].id %>
+                </a>
+            </td>
             <td class="ellips" style="max-width: 100px;">
                 <a href="/user/<%= status[i].username %>">
                     <%= status[i].username %>

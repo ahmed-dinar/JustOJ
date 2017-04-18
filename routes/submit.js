@@ -25,29 +25,27 @@ var colors      = require('colors');
 router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
     var uploadName = uuid.v4();
-    var uploadedFile =  MyUtil.UPLOAD_DIR + '/' + uploadName;
+    var codeDir =  MyUtil.UPLOAD_DIR + '/' + uploadName;
     var problemId = req.params.pid;
     var userId = String(req.user.id);
 
     async.waterfall([
         function(callback){
-            makeTempDir({ codeDir: uploadedFile  }, callback);
-        },
-        function(ignore_please,callback){
-            getLimits(problemId,callback); //also check valid problem id
-        },
-        function(opts,callback) {
-            opts['uploadedFile'] = uploadedFile;
-            opts['problemId'] = problemId;
-            getForm(uploadedFile,req,opts,callback);
+            makeTempDir({ codeDir: codeDir  }, callback);
         },
         function(opts,callback){
-            insertSubmissionIntoDb(problemId,userId,'5',opts,callback);
+            opts['problemId'] = problemId;
+            opts['userId'] = userId;
+            getLimits(opts,callback); //also check valid problem id
+        },
+        function(opts,callback) {
+            getForm(req,opts,callback);
+        },
+        function(opts,callback){
+            insertSubmissionIntoDb('5',opts,callback);
         },
         incrementSubmission,
-        makeTempDir,
-        moveSource,
-        removeTempUpload
+        renameSource
     ], function (error, opts) {
 
         if( error ){
@@ -64,7 +62,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
             }
 
             if( has(error,'systemError')  ){
-                return insertSubmissionIntoDb(problemId,userId,'8',opts,function (err) {
+                return insertSubmissionIntoDb('8',opts,function (err) {
                     if( err ) return next(new Error(err));
 
                     res.redirect('/status/u/' + problemId);
@@ -94,12 +92,12 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
 /**
  * Get submitted problem's limits from database
- * @param problemId
+ * @param opts
  * @param callback
  */
-var getLimits = function(problemId,callback){
+var getLimits = function(opts,callback){
 
-    Problems.findById(problemId,['cpu','memory'],function(err,rows){
+    Problems.findById(opts.problemId,['cpu','memory'],function(err,rows){
 
         if(err) return callback(err);
 
@@ -108,10 +106,9 @@ var getLimits = function(problemId,callback){
         if( rows === null || rows[0].cpu === null || rows[0].memory === null )
             return callback(null,{ systemError: 'no limit found for this problem!' });
 
-        return callback(null,{
-            timeLimit: rows[0].cpu,
-            memoryLimit: rows[0].memory
-        });
+        opts['timeLimit']  = rows[0].cpu;
+        opts['memoryLimit']  = rows[0].memory;
+        return callback(null, opts);
     });
 };
 
@@ -119,12 +116,11 @@ var getLimits = function(problemId,callback){
 
 /**
  * Get and save multipart form from HTTP request
- * @param uploadedFile
  * @param req
  * @param opts
  * @param cb
  */
-var getForm = function(uploadedFile,req,opts,cb){
+var getForm = function(req,opts,cb){
 
     var error = 0;
     var fstream = null;
@@ -152,7 +148,7 @@ var getForm = function(uploadedFile,req,opts,cb){
 
             console.log((filename +' receieved with mimetype: ' + mimetype).yellow);
 
-            fstream = fs.createWriteStream(uploadedFile + '/code.txt');
+            fstream = fs.createWriteStream(opts.codeDir + '/code.txt');
 
             file.on('limit', function() {
                 error = 2;
@@ -202,32 +198,61 @@ var getForm = function(uploadedFile,req,opts,cb){
 
 
 /**
- * Insert submission into database
- * @param problemId
- * @param userId
+ * Insert submission into database , also insert submitted code
  * @param submissionStatus
  * @param opts
  * @param callback
  */
-var insertSubmissionIntoDb = function (problemId,userId,submissionStatus,opts,callback) {
+var insertSubmissionIntoDb = function (submissionStatus,opts,callback) {
 
-    Submission.insert({
-        pid: problemId,
-        uid: userId,
-        language: opts.language,
-        status: submissionStatus,
-        cpu: '0',
-        memory: '0'
-    },function(err,sid){
-        if( err ){
-            console.log('Submit inserting error!'.bold.red);
-            console.log(err);
-            return callback(err);
+    async.waterfall([
+        function(cb){
+
+            Submission.insert({
+                pid: opts.problemId,
+                uid: opts.userId,
+                language: opts.language,
+                status: submissionStatus,
+                cpu: '0',
+                memory: '0'
+            },function(err,sid){
+                if( err ){
+                    console.log('inserting Submission error!'.bold.red);
+                    return cb(err);
+                }
+                opts['submissionId'] = String(sid);
+               // opts['codeDir'] = MyUtil.SUBMISSION_DIR + '/' + opts.submissionId;
+                cb();
+            });
+        },
+        function(cb){
+            if( submissionStatus === '8' ) return cb(null,'');  //system erro, ignore code
+
+            fs.readFile(opts.codeDir + '/code.txt', 'utf8', function(err, submittedCode) {
+                if (err){
+                    console.log('error reading code file code'.red);
+                    return cb(err);
+                }
+                console.log(submittedCode);
+                cb(null,submittedCode);
+            });
+        },
+        function(submittedCode,cb){
+            if( submissionStatus === '8' ) return cb();  //system erro, ignore code
+
+            Submission.insertCode({
+                sid: opts.submissionId,
+                code: submittedCode
+            },function(err){
+                if(err){
+                    console.log('error inserting code'.red);
+                    return cb(err);
+                }
+                cb();
+            });
         }
-
-        opts['submissionId'] = String(sid);
-        opts['problemId'] = problemId;
-        opts['codeDir'] = MyUtil.SUBMISSION_DIR + '/' + opts.submissionId;
+    ], function (error) {
+        if(error) console.log(error);
         callback(null,opts);
     });
 };
@@ -265,34 +290,19 @@ var makeTempDir = function(opts,cb){
     });
 };
 
-
 /**
- * Move uploaded code to compiling directory
- * @param uploadedFile
+ *
  * @param opts
  * @param cb
  */
-var moveSource = function(opts,cb){
-    var dest = opts.codeDir + '/code.' + opts.language;
-    mv(opts.uploadedFile+'/code.txt', dest, function(err){
-        if(err){
-            console.log('Moving Source Error'.red);
-            return cb(err);
+var renameSource = function(opts,cb) {
+    fs.rename(opts.codeDir + '/code.txt', opts.codeDir + '/code.' + opts.language,  function(err) {
+        if ( err ) {
+            console.log('ERROR renaming: ');
+            console.log(err);
+            return cb({ systemError: 'error renaming code file' },opts);
         }
-        console.log(('source moved from "' + opts.uploadedFile+'/code.txt"  to "' +  dest + '"').green);
         cb(null,opts);
-    });
-};
-
-
-/**
- * Remove our code from our temporary directory after moving to judge run directory , i,e chroot directory
- * @param opts
- * @param cb
- */
-var removeTempUpload = function(opts,cb){
-    fse.remove(opts.uploadedFile, function (errs) {
-        cb(errs,opts);
     });
 };
 

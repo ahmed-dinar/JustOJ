@@ -1,5 +1,5 @@
 
-<div class="navbar navbar-inverse" style="border-bottom: 1px solid #ccc;">
+<div class="navbar navbar-default transparent" style="border-bottom: 1px solid #ccc;">
     <div class="container">
         <div class="row">
             <div class="navbar-header">
@@ -8,8 +8,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="/"  class="navbar-brand"  >
-                    JUST &nbsp;ONLINE JUDGE
+                <a href="/"  class="navbar-brand" style="font-family: 'Lobster', cursive; color: #262F38; font-size: 21px"  >
+                    JUST ONLINE JUDGE
                 </a>
             </div>
 
@@ -22,7 +22,7 @@
                     </li>
                 </ul>
                 <% } else{ %>
-                <ul class="nav navbar-right navbar-nav"  style="margin-top: 5px;">
+                <ul class="nav navbar-right navbar-nav">
 
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
@@ -48,7 +48,7 @@
         <div class="row">
             <div class="collapse navbar-collapse Navbar-main transparent" style="padding-left: 0;">
                 <ul class="nav navbar-nav" style="margin-left: 0px;">
-                    <li class="<%= active_nav === "problems" ? 'active' : '' %>" ><a href="/problems" style="padding-left: 3px;"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Problems</a></li>
+                    <li class="<%= active_nav === "problems" ? 'active' : '' %>" ><a href="/problems" style="padding-left: 0;"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Problems</a></li>
                     <li class="<%= active_nav === "ranks" ? 'active' : '' %>"><a href="/ranks"><i class="fa fa-trophy" aria-hidden="true"></i> Ranks</a></li>
                     <li class="<%= active_nav === "status" ? 'active' : '' %>"><a href="/status"><i class="fa fa-dot-circle-o" aria-hidden="true"></i> Status</a></li>
                     <li class="<%= active_nav === "contest" ? 'active' : '' %>"><a href="/contest"><i class="fa fa-hourglass" aria-hidden="true"></i> Contest</a></li>

@@ -10,6 +10,7 @@ var ContestSubmit   = require('../models/contestSubmit');
 var Problems        = require('../models/problems');
 var router          = express.Router();
 
+var entities    = require('entities');
 var _           = require('lodash');
 var moment      = require("moment");
 var async       = require('async');
@@ -24,6 +25,7 @@ var mkdirp      = require('mkdirp');
 
 var MyUtil      = require('../helpers/myutil');
 var Paginate    = require('../helpers/paginate');
+var Submission  = require('../models/submission');
 
 var isLoggedIn  = require('../middlewares/isLoggedIn');
 var roles       = require('../middlewares/userrole');
@@ -666,6 +668,7 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
             if( notStarted ){ return callback(null,contest); }
 
             var sql = Query.select([
+                'submissions.id',
                 'submissions.status',
                 'submissions.language',
                 'submissions.submittime',
@@ -764,7 +767,7 @@ router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
             notStarted = moment().isBefore(contest.begin);
             if( notStarted ){ return callback(null,contest); }
 
-            var sql = Query.select(['submissions.status','submissions.language','submissions.submittime','submissions.cpu','submissions.memory','submissions.pid','problems.title'])
+            var sql = Query.select(['submissions.id','submissions.status','submissions.language','submissions.submittime','submissions.cpu','submissions.memory','submissions.pid','problems.title'])
                 .from('contest_submissions as submissions')
                 .orderBy('submissions.submittime', 'desc')
                 .leftJoin('problems', 'submissions.pid', 'problems.id')
@@ -804,6 +807,8 @@ router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
             res.redirect('/contest/' + cid);
         }else {
 
+            console.log(rows);
+
             res.render('contest/view/my_submissions', {
                 active_contest_nav: "submissions",
                 active_nav: "contest",
@@ -824,6 +829,52 @@ router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
 
 });
 
+
+/**
+ *
+ */
+router.get('/:cid/submissions/:sid', isLoggedIn(true), function(req, res, next) {
+
+    res.end('access denied');
+
+    var submissionId = req.params.sid;
+    var contestId = req.params.cid;
+
+    if( !MyUtil.isNumeric(submissionId) ) return next(new Error('no submission found'));
+
+    Submission
+        .getPublicTestCase({ submissionId: submissionId, contestId: contestId }, function (err,rows) {
+            if(err) return next(new Error(err));
+
+            if(rows.length === 0) return res.end('Nothing found!');
+
+            var runs = rows[0];
+
+            if( runs.cases === null || _.isUndefined(runs.cases)  )
+                runs.cases = [];
+            else
+                runs.cases = JSON.parse('[' + runs.cases + ']');
+
+            runs.title = entities.decodeHTML(runs.title);
+
+            console.log(runs);
+            res.end('access denied');
+            /**
+            res.render('status/cases' , {
+                active_nav: "status",
+                title: "Problems | JUST Online Judge",
+                locals: req.app.locals,
+                isLoggedIn: req.isAuthenticated(),
+                user: req.user,
+                runStatus: MyUtil.runStatus(),
+                langNames: MyUtil.langNames(),
+                moment: moment,
+                runs: runs,
+                submissionId: submissionId
+            });*/
+        });
+
+});
 
 
 router.get('/:cid/problem/:pid', function(req, res, next) {

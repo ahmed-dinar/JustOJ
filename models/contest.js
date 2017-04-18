@@ -514,6 +514,22 @@ exports.InsertSubmission = function(inserts,cb){
 
 /**
  *
+ * @param inserts
+ * @param cb
+ */
+exports.insertCode = function(inserts,cb){
+    var sql = Query.insert(inserts)
+        .into('c_submission_code');
+
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            cb(err);
+        });
+};
+
+/**
+ *
  * @param sid
  * @param inserts
  * @param cb

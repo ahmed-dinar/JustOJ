@@ -210,6 +210,9 @@ router.get('/u/:pid/:sid' , isLoggedIn(true),  function(req, res, next) {
 */
 
 
+/**
+ *
+ */
 router.get('/:sid' ,   function(req, res, next) {
 
   //  var userId = req.user.id;
@@ -218,7 +221,7 @@ router.get('/:sid' ,   function(req, res, next) {
     if( !MyUtil.isNumeric(submissionId) ) return next(new Error('What R U looking for?'));
 
     Submission
-        .getPublicTestCase(submissionId, function (err,rows) {
+        .getPublicTestCase({ submissionId: submissionId  }, function (err,rows) {
             if(err) return next(new Error(err));
 
             if(rows.length === 0) return res.end('Nothing found!');

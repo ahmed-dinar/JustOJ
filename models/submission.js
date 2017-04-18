@@ -1,6 +1,7 @@
 
 var _           = require('lodash');
 var async       = require('async');
+var has         = require('has');
 var DB          = require('../config/database/knex/DB');
 var Query       = require('../config/database/knex/query');
 
@@ -44,6 +45,23 @@ exports.addTestCase = function(inserts,cb){
         });
 };
 
+
+/**
+ *
+ * @param inserts
+ * @param cb
+ */
+exports.insertCode = function(inserts,cb){
+    var sql = Query.insert(inserts)
+        .into('submission_code');
+
+    DB.execute(
+        sql.toString()
+        ,function(err,rows){
+            cb(err);
+        });
+};
+
 exports.getTestCase = function(submissionId,problemId,userId,cb){
 
     var sql = Query.select(['sub.*','prob.title','cas.cases'])
@@ -76,23 +94,44 @@ exports.getTestCase = function(submissionId,problemId,userId,cb){
 };
 
 
-exports.getPublicTestCase = function(submissionId,cb){
+/**
+ *
+ * @param opts
+ * @param cb
+ */
+exports.getPublicTestCase = function(opts,cb){
+
+    var isContest = has(opts,'contestId');
+    var subTable = isContest ? 'contest_submissions as sub' : 'submissions as sub';
+    var caseTable = isContest ? 'c_submission_case' : 'submission_case';
 
     var sql = Query.select(['sub.*','prob.title','cas.cases','usr.username'])
-        .from('submissions as sub')
+        .from(subTable)
         .leftJoin('problems as prob','sub.pid','prob.id')
         .leftJoin('users as usr','sub.uid','usr.id')
         .joinRaw( '  LEFT JOIN( '+
             "SELECT `sc`.`sid`, GROUP_CONCAT('{\"status\":\"',`sc`.`status`, '\",\"cpu\":\"' ,`sc`.`cpu`, '\",\"memory\":\"' ,`sc`.`memory`, '\",\"errortype\":\"' ,`sc`.`errortype` , '\"}' SEPARATOR ',') as `cases` " +
-            'FROM `submission_case` as `sc` '+
+            'FROM ?? as `sc` '+
             'WHERE `sc`.`sid` = ? '+
             'GROUP BY `sc`.`sid` ) AS `cas` ON `sub`.`id` = `cas`.`sid` '
-            ,[submissionId]
-        )
-        .where({
-            'sub.id': submissionId
-        })
-        .limit(1);
+            ,[caseTable,opts.submissionId]
+        );
+
+    if( isContest ){
+        sql = sql
+            .where({
+                'sub.id': opts.submissionId,
+                'sub.cid': opts.contestId
+            })
+            .limit(1);
+    }
+    else {
+        sql = sql
+            .where({
+                'sub.id': opts.submissionId
+            })
+            .limit(1);
+    }
 
 
     DB.execute(

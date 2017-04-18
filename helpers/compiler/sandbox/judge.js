@@ -58,8 +58,9 @@ exports.run = function(opts,cb){
         }
     ], function (error, runs) {
 
+
         //remove temporary running directory from chroot directory
-        rimraf(opts.runDir, function (err) {
+        clearTempFiles(opts.runDir, opts.codeDir, function (err) {
 
             if( err ) console.log(err);
             else console.log('success clean submit!'.green);
@@ -405,7 +406,7 @@ var getFinalResult = function(runs,opts,cb){
     console.log(('memory: ' + memory).green);
     console.log(('finalCode: ' + finalCode).green);
 
-    async.parallel([
+    async.series([
             function(callback){
                 Submission.update(opts.submissionId, {
                     status: finalCode,
@@ -433,3 +434,25 @@ var getFinalResult = function(runs,opts,cb){
 };
 
 
+/**
+ *
+ * @param runDir
+ * @param codeDir
+ * @param callback
+ */
+var clearTempFiles = function (runDir,codeDir,callback) {
+    async.series([
+        function (cb) {
+            rimraf(runDir, function (err) {
+                if(err) console.log(('error cleaning runDir ' + runDir).red);
+                cb();
+            });
+        },
+        function (cb) {
+            rimraf(codeDir, function (err) {
+                if(err) console.log(('error cleaning codedir ' + codeDir).red);
+                cb();
+            });
+        }
+    ], callback);
+};

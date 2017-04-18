@@ -60,7 +60,7 @@ exports.run = function(opts,cb){
     ], function (error, runs) {
 
         //clean up submitted code and run files
-        rimraf(opts.runDir, function (errs) {
+        clearTempFiles(opts.runDir, opts.codeDir, function (errs) {
 
             if( errs ) console.log(err);
             else console.log('success clean submit!'.green);
@@ -443,3 +443,25 @@ var getFinalResult = function(runs,opts,cb){
 };
 
 
+/**
+ *
+ * @param runDir
+ * @param codeDir
+ * @param callback
+ */
+var clearTempFiles = function (runDir,codeDir,callback) {
+    async.series([
+        function (cb) {
+            rimraf(runDir, function (err) {
+                if(err) console.log(('error cleaning runDir ' + runDir).red);
+                cb();
+            });
+        },
+        function (cb) {
+            rimraf(codeDir, function (err) {
+                if(err) console.log(('error cleaning codedir ' + codeDir).red);
+                cb();
+            });
+        }
+    ], callback);
+};
