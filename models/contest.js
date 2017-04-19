@@ -49,9 +49,7 @@ exports.getPublic = function(cb){
         function(running,future,callback){
             getEnded(running,future,callback);
         }
-    ], function (error,running,future,ended) {
-        cb(error,running,future,ended);
-    });
+    ], cb);
 };
 
 
@@ -72,13 +70,7 @@ var getRunning = function(cb){
             .orderBy('cnts.begin','desc');
 
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            if(err){ return cb(err); }
-
-            cb(null,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 
@@ -126,7 +118,8 @@ var getEnded = function(running,future,cb){
         Query.raw('`status` = 2 AND `end` <= NOW()')
     )
         .groupBy('cnts.id')
-        .orderBy('cnts.begin','desc');
+        .orderBy('cnts.begin','desc')
+        .limit(10);
 
     DB.execute(
         sql.toString()
@@ -140,18 +133,14 @@ var getEnded = function(running,future,cb){
 
 /**
  * Get contest that is still running or not yet started for edit by admin/moderator
- *  [should change the logic, make it more dynamic]
+ * TODO: should change the logic, make it more dynamic
  * @param cb
  */
 exports.getEditable = function(cb){
 
     var sql = Query.select().from('contest').where(Query.raw('`end` > NOW()'));
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 
@@ -177,17 +166,12 @@ exports.update = function(inserts,cid,cb){
  * @param cb
  */
 exports.updateProblem = function(inserts,pid,cb){
-
     var sql = Query('problems').update(inserts)
         .where({
             'id': pid
         });
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 

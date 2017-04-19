@@ -14,7 +14,7 @@ body {
 
 
 a{
-  color: #1D906A;
+ /* color: #1D906A;*/
 }
 
 .main-wraper > .container{
@@ -346,6 +346,7 @@ td,th{
 }
 
 
+/*
 .table-striped>tbody>tr:nth-child(4n+1)>td,
 .table-striped>tbody>tr:nth-child(4n+2)>td {
   background-color: #fff ;
@@ -360,7 +361,7 @@ td,th{
 .table-striped>tbody>tr:nth-child(even) > td{
   border-top: none 0px ;
 }
-
+*/
 
 
 .fixed-cell{

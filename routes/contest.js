@@ -33,21 +33,21 @@ var roles       = require('../middlewares/userrole');
 var Query       = require('../config/database/knex/query');
 
 
+/**
+ *
+ */
 router.get('/' , function(req, res, next) {
 
     Contest.getPublic(function(err,running,future,ended){
         if(err){
-            console.log("Here!?");
             return next(new Error(err));
         }
-
 
        console.log(running);
         console.log(future);
         console.log(ended);
 
-
-        res.render('contest/contests/running',{
+        res.render('contest/contests',{
             active_nav: "contest",
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
@@ -57,23 +57,34 @@ router.get('/' , function(req, res, next) {
             moment: moment
         });
     });
-
 });
 
+
+/**
+ *
+ */
+router.get('/past' , function(req, res, next) {
+   res.end('coming soon');
+});
 
 
 router.get('/host' , function(req, res, next) {
-
-        res.render('contest/host',{
-            active_nav: "contest",
-            isLoggedIn: req.isAuthenticated(),
-            user: req.user
-        });
-
+    return res.end('coming soon');
+   /* res.render('contest/host',{
+        active_nav: "contest",
+        isLoggedIn: req.isAuthenticated(),
+        user: req.user
+    });*/
 });
 
 
-router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
+/**
+ *
+ */
+router.get('/create', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res, next) {
+
+    if( !req.isAuthenticated() )
+        return res.end('unauthorized');
 
     res.render('contest/create',{
         active_nav: "contest",
@@ -84,15 +95,19 @@ router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, n
 });
 
 
+/**
+ *
+ */
+router.get('/edit', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res, next) {
 
-router.get('/edit', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
+    if( !req.isAuthenticated() )
+        return res.end('unauthorized');
 
     Contest.getEditable(function(err,rows){
 
         if(err){ return next(new Error(err)); }
 
         console.log(rows);
-
 
         res.render('contest/edit/contest_list',{
             active_nav: "contest",
@@ -334,6 +349,9 @@ router.get('/edit/:cid/problems/:pid/step3',isLoggedIn(true) , roles.is('admin')
 });
 
 
+/**
+ *
+ */
 router.get('/edit/:cid/publish',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var cid = req.params.cid;
@@ -349,6 +367,9 @@ router.get('/edit/:cid/publish',isLoggedIn(true) , roles.is('admin'), function(r
 });
 
 
+/**
+ *
+ */
 router.get('/:cid',  function(req, res, next) {
 
     var cid = req.params.cid;
