@@ -78,7 +78,7 @@ footer{
 }
 
 .problem-list > tbody > tr{
-  cursor: pointer;
+  /*cursor: pointer;*/
 }
 
 

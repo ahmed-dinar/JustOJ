@@ -1,3 +1,14 @@
+/*
+contest details and user is resistered
+*/
+select `contest`.* ,  (`contest_participants`.`uid` IS NOT NULL) AS `resistered`
+FROM `contest`
+LEFT JOIN `contest_participants` ON `contest`.`id` = `contest_participants`.`cid` AND `contest_participants`.`uid` = '1'
+where `contest`.`id` = '1'
+limit 1
+
+
+
 SELECT `status`
 FROM   `submissions`
 WHERE  `pid`='2'
@@ -364,7 +375,45 @@ select `running`.*,`future`.*,`ended`.*,(
 
 
 
-
+select `cp`.`uid`, `csu`.`username`, `csu`.`name`, `r`.`penalty`, `r`.`problems`, `r`.`solved`
+from `contest_participants` as `cp`
+left join `users` as `csu` on `cp`.`uid` = `csu`.`id`
+left join(
+    select
+        `rank`.`uid` as `ruid`,
+        /* penalty */
+        SUM(CASE
+                WHEN `rank`.`status`=0
+                THEN ifnull(`rank`.`tried`,1)-1
+                ELSE 0
+            END
+         )
+         * 20
+         + ifnull(SUM(
+             CASE
+             WHEN `rank`.`status`=0
+             THEN TIMESTAMPDIFF(MINUTE, '2017-04-18 02:23:00.000', `rank`.`penalty`)
+             ELSE 0
+             END
+             ),0
+          ) AS `penalty`,
+          /* solved */
+          COUNT(
+              CASE
+              WHEN `rank`.`status`=0
+              THEN `rank`.`status`
+              ELSE NULL
+              END
+           ) as `solved`,
+           /*problems*/
+           GROUP_CONCAT( '"' ,`rank`.`pid` , '":{' , '"status":' , `rank`.`status` , ',"tried":' , `rank`.`tried` , ',"penalty":' , TIMESTAMPDIFF(MINUTE, '2017-04-18 02:23:00.000', `rank`.`penalty`) ,'}'  ORDER BY `rank`.`pid` SEPARATOR ',') as `problems`
+               from `contest_rank` as `rank`
+               where `rank`.`cid` = '1'
+               group by `rank`.`uid`)AS `r` ON `cp`.`uid` = `r`.`ruid`
+           where `cp`.`cid` = '1'
+           group by `cp`.`uid`
+           order by r.solved DESC,r.penalty
+           limit 5
 
 
 

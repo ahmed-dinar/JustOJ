@@ -184,11 +184,7 @@ function getDetails(cid,cb){
 
     var sql = Query.select().from('contest').where('id', cid).limit(1);
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 }
 exports.getDetails = getDetails; //for using in this file
 
@@ -202,7 +198,6 @@ exports.getDetails = getDetails; //for using in this file
 exports.getDetailsIsReg = function (cid,uid,cb){
 
     var sql;
-
 
     if(uid<1) {
          sql = Query.select([
@@ -237,11 +232,7 @@ exports.getDetailsIsReg = function (cid,uid,cb){
             .limit(1);
     }
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 
@@ -267,12 +258,7 @@ exports.getDetailsAndProblemList = function(cid,cb){
         .where('c.id', cid)
         .limit(1);
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
-
+    DB.execute(sql.toString(),cb);
 };
 
 
@@ -289,16 +275,12 @@ exports.getProblems = function(cid,cb){
         .where('contest_problems.cid', cid)
         .as('ignored_alias');
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 
 /**
- * Get problem list of a specific contest including statictis of problems
+ * Get problem list of a specific contest including statictics of problems
  * @param cid
  * @param uid
  * @param cb
@@ -309,8 +291,7 @@ exports.getDashboardProblems = function(cid,uid,cb){
     if(uid!==-1){ //if user logged in
 
         sql = Query.select([
-            'cp.pid','cp.pname',
-            'prob.title',
+            'cp.pid','cp.pname', 'prob.title',
             Query.raw('COUNT(DISTINCT `solved`.`uacc`) as `accepted`'),
             Query.raw('ifnull(`isac`.`isuac`,-1) as `yousolved`'),
             Query.raw('ifnull(`iswa`.`isuwa`,-1) as `youtried`')
@@ -327,9 +308,7 @@ exports.getDashboardProblems = function(cid,uid,cb){
     }else{
 
         sql = Query.select([
-            'cp.pid',
-            'cp.pname',
-            'prob.title',
+            'cp.pid', 'cp.pname', 'prob.title',
             Query.raw('COUNT(DISTINCT `solved`.`uac`) as `accepted`')
         ])
             .from('contest_problems as cp')
@@ -340,11 +319,7 @@ exports.getDashboardProblems = function(cid,uid,cb){
             .groupBy('cp.pid');
     }
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 
@@ -365,36 +340,117 @@ exports.getDetailsandProblem = function(cid,pid,cb){
         .where('cn.id', cid)
         .limit(1);
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 
 /**
- * Get a user submission history of a contest
+ * Get a user submission history of a problem
  * @param cid
  * @param pid
  * @param uid
  * @param cb
  */
-exports.getUserSubmissions = function(cid,pid,uid,cb){
+exports.getUserProblemSubmissions = function(cid,pid,uid,cb){
 
-    var sql = Query.select(['status','submittime','language']).from('contest_submissions').where({
-        cid: cid,
-        pid: pid,
-        uid: uid
-    })
-        .orderBy('submittime','desc')
-        .limit(4);
+    var sql = Query
+                .select(['status','submittime','language'])
+                .from('contest_submissions')
+                .where({
+                    cid: cid,
+                    pid: pid,
+                    uid: uid
+                })
+                .orderBy('submittime','desc')
+                .limit(4);
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
+    DB.execute(sql.toString(),cb);
+};
+
+
+/**
+ * Get all submissions of a contest
+ * @param cid
+ * @param cur_page
+ * @param URL
+ * @param cb
+ */
+exports.getSubmissions = function(cid,cur_page,URL,cb){
+
+    var sql = Query.select([
+        'submissions.id',
+        'submissions.status',
+        'submissions.language',
+        'submissions.submittime',
+        'submissions.cpu',
+        'submissions.memory',
+        'submissions.pid',
+        'users.username',
+        'problems.title'
+    ])
+        .from('contest_submissions as submissions')
+        .orderBy('submissions.submittime', 'desc')
+        .leftJoin('users', 'submissions.uid', 'users.id')
+        .leftJoin('problems', 'submissions.pid', 'problems.id')
+        .where('submissions.cid',cid);
+
+    var sqlCount = Query.countDistinct('id as count')
+        .from('contest_submissions')
+        .where('cid',cid);
+
+    Paginate.paginate({
+            cur_page: cur_page,
+            sql: sql,
+            limit: 25,
+            sqlCount: sqlCount,
+            url: URL
+        },
+        cb);
+};
+
+
+/**
+ * Get all submissions of a contest of a user
+ * @param cid
+ * @param uid
+ * @param cur_page
+ * @param URL
+ * @param cb
+ */
+exports.getUserSubmissions = function(cid,uid,cur_page,URL,cb){
+
+    var sql = Query.select([
+        'submissions.id',
+        'submissions.status',
+        'submissions.language',
+        'submissions.submittime',
+        'submissions.cpu',
+        'submissions.memory',
+        'submissions.pid',
+        'problems.title'
+    ])
+        .from('contest_submissions as submissions')
+        .orderBy('submissions.submittime', 'desc')
+        .leftJoin('problems', 'submissions.pid', 'problems.id')
+        .where({
+            'submissions.cid': cid,
+            'submissions.uid': uid
         });
+
+    var sqlCount = Query.count('* as count')
+        .from('contest_submissions')
+        .where({
+            'cid':cid,
+            'uid': uid
+        });
+
+    Paginate.paginate({
+            cur_page: cur_page,
+            sql: sql,
+            limit: 20,
+            sqlCount: sqlCount,
+            url: URL
+        }, cb);
 };
 
 
@@ -411,12 +467,32 @@ exports.isRegistered = function(cid,uid,cb){
         uid: uid
     }).limit(1);
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
+
+
+/**
+ * Check if a user resitered for a specific valid contest
+ * @param cid
+ * @param uid
+ * @param cb
+ */
+exports.findAndisRegistered = function(cid,uid,cb){
+
+    var sql = Query.select([
+            'contest.id',
+            Query.raw('(`contest_participants`.`uid` IS NOT NULL) AS `resistered`')
+        ])
+        .joinRaw('LEFT JOIN `contest_participants` ON `contest`.`id` = `contest_participants`.`cid` AND `contest_participants`.`uid` = ?',[uid])
+        .from('contest')
+        .where('contest.id',cid)
+        .limit(1);
+
+    DB.execute(sql.toString(),cb);
+};
+
+
+
 
 
 /**
@@ -432,11 +508,7 @@ exports.register = function(cid,uid,cb){
         uid: uid
     }).into('contest_participants');
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
 
@@ -532,7 +604,7 @@ exports.UpdateSubmission = function(sid,inserts,cb){
 
 
 /**
- *
+ *  TODO: this is bad,right? so many queries?? may be use mysql PROCEDURE?? what do you think?
  * @param cid
  * @param uid
  * @param pid
@@ -588,19 +660,9 @@ exports.UpdateRank = function(cid,uid,pid,finalCode,cb){
                 return callback();
             }
 
-            console.log('moggggggg--------------------------------------------------------');
-            console.log(sql.toString());
-            console.log('moggggggg--------------------------------------------------------');
-
-            DB.execute(
-                sql.toString()
-                ,function(err,rows){
-                    callback(err,rows);
-                });
+            DB.execute(sql.toString(), callback);
         }
-    ], function (error, rows) {
-            cb(error,rows);
-    });
+    ],cb);
 };
 
 
@@ -644,16 +706,12 @@ function getProblemStats(cid,withTried,cb){
         .groupBy('cp.pid')
         .as('ignored_alias');
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 }
 
 
 /**
- *
+ * TODO: this is bad,right? complex queries?? may be use mysql PROCEDURE?? what do you think?
  * @param cid
  * @param cur_page
  * @param url
@@ -664,26 +722,21 @@ exports.getRank = function(cid,cur_page,url,cb){
     async.waterfall([
         function(callback) {
             getDetails(cid,function(err,rows){
-                if(err){ return callback(err); }
+                if(err) return callback(err);
 
-                if(!rows.length){ return callback('no contest found'); }
+                if(!rows.length) return callback('404');
 
                 callback(null,rows[0]);
             });
         },
         function(contest,callback){
-
             getProblemStats(cid,true,function(err,rows){
-
-                if(err){ return callback(err); }
+                if(err) return callback(err);
 
                 callback(null,contest,rows);
-
             });
-
         },
         function(contest,problemStats,callback){
-
 
             var sqlInner = Query.select([
                 'rank.uid as ruid',
@@ -716,7 +769,6 @@ exports.getRank = function(cid,cur_page,url,cb){
             var sqlCount = Query('contest_participants').countDistinct('uid as count')
                 .where('cid',cid);
 
-
             Paginate.paginate({
                     cur_page: cur_page,
                     sql: sql,
@@ -727,12 +779,8 @@ exports.getRank = function(cid,cur_page,url,cb){
                 function(err,rows,pagination) {
                     callback(err,contest,problemStats,rows,pagination);
                 });
-
         }
-    ], function (error,contest,problemStats,rank,pagination) {
-        cb(error,contest,problemStats,rank,pagination);
-    });
-
+    ], cb);
 };
 
 
@@ -760,13 +808,18 @@ exports.getClarification = function(cid,clid,cb){
             'cc.cid': cid
         }).limit(1);
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };
 
+
+/**
+ *
+ * @param cid
+ * @param qid
+ * @param cur_page
+ * @param url
+ * @param cb
+ */
 exports.getClarifications = function(cid,qid,cur_page,url,cb){
 
     var sql = Query.select([
@@ -790,7 +843,7 @@ exports.getClarifications = function(cid,qid,cur_page,url,cb){
         sql = sql.where({
             'cc.cid':cid,
             'cc.pid': 0
-    });
+        });
     }else{
         sql = sql.where('cc.cid',cid);
     }
@@ -805,19 +858,18 @@ exports.getClarifications = function(cid,qid,cur_page,url,cb){
             limit: 20,
             sqlCount: sqlCount,
             url: url
-        },
-        function(err,rows,pagination) {
-            cb(err,rows,pagination);
-        });
+        }, cb);
 };
 
+
+/**
+ *
+ * @param inserts
+ * @param cb
+ */
 exports.insertClarification = function (inserts,cb){
 
     var sql = Query.insert(inserts).into('contest_clarifications');
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            cb(err,rows);
-        });
+    DB.execute(sql.toString(),cb);
 };

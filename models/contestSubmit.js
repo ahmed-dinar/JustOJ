@@ -57,6 +57,9 @@ exports.submit = function(req, res, next){
 
             // user form empty errors
             if( has(error,'formError') ){
+
+                if( error.formError === '404' ) return next(new Error('404'));
+
                 req.flash('formError',error.formError);
                 res.redirect('/contest/' + contestId + '/problem/' + problemId);
                 return;
@@ -274,7 +277,7 @@ var getLimits = function(opts,callback){
 
         if(err) return callback(err);
 
-        if( rows.length === 0 ) return callback({ formError: '404, no problem found'});
+        if( rows.length === 0 ) return callback({ formError: '404'});
 
         if( rows === null || rows[0].cpu === null || rows[0].memory === null )
             return callback(null,{ systemError: 'no limit found for this problem!' });
