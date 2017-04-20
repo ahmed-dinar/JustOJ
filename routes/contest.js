@@ -431,7 +431,8 @@ router.get('/:cid',  function(req, res, next) {
                 errors: req.flash('err'),
                 contest: details,
                 registered: registered,
-                moment: moment
+                moment: moment,
+                decodeToHTML: entities.decodeHTML
             });
         }
 
@@ -445,7 +446,8 @@ router.get('/:cid',  function(req, res, next) {
             registered: registered,
             running: !moment().isAfter(details.end),
             moment: moment,
-            problems: problems
+            problems: problems,
+            decodeToHTML: entities.decodeHTML
         });
     });
 });
@@ -501,6 +503,7 @@ router.get('/:cid/clarifications/view/:clid', isLoggedIn(true), function(req, re
             user: req.user,
             moment: moment,
             contest: contest,
+            decodeToHTML: entities.decodeHTML,
             clarification: clarification
         });
     });
@@ -550,6 +553,7 @@ router.get('/:cid/clarifications/request', isLoggedIn(true), function(req, res, 
             contest: contest,
             moment: moment,
             problems: problems,
+            decodeToHTML: entities.decodeHTML,
             err: req.flash('err'),
             _: _
         });
@@ -558,6 +562,7 @@ router.get('/:cid/clarifications/request', isLoggedIn(true), function(req, res, 
 
 
 /**
+ * TODO: add my option
  *  clarification query. all / general / specific problems clarification
  */
 router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next) {
@@ -566,10 +571,11 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
     var cid = req.params.cid;
     var isAuthenticated = req.isAuthenticated();
     var user = req.user;
+    var uid = req.user.id;
     var qid = req.params.q;
 
 
-    if( _.isUndefined(qid) || (qid !== 'all' && qid !== 'general' && !MyUtil.isNumeric(qid)) )
+    if( _.isUndefined(qid) || (qid !== 'all' && qid !== 'general' && qid !== 'my' && !MyUtil.isNumeric(qid)) )
         return next(new Error('404'));
 
 
@@ -601,7 +607,7 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
 
             // the pagination part will do in that 'Contest.getClarifications()' function
             var URL = url.parse(req.originalUrl).pathname;
-            Contest.getClarifications(cid,qid,cur_page,URL,function(err,rows,pagination){
+            Contest.getClarifications(cid,uid,qid,cur_page,URL,function(err,rows,pagination){
                 if(err) return callback(err);
 
                 callback(null,contest,rows,pagination);
@@ -641,6 +647,7 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
             _: _,
             selected: MyUtil.isNumeric(qid) ? parseInt(qid) : qid,
             clarifications: clarifications,
+            decodeToHTML: entities.decodeHTML,
             pagination: _.isUndefined(pagination) ? {} : pagination
         });
     });
@@ -707,6 +714,7 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
             contest: contest,
             runStatus: MyUtil.runStatus(),
             langNames: MyUtil.langNames(),
+            decodeToHTML: entities.decodeHTML,
             pagination: _.isUndefined(pagination) ? {} : pagination
         });
     });
@@ -776,6 +784,7 @@ router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
             contest: contest,
             runStatus: MyUtil.runStatus(),
             langNames: MyUtil.langNames(),
+            decodeToHTML: entities.decodeHTML,
             pagination: _.isUndefined(pagination) ? {} : pagination
         });
     });
@@ -902,7 +911,8 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
                 contest: contest,
                 registered: registered,
                 running: false,
-                moment: moment
+                moment: moment,
+                decodeToHTML: entities.decodeHTML
             });
         }
 
@@ -921,7 +931,8 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
             running: true,
             moment: moment,
             submissions: submissions,
-            runStatus: MyUtil.runStatus()
+            runStatus: MyUtil.runStatus(),
+            decodeToHTML: entities.decodeHTML
         });
     });
 });

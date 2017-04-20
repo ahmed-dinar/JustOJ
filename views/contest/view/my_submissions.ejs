@@ -30,7 +30,7 @@
 <table class="table">
     <thead>
     <tr>
-        <th>#</th>
+        <th style="padding-left: 15px;">#</th>
         <th>Problem</th>
         <th>Time</th>
         <th>Language</th>
@@ -42,7 +42,7 @@
     <tbody>
     <% for(var i=0; i<status.length; i++){ %>
     <tr>
-        <td>
+        <td style="padding-left: 15px;">
             <a href="/contest/<%= contest.id %>/submissions/<%= status[i].id %>" >
                 <%= status[i].id %>
             </a>
@@ -85,13 +85,16 @@
     </tbody>
 </table>
 
-<hr class="last-border">
+
 
 <% include ../../templates/pagination.ejs %>
 
 <% } %>
 
 
+
+<!-- ending of contest header  -->
+</div>
 </div>
 </div>
 </div>

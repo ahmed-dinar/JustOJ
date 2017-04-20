@@ -820,7 +820,7 @@ exports.getClarification = function(cid,clid,cb){
  * @param url
  * @param cb
  */
-exports.getClarifications = function(cid,qid,cur_page,url,cb){
+exports.getClarifications = function(cid,uid,qid,cur_page,url,cb){
 
     var sql = Query.select([
         'cc.id',
@@ -844,7 +844,14 @@ exports.getClarifications = function(cid,qid,cur_page,url,cb){
             'cc.cid':cid,
             'cc.pid': 0
         });
-    }else{
+    }
+    else if( qid === 'my' ){
+        sql = sql.where({
+            'cc.cid':cid,
+            'cc.uid': uid
+        });
+    }
+    else{
         sql = sql.where('cc.cid',cid);
     }
 

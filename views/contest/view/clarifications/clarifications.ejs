@@ -14,73 +14,84 @@
 
 <% include ../../../templates/contest_header.ejs %>
 
-        <% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; var i; %>
+<% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; var i; %>
 
 
-                <div class="col-md-10">
-                    <div class="pull-left"><h4>Clarifications</h4></div>
-                    <div class="pull-right">
-                        <a href="/contest/<%= contest.id %>/clarifications/request" class="btn btn-sm btn-primary">REQUEST</a>
-                    </div>
+<div class="panel-body">
+<div class="col-md-10">
 
-                    <select class="form-control" id="dropd"  >
-
-                        <option value="/contest/<%= contest.id %>/clarifications/all">ALL</option>
-
-                        <% if(selected==='general'){ %>
-                        <option value="/contest/<%= contest.id %>/clarifications/general" selected>GENERAL</option>
-                        <% }else{ %>
-                        <option value="/contest/<%= contest.id %>/clarifications/general">GENERAL</option>
-                        <% } %>
-
-
-                    <% i=0; _.forEach(problems,function(value, key){ %>
-
-                        <% if(selected===value.pid){ %>
-                        <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
-                            <%= ch.charAt(i++) %>.<%= value.title %>
-                        </option>
-                        <% }else{ %>
-                        <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>">
-                            <%= ch.charAt(i++) %>.<%= value.title %>
-                        </option>
-                        <% } %>
-
-                    <% }); %>
-
-                    </select>
-
-                    <hr>
-
-                    <% if(clarifications.length){ %>
-
-                        <div class="list-group">
-
-                            <% for(i=0; i<clarifications.length; i++){ %>
-                                <a href="/contest/<%= contest.id %>/clarifications/view/<%= clarifications[i].id %>" class="list-group-item">
-                                    <h4 class="ellips">
-                                        <% if(clarifications[i].pname==='General'){ %>
-                                        <%= clarifications[i].request %>
-                                        <% }else{ %>
-                                        [<%= ch.charAt(clarifications[i].pname-1) %>.<%= clarifications[i].title %>] <%= clarifications[i].request %>
-                                        <% } %>
-                                    </h4>
-                                </a>
-                            <% } %>
-
-
-                            <% include ../../../templates/pagination.ejs %>
-
-                        </div>
-                    <% } %>
-
-                </div>
-
-
-
-
-        </div>
+    <div class="pull-left"><h4>Clarifications</h4></div>
+    <div class="pull-right">
+        <a href="/contest/<%= contest.id %>/clarifications/request" class="btn btn-sm btn-primary">REQUEST</a>
     </div>
+
+    <select class="form-control" id="dropd"  >
+
+        <option value="/contest/<%= contest.id %>/clarifications/all">ALL</option>
+
+        <% if(selected==='my'){ %>
+        <option value="/contest/<%= contest.id %>/clarifications/my" selected>MY</option>
+        <option value="/contest/<%= contest.id %>/clarifications/general">GENERAL</option>
+        <% }else if(selected==='general'){ %>
+        <option value="/contest/<%= contest.id %>/clarifications/my" >MY</option>
+        <option value="/contest/<%= contest.id %>/clarifications/general" selected>GENERAL</option>
+        <% }else{ %>
+        <option value="/contest/<%= contest.id %>/clarifications/my" >MY</option>
+        <option value="/contest/<%= contest.id %>/clarifications/general" >GENERAL</option>
+        <% } %>
+
+
+        <% i=0; _.forEach(problems,function(value, key){ %>
+
+        <% if(selected===value.pid){ %>
+        <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
+            [<%= ch.charAt(i++) %>] <%= decodeToHTML(value.title) %>
+        </option>
+        <% }else{ %>
+        <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>">
+            [<%= ch.charAt(i++) %>] <%= decodeToHTML(value.title) %>
+        </option>
+        <% } %>
+
+        <% }); %>
+
+    </select>
+
+    <hr>
+
+    <% if(clarifications.length){ %>
+
+    <div class="list-group">
+
+        <% for(i=0; i<clarifications.length; i++){ %>
+        <a href="/contest/<%= contest.id %>/clarifications/view/<%= clarifications[i].id %>" class="list-group-item">
+            <h4 class="ellips">
+                <% if(clarifications[i].pname==='General'){ %>
+                <%= clarifications[i].request %>
+                <% }else{ %>
+                [<%= ch.charAt(clarifications[i].pname-1) %>. <%= decodeToHTML(clarifications[i].title) %>] <%= decodeToHTML(clarifications[i].request) %>
+                <% } %>
+            </h4>
+        </a>
+        <% } %>
+
+
+
+
+    </div>
+    <% include ../../../templates/pagination.ejs %>
+    <% } %>
+
+</div>
+</div>
+
+
+
+
+<!-- ending of contest header  -->
+</div>
+</div>
+</div>
 </div>
 
 

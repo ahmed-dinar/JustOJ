@@ -16,16 +16,22 @@
 
 <% include ../../templates/contest_header.ejs %>
 
-<div id="db-lg">
-    <div class="col-md-10 contest-p-list">
-        <h4>Problems</h4><br/>
-        <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
+<div class="panel-body" style="min-height: 50px;">
+    <div class="col-md-10" >
+        <div class="panel panel-default" >
 
-        <% var problem_label = "default"; %>
+            <div class="panel-heading" >
+                PROBLEMS
+            </div>
 
-        <% for(var i= 0; i<problems.length; i++){ %>
+            <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
 
-             <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>" class="list-group-item">
+            <% var problem_label = "default"; %>
+
+
+            <table class="table contest-problem-table">
+                <tbody>
+                <% for(var i= 0; i<problems.length; i++){ %>
 
                 <%
                     if(isLoggedIn && registered){
@@ -39,22 +45,38 @@
                     }
                 %>
 
-                 <span class="label label-<%= problem_label %> pull-right">
-                     <i class="fa fa-user" aria-hidden="true"></i> x <%= problems[i].accepted %>
-                 </span>
-                 <h5 style="font-weight: 600">
-                     <%= ch.charAt(i).toUpperCase() %>. <%= problems[i].title %>
-                 </h5>
+                <tr>
+                    <td style="width: 2%">
+                        <h3><%= ch.charAt(i).toUpperCase() %></h3>
+                    </td>
+                    <td style="width: 93%">
+                        <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>">
+                            <h4><%= decodeToHTML(problems[i].title) %></h4>
+                        </a>
+                    </td>
+                    <td style="width: 5%">
+                        <span class="label label-<%= problem_label %> pull-right">
+                             <i class="fa fa-user" aria-hidden="true"></i> x <%= problems[i].accepted %>
+                         </span>
+                    </td>
+                </tr>
 
-             </a>
+                <% } %>
 
-         <% } %>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
+
+
+<!-- ending of contest header  -->
 </div>
 </div>
 </div>
+</div>
+
 
 
 <script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>
