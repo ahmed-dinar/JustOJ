@@ -315,12 +315,11 @@ td,th{
 }
 
 
+
+/*
 .scoreboard{
   font-size: 14px ;
 }
-
-
-
 
 .scoreboard >tbody>tr:nth-child(odd) > td{
   padding: 8px 8px 2px 8px ;
@@ -329,6 +328,15 @@ td,th{
 .scoreboard > thead > tr > th,.scoreboard > thead > tr > td {
   padding: 0px ;
   margin: 0px ;
+}
+*/
+
+.scoreboard > tbody > tr > td {
+  padding: 8px 4px;
+}
+
+.scoreboard > tbody > tr > td > .label-default {
+  background-color: #e0e0e0;
 }
 
 .standings-cell > .label{
@@ -340,6 +348,25 @@ td,th{
   font-weight: bold;
   font-size: 11px;
   border-radius: 4px;
+}
+
+.standings-cell > a > p {
+  margin-bottom: 0;
+}
+
+.standings-cell > a > p:first-child {
+  margin-bottom: 6px;
+  margin-top: 1px;
+}
+
+
+
+.standings-cell a:hover p.penalty-label span{
+  display: none;
+}
+
+.standings-cell a:hover p.penalty-label:after{
+  content: attr(time-penalty);
 }
 
 
@@ -362,8 +389,8 @@ td,th{
 
 
 .fixed-cell{
-  max-width: 64px;
-  width: 64px;
+  max-width: 55px;
+  width: 55px;
 }
 
 .last-border{

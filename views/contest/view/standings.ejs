@@ -17,13 +17,13 @@
 
     <%
         var probNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        var colspan = problemStats.length < 10 ? 10 : problemStats.length; //
+        var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
     %>
 
 
 <div style="min-height: 400px;">
 <div class="table-responsive">
-    <table class="table">
+    <table class="table table-hover scoreboard">
         <thead>
             <tr>
                 <th class="text-center fixed-cell">#</th>
@@ -32,14 +32,13 @@
                 <th class="text-center fixed-cell">Time</th>
 
                 <% for(var i=0; i<problemStats.length; i++){ %>
-                <th class="text-center standings-cell fixed-cell">
-                    <a href="/contest/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %> [<%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %>]</a>
-
+                <th class="text-center standings-cell fixed-cell ellips" title="<%- problemStats[i].title %> [ <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %> ]">
+                    <a href="/contest/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a>
                 </th>
                 <% }
-                /*for(var i=problemStats.length; i<colspan; i++){ %>
+                for(var i=problemStats.length; i<colspan; i++){ %>
                     <th class="fixed-cell"></th>
-                <% }*/ %>
+                <% } %>
 
             </tr>
         </thead>
@@ -50,8 +49,8 @@
             <% if( ranks[i].penalty === null || _.isUndefined(ranks[i].penalty) ){ %>
 
                         <tr>
-                            <td  class="text-center"><%= pagination.offset() + i + 1 %></td>
-                            <td  ><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td  class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
+                            <td  style="vertical-align: middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
                             <td class="text-center"  style="vertical-align: middle">0</td>
                             <td class="text-center"  style="vertical-align: middle">0</td>
 
@@ -66,9 +65,9 @@
                         <% var up = JSON.parse('{' + ranks[i].problems + '}'); %>
 
                         <tr>
-                            <td class="text-center " ><%= pagination.offset() + i + 1 %></td>
+                            <td class="text-center " style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
 
-                            <td ><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td style="vertical-align: middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
                             <td class="text-center " style="vertical-align: middle"><%= ranks[i].solved %></td>
                             <td class="text-center " style="vertical-align: middle"><%= parseInt(ranks[i].penalty) < 0 ? 0 : ranks[i].penalty %></td>
 
@@ -76,13 +75,36 @@
                             <td class="text-center standings-cell">
 
                                 <% if( !_.isUndefined(up[problemStats[j].pid]) ){ %>
+
+
                                     <% if(up[problemStats[j].pid].status === 0){ %>
-                                    <span class="label label-success" ><%= up[problemStats[j].pid].penalty < 0 ? 0 : up[problemStats[j].pid].penalty %> (<%= up[problemStats[j].pid].tried %>)</span>
+
+                                        <a class="label label-success show-runs" href="#" data-link="/contest/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
+                                            <p>( <%= up[problemStats[j].pid].tried %> )</p>
+                                            <p class="penalty-label" time-penalty="<%= up[problemStats[j].pid].penalty_time  %>">
+                                                <span>
+                                                    <%= up[problemStats[j].pid].penalty < 0 ? 0 : up[problemStats[j].pid].penalty %>
+                                                </span>
+                                            </p>
+                                        </a>
+
                                     <% }else{ %>
-                                    <span class="label label-danger"><%= up[problemStats[j].pid].tried %></span>
+
+
+                                        <a class="label label-danger show-runs" href="#" data-link="/contest/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
+                                            <p>( <%= up[problemStats[j].pid].tried %> )</p>
+                                            <p>-</p>
+                                        </a>
+
                                     <% } %>
+
+
+
                                 <% }else{ %>
-                                <span class="label label-default" style="background: #D1D1D1">-</span>
+                                <div class="label label-default">
+                                    <p></p>
+                                    <p>-</p>
+                                </div>
                                 <% } %>
 
                             </td>
@@ -151,11 +173,123 @@
 </div>
 </div>
 
+
+
+<div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4></h4>
+            </div>
+
+            <div class="modal-body">
+                <div id="run-info"></div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript" src="/javascripts/moment.min.js"></script>
 <script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>
 <script type="text/javascript">
+
     $( document ).ready(function() {
+
+        //start our countdown timer
         CountDownTimer('<%= contest.end %>',document.getElementById("countdown"));
+
+
+        $(document).on('click', '.show-runs', function (e) {
+            e.preventDefault();
+
+            var URL = $(this).attr('data-link');
+            $.ajax({
+                type: "GET",
+                data: {
+                    format: 'json'
+                },
+                url: URL,
+                dataType: "json",
+                success: function(data) {
+                    if( typeof data === 'string' )
+                        document.getElementById('run-info').innerHTML = '<h3 style="color:#f56b3d">error</h3>';
+                    else
+                        document.getElementById('run-info').innerHTML = submissionHTML(data);
+
+                    $('#myModal').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    alert(JSON.stringify(error));
+                }
+            });
+
+        });
     });
+
+
+    function submissionHTML(status) {
+
+            var statusName = ['Accepted','Runtime Error','Time Limit Exceeded','Memory Limit Exceeded','Output Limit Exceeded','In Queue','Running','Compilation Error','System Error', 'Wrong Answer'];
+
+            var ret = '<table class="table table-responsive"> <thead><tr><th style="padding-left: 15px;">#</th>' +
+            '<th>Time</th>' +
+            '<th>Language</th>' +
+            '<th>CPU</th>' +
+            ' <th>Memory</th>' +
+            '<th>Verdict</th></tr></thead><tbody>';
+             for(var i=0; i<status.length; i++){
+                 ret += '<tr>';
+                 ret += '<td style="padding-left: 15px;">' ;
+                 ret +='<a href="/contest/'+ status[i].cid +'/submissions/'+status[i].id+ '">';
+                 ret += status[i].id;
+                 ret +='</a></td>';
+                 ret +='<td title="'+ status[i].submittime +'" class="ellips" style="max-width: 100px;">';
+                 ret += moment(status[i].submittime).from();
+                 ret +='</td>';
+                 ret +='<td> ';
+                 if( status[i].language === 'c' )
+                     ret += 'C</td>';
+                 else if( status[i].language === 'cpp' )
+                     ret += 'C++</td>';
+
+                 ret += '<td>' ;
+                 if( parseInt(status[i].cpu) === 0)
+                     ret += '0.00s' ;
+                else
+                     ret += parseFloat(parseInt(status[i].cpu)/1000.0).toString().match(/^-?\d+(?:\.\d{0,2})?/)[0] +  's';
+
+                 ret +=' </td>'
+                 ret += ' <td>'+ status[i].memory+'KB</td>';
+                 ret +=' <td>';
+                 var st = parseInt(status[i].status);
+                if(st === 0){
+                         ret += ' <span class="label label-success">';
+                }else if(st === 5){
+                         ret += '   <span class="label label-default">';
+                }else if(st === 6){
+                         ret += '   <span class="label label-info">';
+                }else if(st === 8){
+                         ret +='    <span class="label label-warning">';
+                }else{
+                         ret += '    <span class="label label-danger">';
+                }
+                ret += statusName[st];
+                 ret +=  '   </span>';
+                 ret +=  '   </td>';
+                 ret +=  '  </tr>';
+             }
+        ret += '   </tbody>';
+        ret += '   </table>';
+        return ret;
+    }
+
 </script>
 
 <!-- footer -->

@@ -455,6 +455,32 @@ exports.getUserSubmissions = function(cid,uid,cur_page,URL,cb){
 
 
 /**
+ *
+ * @param cid
+ * @param username
+ * @param cb
+ */
+exports.getUserSubmissionByProblem = function(cid,pid,username,cb){
+
+    var sql = Query.select([
+        'submissions.*',
+        'problems.title'
+    ])
+        .from('contest_submissions as submissions')
+        .leftJoin('problems', 'submissions.pid', 'problems.id')
+        .joinRaw('LEFT JOIN `users` ON `submissions`.`uid` = `users`.`id` AND `users`.`username` = ?',[username])
+        .where({
+            'submissions.cid': cid,
+            'submissions.pid': pid,
+            'users.username': username
+        })
+        .orderBy('submissions.submittime', 'desc');
+
+    DB.execute(sql.toString(),cb);
+};
+
+
+/**
  * Check if a user resitered for a specific contest
  * @param cid
  * @param uid
@@ -680,9 +706,12 @@ function getProblemStats(cid,withTried,cb){
     if(withTried){
         sql = Query.select([
             'cp.pid',
+            'prob.title',
             Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`'),
             Query.raw('ifnull(`wa`.`tried`,0) as `triedBy`')
-        ]).joinRaw('  LEFT JOIN( ' +
+        ])
+            .leftJoin('problems as prob', 'cp.pid', 'prob.id')
+            .joinRaw('  LEFT JOIN( ' +
                         'SELECT COUNT(DISTINCT `cs2`.`uid`) as `tried`,`cs2`.`pid` ' +
                         'FROM `contest_submissions` as `cs2` ' +
                         'WHERE `cs2`.`cid`=? ' +
@@ -691,8 +720,10 @@ function getProblemStats(cid,withTried,cb){
     }else{
         sql = Query.select([
             'cp.pid',
+            'prob.title',
             Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`')
-        ]);
+        ])
+            .leftJoin('problems as prob', 'cp.pid', 'prob.id');
     }
 
     sql = sql.from('contest_problems as cp')
@@ -742,7 +773,7 @@ exports.getRank = function(cid,cur_page,url,cb){
                 'rank.uid as ruid',
                 Query.raw("SUM(CASE WHEN `rank`.`status`=0 THEN ifnull(`rank`.`tried`,1)-1 ELSE 0 END) * 20 + ifnull(SUM(CASE WHEN `rank`.`status`=0 THEN TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ELSE 0 END),0) AS `penalty`",[contest.begin]),
                 Query.raw("COUNT(CASE WHEN `rank`.`status`=0 THEN `rank`.`status` ELSE NULL END) as `solved`"),
-                Query.raw("GROUP_CONCAT( '\"' ,`rank`.`pid` , '\":{' , '\"status\":' , `rank`.`status` , ',\"tried\":' , `rank`.`tried` , ',\"penalty\":' , TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ,'}'  ORDER BY `rank`.`pid` SEPARATOR ',') as `problems`",[contest.begin]),
+                Query.raw("GROUP_CONCAT( '\"' ,`rank`.`pid` , '\":{' , '\"status\":' , `rank`.`status` , ',\"tried\":' , `rank`.`tried` ,  ',\"penalty_time\":\"' , TIME_FORMAT(TIMEDIFF(`rank`.`penalty`,?), '%H:%i:%s')    ,   '\",\"penalty\":' , TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ,'}'  ORDER BY `rank`.`pid` SEPARATOR ',') as `problems`",[contest.begin,contest.begin]),
             ])
                 .from('contest_rank as rank')
                 .where('rank.cid',cid)

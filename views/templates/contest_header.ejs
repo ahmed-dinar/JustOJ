@@ -39,6 +39,13 @@
                                     <i class="fa fa-paper-plane" aria-hidden="true"></i> Submissions
                                 </a>
                             </li>
+                            <% if(isLoggedIn){ %>
+                            <li class="<%= active_contest_nav === "submissionsmy" ? 'active' : '' %>">
+                                <a href="/contest/<%= contest.id %>/submissions/my">
+                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i> My Submissions
+                                </a>
+                            </li>
+                            <% } %>
                         </ul>
                     </div>
                 </div>

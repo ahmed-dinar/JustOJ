@@ -722,6 +722,36 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
 
 
 /**
+ *   submissions of a contest
+ */
+router.get('/:cid/submission',  function(req, res, next) {
+
+    if( !has(req.query,'username') || !has(req.query,'problem') ){
+        res.send(JSON.stringify('404'));
+        res.end();
+        return;
+    }
+
+    var cid = req.params.cid;
+    var username = req.query.username;
+    var problemId = req.query.problem;
+
+    Contest.getUserSubmissionByProblem(cid,problemId,username,function(err,rows) {
+        if( err )
+            res.send(JSON.stringify('error'));
+
+        var runs = JSON.stringify(rows);
+
+        console.log(rows);
+        console.log(rows.length);
+
+        res.send(runs);
+        res.end();
+    });
+});
+
+
+/**
  *  submissions of a contest of current logged in user
  */
 router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
@@ -773,7 +803,7 @@ router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
         console.log(rows);
 
         res.render('contest/view/my_submissions', {
-            active_contest_nav: "submissions",
+            active_contest_nav: "submissionsmy",
             active_nav: "contest",
             title: "Problems | JUST Online Judge",
             locals: req.app.locals,
@@ -997,8 +1027,11 @@ router.get('/:cid/standings', function(req, res, next) {
         if(err) return next(new Error(err));
 
         console.log(contest);
+        console.log("Begin: " +  moment(contest.begin).format("YYYY-MM-DD HH:mm:ss") );
         console.log(ranks);
         console.log(problemStats);
+
+
 
         res.render('contest/view/standings',{
             active_contest_nav: "standings",
@@ -1279,7 +1312,6 @@ router.post('/edit/detail/:cid', isLoggedIn(true) , roles.is('admin'), function(
         minutes: parseInt(len.get('minute')),
         seconds: parseInt(len.get('second'))
     }).format("YYYY-MM-DD HH:mm:ss");
-
 
     Contest.update({
         title: title,
