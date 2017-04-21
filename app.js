@@ -156,7 +156,7 @@ app.use(function(err, req, res, next) {
 /**
  * Get port from environment and store in Express.
  */
-var port = normalizePort(process.env.PORT || '8888');
+var port = normalizePort(process.env.PORT || '8888'); //if EADDRINUSE error run  $sudo killall -9 node
 
 
 /**

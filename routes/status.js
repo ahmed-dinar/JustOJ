@@ -78,6 +78,65 @@ router.get('/' , function(req, res, next) {
 });
 
 
+/**
+ *  current user status
+ */
+router.get('/my' , isLoggedIn(true),  function(req, res, next) {
+
+    var userId = req.user.id;
+    var cur_page = req.query.page;
+
+    if( _.isUndefined(cur_page) )
+        cur_page = 1;
+    else
+        cur_page = parseInt(cur_page);
+
+
+    if( cur_page<1 )
+        return callback('401');
+
+
+    var sql = Query.select(['submissions.status','submissions.language','submissions.submittime','submissions.cpu','submissions.memory','submissions.pid','submissions.id','problems.title'])
+        .from('submissions')
+        .orderBy('submissions.submittime', 'desc')
+        .leftJoin('problems', 'submissions.pid', 'problems.id')
+        .where('submissions.uid',userId);
+
+    var sqlCount = Query.count('* as count').from('submissions').where('uid',userId);
+    Paginate.paginate({
+            cur_page: cur_page,
+            sql: sql,
+            limit: 25,
+            sqlCount: sqlCount,
+            url: url.parse(req.originalUrl).pathname
+        },
+        function(err,rows,pagination) {
+
+            if( err )
+                return next(new Error(err));
+
+            console.log(rows);
+
+
+            res.render('status/user_status' , {
+                active_nav: "status",
+                title: "Problems | JUST Online Judge",
+                locals: req.app.locals,
+                isLoggedIn: req.isAuthenticated(),
+                user: req.user,
+                moment: moment,
+                status: rows,
+                runStatus: MyUtil.runStatus(),
+                langNames: MyUtil.langNames(),
+                pagination: _.isUndefined(pagination) ? {} : pagination,
+                decodeToHTML: entities.decodeHTML
+            });
+        });
+});
+
+
+
+
 router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
 
     var uID = req.user.id;
@@ -147,7 +206,7 @@ router.get('/u/:pid' , isLoggedIn(true), function(req, res, next) {
             status = {};
         }
 
-        res.render('status/user_status' , {
+        res.render('status/user_problem_status.ejs' , {
             active_nav: "status",
             title: "Problems | JUST Online Judge",
             locals: req.app.locals,

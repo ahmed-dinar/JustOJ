@@ -169,10 +169,10 @@
                                                 <tr>
                                                     <input type="hidden" value="<%= problems[i].pid %>" >
                                                     <td class="col-sm-1"><%= (i+1) %></td>
-                                                    <td><%= problems[i].title %></td>
+                                                    <td><%- problems[i].title %></td>
                                                     <td class="col-sm-1">
                                                         <% if(problems[i].status==='incomplete'){ %>
-                                                            <span class="label label-danger">Incomplete
+                                                            <span class="label label-danger" >Incomplete
                                                         <% }else{ %>
                                                             <span class="label label-success">Ready
                                                         <% } %>

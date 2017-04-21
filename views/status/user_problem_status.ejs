@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <% include ../templates/head.ejs %>
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../templates/header2.ejs %>
+
+
+<!-- Main Content -->
+<div class="content container c-h">
+
+    <div class="row">
+
+            <div class="col-md-10 nopadding">
+        <div class="panel panel-default">
+            <div class="panel-heading">MY SUBMISSIONS</div>
+            <div class="panel-heading" style="background-color: #FFFFFF"><h4><a href="/problems/JOP0<%= pid %>"><%- pName %></a></h4></div>
+
+
+                    <!-- problem list -->
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th style="padding-left: 20px;">#</th>
+                            <th>Date</th>
+                            <th>Language</th>
+                            <th>CPU</th>
+                            <th>Memory</th>
+                            <th>Verdict</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            <% for(var i=0; i<status.length; i++){ %>
+                                <tr>
+                                    <td style="padding-left: 20px;">
+                                        <a href="/status/<%= status[i].id %>">
+                                            <%= status[i].id %>
+                                        </a>
+                                    </td>
+                                    <td class="ellips" title="<%= status[i].submittime %>"><%= moment(status[i].submittime).from() %></td>
+                                    <td><%= langNames[status[i].language] %></td>
+                                    <td>
+                                        <% if( parseInt(status[i].cpu) === 0){ %>
+                                            0.00s
+                                        <% }else{ %>
+                                            <%= parseFloat( parseInt(status[i].cpu)/1000.0).toString().match(/^-?\d+(?:\.\d{0,2})?/)[0] %>s
+                                        <% } %>
+                                    </td>
+                                    <td><%= status[i].memory %>KB</td>
+                                    <td>
+                                        <% var st = parseInt(status[i].status); %>
+                                        <% if(st === 0){ %>
+                                            <span class="label label-success">
+                                        <% }else if(st === 5){ %>
+                                            <span class="label label-default">
+                                        <% }else if(st === 6){ %>
+                                            <span class="label label-info">
+                                       <% }else if(st === 8){ %>
+                                            <span class="label label-warning">
+                                        <% }else{ %>
+                                            <span class="label label-danger">
+                                        <% } %>
+                                                <%= runStatus[st] %>
+                                            </span>
+                                    </td>
+                                </tr>
+                            <% } %>
+
+                        </tbody>
+                    </table>
+
+                    <% include ../templates/pagination.ejs %>
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- footer -->
+<% include ../templates/footer.ejs %>
+
+</body>
+</html>

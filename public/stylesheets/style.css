@@ -337,9 +337,9 @@ td,th{
   display: block;
   padding: 3px 6px;
   margin: 0 0;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 11px;
-  border-radius: 1px;
+  border-radius: 4px;
 }
 
 
@@ -580,6 +580,16 @@ nav.nopadding, div.nopadding {
   color: #FFFFFF;
 }
 
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.open>a{
+  background-image: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover{
+  background-color: transparent;
+}
+
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover{
   background-image: none;
   background-color: transparent;
@@ -587,6 +597,12 @@ nav.nopadding, div.nopadding {
 
 .contest-nav >li>a {
   padding: 10px 15px;
+}
+
+.navbar-inverse  .contest-nav > .active > a{
+  background-image: none;
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .contest-problem-table > tbody > tr>td{
@@ -603,4 +619,12 @@ nav.nopadding, div.nopadding {
 
 .panel-default{
   /* border-color: #e7ecf1;*/
+}
+
+.label-danger{
+  background-color: #f56b3d;
+}
+
+.label-success{
+  background-color: #57B257;
 }

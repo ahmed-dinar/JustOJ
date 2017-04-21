@@ -14,42 +14,33 @@
 
 <% include ../../templates/contest_header.ejs %>
 
-<div class="text-center">
-    <h4>Standings</h4>
-</div><br/>
-
 
     <%
         var probNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        var colspan = problemStats.length < 15 ? 15 : problemStats.length;
+        var colspan = problemStats.length < 10 ? 10 : problemStats.length; //
     %>
 
 
-
+<div style="min-height: 400px;">
 <div class="table-responsive">
-    <table class="table table-striped scoreboard ">
+    <table class="table">
         <thead>
             <tr>
-                <th class="fixed-cell"></th>
-
-                <% for(var i=0; i<problemStats.length; i++){ %>
-                    <th class="text-center fixed-cell"><a href="/contest/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a></th>
-                <% } %>
-                <th></th>
-                <th></th>
-            </tr>
-            <tr>
-                <th class="text-center">#</th>
+                <th class="text-center fixed-cell">#</th>
+                <th>Username</th>
+                <th class="text-center fixed-cell">Slv.</th>
+                <th class="text-center fixed-cell">Time</th>
 
                 <% for(var i=0; i<problemStats.length; i++){ %>
                 <th class="text-center standings-cell fixed-cell">
-                    <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %>
+                    <a href="/contest/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %> [<%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %>]</a>
+
                 </th>
-                <% }for(var i=problemStats.length; i<colspan; i++){ %>
+                <% }
+                /*for(var i=problemStats.length; i<colspan; i++){ %>
                     <th class="fixed-cell"></th>
-                <% } %>
-                <th class="text-center fixed-cell">Solved</th>
-                <th class="text-center fixed-cell">Time</th>
+                <% }*/ %>
+
             </tr>
         </thead>
         <tbody>
@@ -59,12 +50,11 @@
             <% if( ranks[i].penalty === null || _.isUndefined(ranks[i].penalty) ){ %>
 
                         <tr>
-                            <td rowspan="2" class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
-                            <td colspan="<%= colspan %>" class="scoreboard-name"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
-                            <td class="text-center" rowspan="2" style="vertical-align: middle">0</td>
-                            <td class="text-center" rowspan="2" style="vertical-align: middle">0</td>
-                        </tr>
-                        <tr>
+                            <td  class="text-center"><%= pagination.offset() + i + 1 %></td>
+                            <td  ><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td class="text-center"  style="vertical-align: middle">0</td>
+                            <td class="text-center"  style="vertical-align: middle">0</td>
+
                             <% for(var j=0; j<problemStats.length; j++){ %>
                             <td class="text-center standings-cell" ><span class="label label-default" style="background: #D1D1D1">-</span></td>
                             <% } %>
@@ -76,33 +66,37 @@
                         <% var up = JSON.parse('{' + ranks[i].problems + '}'); %>
 
                         <tr>
-                            <td rowspan="2" class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
+                            <td class="text-center " ><%= pagination.offset() + i + 1 %></td>
 
-                            <td colspan="<%= colspan %>"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
-                            <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].solved %></td>
-                            <td class="text-center " rowspan="2" style="vertical-align: middle"><%= ranks[i].penalty < 0 ? 0 : ranks[i].penalty %></td>
-                        </tr>
-                        <tr>
+                            <td ><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td class="text-center " style="vertical-align: middle"><%= ranks[i].solved %></td>
+                            <td class="text-center " style="vertical-align: middle"><%= parseInt(ranks[i].penalty) < 0 ? 0 : ranks[i].penalty %></td>
+
                             <% for(var j=0; j<problemStats.length; j++){ %>
                             <td class="text-center standings-cell">
+
                                 <% if( !_.isUndefined(up[problemStats[j].pid]) ){ %>
                                     <% if(up[problemStats[j].pid].status === 0){ %>
-                                    <span class="label label-success" ><%= up[problemStats[j].pid].tried %> - <%= up[problemStats[j].pid].penalty < 0 ? 0 : up[problemStats[j].pid].penalty %></span>
+                                    <span class="label label-success" ><%= up[problemStats[j].pid].penalty < 0 ? 0 : up[problemStats[j].pid].penalty %> (<%= up[problemStats[j].pid].tried %>)</span>
                                     <% }else{ %>
                                     <span class="label label-danger"><%= up[problemStats[j].pid].tried %></span>
                                     <% } %>
                                 <% }else{ %>
                                 <span class="label label-default" style="background: #D1D1D1">-</span>
                                 <% } %>
+
                             </td>
                             <% } %>
                         </tr>
 
             <% } %>
+
         <% } %>
+
+
         </tbody>
     </table>
-    <hr class="last-border">
+
 </div>
 
 
@@ -149,9 +143,12 @@
             </div>
             <!-- end pagination -->
 
+</div>
 
-        </div>
-    </div>
+<!-- ending of contest header  -->
+</div>
+</div>
+</div>
 </div>
 
 <script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>

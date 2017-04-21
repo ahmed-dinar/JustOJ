@@ -28,29 +28,21 @@
 
 
                 <table class="table">
-                    <thead>
-                    <tr>
 
-                        <th style="width: 65%">Title</th>
-                        <th style="width: 25%">Start</th>
-                        <th style="width: 5%"></th>
-                    </tr>
-                    </thead>
                     <tbody>
 
                     <% for(var i=0; i<running.length; i++){ %>
 
                     <tr>
-
-                        <td>
-                            <a href = "/contest/<%= running[i].id %>" style="font-size: 15px;">
+                        <td style="width: 68%; ">
+                            <a href = "/contest/<%= running[i].id %>" style="font-size: 15px; margin-left: 10px;">
                                 <%= running[i].title %>
                             </a>
                         </td>
-                        <td>
+                        <td style="width: 30%">
                             Ends <%= moment(running[i].end).from() %>
                         </td>
-                        <td>
+                        <td style="width: 2%">
                             <span class = "badge badge-info">
                                 <i class="fa fa-user" aria-hidden="true"></i> x <%= running[i].users %>
                             </span>
@@ -71,29 +63,21 @@
             <% if(future.length){ %>
 
             <table class="table">
-                <thead>
-                <tr>
-
-                    <th style="width: 65%">Title</th>
-                    <th style="width: 25%">Start</th>
-                    <th style="width: 5%"></th>
-                </tr>
-                </thead>
                 <tbody>
 
                 <% for(var i=0; i<future.length; i++){ %>
 
                 <tr>
 
-                    <td>
-                        <a href = "/contest/<%= future[i].id %>" style="font-size: 15px;">
+                    <td style="width: 68%">
+                        <a href = "/contest/<%= future[i].id %>" style="font-size: 15px; margin-left: 10px;">
                             <%= future[i].title %>
                         </a>
                     </td>
-                    <td>
+                    <td style="width: 30%">
                         Starts <%= moment(future[i].begin).from() %>
                     </td>
-                    <td>
+                    <td style="width: 2%">
                             <span class = "badge">
                                 <i class="fa fa-user" aria-hidden="true"></i> x <%= future[i].users %>
                             </span>
@@ -119,13 +103,7 @@
             <% if(ended.length){ %>
 
                 <table class="table">
-                    <thead>
-                    <tr>
-                        <th style="width: 65%">Title</th>
-                        <th style="width: 25%">Start</th>
-                        <th style="width: 5%"></th>
-                    </tr>
-                    </thead>
+
                     <tbody>
 
 
@@ -138,15 +116,15 @@
                 <tr>
 
 
-                    <td>
-                        <a href = "/contest/<%= ended[i].id %>" style="font-size: 15px;">
+                    <td style="width: 68%">
+                        <a href = "/contest/<%= ended[i].id %>" style="font-size: 15px; margin-left: 10px;">
                             <%= ended[i].title %>
                         </a>
                     </td>
-                    <td>
+                    <td style="width: 30%">
                         Ended <%= moment(ended[i].begin).from() %>
                     </td>
-                    <td>
+                    <td style="width: 2%">
                             <span class = "badge">
                                 <i class="fa fa-user" aria-hidden="true"></i> x <%= ended[i].users %>
                             </span>
