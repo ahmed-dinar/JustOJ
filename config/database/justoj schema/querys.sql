@@ -1,4 +1,14 @@
 /*
+http://stackoverflow.com/questions/43464836/sql-count-second-column-for-each-unique-row-of-first-column
+distict problems and how many user solved it
+*/
+SELECT pid, COUNT(DISTINCT uid) AS 'total'
+FROM submissions
+GROUP BY pid
+
+
+
+/*
 contest details and user is resistered
 */
 select `contest`.* ,  (`contest_participants`.`uid` IS NOT NULL) AS `resistered`

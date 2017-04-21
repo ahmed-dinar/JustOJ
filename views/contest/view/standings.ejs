@@ -50,12 +50,16 @@
 
                         <tr>
                             <td  class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
-                            <td  style="vertical-align: middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td  style="vertical-align: middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
                             <td class="text-center"  style="vertical-align: middle">0</td>
                             <td class="text-center"  style="vertical-align: middle">0</td>
-
                             <% for(var j=0; j<problemStats.length; j++){ %>
-                            <td class="text-center standings-cell" ><span class="label label-default" style="background: #D1D1D1">-</span></td>
+                                <td class="text-center standings-cell" >
+                                    <div class="label label-default">
+                                        <p></p>
+                                        <p>-</p>
+                                    </div>
+                                </td>
                             <% } %>
                         </tr>
 
@@ -66,8 +70,7 @@
 
                         <tr>
                             <td class="text-center " style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
-
-                            <td style="vertical-align: middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].name %></a></td>
+                            <td style="vertical-align: middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
                             <td class="text-center " style="vertical-align: middle"><%= ranks[i].solved %></td>
                             <td class="text-center " style="vertical-align: middle"><%= parseInt(ranks[i].penalty) < 0 ? 0 : ranks[i].penalty %></td>
 
@@ -226,10 +229,9 @@
                     $('#myModal').modal('show');
                 },
                 error: function(xhr, status, error) {
-                    alert(JSON.stringify(error));
+                    alert(JSON.stringify('error'));
                 }
             });
-
         });
     });
 

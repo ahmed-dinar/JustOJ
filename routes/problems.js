@@ -13,12 +13,12 @@ var async       = require('async');
 var moment      = require("moment");
 var colors      = require('colors');
 var url         = require('url');
+var has         = require('has');
 
-var Paginate    = require('../helpers/paginate');
+
 var MyUtil      = require('../helpers/myutil');
 var Problems    = require('../models/problems');
 var User        = require('../models/user');
-var Query       = require('../config/database/knex/query');
 var DB          = require('../config/database/knex/DB');
 var entities    = require('entities');
 var isLoggedIn  = require('../middlewares/isLoggedIn');
@@ -27,34 +27,27 @@ var roles       = require('../middlewares/userrole');
 var EditProblem = require('./edit_problem/editProblem');
 
 
-
 router.get('/', function(req, res, next) {
+    
+    var cur_page;
+    if( !has(req.query,'page') )
+        cur_page = 1;
+    else
+        cur_page = parseInt(req.query.page);
 
-    async.waterfall([
-        function(callback) {
-            findProblems(req,callback);
-        },
-        function(rows,pagination,callback){
+    if( cur_page<1 )
+        return next(new  Error('401'));
 
-            return callback(null,rows,pagination);
+    var URL = url.parse(req.originalUrl).pathname;
+    var uid = req.isAuthenticated() ? req.user.id : -1;
 
-            /*if( !req.isAuthenticated() ){
-                return callback(null,rows,pagination);
-            }
 
-            //TODO: currenty disabled, implement it! , NOTE: USE Left join insted of separate query
-            User.problemStatus(req.user.id, function(err,status){
+    //TODO:
+    //TODO: AGAIN TODO!!:  please please check the query with user id in model, is it horrible when submission table is too huge??
+    Problems.findProblems(uid,cur_page,URL, function(error,problems,pagination) {
+        if( error ) return next(new Error(error));
 
-                if( err ){ return callback(err); }
-
-                callback(null,rows,pagination,status);
-
-            });*/
-        }
-    ], function (error, problems, pagination, status) {
-        if( error ){ return next(new Error(error)); }
-
-        console.log(status);
+        console.log(problems);
 
         res.render('problem/problems', {
             active_nav: "problems",
@@ -65,14 +58,15 @@ router.get('/', function(req, res, next) {
             _: _,
             problems: _.isUndefined(problems) ? {} : problems,
             pagination: _.isUndefined(pagination) ? {} : pagination,
-            status: _.isUndefined(status) ? {} : status,
             decodeToHTML: entities.decodeHTML
         });
     });
 });
 
 
-
+/**
+ *
+ */
 router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     res.render('problem/create/new', {
@@ -288,37 +282,7 @@ var findUserSubmissions = function(pid,uid,problem,rank,cb){
 };
 
 
-/**
- * Find some public problems
- * @param req
- * @param cb
- * @returns {*}
- */
-var findProblems = function(req,cb){
 
-    var cur_page = req.query.page;
-
-    if( _.isUndefined(cur_page) ){
-        cur_page = 1;
-    }else{
-        cur_page = parseInt(cur_page);
-    }
-
-    if( cur_page<1 ) return cb('what are u looking for!');
-
-    Paginate.paginate({
-            cur_page: cur_page,
-            sql: Query.select(['id','title','submissions','solved','difficulty']).from('problems').where('status','public'),
-            sqlCount: Query.count('id as count').from('problems').where('status','public'),
-            limit: 5,
-            url: url.parse(req.originalUrl).pathname
-        },
-        function(err,rows,pagination) {
-            if( err ){ return cb(err); }
-
-            cb(null,rows,pagination);
-        });
-};
 
 
 /**

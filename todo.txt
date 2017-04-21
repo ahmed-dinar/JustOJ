@@ -1,0 +1,18 @@
+# user status for problems in problems page
+# compare result program
+# admin panel
+# proper next() error handling
+# implement error page
+# Past Contests
+# Contest hosting
+# User profile
+# Ranks
+# add ace editor
+# may be separate judge server?
+# cluster for multithreading??
+
+## of course possible tests!
+## java sandbox (java support)
+## C++11 and C++14 support
+
+### ReactJS in front end

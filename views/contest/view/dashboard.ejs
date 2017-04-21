@@ -26,38 +26,37 @@
 
             <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
 
-            <% var problem_label = "default"; %>
+            <% var problem_label = ""; %>
 
 
-            <table class="table contest-problem-table">
+            <table class="table contest-problem-table table-responsive">
                 <tbody>
                 <% for(var i= 0; i<problems.length; i++){ %>
 
-                <%
-                    if(isLoggedIn && registered){
-                        if(problems[i].yousolved !== -1){
-                            problem_label = "success";
-                        }else if(problems[i].youtried !== -1){
-                            problem_label = "danger";
-                        }else{
-                            problem_label = "default";
-                        }
-                    }
-                %>
-
                 <tr>
-                    <td style="width: 2%">
+                    <td style="width: 3%; padding-left: 18px;">
                         <h3><%= ch.charAt(i).toUpperCase() %></h3>
                     </td>
-                    <td style="width: 93%">
+
+                    <td style="width: 89%">
                         <a href="/contest/<%= contest.id %>/problem/<%= problems[i].pid %>">
-                            <h4><%= decodeToHTML(problems[i].title) %></h4>
+                            <h4><%- problems[i].title %></h4>
                         </a>
                     </td>
-                    <td style="width: 5%">
-                        <span class="label label-<%= problem_label %> pull-right">
-                             <i class="fa fa-user" aria-hidden="true"></i> x <%= problems[i].accepted %>
-                         </span>
+
+                    <%
+                        problem_label = "";
+                        if(isLoggedIn && registered){
+                            if(problems[i].yousolved !== -1){
+                                problem_label = 'color: #2db300;';
+                            }else if(problems[i].youtried !== -1){
+                                problem_label = 'color: #e62e00;';
+                            }
+                        }
+                    %>
+
+                    <td style=" width: 8%; <%= problem_label %> " class="ellips">
+                        <i class="fa fa-user" aria-hidden="true"></i> x <%= problems[i].accepted %>
                     </td>
                 </tr>
 

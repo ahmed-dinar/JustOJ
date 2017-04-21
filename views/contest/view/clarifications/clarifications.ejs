@@ -20,12 +20,20 @@
 <div class="panel-body" style="min-height: 400px;">
 <div class="col-md-10">
 
-    <div class="pull-left"><h4>Clarifications</h4></div>
-    <div class="pull-right">
-        <a href="/contest/<%= contest.id %>/clarifications/request" class="btn btn-sm btn-primary">REQUEST</a>
-    </div>
 
-    <select class="form-control" id="dropd"  >
+    <div class="panel panel-default" >
+
+        <div class="panel-heading" style="padding: 15px 20px;"  >
+            CLARIFICATIONS
+            <div class="pull-right">
+                <a style="margin-top: -4px;" href="/contest/<%= contest.id %>/clarifications/request" class="btn btn-sm btn-primary">REQUEST</a>
+            </div>
+        </div>
+
+
+        <div class="panel-heading" style="padding: 20px;">
+
+    <select class="form-control" id="dropd" style="padding: 10px 12px;  height: 45px;"  >
 
         <option value="/contest/<%= contest.id %>/clarifications/all">ALL</option>
 
@@ -57,7 +65,7 @@
 
     </select>
 
-    <hr>
+        </div>
 
     <% if(clarifications.length){ %>
 
@@ -82,6 +90,7 @@
     <% include ../../../templates/pagination.ejs %>
     <% } %>
 
+</div>
 </div>
 </div>
 

@@ -3,6 +3,7 @@ var _           = require('lodash');
 var entities    = require('entities');
 var async       = require('async');
 
+var Paginate    = require('../helpers/paginate');
 var DB          = require('../config/database/knex/DB');
 var Query       = require('../config/database/knex/query');
 
@@ -32,6 +33,71 @@ exports.findById = function (pid,attr,callback) {
         ,function(err,rows){
             callback(err,rows);
         });
+};
+
+
+/**
+ *
+ * @param cur_page
+ * @param URL
+ * @param cb
+ */
+exports.findProblems = function (uid,cur_page,URL, cb) {
+
+    var sql;
+    if (uid < 0) {
+        sql = Query
+            .select(['pb.id', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
+                Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
+                Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy')
+            ])
+            .from('problems  as pb');
+    }
+    else{  //TODO: bad query? disable it
+        sql = Query
+            .select(['pb.id', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
+                Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
+                Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy'),
+                Query.raw('(pbus.pid IS NOT NULL) as youSolved'),
+                Query.raw('(pbut.pid IS NOT NULL) as youTried')
+            ])
+            .from('problems  as pb')
+            .joinRaw(' LEFT JOIN( ' +
+                'SELECT sss.pid ' +
+                'FROM submissions as sss ' +
+                'WHERE sss.`status` = 0 AND sss.`uid` = ? ' +
+                'GROUP BY sss.pid ' +
+                ') as pbus ON pb.id = pbus.pid ', [uid])
+            .joinRaw(' LEFT JOIN( ' +
+                'SELECT sa.pid ' +
+                'FROM submissions as sa ' +
+                'WHERE sa.`status` != 0 AND sa.`uid` = ? ' +
+                'GROUP BY sa.pid ' +
+                ') as pbut ON pb.id = pbut.pid ', [uid]);
+    }
+
+     sql = sql
+        .joinRaw(' LEFT JOIN( ' +
+            'SELECT ssss.pid, COUNT(DISTINCT ssss.uid) AS triedBy ' +
+            'FROM submissions as ssss ' +
+            'GROUP BY ssss.pid ' +
+            ') as pbtry ON pb.id = pbtry.pid ')
+        .joinRaw(' LEFT JOIN( ' +
+            'SELECT ss.pid, COUNT(DISTINCT ss.uid) AS solvedBy ' +
+            'FROM submissions as ss ' +
+            'WHERE ss.`status` = 0 ' +
+            'GROUP BY ss.pid ' +
+            ') as pbs ON pb.id = pbs.pid ')
+        .where('pb.status', 'public');
+
+
+    Paginate.paginate({
+            cur_page: cur_page,
+            sql: sql,
+            sqlCount: Query.count('id as count').from('problems').where('status','public'),
+            limit: 5,
+            url: URL
+        }, cb);
 };
 
 

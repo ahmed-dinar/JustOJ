@@ -414,7 +414,7 @@ var getFinalResult = function(runs,opts,cb){
                     memory: String(memory)
                 }, callback);
             },
-            function(callback){
+            function(callback){  //TODO: omg stop it! stop it right now!! check problems route
                 if(finalCode === '0')   //if accepted increment total solved
                     return Problems.updateSubmission(opts.problemId, 'solved', callback);
 
