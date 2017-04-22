@@ -15,7 +15,7 @@ exports.insert = function(inserts,cb){
     DB.execute(
         sql.toString()
         ,function(err,rows){
-            if( err ){ return cb(err); }
+            if( err ) return cb(err);
 
             cb(null,rows.insertId);
         });

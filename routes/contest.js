@@ -10,6 +10,7 @@ var ContestSubmit   = require('../models/contestSubmit');
 var Problems        = require('../models/problems');
 var router          = express.Router();
 
+
 var has         = require('has');
 var entities    = require('entities');
 var _           = require('lodash');
@@ -23,6 +24,7 @@ var uuid        = require('node-uuid');
 var rimraf      = require('rimraf');
 var url         = require('url');
 var mkdirp      = require('mkdirp');
+
 
 var MyUtil      = require('../helpers/myutil');
 var Paginate    = require('../helpers/paginate');
@@ -65,7 +67,31 @@ router.get('/' , function(req, res, next) {
  *
  */
 router.get('/past' , function(req, res, next) {
-    res.end('coming soon');
+
+    var cur_page = req.query.page;
+
+    if( _.isUndefined(cur_page) )
+        cur_page = 1;
+    else
+        cur_page = parseInt(cur_page);
+
+    if( cur_page<1 )
+        return next(new Error('400'));
+
+    var URL = url.parse(req.originalUrl).pathname;
+    Contest.getPastContests(cur_page,URL, function (err,rows,pagination) {
+        if(err) return next(new Error(err));
+
+        console.log(rows);
+        res.render('contest/past_contests',{
+            active_nav: "contest",
+            isLoggedIn: req.isAuthenticated(),
+            user: req.user,
+            ended: rows,
+            moment: moment,
+            pagination: _.isUndefined(pagination) ? {} : pagination
+        });
+    });
 });
 
 
@@ -122,12 +148,199 @@ router.get('/edit', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res,
 });
 
 
-router.get('/edit/:cid',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
+
+/**
+ *
+ */
+router.post('/edit/removealluser',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+
+    var cid = req.body.cid;
+
+    Contest.removealluser(cid, function (err, rows) {
+        if(err) return next(new Error(err));
+
+        req.flash('success', 'successfully removed all user');
+        res.redirect('/contest/edit/' + cid);
+    });
+});
+
+
+/**
+ *
+ */
+router.post('/edit/edituser/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+
+    var cid = req.params.cid;
+    var uid = req.body.userid;
+    var username = req.body.username;
+    var name = req.body.name;
+    var password = req.body.password;
+    var institute  = req.body.institute;
+
+
+    console.log(req.body);
+
+
+    var insertObj = {
+        username: username,
+        name: name,
+        institute: institute,
+        password: password,
+        email   : ''
+    };
+
+    Contest.editUser(cid,uid,insertObj,function (err,rows) {
+
+        if(err){
+            console.log(err);
+
+            if( typeof err === 'string' )
+                res.send(JSON.stringify(err));
+            else
+                res.send(JSON.stringify('error'));
+
+            res.end();
+            return;
+        }
+
+        res.send(JSON.stringify('success'));
+        res.end();
+    });
+});
+
+
+/**
+ * Generate random user for a contest
+ */
+router.post('/edit/generateuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+
+    var quantity = req.body.quantity;
+    var cid = req.params.cid;
+
+    if( !MyUtil.isNumeric(quantity)  )
+        return next(new Error('404'));
+
+    if( quantity< 0 || quantity > 100 ){
+        req.flash('error', 'quantity of number of user to generate must be between 1 and 100');
+        res.redirect('/contest/edit/' + cid);
+        return;
+    }
+
+    async.waterfall([
+        function (callback) {
+            Contest.findById(cid,function (err,rows) {
+                if(err) return callback(err);
+
+                if(!rows || rows.length === 0) return callback('404');
+
+                callback();
+            });
+        },
+        function (callback) {
+            var usr = [];
+            for(var i=0; i<quantity; i++) usr.push(i);
+
+            async.eachSeries(usr, Contest.generateUser.bind(null,cid) , callback);
+        }
+    ],function (err,rows) {
+        if(err){
+            console.log(err);
+            return next(new Error('error while...'));
+        }
+
+        req.flash('success', 'successfully added ' + quantity + ' users');
+        res.redirect('/contest/edit/' + cid);
+    });
+});
+
+
+
+/**
+ * Insert a user for a contest
+ */
+router.post('/edit/insertuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+
+    var username = req.body.username;
+    var name = req.body.name;
+    var password = req.body.password;
+    var institute  = req.body.institute;
+    var random_password  =  !_.isUndefined(req.body.random_password);
+    var cid = req.params.cid;
+
+    var insertObj = {
+        username: username,
+        name: name,
+        institute: institute,
+        password: password,
+        email   : '',
+        role    : 'genuser'
+    };
+
+
+    Contest.insertUser(cid, random_password , insertObj, function (err,rows) {
+
+        if(err){
+            if( typeof rows === 'string' && rows === 'username already taken by someone' )
+                req.flash('err', rows);
+            else
+                return next(new Error(err));
+        }
+        else {
+            req.flash('success', 'user successfully added');
+        }
+
+        res.redirect('/contest/edit/' + cid);
+    });
+});
+
+
+/**
+ *
+ */
+router.post('/edit/removeuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+
+    var cid = req.params.cid;
+    var isJson = req.headers['content-type'] === 'application/json';
+
+    Contest.removeUser(cid, req.body, function (err, rows) {
+
+        if(err){
+            if( isJson ){
+                req.flash('err', 'error while processing request');
+                res.send(JSON.stringify('error'));
+                res.end();
+                return;
+            }
+            return next(new Error(err));
+        }
+
+
+        if( !isJson ){
+            req.flash('success', 'user successfully removed');
+            res.redirect('/contest/edit/' + cid);
+            return;
+        }
+
+        req.flash('success', 'users successfully removed');
+        res.send(JSON.stringify('success'));
+        res.end();
+    });
+});
+
+
+
+
+
+
+
+router.get('/edit/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
 
     async.waterfall([
         function(callback) {
             Contest.getDetails(req.params.cid,function(err,rows){
                 if(err){ return callback(err); }
+
+                if( !rows || rows.length === 0 ) return callback('404');
 
                 callback(null,rows);
             });
@@ -138,14 +351,36 @@ router.get('/edit/:cid',isLoggedIn(true) , roles.is('admin'), function(req, res,
 
                 callback(null,details,rows);
             });
+        },
+        function (details,problems,callback) {
+            if( details[0].privacy !== 0 ) return callback(null,details,problems,[]); //if not private contest
+
+            var cur_page = req.query.page;
+
+            if( _.isUndefined(cur_page) || parseInt(cur_page) < 1 )
+                cur_page = 1;
+            else
+                cur_page = parseInt(cur_page);
+
+            var URL = url.parse(req.originalUrl).pathname;
+            var LIMIT = 50;
+            Contest.getParticipants(req.params.cid,cur_page,URL, LIMIT, function (err,rows,pagination) {
+                if( err ) return callback(err);
+
+                callback(null,details,problems,rows,pagination);
+            });
         }
-    ], function (error,details,problems) {
+    ], function (error,details,problems, participants , pagination) {
 
-        if( error ){ return next(new Error(error)); }
+        if( error ) return next(new Error(error));
 
-        console.log(details[0]);
 
+        console.log(details);
+        console.log('problems:');
         console.log(problems);
+        console.log('participants:');
+        console.log(participants);
+
 
         var detail = details[0];
         detail['beginDate'] = moment(detail.begin).format('YYYY-MM-DD');
@@ -160,11 +395,11 @@ router.get('/edit/:cid',isLoggedIn(true) , roles.is('admin'), function(req, res,
             errors: req.flash('err'),
             success: req.flash('success'),
             details: detail,
-            problems: problems
+            problems: problems,
+            participants: participants,
+            pagination: _.isUndefined(pagination) ? {} : pagination
         });
-
     });
-
 });
 
 
@@ -358,13 +593,12 @@ router.get('/edit/:cid/publish',isLoggedIn(true) , roles.is('admin'), function(r
     var cid = req.params.cid;
 
     Contest.update({'status': 2}, cid, function(err,rows){
-        if( err ){ return next(new Error(err)); }
+        if( err ) return next(new Error(err));
 
 
         console.log('published!');
         res.redirect('/contest/edit');
     });
-
 });
 
 
@@ -903,7 +1137,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
             Contest.isRegistered(cid,user.id,function(err,rows){
                 if(err) return callback(err);
 
-                 callback(null,details, (rows.length > 0) );
+                callback(null,details, (rows.length > 0) );
             });
         },
         function(details,registered,callback) {

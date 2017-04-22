@@ -1,9 +1,10 @@
-# user status for problems in problems page
+# set problem status to incomplete when remove all test cases
+# add test cases in datatbase insted of file system
+# delete contest
 # compare result program
 # admin panel
 # proper next() error handling
 # implement error page
-# Past Contests
 # Contest hosting
 # User profile
 # Ranks

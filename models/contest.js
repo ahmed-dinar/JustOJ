@@ -7,6 +7,186 @@ var DB          = require('../config/database/knex/DB');
 var Query       = require('../config/database/knex/query');
 var Paginate    = require('../helpers/paginate');
 var MyUtil      = require('../helpers/myutil');
+var bcrypt      = require('bcryptjs');
+var shortid     = require('shortid');
+var Hashids     = require('hashids');
+
+var User        = require('./user');
+
+/**
+ *
+ * @param cid
+ * @param indx
+ * @param cb
+ */
+exports.generateUser = function (cid,indx, cb) {
+
+    var password = shortid.generate();
+    async.waterfall([
+        function(callback) {
+            bcrypt.genSalt(10, function (err, salt) {
+                if (err) return callback('salt error');
+
+                callback(null, salt);
+            });
+        },
+        function(salt,callback) {
+            bcrypt.hash(password, salt, function (err, hash) {
+                if (err) return callback('hash error');
+
+                callback(null, hash);
+            });
+        },
+        function(hash,callback) {
+
+            var sql = Query.insert({
+                username: password,   // we will change it
+                name: 'randomUser_' + cid + '_' + indx,
+                institute: '',
+                password: hash,
+                email   : password,  //we need password for download
+                role    : 'randuser'
+            })
+                .into('users');
+
+            DB.execute(sql.toString(), callback);
+        },
+        function(rows, callback) {
+
+            var hashids = new Hashids('randomuser' , 15);
+            var username = hashids.encode(rows.insertId);
+            console.log('user inserted id: ' + rows.insertId + ' and username: ' + username + ' and password: ' + password);
+
+            var sql = Query('users').update({ username: username }).where({ 'id': rows.insertId });
+            DB.execute(sql.toString(), function (err,row2) {
+                if(err) return callback(err);
+
+                callback(null,rows.insertId);
+            });
+        },
+        function (uid ,callback) {
+            var sql = Query.insert({ cid: cid, uid: uid }).into('contest_participants');
+
+            DB.execute(sql.toString(), callback);
+        }
+    ], cb);
+};
+
+
+/**
+ *
+ * @param cid
+ * @param random_password
+ * @param insertObj
+ * @param cb
+ */
+exports.insertUser = function (cid, random_password, insertObj, cb) {
+
+    async.waterfall([
+        function (callback) {
+            findById(cid,function (err,rows) {
+                if(err) return callback(err);
+
+                if(!rows || rows.length === 0) return callback('404');
+
+                callback();
+            });
+        },
+        function (callback) {
+            User.available(insertObj.username, null,function(err,rows){
+                if(err) return callback(err);
+
+                if( rows.length ) return callback('username not available' , 'username already taken by someone');
+
+                callback();
+            });
+        },
+        function(callback) {
+            bcrypt.genSalt(10, function (err, salt) {
+                if (err) return callback('salt error');
+
+                callback(null, salt);
+            });
+        },
+        function(salt,callback) {
+
+            if(random_password)
+                 insertObj.password = shortid.generate();
+
+            insertObj.email = insertObj.password;
+
+            bcrypt.hash(insertObj.password, salt, function (err, hash) {
+                if (err) return callback('hash error');
+
+                callback(null, hash);
+            });
+        },
+        function(hash,callback) {
+            insertObj.password = hash;
+            var sql = Query.insert(insertObj).into('users');
+            DB.execute(sql.toString(), callback);
+        },
+        function (urow ,callback) {
+            var sql = Query.insert({ cid: cid, uid: urow.insertId }).into('contest_participants');
+            DB.execute(sql.toString(), callback);
+        }
+    ], cb);
+};
+
+
+/**
+ *
+ * @param cid
+ * @param uid
+ * @param insertObj
+ * @param cb
+ */
+exports.editUser = function (cid, uid, insertObj, cb) {
+
+    async.waterfall([
+        function (callback) {
+            findById(cid,function (err,rows) {
+                if(err) return callback(err);
+
+                if(!rows || rows.length === 0) return callback('404','404');
+
+                callback();
+            });
+        },
+        function (callback) {
+            User.available(insertObj.username, null,function(err,rows){
+                if(err) return callback(err);
+
+                if( rows.length ) return callback('username not available' , 'username already taken');
+
+                callback();
+            });
+        },
+        function(callback) {
+            bcrypt.genSalt(10, function (err, salt) {
+                if (err) return callback('salt error');
+
+                callback(null, salt);
+            });
+        },
+        function(salt,callback) {
+
+            insertObj.email = insertObj.password;
+            bcrypt.hash(insertObj.password, salt, function (err, hash) {
+                if (err) return callback('hash error');
+
+                callback(null, hash);
+            });
+        },
+        function(hash,callback) {
+            insertObj.password = hash;
+
+            var sql = Query('users').update(insertObj).where({ 'id': uid });
+            DB.execute(sql.toString(), callback);
+        }
+    ], cb);
+};
+
 
 
 /**
@@ -14,12 +194,13 @@ var MyUtil      = require('../helpers/myutil');
  * @param cid
  * @param cb
  */
-exports.findById = function(cid,cb){
+ function findById(cid,cb){
     var sql = Query
                 .select(['id']).from('contest').where({ 'id': cid }).limit(1);
 
     DB.execute( sql.toString(), cb);
-};
+}
+exports.findById = findById;
 
 
 
@@ -48,6 +229,158 @@ exports.getPublic = function(cb){
         },
         function(running,future,callback){
             getEnded(running,future,callback);
+        }
+    ], cb);
+};
+
+
+/**
+ *
+ * @param cur_page
+ * @param URL
+ * @param cb
+ */
+exports.getPastContests = function (cur_page,URL,cb) {
+
+    var sql = Query.select(['cnts.*'])
+        .count('usr.id as users')
+        .from('contest as cnts')
+        .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
+        .where(
+            Query.raw('`status` = 2 AND `end` <= NOW()')
+        )
+        .groupBy('cnts.id')
+        .orderBy('cnts.begin','desc');
+
+
+    var sqlCount = Query.count('* as count')
+        .from('contest')
+        .where(
+            Query.raw('`status` = 2 AND `end` <= NOW()')
+        );
+
+    Paginate.paginate({
+        cur_page: cur_page,
+        sql: sql,
+        limit: 20,
+        sqlCount: sqlCount,
+        url: URL
+    }, cb);
+};
+
+
+/**
+ *  get Participants list of a contest
+ * @param cid
+ * @param cur_page
+ * @param URL
+ * @param LIMIT
+ * @param cb
+ */
+exports.getParticipants = function (cid,cur_page,URL,LIMIT,cb) {
+
+    var sql = Query.select(['cp.*','usr.username','usr.email as password','usr.name','usr.institute'])
+        .from('contest_participants as cp')
+        .leftJoin('users as usr', 'cp.uid', 'usr.id')
+        .where('cp.cid', cid)
+        .orderBy('usr.username','desc');
+
+    var sqlCount = Query.count('* as count')
+        .from('contest_participants')
+        .where('cid', cid);
+
+    if( LIMIT < 50 || LIMIT > 200 )
+        LIMIT = 100;
+
+    Paginate.paginate({
+        cur_page: cur_page,
+        sql: sql,
+        limit: LIMIT,
+        sqlCount: sqlCount,
+        url: URL
+    }, cb);
+};
+
+
+/**
+ *
+ * @param cid
+ * @param userid
+ * @param cb
+ */
+exports.removeUser = function (cid, userid, cb) {
+
+    var isMulti = _.isArray(userid);
+    async.waterfall([
+        function (callback) {
+            findById(cid,function (err,rows) {
+                if(err) return callback(err);
+
+                if(!rows || rows.length === 0) return callback('404');
+
+                callback();
+            });
+        },
+        function(callback) {
+
+            var sql;
+
+            if(  isMulti ){
+                sql = Query('contest_participants')
+                    .whereIn('uid', userid)
+                    .andWhere('cid',cid)
+                    .del();
+            }else {
+                sql = Query('contest_participants').where(
+                    Query.raw('cid = ? AND uid = ?', [cid, userid.userid])
+                ).del();
+            }
+
+            DB.execute(sql.toString(), callback);
+        },
+        function (urow,callback) {
+
+            var sql;
+
+            if(  isMulti )
+                sql = Query('users').whereIn('id',userid).del();
+            else
+                sql = Query('users').where('id',userid.userid).del();
+
+            DB.execute(sql.toString(), callback);
+        }
+    ], cb);
+};
+
+
+/**
+ *
+ * @param cid
+ * @param cb
+ */
+exports.removealluser = function (cid, cb) {
+
+    async.waterfall([
+        function (callback) {
+            findById(cid,function (err,rows) {
+                if(err) return callback(err);
+
+                if(!rows || rows.length === 0) return callback('404');
+
+                callback();
+            });
+        },
+        function(callback) {
+            var sql = Query('users').where(
+                Query.raw('`id` IN ( SELECT `uid` FROM `contest_participants` WHERE `cid` = ? )' , [cid])
+            ).del();
+            DB.execute(sql.toString(), callback);
+        },
+        function (urow,callback) {
+            var sql = Query('contest_participants').where(
+                Query.raw('cid = ?',[cid])
+            ).del();
+            DB.execute(sql.toString(), callback);
         }
     ], cb);
 };
@@ -142,6 +475,9 @@ exports.getEditable = function(cb){
 
     DB.execute(sql.toString(),cb);
 };
+
+
+
 
 
 /**
@@ -890,7 +1226,7 @@ exports.getClarifications = function(cid,uid,qid,cur_page,url,cb){
         .from('contest_clarifications')
         .where('cid',cid);
 
-    Paginate.paginate({
+        Paginate.paginate({
             cur_page: cur_page,
             sql: sql,
             limit: 20,

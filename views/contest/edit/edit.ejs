@@ -13,8 +13,16 @@
 
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.js"></script>
 
+    <!-- dataTables -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+
+
 </head>
 <body>
+
+
 
 
 <!-- header and menu -->
@@ -61,11 +69,17 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Detail</a></li>
                     <li role="presentation"><a href="#problems" aria-controls="problems" role="tab" data-toggle="tab">Problems</a></li>
+
+                    <% if(details.privacy === 0){ %>
+                    <li role="presentation"><a href="#participants" aria-controls="participants" role="tab" data-toggle="tab">Participants</a></li>
+                    <% } %>
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
 
+
+                    <!--  HOME TAB -->
                     <div role="tabpanel" class="tab-pane active" id="home">
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -143,6 +157,8 @@
                         </div>
                     </div>
 
+
+                    <!-- Problems TAB  -->
                     <div role="tabpanel" class="tab-pane" id="problems">
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -154,7 +170,7 @@
 
                                 <% if(problems.length){ %>
                                     <br/>
-                                    <table class="table">
+                                    <table class="table table-responsive">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -197,38 +213,350 @@
                         </div>
                     </div>
 
+
+                    <!-- Problems TAB  -->
+                    <%  if(details.privacy === 0){  %>
+                    <div role="tabpanel" class="tab-pane" id="participants">
+                        <div class="panel panel-default">
+
+                            <div class="panel-heading">
+                                <h4>Participants List</h4>
+                            </div>
+
+                            <div class="panel-heading">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".generate-user-modal">
+                                    Generate Random User
+                                </button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-user-modal">
+                                    Insert User
+                                </button>
+
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-danger" id="remAllBtn" data-toggle="modal" data-target=".confirm-remove-modal">
+                                        Remove All Users
+                                    </button>
+
+                                    <button type="button" class="btn btn-danger" id="deleteSelectedUserBtn">
+                                        Remove Selected Users
+                                    </button>
+                                </div>
+
+                            </div>
+
+
+
+
+                            <!--  user list table -->
+                            <div class="panel-body">
+                                <table class="table table-responsive"  id="user_data_table">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Username</th>
+                                        <th>Password</th>
+                                        <th>Institute</th>
+                                        <th>Edit</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% for(var i=0; i<participants.length; i++){ %>
+                                    <tr>
+                                        <td><%= pagination.offset() + i + 1 %></td>
+                                        <td title="<%= participants[i].name %>"><%= participants[i].name %></td>
+                                        <td title="<%= participants[i].username %>"><%= participants[i].username %></td>
+                                        <td title="<%= participants[i].password %>"><%= participants[i].password %></td>
+                                        <td title="<%= participants[i].institute %>"><%= participants[i].institute %></td>
+                                        <td><button type="button" class="button btn-sm btn-primary edit-user-btn">Edit</button></td>
+                                        <td><button type="button" userid="<%= participants[i].uid %>" class="button btn-sm btn-danger remove-user-btn">Remove</button></td>
+                                    </tr>
+                                    <% } %>
+                                    </tbody>
+                                </table>
+                                <% include ../../templates/pagination.ejs %>
+                            </div>
+
+
+    <!---------------------------------------------------  MODALS   -->
+     <!-- ################################################### -->
+
+                            <!-- user generation form -->
+                            <div class="modal fade generate-user-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Generate Random User</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <form method="post" action="/contest/edit/generateuser/<%= cid %>">
+                                                <div class="form-group">
+                                                    <label for="iquan" class="control-label">Number of users to generate</label>
+                                                    <input id="iquan" type="number" name="quantity" class="form-control" min="1" max="100" required />
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="submit" class="btn btn-primary form-control" value="Generate" />
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- user add form -->
+                            <div class="modal fade add-user-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Insert User</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" action="/contest/edit/insertuser/<%= cid %>">
+                                                <div class="form-group">
+                                                    <label for="iUsername" class="control-label">Username</label>
+                                                    <input id="iUsername" type="username" name="username" class="form-control" required />
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="big-checkbox">
+                                                        <input type="checkbox" id="randPass" name="random_password" />
+                                                        <label>Random Password</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" id="passInput">
+                                                    <label for="iPassword" class="control-label">Password</label>
+                                                    <input id="iPassword" type="password" name="password" class="form-control" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="iFullname" class="control-label">Full name</label>
+                                                    <input id="iFullname" type="text" name="name" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="iiInst" class="control-label">School/University</label>
+                                                    <input id="iiInst" type="text" name="institute" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="submit" class="btn btn-primary form-control" value="INSERT" />
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- user edit form -->
+                            <div class="modal fade edit-user-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Edit User</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" action="#" id="editUsrForm" >
+                                                <div class="form-group">
+                                                    <label for="iFullname" class="control-label">Name</label>
+                                                    <input id="iFullname" type="text" name="name" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="iUsername" class="control-label">Username</label>
+                                                    <input id="iUsername" type="username" name="username" class="form-control" required />
+                                                </div>
+                                                <div class="form-group" id="passInput">
+                                                    <label for="iPassword" class="control-label">Password</label>
+                                                    <input id="iPassword" type="text" name="password" class="form-control" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="iiInst" class="control-label">School/University</label>
+                                                    <input id="iiInst" type="text" name="institute" class="form-control" />
+                                                    <input type="hidden" name="userid" value=""  />
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="submit" class="btn btn-primary form-control" value="SUBMIT" />
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="modal fade confirm-remove-modal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4>Remove all user Submit</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4>You want to remove all users resistered for this contest?</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">BACK</button>
+                                            <a href="#" class="btn btn-primary confirmRemoveAllBtn">CONFIRM</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4></h4>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div id="omg" ></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <!-- ############### END MODALS #################################### -->
+
+
+
+                        </div>
+                    </div>
+                    <% } %>
+
+
+
                 </div>
-
             </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4></h4>
-            </div>
-
-            <div class="modal-body">
-                <div id="omg" ></div>
-            </div>
-
-
         </div>
     </div>
 </div>
+
+
+
+
 
 <script type="text/javascript">
 
     jQuery(document).ready(function(){
+
+        var table = $('#user_data_table').DataTable({
+            paging: false,
+            ordering:  false,
+            select: true
+        });
+
+        $('#user_data_table_info').parent().parent().hide();
+        $('#deleteSelectedUserBtn').hide();
+
+        $('#user_data_table tbody').on( 'click', 'tr', function () {
+            $(this).toggleClass('tr-selected');
+
+            if( table.rows('.tr-selected').data().length  === 0 ){
+                $('#deleteSelectedUserBtn').hide();
+                $('#remAllBtn').show();
+            }
+            else if( !$('#deleteSelectedUserBtn').is(":visible")  ){
+                $('#deleteSelectedUserBtn').show();
+                $('#remAllBtn').hide();
+            }
+        });
+
+
+        //edit user
+        $('#editUsrForm').on('submit', function(e){
+            e.preventDefault();
+
+            var sr = $('#editUsrForm').serialize();
+            var sj = JSON.stringify(sr);
+            console.log(sr);
+            console.log(sj);
+
+            $.ajax({
+                url: '/contest/edit/edituser/<%= cid %>',
+                type: "POST",
+                data: $('#editUsrForm').serialize(),
+                complete: function(){
+
+                },
+                success: function(data) {
+                    alert(data);
+                    location.reload(true);
+                },
+                error: function(xhr, status, error) {
+                    alert('error');
+                }
+            });
+        });
+
+
+
+        //delet slected row users
+        $('#deleteSelectedUserBtn').click( function () {
+
+            var data = table
+                .rows('.tr-selected')
+                .data();
+
+            if( data.length === 0 ) return;
+
+            var userdata = $.map($(data), function( value , index ) {
+                var userid = $(value[6]).attr('userid');
+                return userid;
+            });
+
+            $.ajax({
+                url: '/contest/edit/removeuser/<%= cid %>',
+                type: "POST",
+                data: JSON.stringify(userdata),
+                contentType : "application/json",
+                dataType: "json",
+                complete: function(){
+
+                },
+                success: function(data) {
+                    location.reload(true);
+                },
+                error: function(xhr, status, error) {
+                    alert('error');
+                }
+            });
+        });
+
+
+        //random passord option for insert user form
+        var checkRandomPass = $('#randPass');
+        var passInputBlock = $('#passInput');
+        passInputBlock.show();
+        checkRandomPass.on('click', function () {
+            if($(this).is(':checked')) {
+                passInputBlock.hide();
+                passInputBlock.find('input').attr('required', false);
+
+            } else {
+                passInputBlock.show();
+                passInputBlock.find('input').attr('required', true);
+            }
+        });
+
 
         var validator = $("#ccFrom").validate({
             showErrors: function(errorMap, errorList) {
@@ -249,6 +577,48 @@
                     $element.tooltip("show");
                 });
             }
+        });
+
+
+        //remove a single user
+        $(document).on('click', '.remove-user-btn', function () {
+                var uid = $(this).attr('userid');
+                deleteUser(uid);
+        });
+
+
+        //remove all user
+        $(document).on('click', '.confirmRemoveAllBtn', function () {
+            var form = document.createElement("form");
+            var element = document.createElement("input");
+
+            form.method = "POST";
+            form.action = "/contest/edit/removealluser";
+
+            element.value = '<%= cid %>';
+            element.name = "cid";
+            form.appendChild(element);
+            document.body.appendChild(form);
+            form.submit();
+        });
+
+
+        //edit user
+        $(document).on('click', '.edit-user-btn', function () {
+
+            var selRow = $(this).closest('tr');
+            if( $(selRow).hasClass('tr-selected') ){
+                $(selRow).toggleClass('tr-selected');
+            }
+            var cols = $(selRow).find('td');
+
+
+            $('.edit-user-modal').find("input[name='name']").val( $(cols[1]).html() );
+            $('.edit-user-modal').find("input[name='username']").val( $(cols[2]).html() );
+            $('.edit-user-modal').find("input[name='password']").val( $(cols[3]).html() );
+            $('.edit-user-modal').find("input[name='institute']").val( $(cols[4]).html() );
+            $('.edit-user-modal').find("input[type='hidden']").val( $(cols[6]).find('.remove-user-btn').attr('userid') );
+            $('.edit-user-modal').modal('show');
         });
 
 
@@ -290,6 +660,23 @@
 
 
     });
+
+    /* delet a user from table */
+    function deleteUser(uid) {
+        var form = document.createElement("form");
+        var element = document.createElement("input");
+
+        form.method = "POST";
+        form.action = "/contest/edit/removeuser/<%= cid %>";
+
+        element.value = uid;
+        element.name = "userid";
+        form.appendChild(element);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+
 
     function getProblem(data){
         var htmls = '<div class="preview">';

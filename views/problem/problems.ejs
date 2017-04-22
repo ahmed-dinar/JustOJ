@@ -18,9 +18,9 @@
 <div class="content container c-h">
 
     <div class="row">
-            <div class="col-md-10 nopadding">
-        <div class="panel panel-default">
-            <div class="panel-heading">PROBLEMS</div>
+        <div class="col-md-9 nopadding">
+            <div class="panel panel-default">
+                <div class="panel-heading">PROBLEMS</div>
 
 
                 <!-- problem list -->
@@ -41,16 +41,16 @@
                     <tr >
 
 
-                            <% if(isLoggedIn){ %>
-                                <% if( problems[i].youSolved ){ %>
-                                    <td class="color-success" title="solved by you"><i class="fa fa-check" aria-hidden="true"></i>
-                                <% }else if( problems[i].youTried ){ %>
-                                     <td class="color-failed" title="tried by you"><i class="fa fa-times" aria-hidden="true"></i>
-                                <% }else{ %>
-                                        <td>
-                                <% } %>
+                        <% if(isLoggedIn){ %>
+                        <% if( problems[i].youSolved ){ %>
+                        <td class="color-success" title="solved by you"><i class="fa fa-check" aria-hidden="true"></i>
+                            <% }else if( problems[i].youTried ){ %>
+                        <td class="color-failed" title="tried by you"><i class="fa fa-times" aria-hidden="true"></i>
                             <% }else{ %>
-                                         <td>
+                        <td>
+                            <% } %>
+                            <% }else{ %>
+                        <td>
                             <% } %>
                         </td>
 
@@ -95,7 +95,7 @@
 
 
 
-            <!--    <hr class="last-border">  -->
+                <!--    <hr class="last-border">  -->
 
 
                 <% include ../templates/pagination.ejs %>
@@ -104,8 +104,20 @@
 
             </div>
         </div>
+
+
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Contribute Problem</h3>
+                    <p>Want to contribute problems?</p>
+                    <a href="#" class="btn btn-sm btn-primary">Click Here!</a>
+                </div>
+            </div>
+        </div>
+
     </div>
-    </div>
+</div>
 
 </div>
 
