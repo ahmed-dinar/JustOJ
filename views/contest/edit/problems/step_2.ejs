@@ -93,7 +93,7 @@
 
 
                 <div class="well well-sm">
-                    <form method="post" action="/contest/edit/<%= cid %>/problems/<%= pid %>/step2" name="cases" id="cases" enctype="multipart/form-data" >
+                    <form method="post" action="/contests/edit/<%= cid %>/problems/<%= pid %>/step2" name="cases" id="cases" enctype="multipart/form-data" >
                         <table class="table">
                             <thead>
                             <tr>
@@ -132,7 +132,7 @@
 
 
     <div class="col-md-6" style="margin-bottom: 30px;">
-        <a href="/contest/edit/<%= cid %>/problems/<%= pid %>/step3" style="color: #FFFFFF;"><button  class="btn btn-primary"> Save And Continue</button></a>
+        <a href="/contests/edit/<%= cid %>/problems/<%= pid %>/step3" style="color: #FFFFFF;"><button  class="btn btn-primary"> Save And Continue</button></a>
     </div>
 
     <script type="text/javascript">
@@ -166,7 +166,7 @@
             var element2 = document.createElement("input");
 
             form.method = "POST";
-            form.action = "/contest/edit/" + cCid + "/problems/rtc";
+            form.action = "/contests/edit/" + cCid + "/problems/rtc";
 
             element1.value = cPid;
             element1.name = "pid";

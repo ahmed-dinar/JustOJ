@@ -22,8 +22,8 @@
     </div>
     <div class="pull-right">
         <div class="btn-group-sm" role="group" >
-            <a href="/contest/<%= contest.id %>/submissions" class="btn btn-sm btn-default">ALL</a>
-            <a href="/contest/<%= contest.id %>/submissions/my" class="btn btn-sm btn-default <%= active_contest_nav === 'submissions' ? '' : 'disabled' %>">MY</a>
+            <a href="/contests/<%= contest.id %>/submissions" class="btn btn-sm btn-default">ALL</a>
+            <a href="/contests/<%= contest.id %>/submissions/my" class="btn btn-sm btn-default <%= active_contest_nav === 'submissions' ? '' : 'disabled' %>">MY</a>
         </div>
     </div>
 </div>
@@ -45,12 +45,12 @@
     <% for(var i=0; i<status.length; i++){ %>
     <tr>
         <td style="padding-left: 15px;">
-            <a href="/contest/<%= contest.id %>/submissions/<%= status[i].id %>" >
+            <a href="/contests/<%= contest.id %>/submissions/<%= status[i].id %>" >
                 <%= status[i].id %>
             </a>
         </td>
         <td class="ellips" style="max-width: 100px;">
-            <a href="/contest/<%= contest.id %>/problem/<%= status[i].pid %>" title="<%- status[i].title %>">
+            <a href="/contests/<%= contest.id %>/problem/<%= status[i].pid %>" title="<%- status[i].title %>">
                 <%- status[i].title %>
             </a>
         </td>

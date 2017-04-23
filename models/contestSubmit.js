@@ -61,7 +61,7 @@ exports.submit = function(req, res, next){
                 if( error.formError === '404' ) return next(new Error('404'));
 
                 req.flash('formError',error.formError);
-                res.redirect('/contest/' + contestId + '/problem/' + problemId);
+                res.redirect('/contests/' + contestId + '/problem/' + problemId);
                 return;
             }
 
@@ -69,7 +69,7 @@ exports.submit = function(req, res, next){
                return insertSubmissionIntoDb('8',opts,function (err) {
                     if( err ) return next(new Error(err));
 
-                    res.redirect('/contest/' + contestId + '/problem/' + problemId);
+                    res.redirect('/contests/' + contestId + '/problem/' + problemId);
                 });
             }
 
@@ -77,7 +77,7 @@ exports.submit = function(req, res, next){
         }
 
         console.log('Submit Successfull'.green);
-        res.redirect('/contest/' + contestId + '/submissions/my');
+        res.redirect('/contests/' + contestId + '/submissions/u/my');
 
         //run code against test cases in sandbox
         Judge.run(opts,function(err,runs){

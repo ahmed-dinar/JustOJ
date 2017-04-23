@@ -9,7 +9,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href="/"  class="navbar-brand"  >
-                    JUST &nbsp;ONLINE JUDGE
+                    JOJ <sup><i class="fa fa-terminal" aria-hidden="true"></i></sup>
                 </a>
             </div>
 
@@ -48,10 +48,11 @@
         <div class="row">
             <div class="collapse navbar-collapse Navbar-main transparent" style="padding-left: 0;">
                 <ul class="nav navbar-nav" style="margin-left: 0px;">
+                    <li class="<%= active_nav === "" ? 'active' : '' %>"><a href="/"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
                     <li class="<%= active_nav === "problems" ? 'active' : '' %>" ><a href="/problems" style="padding-left: 3px;"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Problems</a></li>
                     <li class="<%= active_nav === "ranks" ? 'active' : '' %>"><a href="/ranks"><i class="fa fa-trophy" aria-hidden="true"></i> Ranks</a></li>
                     <li class="<%= active_nav === "status" ? 'active' : '' %>"><a href="/status"><i class="fa fa-dot-circle-o" aria-hidden="true"></i> Status</a></li>
-                    <li class="<%= active_nav === "contest" ? 'active' : '' %>"><a href="/contest"><i class="fa fa-hourglass" aria-hidden="true"></i> Contest</a></li>
+                    <li class="<%= active_nav === "contest" ? 'active' : '' %>"><a href="/contests"><i class="fa fa-hourglass" aria-hidden="true"></i> Contests</a></li>
                 </ul>
             </div>
         </div>

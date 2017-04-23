@@ -53,16 +53,16 @@
                                         <% if(contests[i].status === 0){ %>
                                             <span class="label label-danger">Incomplete</span>
                                         <% }else if(contests[i].status === 1){ %>
-                                            <a class="btn btn-xs btn-primary" href="/contest/edit/<%= contests[i].id %>/publish">PUBLISH</a>
+                                            <a class="btn btn-xs btn-primary" href="/contests/edit/<%= contests[i].id %>/publish">PUBLISH</a>
                                         <% }else{ %>
                                             <span class="label label-success">PUBLIC</span>
                                         <% } %>
                                     </td>
-                                    <td class="col-sm-1"><a class="btn btn-xs btn-primary" href="/contest/edit/<%= contests[i].id %>">EDIT</a></td>
+                                    <td class="col-sm-1"><a class="btn btn-xs btn-primary" href="/contests/edit/<%= contests[i].id %>">EDIT</a></td>
 
 
 
-                                    <form method="post" id="del-contest-form" action="/contest/delete" name="delcform" >
+                                    <form method="post" id="del-contest-form" action="/contests/delete" name="delcform" >
                                         <input type="hidden" name="cid" value="" id="cidField" />
                                     </form>
 

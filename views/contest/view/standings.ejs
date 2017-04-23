@@ -33,7 +33,7 @@
 
                 <% for(var i=0; i<problemStats.length; i++){ %>
                 <th class="text-center standings-cell fixed-cell ellips" title="<%- problemStats[i].title %> [ <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %> ]">
-                    <a href="/contest/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a>
+                    <a href="/contests/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a>
                 </th>
                 <% }
                 for(var i=problemStats.length; i<colspan; i++){ %>
@@ -82,7 +82,7 @@
 
                                     <% if(up[problemStats[j].pid].status === 0){ %>
 
-                                        <a class="label label-success show-runs" href="#" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contest/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
+                                        <a class="label label-success show-runs" href="#" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
                                             <p>( <%= up[problemStats[j].pid].tried %> )</p>
                                             <p class="penalty-label" time-penalty="<%= up[problemStats[j].pid].penalty_time  %>">
                                                 <span>
@@ -94,7 +94,7 @@
                                     <% }else{ %>
 
 
-                                        <a class="label label-danger show-runs" href="#" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contest/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
+                                        <a class="label label-danger show-runs" href="#" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
                                             <p>( <%= up[problemStats[j].pid].tried %> )</p>
                                             <p>-</p>
                                         </a>
@@ -135,7 +135,7 @@
 
                     <% if( pagination.hasPrevPage() ){ %>
                     <li>
-                        <a href="/contest/<%= contest.id %>/standings?page=<%= pagination.prevPage() %>" aria-label="Previous">
+                        <a href="/contests/<%= contest.id %>/standings?page=<%= pagination.prevPage() %>" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
@@ -150,7 +150,7 @@
                     <li>
                         <% } %>
 
-                        <a href="/contest/<%= contest.id %>/standings?page=<%= i+1 %>">
+                        <a href="/contests/<%= contest.id %>/standings?page=<%= i+1 %>">
                             <%= i+1 %>
                         </a>
                     </li>
@@ -158,7 +158,7 @@
 
                     <% if( pagination.hasNextPage() ){ %>
                     <li>
-                        <a href="/contest/<%= contest.id %>/standings?page=<%= pagination.nextPage() %>" aria-label="Next">
+                        <a href="/contests/<%= contest.id %>/standings?page=<%= pagination.nextPage() %>" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -255,7 +255,7 @@
              for(var i=0; i<status.length; i++){
                  ret += '<tr>';
                  ret += '<td style="padding-left: 15px;">' ;
-                 ret +='<a href="/contest/'+ status[i].cid +'/submissions/'+status[i].id+ '">';
+                 ret +='<a href="/contests/'+ status[i].cid +'/submissions/'+status[i].id+ '">';
                  ret += status[i].id;
                  ret +='</a></td>';
                  ret +='<td title="'+ status[i].submittime +'" class="ellips" style="max-width: 100px;">';

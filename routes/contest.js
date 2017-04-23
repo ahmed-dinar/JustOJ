@@ -141,7 +141,7 @@ router.post('/delete', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, r
 
         console.log('contest deleted');
         req.flash('success','contest successfully removed');
-        res.redirect('/contest/edit');
+        res.redirect('/contests/edit');
     });
 });
 
@@ -188,7 +188,7 @@ router.post('/edit/removealluser',/*isLoggedIn(true) , roles.is('admin'), */func
         if(err) return next(new Error(err));
 
         req.flash('success', 'successfully removed all user');
-        res.redirect('/contest/edit/' + cid);
+        res.redirect('/contests/edit/' + cid);
     });
 });
 
@@ -250,7 +250,7 @@ router.post('/edit/generateuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */
 
     if( quantity< 0 || quantity > 100 ){
         req.flash('error', 'quantity of number of user to generate must be between 1 and 100');
-        res.redirect('/contest/edit/' + cid);
+        res.redirect('/contests/edit/' + cid);
         return;
     }
 
@@ -277,7 +277,7 @@ router.post('/edit/generateuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */
         }
 
         req.flash('success', 'successfully added ' + quantity + ' users');
-        res.redirect('/contest/edit/' + cid);
+        res.redirect('/contests/edit/' + cid);
     });
 });
 
@@ -317,7 +317,7 @@ router.post('/edit/insertuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */fu
             req.flash('success', 'user successfully added');
         }
 
-        res.redirect('/contest/edit/' + cid);
+        res.redirect('/contests/edit/' + cid);
     });
 });
 
@@ -345,7 +345,7 @@ router.post('/edit/removeuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */fu
 
         if( !isJson ){
             req.flash('success', 'user successfully removed');
-            res.redirect('/contest/edit/' + cid);
+            res.redirect('/contests/edit/' + cid);
             return;
         }
 
@@ -596,7 +596,7 @@ router.get('/edit/:cid/problems/:pid/step3',isLoggedIn(true) , roles.is('admin')
 
         if (noTest){
             req.flash('noTestCase', 'Please add at least one test case');
-            return res.redirect('/contest/edit/' + req.params.cid + '/problems/'+ req.params.pid +'/step2');
+            return res.redirect('/contests/edit/' + req.params.cid + '/problems/'+ req.params.pid +'/step2');
         }
 
         res.render('contest/edit/problems/step_3', {
@@ -625,7 +625,7 @@ router.get('/edit/:cid/publish',isLoggedIn(true) , roles.is('admin'), function(r
 
 
         console.log('published!');
-        res.redirect('/contest/edit');
+        res.redirect('/contests/edit');
     });
 });
 
@@ -754,7 +754,7 @@ router.get('/:cid/clarifications/view/:clid', isLoggedIn(true), function(req, re
 
         if( notStarted ){ // not started
             req.flash('err','Contest not started yet');
-            res.redirect('/contest/' + cid);
+            res.redirect('/contests/' + cid);
             return;
         }
 
@@ -790,13 +790,13 @@ router.get('/:cid/clarifications/request', isLoggedIn(true), function(req, res, 
         var contest = rows[0];
         if( moment().isBefore(contest.begin) ){
             req.flash('err','Contest not started yet');
-            res.redirect('/contest/' + cid);
+            res.redirect('/contests/' + cid);
             return;
         }
 
         if( parseInt(contest.isReg) === -1 ){
             req.flash('err','You are not participating in this contest');
-            res.redirect('/contest/' + cid);
+            res.redirect('/contests/' + cid);
             return;
         }
 
@@ -884,7 +884,7 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
 
         if( notStarted ){ // not started
             req.flash('err','Contest not started yet');
-            res.redirect('/contest/' + cid);
+            res.redirect('/contests/' + cid);
             return;
         }
 
@@ -963,7 +963,7 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
             return next(new Error(error));
 
         if( notStarted )
-            return res.redirect('/contest/' + cid);
+            return res.redirect('/contests/' + cid);
 
         res.render('contest/view/submissions', {
             active_contest_nav: "submissions",
@@ -1017,7 +1017,7 @@ router.get('/:cid/submission',  function(req, res, next) {
 /**
  *  submissions of a contest of current logged in user
  */
-router.get('/:cid/submissions/:username', isLoggedIn(true), function(req, res, next) {
+router.get('/:cid/submissions/u/:username', isLoggedIn(true), function(req, res, next) {
 
     var username = req.params.username;
     var cur_page = req.query.page;
@@ -1067,7 +1067,7 @@ router.get('/:cid/submissions/:username', isLoggedIn(true), function(req, res, n
         if( error ) return next(new Error(error));
 
         if( notStarted )
-            return res.redirect('/contest/' + cid);
+            return res.redirect('/contests/' + cid);
 
         console.log(rows);
 
@@ -1199,7 +1199,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
         console.log(submissions);
 
         if( notStarted )
-            return res.redirect('/contest/' + cid);
+            return res.redirect('/contests/' + cid);
 
         if( moment().isAfter(contest.end)  ){ //ended
 
@@ -1272,7 +1272,7 @@ router.get('/:cid/resister', isLoggedIn(true), function(req, res, next) {
     ], function (error) {
         if( error ) return next(new Error(error));
 
-        res.redirect('/contest/' + cid);
+        res.redirect('/contests/' + cid);
     });
 });
 
@@ -1335,19 +1335,19 @@ router.post('/edit/:cid/problems/:pid/step3', isLoggedIn(true) , roles.is('admin
 
     if( !cpu || !memory || !MyUtil.isNumeric(cpu) || !MyUtil.isNumeric(memory) ){
         req.flash('error', 'invalid or empty limits, please check again');
-        res.redirect('/contest/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
+        res.redirect('/contests/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
         return;
     }
 
     if( parseFloat(cpu) < 0.0 || parseFloat(cpu)>5.0 ){
         req.flash('error', 'cpu limit should not be less than zero or greater than 5s');
-        res.redirect('/contest/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
+        res.redirect('/contests/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
         return;
     }
 
     if( parseInt(memory) < 0.0 || parseInt(memory)>256 ){
         req.flash('error', 'memory limit should not be less than zero or greater than 256mb');
-        res.redirect('/contest/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
+        res.redirect('/contests/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
         return;
     }
 
@@ -1410,10 +1410,10 @@ router.post('/edit/:cid/problems/:pid/step3', isLoggedIn(true) , roles.is('admin
 
         if (noTest){
             req.flash('noTestCase', 'Please add at least one test case');
-            return res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
+            return res.redirect('/contests/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
         }
 
-        res.redirect('/contest/edit/'+ req.params.cid);
+        res.redirect('/contests/edit/'+ req.params.cid);
     });
 });
 
@@ -1429,7 +1429,7 @@ router.post('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin
 
         if( err ) return next(new Error(err));
 
-        res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
+        res.redirect('/contests/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
     });
 });
 
@@ -1486,7 +1486,7 @@ router.post('/edit/:cid/problems/:pid/step2', isLoggedIn(true) , roles.is('admin
                 return clearUpload( saveTo , req, res );
 
             req.flash('tcUpSuccess', 'Test Case added!');
-            res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
+            res.redirect('/contests/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
         });
         req.pipe(busboy);
     });
@@ -1511,7 +1511,7 @@ router.post('/edit/:cid/problems/rtc', isLoggedIn(true) , roles.is('admin'), fun
         }else{
             req.flash('tcRemSuccess', 'Test Case Removed');
         }
-        res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.body.pid +'/step2');
+        res.redirect('/contests/edit/'+ req.params.cid +'/problems/'+ req.body.pid +'/step2');
     });
 });
 
@@ -1548,7 +1548,7 @@ router.post('/edit/:cid/problems/new', isLoggedIn(true) , roles.is('admin'), fun
     ], function (error,pid) {
         if( error ) return next(new Error(error));
 
-        res.redirect('/contest/edit/' + req.params.cid + '/problems/' + pid + '/step2');
+        res.redirect('/contests/edit/' + req.params.cid + '/problems/' + pid + '/step2');
     });
 });
 
@@ -1573,7 +1573,7 @@ router.post('/edit/detail/:cid', isLoggedIn(true) , roles.is('admin'), function(
         // console.log('beginTime: ' + beginTime + ' lenDay: ' + lenDay + ' lenTime: ' + lenTime);
 
         req.flash('err','Invalid or Empty Form');
-        res.redirect('/contest/edit/'+req.params.cid);
+        res.redirect('/contests/edit/'+req.params.cid);
         return;
     }
 
@@ -1597,7 +1597,7 @@ router.post('/edit/detail/:cid', isLoggedIn(true) , roles.is('admin'), function(
             return next(new Error(err));
 
         req.flash('success','Updated!');
-        res.redirect('/contest/edit/' + req.params.cid);
+        res.redirect('/contests/edit/' + req.params.cid);
     });
 });
 
@@ -1621,7 +1621,7 @@ router.post('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, 
         !beginTime.length || !lenDay.length || !lenTime.length){
 
         req.flash('err','invalid or empty data, please check again');
-        res.redirect('/contest/create');
+        res.redirect('/contests/create');
         return;
     }
 
@@ -1644,7 +1644,7 @@ router.post('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, 
     }, function(err,rows){
         if(err) return next(new Error(err));
 
-        res.redirect('/contest/edit/' + rows.insertId);
+        res.redirect('/contests/edit/' + rows.insertId);
     });
 });
 
@@ -1680,7 +1680,7 @@ router.post('/:cid/clarifications/request',isLoggedIn(true) , function(req, res,
 
     if( reqText === '' ){
         req.flash('err','empty request');
-        res.redirect('/contest/' + cid + '/clarifications/request');
+        res.redirect('/contests/' + cid + '/clarifications/request');
         return;
     }
 
@@ -1730,22 +1730,22 @@ router.post('/:cid/clarifications/request',isLoggedIn(true) , function(req, res,
 
         if( contest.isReg === -1 ){
             req.flash('err','You Are Not Participation in This Contest');
-            res.redirect('/contest/' + cid);
+            res.redirect('/contests/' + cid);
             return;
         }
 
         if( notStarted ){
-            res.redirect('/contest/' + cid);
+            res.redirect('/contests/' + cid);
             return;
         }
 
         if( isEnded ){
             req.flash('err','Contest Ended');
-            res.redirect('/contest/' + cid);
+            res.redirect('/contests/' + cid);
             return;
         }
 
-        res.redirect('/contest/' + cid + '/clarifications/all');
+        res.redirect('/contests/' + cid + '/clarifications/all');
     });
 });
 
@@ -1765,7 +1765,7 @@ var clearUpload = function(remDir,req,res){
             console.log('Cleaned uploaded TC');
 
         req.flash('tcUpErr', 'Please Select File');
-        res.redirect('/contest/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
+        res.redirect('/contests/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');
     });
 };
 

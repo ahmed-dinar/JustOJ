@@ -26,7 +26,7 @@
         <div class="panel-heading" style="padding: 15px 20px;"  >
             CLARIFICATIONS
             <div class="pull-right">
-                <a style="margin-top: -4px;" href="/contest/<%= contest.id %>/clarifications/request" class="btn btn-sm btn-primary">REQUEST</a>
+                <a style="margin-top: -4px;" href="/contests/<%= contest.id %>/clarifications/request" class="btn btn-sm btn-primary">REQUEST</a>
             </div>
         </div>
 
@@ -35,28 +35,28 @@
 
     <select class="form-control" id="dropd" style="padding: 10px 12px;  height: 45px;"  >
 
-        <option value="/contest/<%= contest.id %>/clarifications/all">ALL</option>
+        <option value="/contests/<%= contest.id %>/clarifications/all">ALL</option>
 
         <% if(selected==='my'){ %>
-        <option value="/contest/<%= contest.id %>/clarifications/my" selected>MY</option>
-        <option value="/contest/<%= contest.id %>/clarifications/general">GENERAL</option>
+        <option value="/contests/<%= contest.id %>/clarifications/my" selected>MY</option>
+        <option value="/contests/<%= contest.id %>/clarifications/general">GENERAL</option>
         <% }else if(selected==='general'){ %>
-        <option value="/contest/<%= contest.id %>/clarifications/my" >MY</option>
-        <option value="/contest/<%= contest.id %>/clarifications/general" selected>GENERAL</option>
+        <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
+        <option value="/contests/<%= contest.id %>/clarifications/general" selected>GENERAL</option>
         <% }else{ %>
-        <option value="/contest/<%= contest.id %>/clarifications/my" >MY</option>
-        <option value="/contest/<%= contest.id %>/clarifications/general" >GENERAL</option>
+        <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
+        <option value="/contests/<%= contest.id %>/clarifications/general" >GENERAL</option>
         <% } %>
 
 
         <% i=0; _.forEach(problems,function(value, key){ %>
 
         <% if(selected===value.pid){ %>
-        <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
+        <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
             [<%= ch.charAt(i++) %>] <%- value.title %>
         </option>
         <% }else{ %>
-        <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>">
+        <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>">
             [<%= ch.charAt(i++) %>] <%- value.title %>
         </option>
         <% } %>
@@ -72,7 +72,7 @@
     <div class="list-group">
 
         <% for(i=0; i<clarifications.length; i++){ %>
-        <a href="/contest/<%= contest.id %>/clarifications/view/<%= clarifications[i].id %>" class="list-group-item">
+        <a href="/contests/<%= contest.id %>/clarifications/view/<%= clarifications[i].id %>" class="list-group-item">
 
             <%  if( clarifications[i].response === 'ignore' ){ %>
              <div class="badge badge-warning">Ignored</div>

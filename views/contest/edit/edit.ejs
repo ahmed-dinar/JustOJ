@@ -84,7 +84,7 @@
                         <div class="panel panel-default">
                             <div class="panel-body">
 
-                                <form method="post" action="/contest/edit/detail/<%= cid %>" role="form" id="ccFrom" class="form-horizontal" >
+                                <form method="post" action="/contests/edit/detail/<%= cid %>" role="form" id="ccFrom" class="form-horizontal" >
 
                                     <div class="form-group">
                                         <label class="col-sm-1 control-label">Type</label>
@@ -164,7 +164,7 @@
                             <div class="panel-body">
 
                                 <div class="col-md-2 col-md-offset-5">
-                                    <a class="btn btn-success btn-sm" href="/contest/edit/<%= cid %>/problems/new" >ADD PROBLEM</a>
+                                    <a class="btn btn-success btn-sm" href="/contests/edit/<%= cid %>/problems/new" >ADD PROBLEM</a>
                                 </div>
 
 
@@ -198,7 +198,7 @@
                                                         <button class="btn btn-sm btn-primary previewBtn" >PREVIEW</button>
                                                     </td>
                                                     <td class="col-sm-1">
-                                                        <a class="btn btn-sm btn-primary" href="/contest/edit/<%= cid %>/problems/<%= problems[i].pid %>/step1">
+                                                        <a class="btn btn-sm btn-primary" href="/contests/edit/<%= cid %>/problems/<%= problems[i].pid %>/step1">
                                                             EDIT
                                                         </a>
                                                     </td>
@@ -291,7 +291,7 @@
                                         </div>
                                         <div class="modal-body">
 
-                                            <form method="post" action="/contest/edit/generateuser/<%= cid %>">
+                                            <form method="post" action="/contests/edit/generateuser/<%= cid %>">
                                                 <div class="form-group">
                                                     <label for="iquan" class="control-label">Number of users to generate</label>
                                                     <input id="iquan" type="number" name="quantity" class="form-control" min="1" max="100" required />
@@ -319,7 +319,7 @@
                                             <h4 class="modal-title" id="myModalLabel">Insert User</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <form method="post" action="/contest/edit/insertuser/<%= cid %>">
+                                            <form method="post" action="/contests/edit/insertuser/<%= cid %>">
                                                 <div class="form-group">
                                                     <label for="iUsername" class="control-label">Username</label>
                                                     <input id="iUsername" type="username" name="username" class="form-control" required />
@@ -491,7 +491,7 @@
             console.log(sj);
 
             $.ajax({
-                url: '/contest/edit/edituser/<%= cid %>',
+                url: '/contests/edit/edituser/<%= cid %>',
                 type: "POST",
                 data: $('#editUsrForm').serialize(),
                 complete: function(){
@@ -524,7 +524,7 @@
             });
 
             $.ajax({
-                url: '/contest/edit/removeuser/<%= cid %>',
+                url: '/contests/edit/removeuser/<%= cid %>',
                 type: "POST",
                 data: JSON.stringify(userdata),
                 contentType : "application/json",
@@ -593,7 +593,7 @@
             var element = document.createElement("input");
 
             form.method = "POST";
-            form.action = "/contest/edit/removealluser";
+            form.action = "/contests/edit/removealluser";
 
             element.value = '<%= cid %>';
             element.name = "cid";
@@ -625,7 +625,7 @@
         $(document).on('click', '.previewBtn', function () {
             var pid = $(this).parents('tr').find('input[type="hidden"]').val();
 
-            var URL = '/contest/edit/<%= cid %>/problems/' + pid + '/preview';
+            var URL = '/contests/edit/<%= cid %>/problems/' + pid + '/preview';
 
             $.ajax({
                 type: "GET",
@@ -667,7 +667,7 @@
         var element = document.createElement("input");
 
         form.method = "POST";
-        form.action = "/contest/edit/removeuser/<%= cid %>";
+        form.action = "/contests/edit/removeuser/<%= cid %>";
 
         element.value = uid;
         element.name = "userid";

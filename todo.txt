@@ -1,6 +1,7 @@
 # set problem status to incomplete when remove all test cases
 # add score in contest problems
-# no test case option for a problem
+# no test case option for a problem and judge
+# download user list as csv for private contest
 # compare result program
 # admin panel
     - contest admin panel

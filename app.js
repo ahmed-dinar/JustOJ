@@ -95,7 +95,7 @@ app.use('/submit', submit);
 app.use('/status', status);
 app.use('/ranks', ranks);
 app.use('/user', user);
-app.use('/contest', contest);
+app.use('/contests', contest);
 app.use('/ucheck', ucheck);
 app.use('/verify', verify);
 app.use('/s3', s3p);

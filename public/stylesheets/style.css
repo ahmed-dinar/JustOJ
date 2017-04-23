@@ -1,6 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css?family=Lobster|Ranchers');
-
 body {
 
   margin: 0px ;
@@ -8,19 +6,26 @@ body {
   font-family: 'PT Sans', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px ;
   color: #333 ;
-  background: #FFFFFF;
+  background: #f1f1f1;
 }
 
+.c-h{
+  min-height: 580px;
+  /*border: 1px solid #ccc;*/
+
+}
+
+.main-wraper > .container{
+  background: transparent;
+  box-shadow: none;
+}
 
 
 a{
  /* color: #1D906A;*/
 }
 
-.main-wraper > .container{
-  background: #FFFFFF;
-  box-shadow: none;
-}
+
 
 .content{
   padding-top: 30px;
@@ -62,10 +67,7 @@ footer{
   width:6%;
 }*/
 
-.panel-body  {
 
-  word-wrap: break-word;
-}
 
 .problem-list tr td:nth-child(1){
   width:1%;
@@ -201,10 +203,6 @@ hr {
 }
 
 
-.c-h{
-  min-height: 545px;
-  /*border: 1px solid #ccc;*/
-}
 
 
 .grey-back{
@@ -242,12 +240,27 @@ hr {
 }
 
 .panel{
-  /*-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
-  -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12),0 1px 2px rgba(0,0,0,0.24);*/
+  box-shadow: none;
+
+
   border-radius: 0px ;
   /*border: none;*/
 }
+
+.panel-body  {
+  word-wrap: break-word;
+}
+
+.panel-default>.panel-heading {
+  background-color: #f6f6f6;
+  background-image: none;
+}
+
+.panel-default {
+  border-color: #dfe8f1;
+}
+
+
 
 /*
 .navbar {
@@ -584,10 +597,7 @@ nav.nopadding, div.nopadding {
 }
 
 
-.panel-default>.panel-heading {
-  background-color: #f6f6f6;
-  background-image: none;
-}
+
 
 .list-group {
   border-radius: 0;
@@ -619,9 +629,7 @@ nav.nopadding, div.nopadding {
   border-color: transparent;
 }
 
-.navbar-brand{
-  color: #337ab7; font-family: 'Lobster', cursive; font-size: 24px; font-weight: 550; padding-left: 18px;
-}
+
 
 .navbar-inverse .navbar-brand{
   color: #FFFFFF;
@@ -664,9 +672,6 @@ nav.nopadding, div.nopadding {
   margin-top: 4px;
 }
 
-.panel-default{
-  /* border-color: #e7ecf1;*/
-}
 
 .label-danger{
   background-color: #f56b3d;
@@ -721,3 +726,20 @@ nav.nopadding, div.nopadding {
 .badge{
   font-weight: normal;
 }
+
+
+.navbar-brand{
+  font-family: 'Lobster', cursive;
+  font-family: 'Lobster Two', cursive;
+  font-size: 26px;
+  padding-left: 30px;
+  font-weight: normal;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #ffffff;
+}
+
+
+
+

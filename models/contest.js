@@ -417,7 +417,8 @@ var getFuture = function(running,cb){
     var sql = Query.select(['cnts.*'])
         .count('usr.id as users')
         .from('contest as cnts')
-        .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
+        .leftJoin('contest_participants as usr',  'cnts.id', 'usr.cid')
+       // .joinRaw('LEFT JOIN `contest_participants` as `cp` ON cnts.id = cp.cid AND cp.uid = ?',[uid]) //if a user already resistered
         .where(
         Query.raw('`status` = 2 AND `begin` > NOW()')
     )
@@ -816,7 +817,7 @@ exports.getUserSubmissions = function(cid,username,cur_page,URL,cb){
         .leftJoin('problems', 'submissions.pid', 'problems.id')
         .where({
             'user.username': username
-        });
+        }).orderBy('submissions.submittime', 'desc');
 
     var sqlCount = Query.count('submissions.id as count')
         .from('users as user')

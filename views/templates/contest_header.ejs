@@ -3,13 +3,13 @@
     <div class="row">
         <div class="col-md-12 nopadding">
 
-            <div class="panel panel-default" style="margin-bottom: 0; box-shadow: none; border-radius: 0;">
+            <div class="panel panel-default" style="margin-bottom: 20px; box-shadow: none; border-radius: 0;">
                 <div class="panel-heading" style="border: none; background-color: #FFFFFF; margin-left: 16px; padding: 0px 15px;">
                     <h3 style="margin-top: 12px;"><%- contest.title %></h3>
                     <div id="countdown" style="font-size: 18px; font-weight: 200; margin-bottom: 8px;  "></div>
                 </div>
 
-                <div class="navbar navbar-inverse" style="border-radius: 0; background: #364150; min-height: 36px; box-shadow: none; border-right: 0; border-left: 0; margin-bottom: 40px;">
+                <div class="navbar navbar-default" style="border-radius: 0; background: #f1f1f1; min-height: 36px; box-shadow: none; border-right: 0; border-left: 0; margin-bottom: 40px;">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle"  data-toggle="collapse" data-target=".navbar-contest">
                             <span class="icon-bar"></span>
@@ -20,28 +20,28 @@
                     <div class="collapse navbar-collapse navbar-contest" >
                         <ul class="nav navbar-nav contest-nav">
                             <li class="<%= active_contest_nav === "problems" ? 'active' : '' %>">
-                                <a href="/contest/<%= contest.id %>">
+                                <a href="/contests/<%= contest.id %>">
                                     <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
                                 </a>
                             </li>
                             <li class="<%= active_contest_nav === "clarifications" ? 'active' : '' %>">
-                                <a href="/contest/<%= contest.id %>/clarifications/all">
+                                <a href="/contests/<%= contest.id %>/clarifications/all">
                                     <i class="fa fa-question-circle" aria-hidden="true"></i> Clarifications
                                 </a>
                             </li>
                             <li class="<%= active_contest_nav === "standings" ? 'active' : '' %>">
-                                <a href="/contest/<%= contest.id %>/standings">
+                                <a href="/contests/<%= contest.id %>/standings">
                                     <i class="fa fa-trophy" aria-hidden="true"></i> Standings
                                 </a>
                             </li>
                             <li class="<%= active_contest_nav === "submissions" ? 'active' : '' %>">
-                                <a href="/contest/<%= contest.id %>/submissions">
+                                <a href="/contests/<%= contest.id %>/submissions">
                                     <i class="fa fa-paper-plane" aria-hidden="true"></i> Submissions
                                 </a>
                             </li>
                             <% if(isLoggedIn){ %>
                             <li class="<%= active_contest_nav === "submissionsmy" ? 'active' : '' %>">
-                                <a href="/contest/<%= contest.id %>/submissions/my">
+                                <a href="/contests/<%= contest.id %>/submissions/u/my">
                                     <i class="fa fa-paper-plane-o" aria-hidden="true"></i> My Submissions
                                 </a>
                             </li>
