@@ -46,13 +46,18 @@
 
                     <%
                         problem_label = "";
+                        console.log(isLoggedIn);
+                        console.log(registered);
+                        console.log(problems[i].yousolved);
                         if(isLoggedIn && registered){
-                            if(problems[i].yousolved !== -1){
+                            if(  problems[i].yousolved !== -1){
                                 problem_label = 'color: #2db300;';
                             }else if(problems[i].youtried !== -1){
                                 problem_label = 'color: #e62e00;';
                             }
                         }
+                        console.log(problem_label);
+                        console.log('---------');
                     %>
 
                     <td style=" width: 8%; <%= problem_label %> " class="ellips">

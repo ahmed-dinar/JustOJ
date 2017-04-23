@@ -67,7 +67,7 @@ router.get('/', function(req, res, next) {
 /**
  *
  */
-router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
+router.get('/create', /*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
 
     res.render('problem/create/new', {
         active_nav: "problems",

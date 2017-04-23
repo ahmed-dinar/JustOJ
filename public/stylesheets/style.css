@@ -688,8 +688,6 @@ nav.nopadding, div.nopadding {
   color: #f56b3d;
 }
 
-
-
 .big-checkbox > input {width: 27px; height: 27px;}
 
 .big-checkbox > label{
@@ -703,4 +701,23 @@ nav.nopadding, div.nopadding {
 .btn-danger{
   box-shadow: none;
   border: none;
+}
+
+.table-bordered {
+  border: 1px solid #f2f2f2;
+}
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+  border: 1px solid #e6e6e6;
+}
+
+.badge-warning{
+  background-color: #f56b3d;
+}
+
+.badge-success{
+  background-color: #57B257;
+}
+
+.badge{
+  font-weight: normal;
 }

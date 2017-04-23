@@ -746,38 +746,83 @@ exports.getSubmissions = function(cid,cur_page,URL,cb){
 
 
 /**
+ * Delete everything of a contest
+ * @param cid
+ * @param cb
+ */
+exports.delete = function (cid,cb) {
+
+    async.waterfall([
+        function (callback) {
+
+           var sql = Query('problems')
+                .whereIn('id', function() {
+                    this.select('pid').from('contest_problems').where('cid', cid);
+                })
+                .del();
+
+            console.log('deleting problems......');
+            DB.execute(sql.toString(),callback);
+        },
+        function (ignorepls, callback) {
+
+            var sql = Query('users')
+                .whereIn('id', function() {
+                    this.select('uid').from('contest_participants').where('cid', cid);
+                })
+                .del();
+
+            console.log('problems deleted!');
+            console.log('deleting users......');
+            DB.execute(sql.toString(),callback);
+        },
+        function (ignorepls, callback) {
+
+            var sql = Query('contest')
+                .where('id', cid)
+                .del();
+
+            console.log('users deleted!');
+            console.log('deleting contest......');
+            DB.execute(sql.toString(),callback);
+        }
+    ], cb);
+};
+
+
+
+/**
  * Get all submissions of a contest of a user
  * @param cid
- * @param uid
+ * @param username
  * @param cur_page
  * @param URL
  * @param cb
  */
-exports.getUserSubmissions = function(cid,uid,cur_page,URL,cb){
+exports.getUserSubmissions = function(cid,username,cur_page,URL,cb){
 
     var sql = Query.select([
-        'submissions.id',
-        'submissions.status',
-        'submissions.language',
-        'submissions.submittime',
-        'submissions.cpu',
-        'submissions.memory',
-        'submissions.pid',
-        'problems.title'
-    ])
-        .from('contest_submissions as submissions')
-        .orderBy('submissions.submittime', 'desc')
+                    'submissions.id',
+                    'submissions.status',
+                    'submissions.language',
+                    'submissions.submittime',
+                    'submissions.cpu',
+                    'submissions.memory',
+                    'submissions.pid',
+                    'problems.title'
+                ])
+        .from('users as user')
+        .joinRaw('LEFT JOIN contest_submissions as submissions ON user.id = submissions.uid AND submissions.cid = ?',[cid])
         .leftJoin('problems', 'submissions.pid', 'problems.id')
         .where({
-            'submissions.cid': cid,
-            'submissions.uid': uid
+            'user.username': username
         });
 
-    var sqlCount = Query.count('* as count')
-        .from('contest_submissions')
+    var sqlCount = Query.count('submissions.id as count')
+        .from('users as user')
+        .joinRaw('LEFT JOIN contest_submissions as submissions ON user.id = submissions.uid AND submissions.cid = ?',[cid])
         .where({
-            'cid':cid,
-            'uid': uid
+            'user.username': username
         });
 
     Paginate.paginate({

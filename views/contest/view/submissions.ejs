@@ -28,7 +28,7 @@
 </div>
 
 
-    <table class="table table-responsive">
+    <table class="table table-responsive table-striped">
         <thead>
         <tr>
             <th style="padding-left: 15px;">#</th>
@@ -48,34 +48,34 @@
         <tbody>
         <% for(var i=0; i<status.length; i++){ %>
         <tr>
-            <td style="padding-left: 15px;">
+            <td style="padding-left: 15px; max-width: 100px;">
                 <a href="/contest/<%= contest.id %>/submissions/<%= status[i].id %>" >
                     <%= status[i].id %>
                 </a>
             </td>
-            <td class="ellips" style="max-width: 100px;">
+            <td class="ellips" style=" max-width: 180px;">
                 <a href="/user/<%= status[i].username %>">
                     <%= status[i].username %>
                 </a>
             </td>
-            <td class="ellips" style="max-width: 100px;">
+            <td class="ellips" style=" max-width: 200px;">
                 <a href="/contest/<%= contest.id %>/problem/<%= status[i].pid %>" title="<%- status[i].title %>">
                     <%- status[i].title %>
                 </a>
             </td>
-            <td title="<%= status[i].submittime %>" class="ellips" style="max-width: 100px;">
+            <td title="<%= status[i].submittime %>" class="ellips" style="max-width: 150px;">
                 <%= moment(status[i].submittime).from() %>
             </td>
-            <td><%= langNames[status[i].language] %></td>
-            <td>
+            <td class="ellips" style="max-width: 80px;"><%= langNames[status[i].language] %></td>
+            <td class="ellips" style="max-width: 80px;">
                 <% if( parseInt(status[i].cpu) === 0){ %>
                     0.00s
                 <% }else{ %>
                     <%= parseFloat( parseInt(status[i].cpu)/1000.0).toString().match(/^-?\d+(?:\.\d{0,2})?/)[0] %>s
                 <% } %>
             </td>
-            <td><%= status[i].memory %>KB</td>
-            <td>
+            <td class="ellips" style="max-width: 80px;"><%= status[i].memory %>KB</td>
+            <td style="">
                 <% var st = parseInt(status[i].status); %>
                 <% if(st === 0){ %>
                 <span class="label label-success">

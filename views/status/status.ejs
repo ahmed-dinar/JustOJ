@@ -29,7 +29,7 @@
             </div>
 
 
-                <% if(status.length){ %>
+
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -44,6 +44,7 @@
                     </tr>
                     </thead>
                     <tbody>
+
                     <% for(var i=0; i<status.length; i++){ %>
                     <tr>
                         <td style="padding-left: 20px;">
@@ -91,6 +92,8 @@
                         </td>
                     </tr>
                     <% } %>
+
+
                     </tbody>
                 </table>
 
@@ -98,7 +101,7 @@
                 <% include ../templates/pagination.ejs %>
 
 
-                <% } %>
+
 
 
             </div>

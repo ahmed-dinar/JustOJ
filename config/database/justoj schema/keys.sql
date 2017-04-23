@@ -35,7 +35,7 @@ ALTER TABLE `contest_participants`
 ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `contest_problems`
-ADD PRIMARY KEY (`cid`,`pname`);
+ADD PRIMARY KEY (`pname`);
 
 ALTER TABLE `contest_rank`
 ADD PRIMARY KEY (`id`);

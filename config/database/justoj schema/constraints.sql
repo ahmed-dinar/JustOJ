@@ -74,6 +74,36 @@ REFERENCES `submissions`(`id`)
 ON DELETE CASCADE;
 
 
+ALTER TABLE `contest_clarifications`
+ADD CONSTRAINT `fk_contest_clarifications`
+FOREIGN KEY(`cid`)
+REFERENCES `contest`(`id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `contest_participants`
+ADD CONSTRAINT `fk_contest_participants`
+FOREIGN KEY(`cid`)
+REFERENCES `contest`(`id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `contest_problems`
+ADD CONSTRAINT `fk_contest_problems`
+FOREIGN KEY(`cid`)
+REFERENCES `contest`(`id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `contest_rank`
+ADD CONSTRAINT `fk_contest_rank`
+FOREIGN KEY(`cid`)
+REFERENCES `contest`(`id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `contest_submissions`
+ADD CONSTRAINT `fk_contest_submissions`
+FOREIGN KEY(`cid`)
+REFERENCES `contest`(`id`)
+ON DELETE CASCADE;
+
 ALTER TABLE `c_submission_case`
 ADD CONSTRAINT `fk_c_submission_case`
 FOREIGN KEY(`sid`)

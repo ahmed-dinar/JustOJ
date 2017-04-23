@@ -122,14 +122,40 @@ router.get('/create', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, re
 });
 
 
+
+/**
+ *
+ *
+ */
+router.post('/delete', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res, next) {
+
+    var cid = req.body.cid;
+
+    console.log('contest id: ' + cid);
+
+    Contest.delete(cid, function (err ,rows) {
+        if(err){
+            console.log(err);
+            return next(new Error(err));
+        }
+
+        console.log('contest deleted');
+        req.flash('success','contest successfully removed');
+        res.redirect('/contest/edit');
+    });
+});
+
+
+
 /**
  *
  */
 router.get('/edit', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res, next) {
 
+    /*
     if( !req.isAuthenticated() )
         return res.end('unauthorized');
-
+*/
     Contest.getEditable(function(err,rows){
 
         if(err){ return next(new Error(err)); }
@@ -141,7 +167,9 @@ router.get('/edit', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res,
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             contests: rows,
-            moment: moment
+            moment: moment,
+            errors: req.flash('err'),
+            success: req.flash('success')
         });
     });
 
@@ -624,8 +652,8 @@ router.get('/:cid',  function(req, res, next) {
         },
         function(details,callback) {
 
-            //TODO: what???? is private, also skip?? check it!!!
-            if(!isAuthenticated || parseInt(details.privacy)  === 0 ) return callback(null,details,false); //not resistered
+
+            if(!isAuthenticated  ) return callback(null,details,false); //not resistered
 
             Contest.isRegistered(cid,user.id,function(err,rows){
                 if(err) return callback(err);
@@ -851,6 +879,7 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
         if( error ) return next(new Error(error));
 
         console.log(contest);
+        console.log('clarifications--');
         console.log(clarifications);
 
         if( notStarted ){ // not started
@@ -881,7 +910,6 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
             _: _,
             selected: MyUtil.isNumeric(qid) ? parseInt(qid) : qid,
             clarifications: clarifications,
-            decodeToHTML: entities.decodeHTML,
             pagination: _.isUndefined(pagination) ? {} : pagination
         });
     });
@@ -892,6 +920,7 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
  *   submissions of a contest
  */
 router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
+
 
     var cur_page = req.query.page;
     var cid = req.params.cid;
@@ -988,13 +1017,19 @@ router.get('/:cid/submission',  function(req, res, next) {
 /**
  *  submissions of a contest of current logged in user
  */
-router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
+router.get('/:cid/submissions/:username', isLoggedIn(true), function(req, res, next) {
 
+    var username = req.params.username;
     var cur_page = req.query.page;
     var cid = req.params.cid;
     var isAuthenticated = req.isAuthenticated();
     var user = req.user;
+    var active_contest_nav = 'submissions';
 
+    if( username === 'my' || username === req.user.username ) {
+        active_contest_nav = 'submissionsmy';
+        username = req.user.username;
+    }
 
     if( _.isUndefined(cur_page) )
         cur_page = 1;
@@ -1021,7 +1056,7 @@ router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
             if( notStarted ) return callback(null,contest);
 
             var URL = url.parse(req.originalUrl).pathname;
-            Contest.getUserSubmissions(cid,user.id,cur_page,URL,function(err,rows,pagination) {
+            Contest.getUserSubmissions(cid,username,cur_page,URL,function(err,rows,pagination) {
                 if( err ) return callback(err);
 
                 callback(null,contest,rows,pagination);
@@ -1036,14 +1071,18 @@ router.get('/:cid/submissions/my', isLoggedIn(true), function(req, res, next) {
 
         console.log(rows);
 
-        res.render('contest/view/my_submissions', {
-            active_contest_nav: "submissionsmy",
+        if( !rows.length || !rows[0].id ||  rows[0].id === null )
+            rows = [];
+
+        res.render('contest/view/user_submissions', {
+            active_contest_nav: active_contest_nav,
             active_nav: "contest",
             title: "Problems | JUST Online Judge",
             locals: req.app.locals,
             isLoggedIn: isAuthenticated,
             user: user,
             moment: moment,
+            foruser: username,
             status: rows,
             contest: contest,
             runStatus: MyUtil.runStatus(),

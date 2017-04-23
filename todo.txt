@@ -1,8 +1,11 @@
 # set problem status to incomplete when remove all test cases
-# add test cases in datatbase insted of file system
-# delete contest
+# add score in contest problems
+# no test case option for a problem
 # compare result program
 # admin panel
+    - contest admin panel
+            - rejudge
+            - clarifications
 # proper next() error handling
 # implement error page
 # Contest hosting
@@ -17,3 +20,5 @@
 ## C++11 and C++14 support
 
 ### ReactJS in front end
+
+# add test cases in datatbase insted of file system (or may be not?)

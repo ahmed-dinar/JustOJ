@@ -1,3 +1,11 @@
+
+/*
+copy from temp user
+*/
+INSERT INTO `justoj_test`.`users`(`username`,`password`,`role`)
+SELECT `username`,`password`,`role` FROM `justoj_test`.`temp_user`
+
+
 /*
 http://stackoverflow.com/questions/43464836/sql-count-second-column-for-each-unique-row-of-first-column
 distict problems and how many user solved it

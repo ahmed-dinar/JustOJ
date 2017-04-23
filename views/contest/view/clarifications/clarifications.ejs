@@ -53,11 +53,11 @@
 
         <% if(selected===value.pid){ %>
         <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
-            [<%= ch.charAt(i++) %>] <%= decodeToHTML(value.title) %>
+            [<%= ch.charAt(i++) %>] <%- value.title %>
         </option>
         <% }else{ %>
         <option value="/contest/<%= contest.id %>/clarifications/<%= value.pid %>">
-            [<%= ch.charAt(i++) %>] <%= decodeToHTML(value.title) %>
+            [<%= ch.charAt(i++) %>] <%- value.title %>
         </option>
         <% } %>
 
@@ -73,13 +73,27 @@
 
         <% for(i=0; i<clarifications.length; i++){ %>
         <a href="/contest/<%= contest.id %>/clarifications/view/<%= clarifications[i].id %>" class="list-group-item">
-            <h4 class="ellips">
+
+            <%  if( clarifications[i].response === 'ignore' ){ %>
+             <div class="badge badge-warning">Ignored</div>
+            <%  }else if( clarifications[i].response.length  ){   %>
+            <div class="badge badge-success">Answered</div>
+            <%  }else{   %>
+            <div class="badge">In queue</div>
+            <%  }   %>
+
+
+
                 <% if(clarifications[i].pname==='General'){ %>
-                <%= clarifications[i].request %>
+            <h4><b>[General]</b></h4>
                 <% }else{ %>
-                [<%= ch.charAt(clarifications[i].pname-1) %>. <%= decodeToHTML(clarifications[i].title) %>] <%= decodeToHTML(clarifications[i].request) %>
+                    <h4 class="ellips">
+                        <b>[<%= ch.charAt(clarifications[i].pname-1) %>. <%- clarifications[i].title %>]</b>
+                    </h4>
                 <% } %>
-            </h4>
+
+            <h5 class="ellips"><%- clarifications[i].request %></h5>
+
         </a>
         <% } %>
 
