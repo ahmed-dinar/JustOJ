@@ -279,8 +279,12 @@ router.get('/:sid' ,   function(req, res, next) {
 
     if( !MyUtil.isNumeric(submissionId) ) return next(new Error('What R U looking for?'));
 
+    var opts = {
+        submissionId: submissionId
+    };
+
     Submission
-        .getPublicTestCase({ submissionId: submissionId  }, function (err,rows) {
+        .getPublicTestCase(opts, function (err,rows) {
             if(err) return next(new Error(err));
 
             if(rows.length === 0) return res.end('Nothing found!');
@@ -295,6 +299,8 @@ router.get('/:sid' ,   function(req, res, next) {
             runs.title = entities.decodeHTML(runs.title);
 
             console.log(runs);
+
+
 
             res.render('status/cases' , {
                 active_nav: "status",

@@ -1,8 +1,8 @@
 # set problem status to incomplete when remove all test cases
 # add score in contest problems
 # no test case option for a problem and judge
-# download user list as csv for private contest
 # compare result program
+# add object status of every ajax call
 # admin panel
     - contest admin panel
             - rejudge
@@ -16,6 +16,7 @@
 # may be separate judge server?
 # cluster for multithreading??
 
+
 ## of course possible tests!
 ## java sandbox (java support)
 ## C++11 and C++14 support
@@ -23,3 +24,9 @@
 ### ReactJS in front end
 
 # add test cases in datatbase insted of file system (or may be not?)
+
+
+
+---- IN FUTURE ----
+# set different language for problems
+# open compiler for custom test

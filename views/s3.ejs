@@ -1,115 +1,92 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title><%= title %></title>
+    <title>ACE in Action</title>
 
-    <script type="text/javascript" src="./javascripts/jquery-2.1.4.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="/stylesheets/style.css">
-
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.css">
-    <!-- Latest compiled and minified JavaScript -->
-    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
-
-
-
-
+    <style type="text/css" media="screen">
+        #editor {
+            height: 500px;
+            width: 700px;
+            position: relative;
+            border: 1px solid #098ddf;
+        }
+    </style>
 </head>
 <body>
 
+    <select id="languages" name="Language">
+        <option value="0">C</option>
+        <option value="1">C++</option>
+        <option value="2">Java</option>
+    </select>
 
-<!-- header and menu -->
-<% include templates/header.ejs %>
-<% if(!isLoggedIn){ %>
-<li><a href="/login"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> LOGIN</a></li>
-<li><a href="/resister"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> RESISTER</a></li>
-<% } else{ %>
-<li><a href="/logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> LOGOUT</a></li>
-<li><a href="/#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> <%= user.name %> </a></li>
-<% } %>
-<% include templates/headerend.ejs %>
+    <div id="editor"></div>
 
 
-<!-- Main Content -->
-<div class="container">
+<script src="/ace/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
 
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-body">
+    $(document).ready(function () {
+        initAceEditor(0);
+    });
 
-                <h3>Test Limits</h3>
+    $("#languages").change(function () {
+        initAceEditor($(this).val());
+    });
 
+    var lang_theme = {
+        0: "c_cpp",
+        1: "c_cpp",
+        2: "java"
+    };
 
-                <form method="post" action="/s3/formidable" name="judgesolution" id="judgesolution" enctype="multipart/form-data" >
+    function initAceEditor(language_index) {
+        var lang_theme_mode ="c_cpp";
+        if (lang_theme[language_index] != undefined) {
+            lang_theme_mode = lang_theme[language_index];
+        }
 
-                    <div class="row form-group">
-                        <div class="col-xs-4">
-                            <label form="tl">Time Limit</label>
-                            <input type="text" name="tl" value="" form="judgesolution" class="form-control"  >
-                        </div>
-                        <div class="col-xs-4">
-                            <label form="ml">Memory Limit</label>
-                            <input type="text" name="ml" value="" form="judgesolution"  class="form-control"  >
-                        </div>
-                    </div>
+        var editor = ace.edit("editor");
+        editor.setValue("");
+        editor.setReadOnly(true);
+        editor.setTheme("ace/theme/textmate");
+        editor.setShowPrintMargin(false);
+        editor.getSession().setMode("ace/mode/" + lang_theme_mode);
+        editor.getSession().setUseSoftTabs(false);
+        editor.renderer.setHScrollBarAlwaysVisible(false);
+        editor.resize();
+        editor.getSession().on('change', function (e) {
+            var value = editor.getValue();
+          //  $("#code").val(value);
+        });
 
-                    <div class="form-group">
-                        <label for="language">Select Language</label>
-                        <select class="form-control" id="language"  style="max-width: 200px;" >
-                            <option value="C">C</option>
-                            <option value="CPP">C++</option>
-                            <option value="JAVA">JAVA</option>
-                        </select>
-                        <input type="hidden" form="judgesolution" id="sellanguage" />
-                    </div>
+        loadTemplate(language_index, editor);
+        editor.focus();
+    }
 
-
-                    <div class="form-group">
-                        <div class="well well-sm">
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>
-                                        UPLOAD JUDGE SOLUTION
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <input type='file'  form="judgesolution" name="jsinput" class="btn btn-primary btn-sm" style="background: #87CEEE" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type='submit' class="btn btn-primary btn-sm" value="RUN" >
-                                    </td>
-                                </tr>
-                                </tbody>
-
-                            </table>
-                        </div>
-                    </div>
-
-                </form>
+    function loadTemplate(language_index, editor) {
+        $.ajax({
+            url: "/problems/languages/template/" + language_index,
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            cache: false
+        })
+            .done(function (templates) {
+                if (templates.status == "success") {
+                    editor.getSession().setValue(templates.template);
+                    //  $("#code").val(value);
+                }
+            })
+            .fail(function () {
+            })
+            .always(function () {
+            });
+    }
 
 
-
-
-            </div>
-        </div>
-    </div>
-
-
-</div>
-
-
-
-<!-- footer -->
-<% include templates/footer.ejs %>
-
+</script>
 </body>
 </html>

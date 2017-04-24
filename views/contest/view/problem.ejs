@@ -97,7 +97,7 @@
                                 <h5><i class="fa fa-clock-o" aria-hidden="true"></i> My Last Submissions</h5>
 
 
-                                    <% if(submissions.length){ %>
+                                    <% if(isLoggedIn && submissions.length){ %>
                             </div>
                                                 <table class="table" style="font-size: 12px;">
                                                     <thead>
@@ -131,6 +131,11 @@
                                                         </td>
                                                     </tr>
                                                     <% } %>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td><a href="/contests/<%= contest.id %>/submission?username=<%= user.username %>&problem=<%= contest.pid %>" class="btn btn-xs" >View All</a> </td>
+                                                    </tr>
                                                     </tbody>
                                                 </table>
 

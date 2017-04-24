@@ -73,7 +73,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
         }
 
         console.log('Successfully Submitted'.green);
-        res.redirect('/status/u/' + problemId);
+        res.redirect('/status/' + opts.submissionId);
 
 
         //run code against test cases in sandbox

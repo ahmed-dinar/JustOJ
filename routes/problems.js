@@ -81,6 +81,32 @@ router.get('/create', /*isLoggedIn(true) , roles.is('admin'), */function(req, re
 });
 
 
+
+/**
+ *
+ */
+router.post('/languages/template/:languageIndex', /*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+
+    var languageIndex = parseInt(req.params.languageIndex);
+
+    var resObj = {
+        status: 'success',
+        template: ''
+    };
+
+    if( !MyUtil.isNumeric(languageIndex) )
+        resObj.status = 'error';
+    else{
+        resObj.template = MyUtil.langTemplates(languageIndex);
+        if( resObj.template === 'error' )
+            resObj.status = 'error';
+    }
+
+    res.send(JSON.stringify(resObj));
+    res.end();
+});
+
+
 /**
  * First step of editing a problem
  */

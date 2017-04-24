@@ -1,35 +1,76 @@
 
+<% if(pagination && pagination !== null &&  pagination.totalPages() > 0){ %>
+
 <div class="text-center">
     <ul class="pagination">
 
-        <% if( pagination.hasPrevPage() ){ %>
+        <%
+        var disabled = 'disabled-link';
+        if( pagination.hasPrevPage() ) disabled = '';
+        %>
+
         <li>
-            <a href="<%= pagination.url %>?page=<%= pagination.prevPage() %>" aria-label="Previous">
+            <a href="<%= pagination.url %>?page=<%= pagination.prevPage() %>" class="<%= disabled %>" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
-        <% } %>
 
-        <% for(var i=0; i<pagination.totalPages(); i++){ %>
-            <% if( pagination.cur_page == i+1 ){ %>
-                    <li class="active">
-                <% }else{ %>
-                    <li>
-                <% } %>
-
-                        <a href="<%= pagination.url %>?page=<%= i+1 %>">
-                            <%= i+1 %>
-                        </a>
-                    </li>
-        <% } %>
-
-        <% if( pagination.hasNextPage() ){ %>
+        <% if(pagination.cur_page!==1){ %>
             <li>
-                <a href="<%= pagination.url %>?page=<%= pagination.nextPage() %>" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
+                <a href="<%= pagination.url %>?page=1">
+                    1
+                </a>
+            </li>
+            <li>
+                <a href="#" class="disabled-link">
+                    ..
                 </a>
             </li>
         <% } %>
 
+        <%
+            var j = 1;
+        for(var i=pagination.cur_page; i<=pagination.totalPages() && j<=2; i++, j++){ %>
+            <% if( pagination.cur_page == i ){ %>
+            <li class="active">
+                <% }else{ %>
+            <li>
+                <% } %>
+
+                <a href="<%= pagination.url %>?page=<%= i %>">
+                    <%= i %>
+                </a>
+            </li>
+        <% } %>
+
+
+        <% for(i=pagination.totalPages() - 1; i<=pagination.totalPages(); i++){ %>
+            <% if( i<=pagination.cur_page || pagination.cur_page+1 === i) continue; %>
+            <li>
+                <a href="<%= pagination.url %>?page=<%= i %>">
+                    <%= i %>
+                </a>
+            </li>
+        <% } %>
+
+
+
+
+
+        <%
+        disabled = 'disabled-link';
+        if( pagination.hasNextPage() ) disabled = '';
+        %>
+
+
+            <li>
+                <a href="<%= pagination.url %>?page=<%= pagination.nextPage() %>" class="<%= disabled %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+
+
     </ul>
 </div>
+
+<% } %>

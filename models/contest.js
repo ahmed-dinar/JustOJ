@@ -305,6 +305,26 @@ exports.getParticipants = function (cid,cur_page,URL,LIMIT,cb) {
 /**
  *
  * @param cid
+ * @param cb
+ */
+exports.downloadParticipants = function (cid,cb) {
+
+    var sql = Query.select(['usr.username','usr.email as password'])
+        .from('contest_participants as cp')
+        .leftJoin('users as usr', 'cp.uid', 'usr.id')
+        .where('cp.cid', cid)
+        .orderBy('usr.username','desc');
+
+    DB.execute( sql.toString(), cb);
+};
+
+
+
+
+
+/**
+ *
+ * @param cid
  * @param userid
  * @param cb
  */
@@ -836,6 +856,7 @@ exports.getUserSubmissions = function(cid,username,cur_page,URL,cb){
 };
 
 
+
 /**
  *
  * @param cid
@@ -1186,7 +1207,7 @@ exports.getRank = function(cid,cur_page,url,cb){
                     cur_page: cur_page,
                     sql: sql,
                     sqlCount: sqlCount,
-                    limit: 5,
+                    limit: 100,
                     url: url
                 },
                 function(err,rows,pagination) {

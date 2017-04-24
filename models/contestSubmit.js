@@ -77,7 +77,7 @@ exports.submit = function(req, res, next){
         }
 
         console.log('Submit Successfull'.green);
-        res.redirect('/contests/' + contestId + '/submissions/u/my');
+        res.redirect('/contests/' + contestId + '/submissions/' + opts.submissionId);
 
         //run code against test cases in sandbox
         Judge.run(opts,function(err,runs){

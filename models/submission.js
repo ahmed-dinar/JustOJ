@@ -104,11 +104,13 @@ exports.getPublicTestCase = function(opts,cb){
     var isContest = has(opts,'contestId');
     var subTable = isContest ? 'contest_submissions as sub' : 'submissions as sub';
     var caseTable = isContest ? 'c_submission_case' : 'submission_case';
+    var codeTable = isContest ? 'c_submission_code' : 'submission_code';
 
-    var sql = Query.select(['sub.*','prob.title','cas.cases','usr.username'])
+    var sql = Query.select(['sub.*','prob.title','cas.cases','usr.username','subcode.code'])
         .from(subTable)
         .leftJoin('problems as prob','sub.pid','prob.id')
         .leftJoin('users as usr','sub.uid','usr.id')
+        .joinRaw(' LEFT JOIN ?? as subcode ON sub.id = subcode.sid ',[codeTable])
         .joinRaw( '  LEFT JOIN( '+
             "SELECT `sc`.`sid`, GROUP_CONCAT('{\"status\":\"',`sc`.`status`, '\",\"cpu\":\"' ,`sc`.`cpu`, '\",\"memory\":\"' ,`sc`.`memory`, '\",\"errortype\":\"' ,`sc`.`errortype` , '\"}' SEPARATOR ',') as `cases` " +
             'FROM ?? as `sc` '+

@@ -10,7 +10,7 @@ var ContestSubmit   = require('../models/contestSubmit');
 var Problems        = require('../models/problems');
 var router          = express.Router();
 
-
+var json2csv    = require('json2csv');
 var has         = require('has');
 var entities    = require('entities');
 var _           = require('lodash');
@@ -631,6 +631,33 @@ router.get('/edit/:cid/publish',isLoggedIn(true) , roles.is('admin'), function(r
 
 
 /**
+ *  NOTE: if pdf-phantomjs error, run $ node node_modules/phantomjs-prebuilt/install.js
+ */
+router.get('/participants/download/:cid',   function(req, res, next) {
+
+    if( !req.isAuthenticated() || req.user.role !== 'admin' )
+        return next(new Error('404'));
+
+    var cid = req.params.cid;
+
+    async.waterfall([
+        function (callback) {
+            Contest.downloadParticipants(cid, callback);
+        },
+        function (participants,callback) {
+            json2csv({ data: participants, fields: ['username','password'], fieldNames: ['USERNAME', 'PASSWORD'] }, callback);
+        }
+    ],function (err, csvData) {
+        if(err) return next(new Error(err));
+
+        res.attachment('participantsList.csv');
+        res.status(200).send(csvData);
+    });
+});
+
+
+
+/**
  *  contest dashboard
  */
 router.get('/:cid',  function(req, res, next) {
@@ -921,7 +948,6 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
  */
 router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
 
-
     var cur_page = req.query.page;
     var cid = req.params.cid;
     var user = req.user;
@@ -985,31 +1011,93 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
 
 
 /**
- *   submissions of a contest
+ * TODO: if from browser, it shows json array
+ *   submissions of a problem of a contest
  */
 router.get('/:cid/submission',  function(req, res, next) {
 
+    var isJson = req.headers.accept.indexOf('application/json') > -1;
+
     if( !has(req.query,'username') || !has(req.query,'problem') ){
-        res.send(JSON.stringify('404'));
-        res.end();
-        return;
+        if( isJson ){
+            res.send(JSON.stringify('404'));
+            res.end();
+            return;
+        }
+        return next(new Error('404'));
     }
+
 
     var cid = req.params.cid;
     var username = req.query.username;
     var problemId = req.query.problem;
 
-    Contest.getUserSubmissionByProblem(cid,problemId,username,function(err,rows) {
-        if( err )
-            res.send(JSON.stringify('error'));
+    var notStarted = false;
+    async.waterfall([
+        function(callback) {
+            Contest.getDetails(cid,function(err,rows){
+                if(err) return callback(err);
 
-        var runs = JSON.stringify(rows);
+                if(!rows || !rows.length){ return callback('404'); }
+
+                callback(null,rows[0]);
+            });
+        },
+        function(contest,callback){
+
+            notStarted = moment().isBefore(contest.begin);
+            if( notStarted ) return callback(null,contest);
+
+            Contest.getUserSubmissionByProblem(cid,problemId,username,function(err,rows) {
+                if( err ) return callback(err);
+
+                callback(null,contest,rows);
+            });
+        }
+    ], function (error,contest,rows) {
+
+        if( error ) {
+            if( isJson ){
+                res.send(JSON.stringify('error'));
+                res.end();
+                return;
+            }
+            return next(new Error(error));
+        }
+
+        if( notStarted ) {
+            if( isJson ){
+                res.send(JSON.stringify('contest not started yet!'));
+                res.end();
+                return;
+            }
+            res.redirect('/contests/' + cid);
+            return;
+        }
+
+        if( isJson ){
+            res.send(JSON.stringify(rows));
+            res.end();
+            return;
+        }
 
         console.log(rows);
-        console.log(rows.length);
 
-        res.send(runs);
-        res.end();
+        res.render('contest/view/user_problem_submissions', {
+            active_contest_nav: "submissions",
+            active_nav: "contest",
+            title: "Problems | JUST Online Judge",
+            locals: req.app.locals,
+            user: req.user,
+            moment: moment,
+            isLoggedIn: req.isAuthenticated(),
+            status: rows,
+            contest: contest,
+            foruser: username,
+            runStatus: MyUtil.runStatus(),
+            langNames: MyUtil.langNames(),
+            pagination:  { totalPages: function () { return 0; } }
+        });
     });
 });
 
@@ -1066,8 +1154,10 @@ router.get('/:cid/submissions/u/:username', isLoggedIn(true), function(req, res,
 
         if( error ) return next(new Error(error));
 
-        if( notStarted )
-            return res.redirect('/contests/' + cid);
+        if( notStarted ) {
+            res.redirect('/contests/' + cid);
+            return;
+        }
 
         console.log(rows);
 
@@ -1087,7 +1177,6 @@ router.get('/:cid/submissions/u/:username', isLoggedIn(true), function(req, res,
             contest: contest,
             runStatus: MyUtil.runStatus(),
             langNames: MyUtil.langNames(),
-            decodeToHTML: entities.decodeHTML,
             pagination: _.isUndefined(pagination) ? {} : pagination
         });
     });
@@ -1096,49 +1185,80 @@ router.get('/:cid/submissions/u/:username', isLoggedIn(true), function(req, res,
 
 
 /**
- *  TODO: incomplete, implement it
+*
+ *
+ *
  */
 router.get('/:cid/submissions/:sid', isLoggedIn(true), function(req, res, next) {
-
-    return res.end('access denied');
 
     var submissionId = req.params.sid;
     var contestId = req.params.cid;
 
-    if( !MyUtil.isNumeric(submissionId) ) return next(new Error('no submission found'));
+    if( !MyUtil.isNumeric(submissionId) ) return next(new Error('404'));
 
-    Submission
-        .getPublicTestCase({ submissionId: submissionId, contestId: contestId }, function (err,rows) {
-            if(err) return next(new Error(err));
+    async.waterfall([
+        function(callback) {
+            Contest.getDetails(contestId,function(err,rows){
+                if(err){ return callback(err); }
 
-            if(rows.length === 0) return res.end('Nothing found!');
+                if(!rows || !rows.length){ return callback('404'); }
 
-            var runs = rows[0];
+                callback(null,rows[0]);
+            });
+        },
+        function(contest,callback){
 
-            if(  !has(runs,'cases') || runs.cases === null  )
-                runs['cases'] = [];
-            else
-                runs['cases'] = JSON.parse('[' + runs.cases + ']');
+            notStarted = moment().isBefore(contest.begin);
+            if( notStarted ) return callback(null,contest);
 
-            runs.title = entities.decodeHTML(runs.title);
+            Submission
+                .getPublicTestCase({ submissionId: submissionId, contestId: contestId }, function (err,rows) {
+                    if(err) return callback(err);
 
-            console.log(runs);
-            res.end('access denied');
-            /**
-             res.render('status/cases' , {
-                active_nav: "status",
-                title: "Problems | JUST Online Judge",
-                locals: req.app.locals,
-                isLoggedIn: req.isAuthenticated(),
-                user: req.user,
-                runStatus: MyUtil.runStatus(),
-                langNames: MyUtil.langNames(),
-                moment: moment,
-                runs: runs,
-                submissionId: submissionId
-            });*/
+                    if(rows.length === 0) return callback('404');
+
+                    var runs = rows[0];
+
+                    if(  !has(runs,'cases') || runs.cases === null  )
+                        runs['cases'] = [];
+                    else
+                        runs['cases'] = JSON.parse('[' + runs.cases + ']');
+
+                    callback(null,contest, runs);
+                });
+        }
+    ],function (error,contest, runs) {
+        if( error ) return next(new Error(error));
+
+        if( notStarted ) {
+            res.redirect('/contests/' + contestId);
+            return;
+        }
+
+        console.log(contest);
+        console.log(runs);
+
+        if( runs.username !== req.user.username ){
+            res.end('unauthorized');
+            return;
+        }
+
+        res.render('contest/view/submission_info', {
+            active_contest_nav: 'submissions',
+            active_nav: "contest",
+            title: "Problems | JUST Online Judge",
+            locals: req.app.locals,
+            submissionId: submissionId,
+            isLoggedIn: req.isAuthenticated(),
+            user: req.user,
+            moment: moment,
+            contest: contest,
+            runs: runs,
+            runStatus: MyUtil.runStatus(),
+            langNames: MyUtil.langNames()
         });
 
+    });
 });
 
 

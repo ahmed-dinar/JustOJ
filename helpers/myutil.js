@@ -109,6 +109,16 @@ var myUtils = {
                 'java': 'JAVA'
           };
         return names;
+    },
+    langTemplates: function (lang_index) {
+        var tp = [
+            '#include <stdio.h>\r\n\r\nint main() {\r\n\t// your code goes here\r\n\treturn 0;\r\n}', //c
+            '#include <iostream>\r\nusing namespace std;\r\n\r\nint main() {\r\n\t// your code goes here\r\n\treturn 0;\r\n}', //c++
+            'import java.util.*;\r\nimport java.io.*;\r\n\r\nclass Main\r\n{\r\n\tpublic static void main (String[] args) {\r\n\t\t// your code goes here\r\n\t}\r\n}' //java
+        ];
+        if(lang_index >= tp.length) return 'error';
+
+        return tp[lang_index];
     }
 };
 

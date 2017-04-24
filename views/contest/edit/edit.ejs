@@ -214,13 +214,16 @@
                     </div>
 
 
-                    <!-- Problems TAB  -->
+                    <!-- users TAB  -->
                     <%  if(details.privacy === 0){  %>
                     <div role="tabpanel" class="tab-pane" id="participants">
                         <div class="panel panel-default">
 
                             <div class="panel-heading">
                                 <h4>Participants List</h4>
+                                <span class="pull-right">
+                                    <a href="/contests/participants/download/<%= cid %>" class="btn btn-sm btn-default">download as csv</a>
+                                </span>
                             </div>
 
                             <div class="panel-heading">

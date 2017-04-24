@@ -343,6 +343,7 @@ input[type="text"],input[type="password"],input[type="username"],input[type="ema
 }
 
 
+
 td,th{
   display: table-cell;
 }
@@ -660,6 +661,10 @@ nav.nopadding, div.nopadding {
   box-shadow: none;
 }
 
+.contest-nav > li.active{
+    border-bottom: 1px solid #03A9F4;
+}
+
 .contest-problem-table > tbody > tr>td{
   padding: 15px;
 }
@@ -741,5 +746,27 @@ nav.nopadding, div.nopadding {
 }
 
 
+.disabled-link{
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.7;
+}
 
+pre.prettyprint {
+  padding: 15px;
+  border: none;
+}
 
+li.L1, li.L3, li.L5, li.L7, li.L9 {
+  list-style-type: none;
+  background: transparent;
+}
+
+pre{
+  background-color: transparent;
+  font-size: 12px;
+}
+
+.linenums li {
+  list-style-type: decimal;
+}
