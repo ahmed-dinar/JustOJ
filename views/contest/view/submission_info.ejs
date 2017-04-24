@@ -19,7 +19,7 @@
 
 <div style="min-height: 400px;">
 
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="margin-left: 30px; margin-right: 40px;">
         <div class="panel-heading">SUBMISSION STATUS</div>
 
         <table class="table table-striped">
@@ -83,7 +83,7 @@
     </div>
 
     <% if(runs.cases.length){ %>
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="margin-left: 30px; margin-right: 40px;">
         <div class="panel-heading">TEST CASES</div>
 
         <table class="table table-striped">
@@ -140,7 +140,7 @@
         <div class="panel-heading">
             CODE
         </div>
-        <pre id="source-code" class="prettyprint lang-cpp"><%= runs.code %></pre>
+        <pre id="source-code" class="prettyprint lang-cpp"><%- runs.code %></pre>
     </div>
     <script type="text/javascript">
         $(document).ready(function () {

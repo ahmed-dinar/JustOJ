@@ -191,6 +191,32 @@ router.post('/edit/:pid/tjs', isLoggedIn(true) , roles.is('admin'), function(req
 /**
  *
  */
+router.get('/submit/:pid', function(req, res, next) {
+
+    var problemId = req.params.pid;
+
+    Problems.findById(problemId,['id','title'], function (err,rows) {
+        if(err) return nex(new Error(err));
+
+        if( !rows || rows.length === 0 ) return next(new Error('404'));
+
+        console.log(rows);
+
+        res.render('problem/submit' , {
+            active_nav: "problems",
+            title: "Problems | JUST Online Judge",
+            locals: req.app.locals,
+            isLoggedIn: req.isAuthenticated(),
+            user: req.user,
+            problem: rows[0],
+            moment: moment,
+            formError: req.flash('formError'),
+            error: req.flash('err')
+        });
+    });
+});
+
+
 router.get('/:pid', function(req, res, next) {
     var pid = getPID(req.params.pid);
 

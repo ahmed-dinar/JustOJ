@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <% include ../templates/head.ejs %>
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../templates/header2.ejs %>
+
+
+
+<!-- Main Content -->
+<div class="content container c-h">
+
+    <!-- errors -->
+    <% if (formError.length) { %>
+    <div class="col-md-6 col-md-offset-3">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <%= formError %>
+        </div>
+    </div>
+    <% } %>
+
+    <div class="row">
+
+        <div class="col-md-10 nopadding">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="background-color: #FFFFFF">
+                    <h4><%- problem.title %></h4>
+                </div>
+            </div>
+
+
+
+
+
+
+            <% if(isLoggedIn){ %>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
+
+                    <form method="post" action="/submit/<%= problem.id %>" name="usc" id="usc" enctype="multipart/form-data" >
+
+                        <div class="form-group">
+                            <select class="form-control" id="language"  >
+                                <option value="c">C</option>
+                                <option value="cpp">C++</option>
+                                <option value="java">JAVA</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="file" name="source" >
+                        </div>
+
+                        <input type='submit' class="btn btn-primary" style="padding: 6px 10px;" value="SUBMIT" >
+
+                    </form>
+                </div>
+            </div>
+
+        <% }else{ %>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
+                <a class="btn btn-primary" href="/login/?redirect=/problems/JOP0<%= problem.id %>" >Login</a>
+            </div>
+        </div>
+
+        <% } %>
+
+
+    </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- footer -->
+<% include ../templates/footer.ejs %>
+
+
+<script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/bootstrap/js/bootstrap-filestyle.min.js"></script>
+<script>
+
+    $(document).ready(function(e) {
+
+
+        $('#usc').on('submit', function (ev) {
+
+            $('<input />').attr('type', 'hidden')
+                .attr('name', "language")
+                .attr('value', document.getElementById("language").value)
+                .appendTo('#usc');
+
+            return true;
+        });
+
+
+        $(":file").filestyle({
+            icon: false,
+            buttonText: "SOURCE..",
+            buttonName: "btn-dark",
+            buttonBefore: true,
+            placeholder: "No File Selected..",
+            size: "sm"
+        });
+    });
+
+    function opo(x){
+        return x+' ji';
+    }
+
+
+
+</script>
+
+
+</body>
+</html>

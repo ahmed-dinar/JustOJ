@@ -1,6 +1,8 @@
 var path        = require("path");
 var fs          = require('fs');
 
+
+
 var mkdirp      = require('mkdirp');
 var _           = require('lodash');
 var moment      = require("moment");
@@ -13,11 +15,11 @@ var colors      = require('colors');
 var mv          = require('mv');
 var has         = require('has');
 
+var entities    = require("entities");
 var Contest     = require('../models/contest');
 var Problems    = require('../models/problems');
 var MyUtil      = require('../helpers/myutil');
 var Judge       = require('../helpers/compiler/sandbox/contestJudge');
-
 
 
 exports.submit = function(req, res, next){
@@ -92,7 +94,7 @@ exports.submit = function(req, res, next){
 };
 
 
-
+const jsesc = require('jsesc');
 /**
  *
  * @param submissionStatus
@@ -134,6 +136,8 @@ var insertSubmissionIntoDb = function (submissionStatus, opts,  callback) {
         },
         function(submittedCode,cb){
             if( submissionStatus === '8' ) return cb();  //system erro, ignore code
+
+            submittedCode = entities.encodeHTML(submittedCode);
 
             Contest.insertCode({
                 sid: opts.submissionId,

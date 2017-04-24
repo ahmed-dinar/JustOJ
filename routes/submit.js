@@ -13,6 +13,7 @@ var async       = require('async');
 var moment      = require("moment");
 var has         = require('has');
 var mv          = require('mv');
+var entities    = require("entities");
 
 var isLoggedIn  = require('../middlewares/isLoggedIn');
 var Judge       = require('../helpers/compiler/sandbox/judge');
@@ -239,6 +240,10 @@ var insertSubmissionIntoDb = function (submissionStatus,opts,callback) {
         },
         function(submittedCode,cb){
             if( submissionStatus === '8' ) return cb();  //system erro, ignore code
+
+            submittedCode = entities.encodeHTML(submittedCode);
+            console.log('-------------------------------------y----------------------------------------------------');
+            console.log(submittedCode);
 
             Submission.insertCode({
                 sid: opts.submissionId,

@@ -9,6 +9,7 @@ var Query       = require('../config/database/knex/query');
 
 var table = 'problems';
 
+var colors      = require('colors');
 
 /**
  *
