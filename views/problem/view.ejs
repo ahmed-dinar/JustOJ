@@ -169,7 +169,7 @@
                                 <tbody>
                                 <% for(var i=0; i<userSubmissions.length; i++){ %>
                                     <tr>
-                                        <td class="ellips" title="<%= userSubmissions[i].submittime %>"><%= moment(userSubmissions[i].submittime).from() %></td>
+                                        <td title="<%= userSubmissions[i].submittime %>"><%= moment(userSubmissions[i].submittime).from() %></td>
                                         <td><%= userSubmissions[i].language %></td>
                                         <td>
 
@@ -193,7 +193,7 @@
                                 </tbody>
                             </table>
                     <div class="panel-body">
-                            <span class="pull-right"><a href="/status/u/<%= problem.id %>">View All</a></span>
+                            <span class="pull-right"><a href="/status/u/<%= user.username %>/p/<%= problem.id %>">View All</a></span>
                         </div>
                     <% }else{ %>
                         <span class="label label-default">No Submission Found!</span>

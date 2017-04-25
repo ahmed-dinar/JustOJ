@@ -4,7 +4,7 @@ var async       = require('async');
 var has         = require('has');
 var DB          = require('../config/database/knex/DB');
 var Query       = require('../config/database/knex/query');
-
+var Paginate    = require('../helpers/paginate');
 
 
 exports.insert = function(inserts,cb){
@@ -139,4 +139,92 @@ exports.getPublicTestCase = function(opts,cb){
     DB.execute(
         sql.toString()
         ,cb);
+};
+
+
+/**
+ *
+ * @param username
+ * @param cur_page
+ * @param URL
+ */
+exports.getUserSubmissions = function (username, cur_page, URL, cb) {
+
+    var sql = Query.select([
+        'user.username',
+        'submissions.id',
+        'submissions.status',
+        'submissions.language',
+        'submissions.submittime',
+        'submissions.cpu',
+        'submissions.memory',
+        'submissions.pid',
+        'problems.title'
+    ])
+        .from('users as user')
+        .leftJoin('submissions', 'user.id', 'submissions.uid')
+        .leftJoin('problems', 'submissions.pid', 'problems.id')
+        .where({
+            'user.username': username
+        }).orderBy('submissions.submittime', 'desc');
+
+    var sqlCount = Query.count('submissions.id as count')
+        .from('users as user')
+        .leftJoin('submissions', 'user.id', 'submissions.uid')
+        .where({
+            'user.username': username
+        });
+
+    Paginate.paginate({
+            cur_page: cur_page,
+            sql: sql,
+            sqlCount: sqlCount,
+            limit: 30,
+            url: URL
+        }, cb);
+};
+
+
+/**
+ *
+ * @param username
+ * @param problemId
+ * @param cur_page
+ * @param URL
+ * @param cb
+ */
+exports.getUserProblemSubmissions = function (username, problemId, cur_page, URL, cb) {
+
+    var sql = Query.select([
+        'user.username',
+        'submissions.id',
+        'submissions.status',
+        'submissions.language',
+        'submissions.submittime',
+        'submissions.cpu',
+        'submissions.memory',
+        'submissions.pid',
+        'problems.title'
+    ])
+        .from('users as user')
+        .joinRaw(' LEFT JOIN submissions ON user.id = submissions.uid AND submissions.pid = ? ',[problemId])
+        .leftJoin('problems', 'submissions.pid', 'problems.id')
+        .where({
+            'user.username': username
+        }).orderBy('submissions.submittime', 'desc');
+
+    var sqlCount = Query.count('submissions.id as count')
+        .from('users as user')
+        .joinRaw(' LEFT JOIN submissions ON user.id = submissions.uid AND submissions.pid = ? ',[problemId])
+        .where({
+            'user.username': username
+        });
+
+    Paginate.paginate({
+        cur_page: cur_page,
+        sql: sql,
+        sqlCount: sqlCount,
+        limit: 30,
+        url: URL
+    }, cb);
 };

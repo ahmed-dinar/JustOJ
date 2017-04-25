@@ -13,120 +13,165 @@
 <!-- header and menu -->
 <% include ../templates/header2.ejs %>
 
-
-
 <!-- Main Content -->
-<div class="content container c-h">
-
-    <!-- errors -->
-    <% if (formError.length) { %>
-    <div class="col-md-6 col-md-offset-3">
-        <div class="alert alert-danger alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <%= formError %>
-        </div>
-    </div>
-    <% } %>
+<div class="content container c-h" >
 
     <div class="row">
 
-        <div class="col-md-10 nopadding">
-            <div class="panel panel-default">
-                <div class="panel-heading" style="background-color: #FFFFFF">
-                    <h4><%- problem.title %></h4>
-                </div>
-            </div>
 
-
-
-
-
-
-            <% if(isLoggedIn){ %>
-
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
-
-                    <form method="post" action="/submit/<%= problem.id %>" name="usc" id="usc" enctype="multipart/form-data" >
-
-                        <div class="form-group">
-                            <select class="form-control" id="language"  >
-                                <option value="c">C</option>
-                                <option value="cpp">C++</option>
-                                <option value="java">JAVA</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="file" name="source" >
-                        </div>
-
-                        <input type='submit' class="btn btn-primary" style="padding: 6px 10px;" value="SUBMIT" >
-
-                    </form>
-                </div>
-            </div>
-
-        <% }else{ %>
-
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
-                <a class="btn btn-primary" href="/login/?redirect=/problems/JOP0<%= problem.id %>" >Login</a>
+        <% if (formError.length) { %>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <%= formError %>
             </div>
         </div>
-
         <% } %>
 
 
+        <% if (error && error.length) { %>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <%= error %>
+            </div>
+        </div>
+        <% } %>
+
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-heading"><div class="col-sm-offset-2">SUBMIT SOLUTION</div></div>
+
+                <div class="panel-body">
+                    <form class="form-horizontal" method="post" action="/submit/<%= problem.id %>" name="usc" id="usc" enctype="multipart/form-data" >
+
+                        <div class="form-group">
+                            <label for="probtitle" class="col-sm-2 control-label">Problem</label>
+                            <div class="col-sm-10">
+                                <div id="probtitle"><%= problem.id %> - <%- problem.title %></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="language" class="col-sm-2 control-label">Language</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="language"  >
+                                    <option value="c">C</option>
+                                    <option value="cpp">C++</option>
+                                    <option value="java">JAVA</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editor" class="col-sm-2 control-label">source code</label>
+                            <div class="col-sm-10">
+                                <div id="editor"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sourcefile" class="col-sm-2 control-label">or choose file</label>
+                            <div class="col-sm-10">
+                                <input type="file" name="source" id="sourcefile" >
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <input type='submit' class="btn btn-primary" style="padding: 6px 10px;" value="SUBMIT" >
+                            </div>
+                        </div>
+
+
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
     </div>
-    </div>
 </div>
 
-</div>
-</div>
-
-<!-- footer -->
-<% include ../templates/footer.ejs %>
-
-
-<script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/bootstrap/js/bootstrap-filestyle.min.js"></script>
+<script src="/ace/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
 
-    $(document).ready(function(e) {
 
+    var lang_theme = {
+        'c': "c_cpp",
+        'cpp': "c_cpp",
+        'java': "java"
+    };
 
-        $('#usc').on('submit', function (ev) {
+    var lang_theme_index = {
+        'c': 0,
+        'cpp': 1,
+        'java': 2
+    };
 
-            $('<input />').attr('type', 'hidden')
-                .attr('name', "language")
-                .attr('value', document.getElementById("language").value)
-                .appendTo('#usc');
-
-            return true;
-        });
-
-
-        $(":file").filestyle({
-            icon: false,
-            buttonText: "SOURCE..",
-            buttonName: "btn-dark",
-            buttonBefore: true,
-            placeholder: "No File Selected..",
-            size: "sm"
-        });
+    $(document).ready(function () {
+        initAceEditor(0);
     });
 
-    function opo(x){
-        return x+' ji';
+    $("#language").change(function () {
+        initAceEditor(  lang_theme_index[$(this).val()] );
+    });
+
+
+
+    function initAceEditor(language_index) {
+
+        var lang_theme_mode ="c_cpp";
+        if (lang_theme[language_index] != undefined) {
+            lang_theme_mode = lang_theme[language_index];
+        }
+
+        var editor = ace.edit("editor");
+        editor.setValue("");
+        editor.setTheme("ace/theme/textmate");
+        editor.setShowPrintMargin(false);
+        editor.getSession().setMode("ace/mode/" + lang_theme_mode);
+        editor.getSession().setUseSoftTabs(false);
+        editor.renderer.setHScrollBarAlwaysVisible(false);
+        editor.resize();
+        editor.getSession().on('change', function (e) {
+            var value = editor.getValue();
+
+            //  $("#code").val(value);
+        });
+        loadTemplate(language_index, editor);
+       // editor.focus();
     }
 
+    function loadTemplate(language_index, editor) {
 
+        $.ajax({
+            url: "/problems/languages/template/" + language_index,
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            cache: false
+        })
+            .done(function (templates) {
+                if (templates.status == "success") {
+                    editor.getSession().setValue(templates.template);
+                    //  $("#code").val(value);
+                }
+            })
+            .fail(function () {
+                console.log('failed ajax');
+            })
+            .always(function () {
+            });
+    }
 
 </script>
 
+
+<!-- footer -->
+<% include ../templates/footer.ejs %>
 
 </body>
 </html>

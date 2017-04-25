@@ -770,3 +770,10 @@ pre{
 .linenums li {
   list-style-type: decimal;
 }
+
+#editor {
+  height: 500px;
+  width: auto;
+  position: relative;
+  border: 1px solid #dfe8f1;
+}

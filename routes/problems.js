@@ -191,7 +191,7 @@ router.post('/edit/:pid/tjs', isLoggedIn(true) , roles.is('admin'), function(req
 /**
  *
  */
-router.get('/submit/:pid', function(req, res, next) {
+router.get('/submit/:pid', isLoggedIn(true) , function(req, res, next) {
 
     var problemId = req.params.pid;
 

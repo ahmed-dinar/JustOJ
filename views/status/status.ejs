@@ -58,8 +58,8 @@
                             </a>
                         </td>
                         <td class="ellips" style="max-width: 100px; ">
-                            <a href="/problems/JOP0<%= status[i].pid %>"  title="<%= decodeToHTML(status[i].title) %>">
-                                <%= decodeToHTML(status[i].title) %>
+                            <a href="/problems/JOP0<%= status[i].pid %>"  title="<%- status[i].title %>">
+                                <%- status[i].title %>
                             </a>
                         </td>
                         <td class="ellips" title="<%= status[i].submittime %>">

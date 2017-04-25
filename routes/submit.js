@@ -151,12 +151,12 @@ var getForm = function(req,opts,cb){
 
             fstream = fs.createWriteStream(opts.codeDir + '/code.txt');
 
-            file.on('limit', function() {
+            file.on('limit', function() {  //source size limit
                 error = 2;
             });
 
             file.pipe(fstream);
-        }else {
+        }else {    //no file choosen, empty field
             error = 1;
             file.resume();
         }
@@ -242,8 +242,6 @@ var insertSubmissionIntoDb = function (submissionStatus,opts,callback) {
             if( submissionStatus === '8' ) return cb();  //system erro, ignore code
 
             submittedCode = entities.encodeHTML(submittedCode);
-            console.log('-------------------------------------y----------------------------------------------------');
-            console.log(submittedCode);
 
             Submission.insertCode({
                 sid: opts.submissionId,
