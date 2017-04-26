@@ -1,7 +1,7 @@
 # set problem status to incomplete when remove all test cases
-# add score in contest problems
 # no test case option for a problem and judge
 # compare result program
+# repair contest announcement page
 # add object status of every ajax call
 # admin panel
     - contest admin panel
@@ -11,7 +11,11 @@
 # implement error page
 # Contest hosting
 # User profile
+# forgot password
 # Ranks
+# update registration process
+    - better way to  use tepm user? may be avoid this db?
+    - setup cron job for deleting expired temp user
 # add ace editor
 # may be separate judge server?
 # cluster for multithreading??
@@ -30,3 +34,5 @@
 ---- IN FUTURE ----
 # set different language for problems
 # open compiler for custom test
+# activate score in contest problems
+# may be, may be optimize database query?

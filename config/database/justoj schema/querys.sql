@@ -1,4 +1,24 @@
 
+
+/*
+User submission history with solvedList , total solved, total ac etc verdict count
+*/
+SELECT
+GROUP_CONCAT(DISTINCT(CASE WHEN `a`.`status` = 0 THEN `a`.`pid` ELSE NULL END) ORDER BY `a`.`pid` SEPARATOR ',') as solvedList,
+COUNT(DISTINCT(CASE WHEN `a`.`status` = 0 THEN `a`.`pid` ELSE NULL END)) as solved,
+COUNT(CASE WHEN `a`.`status` = 0 THEN 1 ELSE NULL END) as accepted ,
+COUNT(CASE WHEN `a`.`status` = 1 THEN 1 ELSE NULL END) as re ,
+COUNT(CASE WHEN `a`.`status` = 2 THEN 1 ELSE NULL END) as tle ,
+COUNT(CASE WHEN `a`.`status` = 3 THEN 1 ELSE NULL END) as mle ,
+COUNT(CASE WHEN `a`.`status` = 7 THEN 1 ELSE NULL END) as ce ,
+COUNT(CASE WHEN `a`.`status` = 9 THEN 1 ELSE NULL END) as wa ,
+count(`a`.`id`) as `totalsubmissions`
+from `submissions` as `a`
+where `a`.`uid` = 314
+
+
+
+
 /*
 copy from temp user
 */

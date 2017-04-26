@@ -164,7 +164,7 @@
                             <div class="panel-body">
 
                                 <div class="col-md-2 col-md-offset-5">
-                                    <a class="btn btn-success btn-sm" href="/contests/edit/<%= cid %>/problems/new" >ADD PROBLEM</a>
+                                    <a class="btn btn-success btn-sm" href="/contests/edit/<%= cid %>/problems/new" ><i class="fa fa-plus" aria-hidden="true"></i> ADD PROBLEM</a>
                                 </div>
 
 
@@ -219,30 +219,36 @@
                     <div role="tabpanel" class="tab-pane" id="participants">
                         <div class="panel panel-default">
 
-                            <div class="panel-heading">
+                            <div class="panel-heading clearfix">
+                                <div class="pull-left">
                                 <h4>Participants List</h4>
-                                <span class="pull-right">
-                                    <a href="/contests/participants/download/<%= cid %>" class="btn btn-sm btn-default">download as csv</a>
-                                </span>
+                                </div>
+                                <% if(participants.length){ %>
+                                <div class="pull-right">
+                                    <a href="/contests/participants/download/<%= cid %>" class="btn btn-sm btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Download as csv</a>
+                                </div>
+                                <% } %>
                             </div>
 
                             <div class="panel-heading">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".generate-user-modal">
-                                    Generate Random User
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".generate-user-modal">
+                                    <i class="fa fa-users" aria-hidden="true"></i> Generate Random User
                                 </button>
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-user-modal">
-                                    Insert User
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".add-user-modal">
+                                    <i class="fa fa-user-plus" aria-hidden="true"></i> Insert User
                                 </button>
 
+                                <% if(participants.length){ %>
                                 <div class="pull-right">
-                                    <button type="button" class="btn btn-danger" id="remAllBtn" data-toggle="modal" data-target=".confirm-remove-modal">
-                                        Remove All Users
+                                    <button type="button" class="btn btn-danger btn-sm" id="remAllBtn" data-toggle="modal" data-target=".confirm-remove-modal">
+                                        <i class="fa fa-user-times" aria-hidden="true"></i> Remove All Users
                                     </button>
 
-                                    <button type="button" class="btn btn-danger" id="deleteSelectedUserBtn">
-                                        Remove Selected Users
+                                    <button type="button" class="btn btn-danger btn-sm" id="deleteSelectedUserBtn">
+                                        <i class="fa fa-user-times" aria-hidden="true"></i> Remove Selected Users
                                     </button>
                                 </div>
+                                <% } %>
 
                             </div>
 

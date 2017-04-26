@@ -39,19 +39,18 @@ gulp.task('watch', function() {
 
 
 gulp.task('debug', function () {
-
     gulp
-        .src(['bin/www'])
+        .src([])
         .pipe(nodeInspector({
             debugPort: 5858,
             webHost: 'localhost',
             webPort: 8080,
-            preload: false
+            preload: true
         }));
 });
 
 
-gulp.task('default', (args.debug) ? ['debug'] : null, function () {
+gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
 
   //  livereload.listen();
 
@@ -63,7 +62,7 @@ gulp.task('default', (args.debug) ? ['debug'] : null, function () {
     };
 
     if (args.debug) {
-        options.nodeArgs.push('--debug');
+        options.nodeArgs.push('--debug-brk');
     }
 
 

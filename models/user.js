@@ -7,6 +7,7 @@ var Query           = require('../config/database/knex/query');
 
 function User(){}
 
+
 /**
  *
  * @param username
@@ -17,10 +18,8 @@ User.login = function(username, password, fn) {
 
     
     async.waterfall([
-
         //find user by username
         function (callback) {
-
             var sql = Query.select()
                 .from('users')
                 .where({
@@ -40,49 +39,54 @@ User.login = function(username, password, fn) {
         },
         //comapare password with hash
         function (rows, callback) {
-
             bcrypt.compare(password, rows.password, function(err, res) {
 
-                if(err) { return callback('Error compare password'); }
+                if(err) return callback('Error compare password');
 
-                if(res){ return callback(null,rows);  }
+                if(res) return callback(null,rows);
 
                 callback('invalid username or password');
-
             });
-
         }
-
-    ], function (err, result) {
-
-        if( err ){ return fn(err); }
-
-        return fn(null,result);
-    });
+    ], fn);
 };
 
 
+/**
+ * check if a username or user email is avaiable
+ * it can be use as user exists functionality
+ * @param username
+ * @param email
+ * @param fn
+ * @returns {*}
+ */
 User.available = function(username,email,fn){
 
+    var sql;
     if( username && email ){
-        var sql = Query.select('username')
+         sql = Query.select('username')
             .from('users')
             .where('username', username)
             .orWhere('email',email)
             .limit(1);
         DB.execute(sql.toString(),fn);
     }
-    else if( username ){
-        var sql = Query.select('username').from('users').where('username',username).limit(1);
-        DB.execute(sql.toString(),fn);
-    }else if( email ){
-        var sql = Query.select('email').from('users').where('email', email).limit(1);
-        DB.execute(sql.toString(),fn);
-    }else{
-        fn('empty fields');
-    }
+    else if( username )
+         sql = Query.select('username').from('users').where('username',username).limit(1);
+    else if( email )
+         sql = Query.select('email').from('users').where('email', email).limit(1);
+    else
+        return fn('empty fields');
+
+    DB.execute(sql.toString(),fn);
 };
 
+
+/**
+ *
+ * @param id
+ * @param callback
+ */
 User.problemStatus = function(id,callback){
 
     var sql = Query.select()
@@ -98,6 +102,69 @@ User.problemStatus = function(id,callback){
         });
 };
 
+
+/**
+ *
+ * @param username
+ */
+User.getProfile = function (username , fn) {
+
+    async.waterfall([
+        function (callback) {
+
+            var sql = Query.select()
+                .from('users')
+                .where('username',username)
+                .limit(1);
+
+            DB.execute(sql.toString(),function (err,rows) {
+                if(err) return callback(err);
+                
+                if(!rows || !rows.length) return callback('404');
+                
+                callback(null,rows[0]);
+            });
+        },
+        function (userData , callback) {
+            var sql = Query.select([
+                'contest_participants.cid',
+                'contest.title'
+            ])
+                .from('contest_participants')
+                .leftJoin('contest' , 'contest_participants.cid' ,'contest.id')
+                .where('contest_participants.uid',userData.id);
+
+            DB.execute(sql.toString(), function (err,rows) {
+                if(err) return callback(err);
+
+                callback(null, userData , rows);
+            });
+        },
+        function (userData , contestHistory, callback) {
+
+            var sql = Query.select(
+                Query.raw(" GROUP_CONCAT(DISTINCT(CASE WHEN `a`.`status` = 0 THEN `a`.`pid` ELSE NULL END) SEPARATOR ',') as solvedList "),
+                Query.raw(' COUNT(DISTINCT(CASE WHEN `a`.`status` = 0 THEN `a`.`pid` ELSE NULL END)) as solved '),
+                Query.raw(' COUNT(CASE WHEN `a`.`status` = 0 THEN 1 ELSE NULL END) as accepted '),  //accepted
+                Query.raw(' COUNT(CASE WHEN `a`.`status` = 1 THEN 1 ELSE NULL END) as re '),  //runtime error
+                Query.raw(' COUNT(CASE WHEN `a`.`status` = 2 THEN 1 ELSE NULL END) as tle '),  //time limit
+                Query.raw(' COUNT(CASE WHEN `a`.`status` = 3 THEN 1 ELSE NULL END) as mle '),  //memory limit
+                Query.raw(' COUNT(CASE WHEN `a`.`status` = 7 THEN 1 ELSE NULL END) as ce '),  //compilation error
+                Query.raw(' COUNT(CASE WHEN `a`.`status` = 9 THEN 1 ELSE NULL END) as wa ')  //wrong answer
+            )
+                .count('a.id as totalSubmission')
+                .from('submissions as a')
+                .where('a.uid',userData.id);
+
+                //.distinct('b.pid as problems')
+            DB.execute(sql.toString(), function (err,rows) {
+                if(err) return callback(err);
+
+                callback(null, userData , contestHistory, rows);
+            });
+        }
+    ], fn);
+};
 
 
 module.exports = User;
