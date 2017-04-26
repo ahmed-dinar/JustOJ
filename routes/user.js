@@ -20,24 +20,27 @@ router.get('/:username',function(req, res, next) {
     User.getProfile(username, function (err, userData , contestHistory, submissionHistory) {
         if(err) return next(new Error(err));
 
-        console.log('userData');
-        console.log(userData);
-        console.log('contestHistory');
-        console.log(contestHistory);
-        console.log('submissionHistory');
-        console.log(submissionHistory);
-
         var solvedList =  [];
         if( submissionHistory.length && submissionHistory[0].solvedList )
             solvedList = JSON.parse('[' + submissionHistory[0].solvedList + ']');
 
-        console.log(solvedList);
+        submissionHistory = submissionHistory.length ? submissionHistory[0] : { solved: 0, accepted: 0, re: 0, tle: 0, mle: 0, ce: 0, wa: 0, totalSubmission: 0 };
+
+        var profile =  {
+            contestHistory: contestHistory,
+            userData: userData,
+            submissionHistory: submissionHistory,
+            solvedList: solvedList
+        };
+
+        console.log(profile);
 
         res.render('user/profile',{
             active_nav: "",
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
-            username: username
+            username: username,
+            profile: profile
         });
     });
 });

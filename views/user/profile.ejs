@@ -6,6 +6,8 @@
 
     <% include ../templates/head.ejs %>
 
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
 </head>
 <body>
 
@@ -27,12 +29,96 @@
 
                 </div>
             </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">SUBMISSIONS</div>
+                <div class="panel-body">
+
+                    <div id="container"></div>
+
+                </div>
+            </div>
+
         </div>
 
 
     </div>
 
 </div>
+
+<script>
+
+    $(document).ready(function () {
+
+        Highcharts.chart('container', {
+            credits:{
+                enabled: false
+            },
+            colors: ['#7cb5ec', '#90ed7d', '#434348', '#f7a35c', '#8085e9',
+                '#f15c80' ],
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.y}</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    marker: {
+                        enabled: true
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}: {point.y}'
+                    },
+                    point:{
+                        events : {
+                            legendItemClick: function(e){
+                                e.preventDefault();
+                            }
+                        }
+                    },
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: 'Count',
+                colorByPoint: true,
+                data: [{
+                    name: 'Wrong Answer',
+                    y: <%= profile.submissionHistory.wa %>
+                }, {
+                    name: 'Accepted',
+                    y: <%= profile.submissionHistory.accepted %>,
+                    sliced: true,
+                    selected: true
+                }, {
+                    name: 'Runtime Error',
+                    y: <%= profile.submissionHistory.re %>
+                }, {
+                    name: 'Time Limit Exceeded',
+                    y: <%= profile.submissionHistory.tle %>
+                }, {
+                    name: 'Memory Limit Exceeded',
+                    y: <%= profile.submissionHistory.mle %>
+                }, {
+                    name: 'Compilation Error',
+                    y: <%= profile.submissionHistory.ce %>
+                }]
+            }]
+        });
+    });
+
+</script>
+
 
 <!-- footer -->
 <% include ../templates/footer.ejs %>
