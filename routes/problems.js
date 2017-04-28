@@ -5,24 +5,22 @@
  * @type {*|exports|module.exports}
  */
 
-var express     = require('express');
-var router      = express.Router();
+var express = require('express');
+var router = express.Router();
 
-var _           = require('lodash');
-var async       = require('async');
-var moment      = require("moment");
-var colors      = require('colors');
-var url         = require('url');
-var has         = require('has');
+var _ = require('lodash');
+var async = require('async');
+var moment = require('moment');
+var colors = require('colors');
+var url = require('url');
+var has = require('has');
 
 
-var MyUtil      = require('../helpers/myutil');
-var Problems    = require('../models/problems');
-var User        = require('../models/user');
-var DB          = require('../config/database/knex/DB');
-var entities    = require('entities');
-var isLoggedIn  = require('../middlewares/isLoggedIn');
-var roles       = require('../middlewares/userrole');
+var MyUtil = require('../helpers/myutil');
+var Problems = require('../models/problems');
+var entities = require('entities');
+var isLoggedIn = require('../middlewares/isLoggedIn');
+var roles = require('../middlewares/userrole');
 
 var EditProblem = require('./edit_problem/editProblem');
 
@@ -36,7 +34,7 @@ router.get('/', function(req, res, next) {
         cur_page = parseInt(req.query.page);
 
     if( cur_page<1 )
-        return next(new  Error('401'));
+        return next(new Error('401'));
 
     var URL = url.parse(req.originalUrl).pathname;
     var uid = req.isAuthenticated() ? req.user.id : -1;
@@ -50,8 +48,8 @@ router.get('/', function(req, res, next) {
         console.log(problems);
 
         res.render('problem/problems', {
-            active_nav: "problems",
-            title: "Problems | JUST Online Judge",
+            active_nav: 'problems',
+            title: 'Problems | JUST Online Judge',
             locals: req.app.locals,
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
@@ -70,8 +68,8 @@ router.get('/', function(req, res, next) {
 router.get('/create', /*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
 
     res.render('problem/create/new', {
-        active_nav: "problems",
-        title: "editproblem | JUST Online Judge",
+        active_nav: 'problems',
+        title: 'editproblem | JUST Online Judge',
         locals: req.app.locals,
         isLoggedIn: req.isAuthenticated(),
         user: req.user,
@@ -203,8 +201,8 @@ router.get('/submit/:pid', isLoggedIn(true) , function(req, res, next) {
         console.log(rows);
 
         res.render('problem/submit' , {
-            active_nav: "problems",
-            title: "Problems | JUST Online Judge",
+            active_nav: 'problems',
+            title: 'Problems | JUST Online Judge',
             locals: req.app.locals,
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
@@ -223,56 +221,56 @@ router.get('/:pid', function(req, res, next) {
     if( pid === null ) return next(new Error('Invalid problem?'));
 
     async.waterfall([
-            function(callback) {
-                findProblem(pid,callback);
-            },
-            function(problem,callback){    //TODO: use left join insted of separte query
-                findRank(pid,problem,callback);
-            },
-            function(problem,rank,callback){  //TODO: may be left join??
+        function(callback) {
+            findProblem(pid,callback);
+        },
+        function(problem,callback){    //TODO: use left join insted of separte query
+            findRank(pid,problem,callback);
+        },
+        function(problem,rank,callback){  //TODO: may be left join??
 
-                if( !req.isAuthenticated() ){
-                    return callback(null,problem,rank,{});
-                }
-
-                findUserSubmissions(pid,req.user.id,problem,rank,callback);
-            }
-        ], function (error, problem, rank, userSubmissions) {
-
-            if( error && !problem ){
-                return next(new Error(error));
+            if( !req.isAuthenticated() ){
+                return callback(null,problem,rank,{});
             }
 
-            if( problem.length === 0 ){
-                res.status(404);
-                return next(new Error('404 No problem found!'));
-            }
+            findUserSubmissions(pid,req.user.id,problem,rank,callback);
+        }
+    ], function (error, problem, rank, userSubmissions) {
 
-            if( problem[0].status !== 'public' ){
-                res.status(403);
-                return next(new Error('403 problem not found!'));
-            }
+        if( error && !problem ){
+            return next(new Error(error));
+        }
 
-            var tags = _.split(problem[0].tags, ',', 20);
-            tags = (tags[0]==='') ? [] : tags;
+        if( problem.length === 0 ){
+            res.status(404);
+            return next(new Error('404 No problem found!'));
+        }
 
-            res.render('problem/view' , {
-                active_nav: "problems",
-                title: "Problems | JUST Online Judge",
-                locals: req.app.locals,
-                isLoggedIn: req.isAuthenticated(),
-                user: req.user,
-                problem: Problems.decodeToHTML(problem[0]),
-                rank: rank,
-                tags: tags,
-                userSubmissions: userSubmissions,
-                tagName: MyUtil.tagNames(),
-                runStatus: MyUtil.runStatus(true),
-                _: _,
-                moment: moment,
-                formError: req.flash('formError')
-            });
+        if( problem[0].status !== 'public' ){
+            res.status(403);
+            return next(new Error('403 problem not found!'));
+        }
+
+        var tags = _.split(problem[0].tags, ',', 20);
+        tags = (tags[0]==='') ? [] : tags;
+
+        res.render('problem/view' , {
+            active_nav: 'problems',
+            title: 'Problems | JUST Online Judge',
+            locals: req.app.locals,
+            isLoggedIn: req.isAuthenticated(),
+            user: req.user,
+            problem: Problems.decodeToHTML(problem[0]),
+            rank: rank,
+            tags: tags,
+            userSubmissions: userSubmissions,
+            tagName: MyUtil.tagNames(),
+            runStatus: MyUtil.runStatus(true),
+            _: _,
+            moment: moment,
+            formError: req.flash('formError')
         });
+    });
 });
 
 
@@ -347,7 +345,7 @@ function getPID(pid){
         var h = '',i;
         for( i=0; i<pid.length; i++){
             var ch = pid.charAt(i);
-            if( ch === '0'  ){
+            if( ch === '0' ){
                 break;
             }
             h += ch;

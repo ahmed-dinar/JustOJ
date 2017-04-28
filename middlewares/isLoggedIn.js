@@ -1,3 +1,6 @@
+
+var debug = require('debug')('isloggedIn');
+
 /**
  *
  * @param auth
@@ -6,28 +9,30 @@
 
 module.exports = function isLoggedIn(auth) {
 
-     return function isLoggedIn(req, res, next) {
+    return function isLoggedIn(req, res, next) {
 
-         console.log('original url =============== ' +  req.originalUrl || '/' );
+        debug('checking is logged in..');
 
+        if(req.isAuthenticated() == auth){
+            debug('req.isAuthenticated() == auth');
+            return next();
+        }
+        else{
 
-         if(req.isAuthenticated() == auth){
-             return next();
-         }
-         else{
+            var ref_page;
 
-             var ref_page;
+            if( req.originalUrl === '/login' ){
+                ref_page = '/login';
+            }else if( req.query.redirect ){
+                ref_page = req.originalUrl;
+            }else{
+                ref_page = '/login?redirect=' + req.originalUrl;
+            }
 
-             if( req.originalUrl === '/login' ){
-                 ref_page = '/login';
-             }else if( req.query.redirect ){
-                 ref_page = req.originalUrl;
-             }else{
-                 ref_page = '/login?redirect=' + req.originalUrl;
-             }
+            debug('redirecting ' + ref_page);
 
-             res.redirect(ref_page);
-         }
+            res.redirect(ref_page);
+        }
 
-     };
+    };
 };

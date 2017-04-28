@@ -5,13 +5,13 @@
  */
 
 
-var Pagination  = require('../helpers/pagination').Pagination;
-var async       = require('async');
+var Pagination = require('../helpers/pagination').Pagination;
+var async = require('async');
 
-var DB          = require('../config/database/knex/DB');
+var DB = require('../config/database/knex/DB');
 
 
- exports.paginate = function(opts,cb) {
+exports.paginate = function(opts,cb) {
     async.waterfall([
         function(callback) {
             count(opts.sqlCount,callback);

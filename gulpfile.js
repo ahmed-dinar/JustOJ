@@ -57,7 +57,7 @@ gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
     var options = {
         script: 'bin/www',
         ext: 'ejs js',
-        exec: 'sudo node  ',
+        exec: 'sudo DEBUG=isloggedIn,routes:*,models:* node  ',
         nodeArgs: []
     };
 

@@ -1,21 +1,21 @@
 
-var path        = require('path');
-var fs          = require('fs');
-var exec        = require('child_process').exec;
+var path = require('path');
+var fs = require('fs');
+var exec = require('child_process').exec;
 
-var async       = require('async');
-var _           = require('lodash');
-var jsdiff      = require('diff');
-var uuid        = require('node-uuid');
-var rimraf      = require('rimraf');
-var mkdirp      = require('mkdirp');
-var has         = require('has');
-var MyUtil      = require('../../myutil');
-var Submission  = require('../../../models/submission');
-var Problems    = require('../../../models/problems');
-var Compiler    = require('./compiler');
+var async = require('async');
+var _ = require('lodash');
+var jsdiff = require('diff');
+var uuid = require('uuid');
+var rimraf = require('rimraf');
+var mkdirp = require('mkdirp');
+var has = require('has');
+var MyUtil = require('../../myutil');
+var Submission = require('../../../models/submission');
+var Problems = require('../../../models/problems');
+var Compiler = require('./compiler');
 
-var colors      = require('colors');
+var colors = require('colors');
 
 
 /**
@@ -25,8 +25,8 @@ var colors      = require('colors');
 exports.run = function(opts,cb){
 
     opts['runName'] = opts.submissionId;
-    opts['runDir']  = MyUtil.RUN_DIR + '/' + opts.runName;
-    opts['testCaseDir']   = MyUtil.TC_DIR + '/' + opts.problemId;
+    opts['runDir'] = MyUtil.RUN_DIR + '/' + opts.runName;
+    opts['testCaseDir'] = MyUtil.TC_DIR + '/' + opts.problemId;
 
     console.log('In judge!');
     console.log(opts);
@@ -72,7 +72,7 @@ exports.run = function(opts,cb){
                     return Submission.update(opts.submissionId, { status: '8' }, cb);
 
                 //compiler error
-                if( runs !== null && typeof runs === 'object' &&  has(runs,'compiler') )
+                if( runs !== null && typeof runs === 'object' && has(runs,'compiler') )
                     return Submission.update(opts.submissionId, { status: '7' }, cb);
 
                 //no test case was executed, may be no test case found
@@ -122,7 +122,7 @@ var compileCode = function (opts,cb) {
             console.log(stderr);
             console.log('stdout');
             console.log(stdout);
-            return cb(stderr,{ compiler: 'Compiler Error'})
+            return cb(stderr,{ compiler: 'Compiler Error'});
         };
 
         console.log(('Successfully Compiled!').green);
@@ -202,23 +202,23 @@ var runTestCase = function(opts,testCase,cb){
         }
     ], function (error, result) {
 
-        console.log('Case ' + testCase.index  + ' results:');
+        console.log('Case ' + testCase.index + ' results:');
         console.log(result);
 
         if( result !== null && typeof result === 'object'){  //insert every run information into database
             return Submission
-                        .addTestCase({
-                            sid:  opts.submissionId,
-                            name: testCase.value,
-                            status: result.code,
-                            cpu:  String(parseInt(parseFloat(result.cpu) * 1000)),
-                            memory: String(result.memory),
-                            errortype: result.whyError
-                        } , function (err) {
-                                if(err) console.log(err);
+                .addTestCase({
+                    sid:  opts.submissionId,
+                    name: testCase.value,
+                    status: result.code,
+                    cpu:  String(parseInt(parseFloat(result.cpu) * 1000)),
+                    memory: String(result.memory),
+                    errortype: result.whyError
+                } , function (err) {
+                    if(err) console.log(err);
 
-                            clearRun(opts,error, result,cb);
-                        });
+                    clearRun(opts,error, result,cb);
+                });
         }
 
         clearRun(opts,error, result,cb);
@@ -306,12 +306,12 @@ var checkResult = function (opts,cb) {
  */
 var compareResult = function (opts,testCase,resultObj,cb) {
 
-     resultObj['result'] = 'Accepted';
+    resultObj['result'] = 'Accepted';
     return cb(null,resultObj);
 
     var judgeOutput = testCase + '/o.txt';
-    var userOutput  = opts.runDir +'/output.txt';
-    var command =  './helpers/compiler/sandbox/compare ' + judgeOutput + ' ' + userOutput;
+    var userOutput = opts.runDir +'/output.txt';
+    var command = './helpers/compiler/sandbox/compare ' + judgeOutput + ' ' + userOutput;
 
     exec(command, {
         env: process.env,
@@ -342,7 +342,7 @@ var compareResult = function (opts,testCase,resultObj,cb) {
 
         if( resCode === 3 || resCode === 2 ){
 
-            console.log('Wrong ans code ' +  stdout);
+            console.log('Wrong ans code ' + stdout);
 
             resultObj.code = '9';
             resultObj['result'] = 'Wrong Answer';
@@ -390,7 +390,7 @@ var getFinalResult = function(runs,opts,cb){
     var finalCode = '8';
     var cpu = 0.0;
     var memory = 0.0;
-    var whyError =  null;
+    var whyError = null;
 
     _.forEach(runs,function(value) {
         cpu = Math.max(cpu, parseFloat(value.cpu));
@@ -407,26 +407,26 @@ var getFinalResult = function(runs,opts,cb){
     console.log(('finalCode: ' + finalCode).green);
 
     async.series([
-            function(callback){
-                Submission.update(opts.submissionId, {
-                    status: finalCode,
-                    cpu:  String(parseInt(parseFloat(cpu) * 1000)),
-                    memory: String(memory)
-                }, callback);
-            },
-            function(callback){  //TODO: omg stop it! stop it right now!! check problems route
-                if(finalCode === '0')   //if accepted increment total solved
-                    return Problems.updateSubmission(opts.problemId, 'solved', callback);
+        function(callback){
+            Submission.update(opts.submissionId, {
+                status: finalCode,
+                cpu:  String(parseInt(parseFloat(cpu) * 1000)),
+                memory: String(memory)
+            }, callback);
+        },
+        function(callback){  //TODO: omg stop it! stop it right now!! check problems route
+            if(finalCode === '0')   //if accepted increment total solved
+                return Problems.updateSubmission(opts.problemId, 'solved', callback);
 
-                callback();
-            },
-            function(callback){     //TODO: update user status for this problem
+            callback();
+        },
+        function(callback){     //TODO: update user status for this problem
 
-                if( finalCode !== '0'){ return callback(); }
+            if( finalCode !== '0'){ return callback(); }
 
-                callback();
-            }
-        ],
+            callback();
+        }
+    ],
         function(err, results){
 
             cb(null,runs);

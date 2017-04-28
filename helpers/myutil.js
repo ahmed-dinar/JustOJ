@@ -103,11 +103,11 @@ var myUtils = {
     },
 
     langNames: function(){
-          var names = {
-                'c': 'C',
-                'cpp': 'C++',
-                'java': 'JAVA'
-          };
+        var names = {
+            'c': 'C',
+            'cpp': 'C++',
+            'java': 'JAVA'
+        };
         return names;
     },
     langTemplates: function (lang_index) {

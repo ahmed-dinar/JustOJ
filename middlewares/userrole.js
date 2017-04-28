@@ -1,4 +1,4 @@
-var ConnectRoles     = require('connect-roles');
+var ConnectRoles = require('connect-roles');
 
 //connect-roles
 var roles = new ConnectRoles({

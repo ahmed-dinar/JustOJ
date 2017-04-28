@@ -1,9 +1,5 @@
-var path        = require("path");
-var fse         = require('fs-extra');
-var async       = require('async');
-var _           = require('lodash');
-var Problems    = require('../../models/problems');
-var rimraf      = require('rimraf');
+var path = require('path');
+var rimraf = require('rimraf');
 
 
 module.exports = function(req, res, next) {
@@ -12,7 +8,7 @@ module.exports = function(req, res, next) {
         return next(new Error('No Request body found'));
     }
 
-    var TCDir =  path.normalize(process.cwd() + '/files/tc/p/' + req.body.pid +  '/' + req.body.casename);
+    var TCDir = path.normalize(process.cwd() + '/files/tc/p/' + req.body.pid + '/' + req.body.casename);
 
     console.log('tc to remove ' + TCDir);
     rimraf(TCDir, function (err) {

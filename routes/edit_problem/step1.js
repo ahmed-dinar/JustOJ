@@ -1,9 +1,5 @@
-var Problems    = require('../../models/problems');
-var _           = require('lodash');
-var Busboy      = require('busboy');
-var fse         = require('fs-extra');
-var path        = require("path");
-var async       = require('async');
+var Problems = require('../../models/problems');
+var _ = require('lodash');
 
 
 module.exports = function(req,res,next){
@@ -20,8 +16,8 @@ module.exports = function(req,res,next){
 
 
             res.render('problem/edit/step_1', {
-                active_nav: "problems",
-                title: "editproblem | JUST Online Judge",
+                active_nav: 'problems',
+                title: 'editproblem | JUST Online Judge',
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
                 user: req.user,
@@ -39,7 +35,7 @@ module.exports = function(req,res,next){
 
         Problems.update(req, function(err,row){
 
-            if( err ) { return next(new Error( 'Problem Update Error : ' +  err)); }
+            if( err ) { return next(new Error( 'Problem Update Error : ' + err)); }
 
             if( row.length == 0 ) { return next(new Error('something went wrong with updating! :(')); }
 

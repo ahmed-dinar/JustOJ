@@ -1,17 +1,15 @@
-var _           = require('lodash');
-var async       = require('async');
+var _ = require('lodash');
+var async = require('async');
 
-var moment      = require("moment");
+var DB = require('../config/database/knex/DB');
+var Query = require('../config/database/knex/query');
+var Paginate = require('../helpers/paginate');
+var MyUtil = require('../helpers/myutil');
+var bcrypt = require('bcryptjs');
+var shortid = require('shortid');
+var Hashids = require('hashids');
 
-var DB          = require('../config/database/knex/DB');
-var Query       = require('../config/database/knex/query');
-var Paginate    = require('../helpers/paginate');
-var MyUtil      = require('../helpers/myutil');
-var bcrypt      = require('bcryptjs');
-var shortid     = require('shortid');
-var Hashids     = require('hashids');
-
-var User        = require('./user');
+var User = require('./user');
 
 /**
  *
@@ -57,7 +55,9 @@ exports.generateUser = function (cid,indx, cb) {
             var username = hashids.encode(rows.insertId);
             console.log('user inserted id: ' + rows.insertId + ' and username: ' + username + ' and password: ' + password);
 
-            var sql = Query('users').update({ username: username }).where({ 'id': rows.insertId });
+            var sql = Query('users')
+                        .update({ username: username })
+                        .where({ 'id': rows.insertId });
             DB.execute(sql.toString(), function (err,row2) {
                 if(err) return callback(err);
 
@@ -111,7 +111,7 @@ exports.insertUser = function (cid, random_password, insertObj, cb) {
         function(salt,callback) {
 
             if(random_password)
-                 insertObj.password = shortid.generate();
+                insertObj.password = shortid.generate();
 
             insertObj.email = insertObj.password;
 
@@ -181,7 +181,9 @@ exports.editUser = function (cid, uid, insertObj, cb) {
         function(hash,callback) {
             insertObj.password = hash;
 
-            var sql = Query('users').update(insertObj).where({ 'id': uid });
+            var sql = Query('users')
+                .update(insertObj)
+                .where({ 'id': uid });
             DB.execute(sql.toString(), callback);
         }
     ], cb);
@@ -194,9 +196,12 @@ exports.editUser = function (cid, uid, insertObj, cb) {
  * @param cid
  * @param cb
  */
- function findById(cid,cb){
+function findById(cid,cb){
     var sql = Query
-                .select(['id']).from('contest').where({ 'id': cid }).limit(1);
+                .select(['id'])
+                .from('contest')
+                .where({ 'id': cid })
+                .limit(1);
 
     DB.execute( sql.toString(), cb);
 }
@@ -210,7 +215,9 @@ exports.findById = findById;
  * @param cb
  */
 exports.create = function(inserts,cb){
-    var sql = Query.insert(inserts).into('contest');
+    var sql = Query
+                .insert(inserts)
+                .into('contest');
     DB.execute( sql.toString(), cb);
 };
 
@@ -251,7 +258,6 @@ exports.getPastContests = function (cur_page,URL,cb) {
         )
         .groupBy('cnts.id')
         .orderBy('cnts.begin','desc');
-
 
     var sqlCount = Query.count('* as count')
         .from('contest')
@@ -345,7 +351,7 @@ exports.removeUser = function (cid, userid, cb) {
 
             var sql;
 
-            if(  isMulti ){
+            if( isMulti ){
                 sql = Query('contest_participants')
                     .whereIn('uid', userid)
                     .andWhere('cid',cid)
@@ -362,7 +368,7 @@ exports.removeUser = function (cid, userid, cb) {
 
             var sql;
 
-            if(  isMulti )
+            if( isMulti )
                 sql = Query('users').whereIn('id',userid).del();
             else
                 sql = Query('users').where('id',userid.userid).del();
@@ -412,7 +418,7 @@ exports.removealluser = function (cid, cb) {
  */
 var getRunning = function(cb){
 
-        var sql = Query.select(['cnts.*'])
+    var sql = Query.select(['cnts.*'])
          .count('usr.id as users')
          .from('contest as cnts')
          .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
@@ -421,7 +427,6 @@ var getRunning = function(cb){
         )
             .groupBy('cnts.id')
             .orderBy('cnts.begin','desc');
-
 
     DB.execute(sql.toString(),cb);
 };
@@ -437,14 +442,13 @@ var getFuture = function(running,cb){
     var sql = Query.select(['cnts.*'])
         .count('usr.id as users')
         .from('contest as cnts')
-        .leftJoin('contest_participants as usr',  'cnts.id', 'usr.cid')
+        .leftJoin('contest_participants as usr', 'cnts.id', 'usr.cid')
        // .joinRaw('LEFT JOIN `contest_participants` as `cp` ON cnts.id = cp.cid AND cp.uid = ?',[uid]) //if a user already resistered
         .where(
         Query.raw('`status` = 2 AND `begin` > NOW()')
     )
         .groupBy('cnts.id')
         .orderBy('cnts.begin');
-
 
     DB.execute(
         sql.toString()
@@ -557,10 +561,10 @@ exports.getDetailsIsReg = function (cid,uid,cb){
     var sql;
 
     if(uid<1) {
-         sql = Query.select([
-             'c.*',
-             Query.raw("GROUP_CONCAT( '\"' , `list`.`pid` , '\":{' , '\"pid\":' , `list`.`pid` , ',\"name\":' ,`list`.`pname` , ',\"title\":\"' , `list`.`title` , '\"}' ORDER BY `list`.`pname` SEPARATOR ',' ) as `problemList`")
-         ]).from('contest as c')
+        sql = Query.select([
+            'c.*',
+            Query.raw('GROUP_CONCAT( \'"\' , `list`.`pid` , \'":{\' , \'"pid":\' , `list`.`pid` , \',"name":\' ,`list`.`pname` , \',"title":"\' , `list`.`title` , \'"}\' ORDER BY `list`.`pname` SEPARATOR \',\' ) as `problemList`')
+        ]).from('contest as c')
              .where('c.id', cid)
              .joinRaw('  LEFT JOIN('+
              'SELECT `cp`.`cid`,`cp`.`pid`,`cp`.`pname`,`p`.`title`'+
@@ -574,7 +578,7 @@ exports.getDetailsIsReg = function (cid,uid,cb){
         sql = Query.select([
             'c.*',
             Query.raw('ifnull(`cp`.`id`,-1) as `isReg`'),
-            Query.raw("GROUP_CONCAT( '\"' , `list`.`pid` , '\":{' , '\"pid\":' , `list`.`pid` , ',\"name\":' ,`list`.`pname` , ',\"title\":\"' , `list`.`title` , '\"}' ORDER BY `list`.`pname` SEPARATOR ',' ) as `problemList`")
+            Query.raw('GROUP_CONCAT( \'"\' , `list`.`pid` , \'":{\' , \'"pid":\' , `list`.`pid` , \',"name":\' ,`list`.`pname` , \',"title":"\' , `list`.`title` , \'"}\' ORDER BY `list`.`pname` SEPARATOR \',\' ) as `problemList`')
         ])
             .from('contest as c')
             .joinRaw('left join `contest_participants` as `cp` on `c`.`id`=`cp`.`cid` and `cp`.`uid`=?',[uid])
@@ -602,7 +606,7 @@ exports.getDetailsAndProblemList = function(cid,cb){
 
     var sql = Query.select([
         'c.*',
-        Query.raw("GROUP_CONCAT( '\"' , `list`.`pid` , '\":{' , '\"pid\":' , `list`.`pid` , ',\"name\":' ,`list`.`pname` , ',\"title\":\"' , `list`.`title` , '\"}' ORDER BY `list`.`pname` SEPARATOR ',' ) as `problemList`")
+        Query.raw('GROUP_CONCAT( \'"\' , `list`.`pid` , \'":{\' , \'"pid":\' , `list`.`pid` , \',"name":\' ,`list`.`pname` , \',"title":"\' , `list`.`title` , \'"}\' ORDER BY `list`.`pname` SEPARATOR \',\' ) as `problemList`')
     ])
         .from('contest as c')
         .joinRaw('  LEFT JOIN('+
@@ -756,12 +760,12 @@ exports.getSubmissions = function(cid,cur_page,URL,cb){
         .where('cid',cid);
 
     Paginate.paginate({
-            cur_page: cur_page,
-            sql: sql,
-            limit: 25,
-            sqlCount: sqlCount,
-            url: URL
-        },
+        cur_page: cur_page,
+        sql: sql,
+        limit: 25,
+        sqlCount: sqlCount,
+        url: URL
+    },
         cb);
 };
 
@@ -776,7 +780,7 @@ exports.delete = function (cid,cb) {
     async.waterfall([
         function (callback) {
 
-           var sql = Query('problems')
+            var sql = Query('problems')
                 .whereIn('id', function() {
                     this.select('pid').from('contest_problems').where('cid', cid);
                 })
@@ -823,15 +827,15 @@ exports.delete = function (cid,cb) {
 exports.getUserSubmissions = function(cid,username,cur_page,URL,cb){
 
     var sql = Query.select([
-                    'submissions.id',
-                    'submissions.status',
-                    'submissions.language',
-                    'submissions.submittime',
-                    'submissions.cpu',
-                    'submissions.memory',
-                    'submissions.pid',
-                    'problems.title'
-                ])
+        'submissions.id',
+        'submissions.status',
+        'submissions.language',
+        'submissions.submittime',
+        'submissions.cpu',
+        'submissions.memory',
+        'submissions.pid',
+        'problems.title'
+    ])
         .from('users as user')
         .joinRaw('LEFT JOIN contest_submissions as submissions ON user.id = submissions.uid AND submissions.cid = ?',[cid])
         .leftJoin('problems', 'submissions.pid', 'problems.id')
@@ -847,12 +851,12 @@ exports.getUserSubmissions = function(cid,username,cur_page,URL,cb){
         });
 
     Paginate.paginate({
-            cur_page: cur_page,
-            sql: sql,
-            limit: 20,
-            sqlCount: sqlCount,
-            url: URL
-        }, cb);
+        cur_page: cur_page,
+        sql: sql,
+        limit: 20,
+        sqlCount: sqlCount,
+        url: URL
+    }, cb);
 };
 
 
@@ -909,9 +913,9 @@ exports.isRegistered = function(cid,uid,cb){
 exports.findAndisRegistered = function(cid,uid,cb){
 
     var sql = Query.select([
-            'contest.id',
-            Query.raw('(`contest_participants`.`uid` IS NOT NULL) AS `resistered`')
-        ])
+        'contest.id',
+        Query.raw('(`contest_participants`.`uid` IS NOT NULL) AS `resistered`')
+    ])
         .joinRaw('LEFT JOIN `contest_participants` ON `contest`.`id` = `contest_participants`.`cid` AND `contest_participants`.`uid` = ?',[uid])
         .from('contest')
         .where('contest.id',cid)
@@ -1067,23 +1071,23 @@ exports.UpdateRank = function(cid,uid,pid,finalCode,cb){
 
             //if first submisions
             if(status===-2){
-                 sql = Query.insert({
-                     cid: cid,
-                     uid: uid,
-                     pid: pid,
-                     status: finalCode,
-                     tried: 1
-                 }).into('contest_rank');
+                sql = Query.insert({
+                    cid: cid,
+                    uid: uid,
+                    pid: pid,
+                    status: finalCode,
+                    tried: 1
+                }).into('contest_rank');
             }else if(status!==0){  //already not accpeted
-                 sql = Query('contest_rank').update({
-                     status: finalCode,
-                     tried: Query.raw('`tried` + 1')
-                 })
+                sql = Query('contest_rank').update({
+                    status: finalCode,
+                    tried: Query.raw('`tried` + 1')
+                })
                      .where({
                          cid: cid,
                          uid: uid,
                          pid: pid
-                 });
+                     });
             }else{
                 console.log('IGNORE UPDATE! ALREADY ACCEPTED!!!!!!!!!!!!!!!!!!!!!!!');
                 return callback();
@@ -1174,9 +1178,9 @@ exports.getRank = function(cid,cur_page,url,cb){
 
             var sqlInner = Query.select([
                 'rank.uid as ruid',
-                Query.raw("SUM(CASE WHEN `rank`.`status`=0 THEN ifnull(`rank`.`tried`,1)-1 ELSE 0 END) * 20 + ifnull(SUM(CASE WHEN `rank`.`status`=0 THEN TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ELSE 0 END),0) AS `penalty`",[contest.begin]),
-                Query.raw("COUNT(CASE WHEN `rank`.`status`=0 THEN `rank`.`status` ELSE NULL END) as `solved`"),
-                Query.raw("GROUP_CONCAT( '\"' ,`rank`.`pid` , '\":{' , '\"status\":' , `rank`.`status` , ',\"tried\":' , `rank`.`tried` ,  ',\"penalty_time\":\"' , TIME_FORMAT(TIMEDIFF(`rank`.`penalty`,?), '%H:%i:%s')    ,   '\",\"penalty\":' , TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ,'}'  ORDER BY `rank`.`pid` SEPARATOR ',') as `problems`",[contest.begin,contest.begin]),
+                Query.raw('SUM(CASE WHEN `rank`.`status`=0 THEN ifnull(`rank`.`tried`,1)-1 ELSE 0 END) * 20 + ifnull(SUM(CASE WHEN `rank`.`status`=0 THEN TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ELSE 0 END),0) AS `penalty`',[contest.begin]),
+                Query.raw('COUNT(CASE WHEN `rank`.`status`=0 THEN `rank`.`status` ELSE NULL END) as `solved`'),
+                Query.raw('GROUP_CONCAT( \'"\' ,`rank`.`pid` , \'":{\' , \'"status":\' , `rank`.`status` , \',"tried":\' , `rank`.`tried` ,  \',"penalty_time":"\' , TIME_FORMAT(TIMEDIFF(`rank`.`penalty`,?), \'%H:%i:%s\')    ,   \'","penalty":\' , TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ,\'}\'  ORDER BY `rank`.`pid` SEPARATOR \',\') as `problems`',[contest.begin,contest.begin]),
             ])
                 .from('contest_rank as rank')
                 .where('rank.cid',cid)
@@ -1204,12 +1208,12 @@ exports.getRank = function(cid,cur_page,url,cb){
                 .where('cid',cid);
 
             Paginate.paginate({
-                    cur_page: cur_page,
-                    sql: sql,
-                    sqlCount: sqlCount,
-                    limit: 100,
-                    url: url
-                },
+                cur_page: cur_page,
+                sql: sql,
+                sqlCount: sqlCount,
+                limit: 100,
+                url: url
+            },
                 function(err,rows,pagination) {
                     callback(err,contest,problemStats,rows,pagination);
                 });
@@ -1230,8 +1234,8 @@ exports.getClarification = function(cid,clid,cb){
         'cc.request',
         'cc.response',
         'cu.username',
-        Query.raw("ifnull(`pp`.`title`,'') as `title`"),
-        Query.raw("ifnull(`cp`.`pname`,'General') as `pname`")
+        Query.raw('ifnull(`pp`.`title`,\'\') as `title`'),
+        Query.raw('ifnull(`cp`.`pname`,\'General\') as `pname`')
     ])
         .from('contest_clarifications as cc')
         .leftJoin('users as cu','cc.uid','cu.id')
@@ -1260,15 +1264,15 @@ exports.getClarifications = function(cid,uid,qid,cur_page,url,cb){
         'cc.id',
         'cc.request',
         'cc.response',
-        Query.raw("ifnull(`pp`.`title`,'') as `title`"),
-        Query.raw("ifnull(`cp`.`pname`,'General') as `pname`")
+        Query.raw('ifnull(`pp`.`title`,\'\') as `title`'),
+        Query.raw('ifnull(`cp`.`pname`,\'General\') as `pname`')
     ])
         .from('contest_clarifications as cc')
         .leftJoin('problems as pp', 'cc.pid', 'pp.id')
         .leftJoin('contest_problems as cp', 'cc.pid', 'cp.pid');
 
 
-    if( MyUtil.isNumeric(qid)  ){
+    if( MyUtil.isNumeric(qid) ){
         sql = sql.where({
             'cc.cid': cid,
             'cc.pid': qid
@@ -1293,13 +1297,13 @@ exports.getClarifications = function(cid,uid,qid,cur_page,url,cb){
         .from('contest_clarifications')
         .where('cid',cid);
 
-        Paginate.paginate({
-            cur_page: cur_page,
-            sql: sql,
-            limit: 20,
-            sqlCount: sqlCount,
-            url: url
-        }, cb);
+    Paginate.paginate({
+        cur_page: cur_page,
+        sql: sql,
+        limit: 20,
+        sqlCount: sqlCount,
+        url: url
+    }, cb);
 };
 
 

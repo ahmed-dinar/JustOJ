@@ -1,38 +1,32 @@
-var express     = require('express');
-var router      = express.Router();
+var express = require('express');
+var router = express.Router();
 
-var fse         = require('fs-extra');
-var fs          = require('fs');
-var path        = require("path");
+var fs = require('fs');
+var Busboy = require('busboy');
+var uuid = require('uuid');
+var mkdirp = require('mkdirp');
+var async = require('async');
+var has = require('has');
+var entities = require('entities');
 
-var _           = require('lodash');
-var Busboy      = require('busboy');
-var uuid        = require('node-uuid');
-var mkdirp      = require('mkdirp');
-var async       = require('async');
-var moment      = require("moment");
-var has         = require('has');
-var mv          = require('mv');
-var entities    = require("entities");
+var isLoggedIn = require('../middlewares/isLoggedIn');
+var Judge = require('../helpers/compiler/sandbox/judge');
+var MyUtil = require('../helpers/myutil');
+var Problems = require('../models/problems');
+var Submission = require('../models/submission');
 
-var isLoggedIn  = require('../middlewares/isLoggedIn');
-var Judge       = require('../helpers/compiler/sandbox/judge');
-var MyUtil      = require('../helpers/myutil');
-var Problems    = require('../models/problems');
-var Submission  = require('../models/submission');
-
-var colors      = require('colors');
+var colors = require('colors');
 
 router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
     var uploadName = uuid.v4();
-    var codeDir =  MyUtil.UPLOAD_DIR + '/' + uploadName;
+    var codeDir = MyUtil.UPLOAD_DIR + '/' + uploadName;
     var problemId = req.params.pid;
     var userId = String(req.user.id);
 
     async.waterfall([
         function(callback){
-            makeTempDir({ codeDir: codeDir  }, callback);
+            makeTempDir({ codeDir: codeDir }, callback);
         },
         function(opts,callback){
             opts['problemId'] = problemId;
@@ -62,7 +56,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
                 return;
             }
 
-            if( has(error,'systemError')  ){
+            if( has(error,'systemError') ){
                 return insertSubmissionIntoDb('8',opts,function (err) {
                     if( err ) return next(new Error(err));
 
@@ -107,8 +101,8 @@ var getLimits = function(opts,callback){
         if( rows === null || rows[0].cpu === null || rows[0].memory === null )
             return callback(null,{ systemError: 'no limit found for this problem!' });
 
-        opts['timeLimit']  = rows[0].cpu;
-        opts['memoryLimit']  = rows[0].memory;
+        opts['timeLimit'] = rows[0].cpu;
+        opts['memoryLimit'] = rows[0].memory;
         return callback(null, opts);
     });
 };
@@ -145,7 +139,7 @@ var getForm = function(req,opts,cb){
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 
-        if( filename.length  ){
+        if( filename.length ){
 
             console.log((filename +' receieved with mimetype: ' + mimetype).yellow);
 
@@ -181,7 +175,7 @@ var getForm = function(req,opts,cb){
 
             console.log('fstream closed');
 
-            if( language  ){
+            if( language ){
                 opts['language'] = language;
                 if( has(opts,'systemError') )
                     return cb({ systemError: opts.systemError },opts);
@@ -299,7 +293,7 @@ var makeTempDir = function(opts,cb){
  * @param cb
  */
 var renameSource = function(opts,cb) {
-    fs.rename(opts.codeDir + '/code.txt', opts.codeDir + '/code.' + opts.language,  function(err) {
+    fs.rename(opts.codeDir + '/code.txt', opts.codeDir + '/code.' + opts.language, function(err) {
         if ( err ) {
             console.log('ERROR renaming: ');
             console.log(err);

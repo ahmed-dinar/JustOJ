@@ -3,9 +3,11 @@
  * @type {*|exports|module.exports}
  */
 
-var express     = require('express');
-var router      = express.Router();
-var User        = require('../models/user');
+var express = require('express');
+var router = express.Router();
+var User = require('../models/user');
+var gravatar = require('gravatar');
+var moment = require('moment');
 
 
 router.get('/',function(req, res, next) {
@@ -20,27 +22,30 @@ router.get('/:username',function(req, res, next) {
     User.getProfile(username, function (err, userData , contestHistory, submissionHistory) {
         if(err) return next(new Error(err));
 
-        var solvedList =  [];
+        var solvedList = [];
         if( submissionHistory.length && submissionHistory[0].solvedList )
             solvedList = JSON.parse('[' + submissionHistory[0].solvedList + ']');
 
         submissionHistory = submissionHistory.length ? submissionHistory[0] : { solved: 0, accepted: 0, re: 0, tle: 0, mle: 0, ce: 0, wa: 0, totalSubmission: 0 };
 
-        var profile =  {
+        var profile = {
             contestHistory: contestHistory,
             userData: userData,
             submissionHistory: submissionHistory,
-            solvedList: solvedList
+            solvedList: solvedList,
+            profilePicture: gravatar.url(userData.email, {s: '150'}, true)
         };
+
 
         console.log(profile);
 
         res.render('user/profile',{
-            active_nav: "",
+            active_nav: '',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             username: username,
-            profile: profile
+            profile: profile,
+            moment: moment
         });
     });
 });

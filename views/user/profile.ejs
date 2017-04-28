@@ -22,10 +22,26 @@
     <div class="row">
 
         <div class="col-md-8">
+
             <div class="panel panel-default">
                 <div class="panel-body">
 
-                    <%= username %>
+                    <div class="col-md-4">
+                        <div class="profile-pic-container">
+                            <div class="profile-pic-img">
+                                <img class="img-thumbnail" src="<%= profile.profilePicture %>" />
+                                <h5 class="profile-name-container">
+                                    <span class="profile-name"><%= profile.userData.name %></span>
+                                    <br/>
+                                    (<a href="/user/<%= profile.userData.username %>" ><%= profile.userData.username %></a>)
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <p>Joined: <%= moment(profile.userData.joined).format("MMM D, YYYY") %></p>
+                    </div>
 
                 </div>
             </div>
@@ -33,12 +49,16 @@
             <div class="panel panel-default">
                 <div class="panel-heading">SUBMISSIONS</div>
                 <div class="panel-body">
-
-                    <div id="container"></div>
-
+                    <div id="chart-container"></div>
                 </div>
             </div>
+        </div>
 
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                </div>
+            </div>
         </div>
 
 
@@ -50,12 +70,12 @@
 
     $(document).ready(function () {
 
-        Highcharts.chart('container', {
+        Highcharts.chart('chart-container', {
             credits:{
                 enabled: false
             },
-            colors: ['#7cb5ec', '#90ed7d', '#434348', '#f7a35c', '#8085e9',
-                '#f15c80' ],
+            colors: ['#f15c80', '#39ca1c', '#8B572A', '#ff9999', '#ffcc66',
+                '#ffa366' ],
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: null,

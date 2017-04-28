@@ -1,11 +1,8 @@
-var express     = require('express');
-var router      = express.Router();
+var express = require('express');
+var router = express.Router();
 
 
-
-var User        = require('../models/user');
-var DB          = require('../config/database/knex/DB');
-var Query       = require('../config/database/knex/query');
+var User = require('../models/user');
 
 
 router.get('/', function(req, res, next) {

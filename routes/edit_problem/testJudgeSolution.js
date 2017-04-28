@@ -1,25 +1,22 @@
-var fse         = require('fs-extra');
-var fs          = require('fs');
-var path        = require("path");
 
-var _           = require('lodash');
-var Busboy      = require('busboy');
-var uuid        = require('node-uuid');
-var rimraf      = require('rimraf');
-var mkdirp      = require('mkdirp');
-var async       = require('async');
+var fs = require('fs');
+var Busboy = require('busboy');
+var uuid = require('node-uuid');
+var rimraf = require('rimraf');
+var mkdirp = require('mkdirp');
+var async = require('async');
 
-var MyUtil      = require('../../helpers/myutil');
-var Judge       = require('../../helpers/problemSetter/settersJudge');
-var Problems    = require('../../models/problems');
+var MyUtil = require('../../helpers/myutil');
+var Judge = require('../../helpers/problemSetter/settersJudge');
 
-var colors      = require('colors');
+
+var colors = require('colors');
 
 
 module.exports = function(req, res, next) {
 
     var uploadName = uuid.v4();
-    var uploadFile =  MyUtil.RUN_DIR + '/' + uploadName;
+    var uploadFile = MyUtil.RUN_DIR + '/' + uploadName;
     var pID = req.params.pid;
 
     async.waterfall([
@@ -39,12 +36,12 @@ module.exports = function(req, res, next) {
         function(opts,callback){
 
             opts['runName'] = uploadName;
-            opts['runDir']  = uploadFile;
-            opts['pID']     = pID;
-            opts['tcDir']   = MyUtil.TC_DIR + '/' + pID;
+            opts['runDir'] = uploadFile;
+            opts['pID'] = pID;
+            opts['tcDir'] = MyUtil.TC_DIR + '/' + pID;
             opts['codeDir'] = uploadFile;
 
-            console.log("calling Judge runner....".green);
+            console.log('calling Judge runner....'.green);
 
             Judge.run(opts,function(err,result){
                 callback(err,result);
@@ -55,7 +52,7 @@ module.exports = function(req, res, next) {
         cleanSubmit(uploadFile);
 
         if( error ){
-            console.log("in tjs:");
+            console.log('in tjs:');
             console.log(error);
             if( error.formError ){
                 res.json(error);
@@ -105,7 +102,7 @@ var getForm = function(uploadFile,req,cb){
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 
-        if( filename.length  ){
+        if( filename.length ){
 
             console.log((filename +' receieved with mimetype: ' + mimetype).yellow);
 
@@ -143,7 +140,7 @@ var getForm = function(uploadFile,req,cb){
 
 
 
-            if(  limits['tl'] && limits['ml']  ){
+            if( limits['tl'] && limits['ml'] ){
                 opts['language'] = limits['language'];
                 opts['timeLimit'] = parseInt(parseFloat(limits['tl'])*1000);
                 opts['memoryLimit'] = limits['ml'];

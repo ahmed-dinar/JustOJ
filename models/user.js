@@ -1,9 +1,9 @@
 
-var async           = require('async');
-var bcrypt          = require('bcryptjs');
+var async = require('async');
+var bcrypt = require('bcryptjs');
 
-var DB              = require('../config/database/knex/DB');
-var Query           = require('../config/database/knex/query');
+var DB = require('../config/database/knex/DB');
+var Query = require('../config/database/knex/query');
 
 function User(){}
 
@@ -64,17 +64,16 @@ User.available = function(username,email,fn){
 
     var sql;
     if( username && email ){
-         sql = Query.select('username')
+        sql = Query.select('username')
             .from('users')
             .where('username', username)
             .orWhere('email',email)
             .limit(1);
-        DB.execute(sql.toString(),fn);
     }
     else if( username )
-         sql = Query.select('username').from('users').where('username',username).limit(1);
+        sql = Query.select('username').from('users').where('username',username).limit(1);
     else if( email )
-         sql = Query.select('email').from('users').where('email', email).limit(1);
+        sql = Query.select('email').from('users').where('email', email).limit(1);
     else
         return fn('empty fields');
 
@@ -143,7 +142,7 @@ User.getProfile = function (username , fn) {
         function (userData , contestHistory, callback) {
 
             var sql = Query.select(
-                Query.raw(" GROUP_CONCAT(DISTINCT(CASE WHEN `a`.`status` = 0 THEN `a`.`pid` ELSE NULL END) SEPARATOR ',') as solvedList "),
+                Query.raw(' GROUP_CONCAT(DISTINCT(CASE WHEN `a`.`status` = 0 THEN `a`.`pid` ELSE NULL END) SEPARATOR \',\') as solvedList '),
                 Query.raw(' COUNT(DISTINCT(CASE WHEN `a`.`status` = 0 THEN `a`.`pid` ELSE NULL END)) as solved '),
                 Query.raw(' COUNT(CASE WHEN `a`.`status` = 0 THEN 1 ELSE NULL END) as accepted '),  //accepted
                 Query.raw(' COUNT(CASE WHEN `a`.`status` = 1 THEN 1 ELSE NULL END) as re '),  //runtime error

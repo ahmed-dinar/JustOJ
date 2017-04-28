@@ -1,21 +1,21 @@
 
-var path        = require('path');
-var fs          = require('fs');
-var exec        = require('child_process').exec;
+var path = require('path');
+var fs = require('fs');
+var exec = require('child_process').exec;
 
-var async       = require('async');
-var _           = require('lodash');
-var jsdiff      = require('diff');
-var uuid        = require('node-uuid');
-var rimraf      = require('rimraf');
-var mkdirp      = require('mkdirp');
+var async = require('async');
+var _ = require('lodash');
+var jsdiff = require('diff');
+var uuid = require('node-uuid');
+var rimraf = require('rimraf');
+var mkdirp = require('mkdirp');
 
-var MyUtil      = require('../myutil');
-var Submission  = require('../../models/submission');
-var Problems    = require('../../models/problems');
-var Compiler    = require('../compiler/sandbox/compiler');
+var MyUtil = require('../myutil');
+var Submission = require('../../models/submission');
+var Problems = require('../../models/problems');
+var Compiler = require('../compiler/sandbox/compiler');
 
-var colors      = require('colors');
+var colors = require('colors');
 
 
 /**
@@ -48,12 +48,12 @@ exports.run = function(opts,cb){
     ], function (error, runs) {
 
         rimraf(opts.runDir, function (err) {
-            if( err )  console.log(err);
+            if( err ) console.log(err);
 
             console.log('success clean submit!'.green);
 
             if( error ){
-                if( runs.compiler  )
+                if( runs.compiler )
                     return cb(error,runs);
 
                 if( !runs || _.isUndefined(runs[0]) )
@@ -240,8 +240,8 @@ var checkResult = function (opts,cb) {
 var compareResult = function (opts,testCase,resultObj,cb) {
 //ads
     var judgeOutput = testCase + '/o.txt';
-    var userOutput  = opts.runDir +'/output.txt';
-    var command =  './helpers/compiler/sandbox/compare ' + judgeOutput + ' ' + userOutput;
+    var userOutput = opts.runDir +'/output.txt';
+    var command = './helpers/compiler/sandbox/compare ' + judgeOutput + ' ' + userOutput;
 
     exec(command, {
         env: process.env,
@@ -253,7 +253,7 @@ var compareResult = function (opts,testCase,resultObj,cb) {
 
             if( err.code === 2 || err.code === 3 ){
 
-                console.log('Wrong ans code ' +  err.code);
+                console.log('Wrong ans code ' + err.code);
                 console.log(stdout.red);
 
                 resultObj.code = '9';
@@ -312,7 +312,7 @@ var getFinalResult = function(runs,opts,cb){
     var cpu = 0.0;
     var memory = 0.0;
     var result = 'Accepted';
-    var whyError =  null;
+    var whyError = null;
 
     var fres = {};
     var fparts = [];

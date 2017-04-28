@@ -1,0 +1,16 @@
+.idea
+test
+node_modules
+npm-debug.log
+*.yml
+coverage
+.nyc_output
+.babelrc
+.git
+gulpfile.js
+debug
+build
+routes/s3.js
+config
+public
+views

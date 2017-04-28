@@ -1,10 +1,10 @@
 
-var _           = require('lodash');
-var async       = require('async');
-var has         = require('has');
-var DB          = require('../config/database/knex/DB');
-var Query       = require('../config/database/knex/query');
-var Paginate    = require('../helpers/paginate');
+var _ = require('lodash');
+var async = require('async');
+var has = require('has');
+var DB = require('../config/database/knex/DB');
+var Query = require('../config/database/knex/query');
+var Paginate = require('../helpers/paginate');
 
 
 exports.insert = function(inserts,cb){
@@ -74,7 +74,7 @@ exports.getTestCase = function(submissionId,problemId,userId,cb){
             ,[problemId]
         )
         .joinRaw( '  LEFT JOIN( '+
-            "SELECT `sc`.`sid`, GROUP_CONCAT('{\"status\":\"',`sc`.`status`, '\",\"cpu\":\"' ,`sc`.`cpu`, '\",\"memory\":\"' ,`sc`.`memory`, '\",\"errortype\":\"' ,`sc`.`errortype` , '\"}' SEPARATOR ',') as `cases` " +
+            'SELECT `sc`.`sid`, GROUP_CONCAT(\'{"status":"\',`sc`.`status`, \'","cpu":"\' ,`sc`.`cpu`, \'","memory":"\' ,`sc`.`memory`, \'","errortype":"\' ,`sc`.`errortype` , \'"}\' SEPARATOR \',\') as `cases` ' +
             'FROM `submission_case` as `sc` '+
             'WHERE `sc`.`sid` = ? '+
             'GROUP BY `sc`.`sid` ) AS `cas` ON `sub`.`id` = `cas`.`sid` '
@@ -112,7 +112,7 @@ exports.getPublicTestCase = function(opts,cb){
         .leftJoin('users as usr','sub.uid','usr.id')
         .joinRaw(' LEFT JOIN ?? as subcode ON sub.id = subcode.sid ',[codeTable])
         .joinRaw( '  LEFT JOIN( '+
-            "SELECT `sc`.`sid`, GROUP_CONCAT('{\"status\":\"',`sc`.`status`, '\",\"cpu\":\"' ,`sc`.`cpu`, '\",\"memory\":\"' ,`sc`.`memory`, '\",\"errortype\":\"' ,`sc`.`errortype` , '\"}' SEPARATOR ',') as `cases` " +
+            'SELECT `sc`.`sid`, GROUP_CONCAT(\'{"status":"\',`sc`.`status`, \'","cpu":"\' ,`sc`.`cpu`, \'","memory":"\' ,`sc`.`memory`, \'","errortype":"\' ,`sc`.`errortype` , \'"}\' SEPARATOR \',\') as `cases` ' +
             'FROM ?? as `sc` '+
             'WHERE `sc`.`sid` = ? '+
             'GROUP BY `sc`.`sid` ) AS `cas` ON `sub`.`id` = `cas`.`sid` '
@@ -176,12 +176,12 @@ exports.getUserSubmissions = function (username, cur_page, URL, cb) {
         });
 
     Paginate.paginate({
-            cur_page: cur_page,
-            sql: sql,
-            sqlCount: sqlCount,
-            limit: 30,
-            url: URL
-        }, cb);
+        cur_page: cur_page,
+        sql: sql,
+        sqlCount: sqlCount,
+        limit: 30,
+        url: URL
+    }, cb);
 };
 
 

@@ -1,7 +1,7 @@
-var passportLocal   = require('passport-local');
-var User            = require('../models/user');
-var DB              = require('../config/database/knex/DB');
-var Query           = require('../config/database/knex/query');
+var passportLocal = require('passport-local');
+var User = require('../models/user');
+var DB = require('../config/database/knex/DB');
+var Query = require('../config/database/knex/query');
 
 module.exports = function(passport) {
 

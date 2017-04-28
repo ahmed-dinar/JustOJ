@@ -1,15 +1,15 @@
-var MyUtil      = require('../helpers/myutil');
-var _           = require('lodash');
-var entities    = require('entities');
-var async       = require('async');
+var MyUtil = require('../helpers/myutil');
+var _ = require('lodash');
+var entities = require('entities');
+var async = require('async');
 
-var Paginate    = require('../helpers/paginate');
-var DB          = require('../config/database/knex/DB');
-var Query       = require('../config/database/knex/query');
+var Paginate = require('../helpers/paginate');
+var DB = require('../config/database/knex/DB');
+var Query = require('../config/database/knex/query');
 
 var table = 'problems';
 
-var colors      = require('colors');
+var colors = require('colors');
 
 /**
  *
@@ -77,7 +77,7 @@ exports.findProblems = function (uid,cur_page,URL, cb) {
                 ') as pbut ON pb.id = pbut.pid ', [uid]);
     }
 
-     sql = sql
+    sql = sql
         .joinRaw(' LEFT JOIN( ' +
             'SELECT ssss.pid, COUNT(DISTINCT ssss.uid) AS triedBy ' +
             'FROM submissions as ssss ' +
@@ -93,12 +93,12 @@ exports.findProblems = function (uid,cur_page,URL, cb) {
 
 
     Paginate.paginate({
-            cur_page: cur_page,
-            sql: sql,
-            sqlCount: Query.count('id as count').from('problems').where('status','public'),
-            limit: 5,
-            url: URL
-        }, cb);
+        cur_page: cur_page,
+        sql: sql,
+        sqlCount: Query.count('id as count').from('problems').where('status','public'),
+        limit: 5,
+        url: URL
+    }, cb);
 };
 
 

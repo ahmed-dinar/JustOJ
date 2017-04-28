@@ -7,14 +7,16 @@
 var bcrypt      = require('bcryptjs');
 var _           = require('lodash');
 var moment      = require("moment");
-var uuid        = require('node-uuid');
-var nodemailer  = require('nodemailer');
+var uuid        = require('uuid');
+var Nodemailer  = require('nodemailer');
 var async       = require('async');
 
 var DB          = require('../config/database/knex/DB');
 var Query       = require('../config/database/knex/query');
 
 var Secrets     = require('../files/secrets/Secrets');
+
+var debug = require('debug')('models:tempuser');
 
 /**
  *
@@ -76,14 +78,16 @@ exports.resister = function (req, cb) {
 
         function(token, callback) {
 
-            var transporter = nodemailer.createTransport({
+            var transporter = Nodemailer.createTransport({
                 service: 'Gmail',
                 auth: {
-                    type: 'OAuth2',
+                    type: 'login',
                     user: Secrets.gmail.username,
-                    accessToken: Secrets.gmail.accessToken
+                    pass: Secrets.gmail.password
                 }
             });
+
+            debug('sending mail..');
 
             var link = "http://" + req.get('host') + "/verify?verification=" + token;
             var html = "Hello," + username + "<br><br>Please Follow the link to verify your email.<br><br>"
@@ -107,8 +111,6 @@ exports.resister = function (req, cb) {
                 callback();
             });
         }
-
-
     ], cb);
 
 };

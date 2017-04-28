@@ -4,7 +4,7 @@
  * @private
  */
 
-var _          = require('lodash');
+var _ = require('lodash');
 
 
 /**
@@ -28,7 +28,7 @@ var Pagination = exports.Pagination = function Pagination(cur_page,page_limit,to
  * @returns {number}
  */
 Pagination.prototype.offset = function() {
-   return (this.cur_page - 1) * this.page_limit;
+    return (this.cur_page - 1) * this.page_limit;
 };
 
 
@@ -37,7 +37,7 @@ Pagination.prototype.offset = function() {
  * @returns {*}
  */
 Pagination.prototype.totalPages = function() {
-   return _.ceil(this.total/this.page_limit);
+    return _.ceil(this.total/this.page_limit);
 };
 
 /**
@@ -45,7 +45,7 @@ Pagination.prototype.totalPages = function() {
  * @returns {number}
  */
 Pagination.prototype.prevPage = function() {
-   return this.cur_page - 1;
+    return this.cur_page - 1;
 };
 
 
@@ -54,7 +54,7 @@ Pagination.prototype.prevPage = function() {
  * @returns {*}
  */
 Pagination.prototype.nextPage = function() {
-   return (this.cur_page + 1);
+    return (this.cur_page + 1);
 };
 
 

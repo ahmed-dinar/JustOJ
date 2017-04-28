@@ -3,19 +3,14 @@
  * @type {*|exports|module.exports}
  */
 
-var express     = require('express');
-var router      = express.Router();
-
-var roles       = require('../middlewares/userrole');
+var express = require('express');
+var router = express.Router();
 
 
 router.get('/',function(req, res, next) {
 
-
-
-
     res.render('index',{
-        active_nav: "",
+        active_nav: '',
         isLoggedIn: req.isAuthenticated(),
         user: req.user
     });

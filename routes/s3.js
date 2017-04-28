@@ -1,15 +1,13 @@
-var express     = require('express');
-var router      = express.Router();
-var fs          = require('fs');
-var fse         = require('fs-extra')
-var uuid        = require('node-uuid');
-var mime        = require('mime-types');
-var path        = require("path");
-var mkdirp      = require('mkdirp');
+var express = require('express');
+var router = express.Router();
+var fs = require('fs');
+var fse = require('fs-extra');
+var uuid = require('uuid');
+var mime = require('mime-types');
+var path = require('path');
+var mkdirp = require('mkdirp');
 var util = require('util');
 
-var Query = require('../config/database/knex/query');
-var DB    = require('../config/database/knex/DB');
 
 
 
@@ -24,14 +22,14 @@ router.get('/' , function(req, res, next) {
 router.post('/:pid/', function(req, res, next) {
 
     var busboy = new Busboy({ headers: req.headers });
-    var uniquename =  uuid.v4();
+    var uniquename = uuid.v4();
     var namemap = ['i','o'];
     var fname = 0;
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 
 
-        var saveTo =  __dirname + '/../files/tc/p/' + req.params.pid +  '/' + uniquename + '/' + namemap[fname++] + '.' + mime.extension(mimetype);
+        var saveTo = __dirname + '/../files/tc/p/' + req.params.pid + '/' + uniquename + '/' + namemap[fname++] + '.' + mime.extension(mimetype);
 
 
         file.on('data', function(data) {

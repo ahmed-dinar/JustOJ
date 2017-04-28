@@ -9,8 +9,8 @@
 */
 
 
-var exec  = require('child_process').exec;
-var fs    = require('fs-extra');
+var exec = require('child_process').exec;
+var fs = require('fs-extra');
 
 
 /**
@@ -118,7 +118,7 @@ Compiler.prototype.run = function run(programmPath,codeName,input,fn){
 
     setTimeout(function(){
 
-        exec("taskkill /im "+codeName+".exe /f",function( error , stdout , stderr ){
+        exec('taskkill /im '+codeName+'.exe /f',function( error , stdout , stderr ){
             console.log('hi killed ha ha ha!  :D ');
            // fs.removeSync(programmPath);
         });

@@ -1,21 +1,21 @@
-var express     = require('express');
-var User        = require('../models/user');
-var router      = express.Router();
+var express = require('express');
+var User = require('../models/user');
+var router = express.Router();
 
-var _           = require('lodash');
-var url         = require('url');
-var entities    = require('entities');
+var _ = require('lodash');
+var url = require('url');
+var entities = require('entities');
 
-var isLoggedIn  = require('../middlewares/isLoggedIn');
-var MyUtil      = require('../helpers/myutil');
-var Problems    = require('../models/problems');
-var Submission  = require('../models/submission');
-var Paginate    = require('../helpers/paginate');
-var moment      = require("moment");
-var async       = require('async');
+var isLoggedIn = require('../middlewares/isLoggedIn');
+var MyUtil = require('../helpers/myutil');
+var Problems = require('../models/problems');
+var Submission = require('../models/submission');
+var Paginate = require('../helpers/paginate');
+var moment = require('moment');
+var async = require('async');
 
 
-var Query       = require('../config/database/knex/query');
+var Query = require('../config/database/knex/query');
 
 
 router.get('/' , function(req, res, next) {
@@ -44,12 +44,12 @@ router.get('/' , function(req, res, next) {
 
 
     Paginate.paginate({
-            cur_page: cur_page,
-            sql: sql,
-            limit: 25,
-            sqlCount: sqlCount,
-            url: url.parse(req.originalUrl).pathname
-        },
+        cur_page: cur_page,
+        sql: sql,
+        limit: 25,
+        sqlCount: sqlCount,
+        url: url.parse(req.originalUrl).pathname
+    },
         function(err,rows,pagination) {
 
             if( err ){
@@ -60,8 +60,8 @@ router.get('/' , function(req, res, next) {
             console.log(rows);
 
             res.render('status/status' , {
-                active_nav: "status",
-                title: "Problems | JUST Online Judge",
+                active_nav: 'status',
+                title: 'Problems | JUST Online Judge',
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
                 user: req.user,
@@ -114,8 +114,8 @@ router.get('/u/:username' , isLoggedIn(true), function(req, res, next) {
             rows = [];
 
         res.render('status/status' , {
-            active_nav: "status",
-            title: "Problems | JUST Online Judge",
+            active_nav: 'status',
+            title: 'Problems | JUST Online Judge',
             locals: req.app.locals,
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
@@ -155,7 +155,7 @@ router.get('/u/:username/p/:pid' , isLoggedIn(true), function(req, res, next) {
             Problems.findById(problemId,['title'],function(err,rows){
                 if(err) return callback(err);
 
-                 if(rows.length===0) return callback('404 no such problem');
+                if(rows.length===0) return callback('404 no such problem');
 
                 callback();
             });
@@ -174,8 +174,8 @@ router.get('/u/:username/p/:pid' , isLoggedIn(true), function(req, res, next) {
             rows = [];
 
         res.render('status/status' , {
-            active_nav: "status",
-            title: "Problems | JUST Online Judge",
+            active_nav: 'status',
+            title: 'Problems | JUST Online Judge',
             locals: req.app.locals,
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
@@ -193,7 +193,7 @@ router.get('/u/:username/p/:pid' , isLoggedIn(true), function(req, res, next) {
 /**
  *
  */
-router.get('/:sid' ,   function(req, res, next) {
+router.get('/:sid' , function(req, res, next) {
 
   //  var userId = req.user.id;
     var submissionId = req.params.sid;
@@ -212,7 +212,7 @@ router.get('/:sid' ,   function(req, res, next) {
 
             var runs = rows[0];
 
-            if( runs.cases === null || _.isUndefined(runs.cases)  )
+            if( runs.cases === null || _.isUndefined(runs.cases) )
                 runs.cases = [];
             else
                 runs.cases = JSON.parse('[' + runs.cases + ']');
@@ -222,8 +222,8 @@ router.get('/:sid' ,   function(req, res, next) {
             console.log(runs);
 
             res.render('status/cases' , {
-                active_nav: "status",
-                title: "Problems | JUST Online Judge",
+                active_nav: 'status',
+                title: 'Problems | JUST Online Judge',
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
                 user: req.user,

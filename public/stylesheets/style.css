@@ -777,3 +777,25 @@ pre{
   position: relative;
   border: 1px solid #dfe8f1;
 }
+
+
+.profile-pic-container{
+  margin: 0 auto;
+  text-align: center;
+}
+
+.profile-pic-img {
+  padding: 5px;
+}
+
+
+
+.profile-name-container {
+  text-align: center;
+}
+
+.profile-name-container > .profile-name {
+   font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+}

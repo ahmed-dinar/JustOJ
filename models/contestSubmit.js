@@ -1,25 +1,25 @@
-var path        = require("path");
-var fs          = require('fs');
+var path = require('path');
+var fs = require('fs');
 
 
 
-var mkdirp      = require('mkdirp');
-var _           = require('lodash');
-var moment      = require("moment");
-var async       = require('async');
-var fse         = require('fs-extra');
-var Busboy      = require('busboy');
-var uuid        = require('node-uuid');
-var rimraf      = require('rimraf');
-var colors      = require('colors');
-var mv          = require('mv');
-var has         = require('has');
+var mkdirp = require('mkdirp');
+var _ = require('lodash');
+var moment = require('moment');
+var async = require('async');
+var fse = require('fs-extra');
+var Busboy = require('busboy');
+var uuid = require('uuid');
+var rimraf = require('rimraf');
+var colors = require('colors');
+var mv = require('mv');
+var has = require('has');
 
-var entities    = require("entities");
-var Contest     = require('../models/contest');
-var Problems    = require('../models/problems');
-var MyUtil      = require('../helpers/myutil');
-var Judge       = require('../helpers/compiler/sandbox/contestJudge');
+var entities = require('entities');
+var Contest = require('../models/contest');
+var Problems = require('../models/problems');
+var MyUtil = require('../helpers/myutil');
+var Judge = require('../helpers/compiler/sandbox/contestJudge');
 
 
 exports.submit = function(req, res, next){
@@ -29,12 +29,12 @@ exports.submit = function(req, res, next){
     var user = req.user;
 
     var uploadName = uuid.v4();
-    var codeDir =  MyUtil.UPLOAD_DIR + '/' + uploadName;
+    var codeDir = MyUtil.UPLOAD_DIR + '/' + uploadName;
     var userId = req.user.id;
 
     async.waterfall([
         function(callback){
-            makeTempDir({ codeDir: codeDir  }, callback);
+            makeTempDir({ codeDir: codeDir }, callback);
         },
         function(opts,callback){
             opts['problemId'] = problemId;
@@ -67,8 +67,8 @@ exports.submit = function(req, res, next){
                 return;
             }
 
-            if( has(error,'systemError')  ){
-               return insertSubmissionIntoDb('8',opts,function (err) {
+            if( has(error,'systemError') ){
+                return insertSubmissionIntoDb('8',opts,function (err) {
                     if( err ) return next(new Error(err));
 
                     res.redirect('/contests/' + contestId + '/problem/' + problemId);
@@ -101,7 +101,7 @@ const jsesc = require('jsesc');
  * @param opts
  * @param callback
  */
-var insertSubmissionIntoDb = function (submissionStatus, opts,  callback) {
+var insertSubmissionIntoDb = function (submissionStatus, opts, callback) {
 
     async.waterfall([
         function(cb){
@@ -219,7 +219,7 @@ var getForm = function(req,opts,cb){
 
     busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 
-        if( filename.length  ){
+        if( filename.length ){
 
             console.log((filename +' receieved with mimetype: ' + mimetype).yellow);
 
@@ -254,11 +254,11 @@ var getForm = function(req,opts,cb){
 
             console.log('fstream closed');
 
-            if( language  ){
+            if( language ){
                 opts['language'] = language;
 
                 if( has(opts,'systemError') )
-                     return cb({ systemError: opts.systemError },opts);
+                    return cb({ systemError: opts.systemError },opts);
 
                 return cb(null,opts);
             }
@@ -286,8 +286,8 @@ var getLimits = function(opts,callback){
         if( rows === null || rows[0].cpu === null || rows[0].memory === null )
             return callback(null,{ systemError: 'no limit found for this problem!' });
 
-        opts['timeLimit']  = rows[0].cpu;
-        opts['memoryLimit']  = rows[0].memory;
+        opts['timeLimit'] = rows[0].cpu;
+        opts['memoryLimit'] = rows[0].memory;
         return callback(null, opts);
     });
 };
@@ -299,7 +299,7 @@ var getLimits = function(opts,callback){
  * @param cb
  */
 var renameSource = function(opts,cb) {
-    fs.rename(opts.codeDir + '/code.txt', opts.codeDir + '/code.' + opts.language,  function(err) {
+    fs.rename(opts.codeDir + '/code.txt', opts.codeDir + '/code.' + opts.language, function(err) {
         if ( err ) {
             console.log('ERROR renaming: ');
             console.log(err);

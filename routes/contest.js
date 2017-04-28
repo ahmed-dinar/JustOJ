@@ -3,37 +3,31 @@
  * @type {*|exports|module.exports}
  */
 
-var express         = require('express');
-var User            = require('../models/user');
-var Contest         = require('../models/contest');
-var ContestSubmit   = require('../models/contestSubmit');
-var Problems        = require('../models/problems');
-var router          = express.Router();
+var express = require('express');
+var Contest = require('../models/contest');
+var ContestSubmit = require('../models/contestSubmit');
+var Problems = require('../models/problems');
+var router = express.Router();
 
-var json2csv    = require('json2csv');
-var has         = require('has');
-var entities    = require('entities');
-var _           = require('lodash');
-var moment      = require("moment");
-var async       = require('async');
-var path        = require("path");
-var fse         = require('fs-extra');
-var fs          = require('fs');
-var Busboy      = require('busboy');
-var uuid        = require('node-uuid');
-var rimraf      = require('rimraf');
-var url         = require('url');
-var mkdirp      = require('mkdirp');
+var json2csv = require('json2csv');
+var has = require('has');
+var entities = require('entities');
+var _ = require('lodash');
+var moment = require('moment');
+var async = require('async');
+var path = require('path');
+var fs = require('fs');
+var Busboy = require('busboy');
+var uuid = require('uuid');
+var rimraf = require('rimraf');
+var url = require('url');
+var mkdirp = require('mkdirp');
 
+var MyUtil = require('../helpers/myutil');
+var Submission = require('../models/submission');
+var isLoggedIn = require('../middlewares/isLoggedIn');
+var roles = require('../middlewares/userrole');
 
-var MyUtil      = require('../helpers/myutil');
-var Paginate    = require('../helpers/paginate');
-var Submission  = require('../models/submission');
-
-var isLoggedIn  = require('../middlewares/isLoggedIn');
-var roles       = require('../middlewares/userrole');
-
-var Query       = require('../config/database/knex/query');
 
 
 /**
@@ -51,7 +45,7 @@ router.get('/' , function(req, res, next) {
         console.log(ended);
 
         res.render('contest/contests',{
-            active_nav: "contest",
+            active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             running: running,
@@ -84,7 +78,7 @@ router.get('/past' , function(req, res, next) {
 
         console.log(rows);
         res.render('contest/past_contests',{
-            active_nav: "contest",
+            active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             ended: rows,
@@ -114,7 +108,7 @@ router.get('/create', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, re
         return res.end('unauthorized');
 
     res.render('contest/create',{
-        active_nav: "contest",
+        active_nav: 'contest',
         isLoggedIn: req.isAuthenticated(),
         user: req.user,
         errors: req.flash('err')
@@ -163,7 +157,7 @@ router.get('/edit', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res,
         console.log(rows);
 
         res.render('contest/edit/contest_list',{
-            active_nav: "contest",
+            active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             contests: rows,
@@ -203,7 +197,7 @@ router.post('/edit/edituser/:cid',/*isLoggedIn(true) , roles.is('admin'), */func
     var username = req.body.username;
     var name = req.body.name;
     var password = req.body.password;
-    var institute  = req.body.institute;
+    var institute = req.body.institute;
 
 
     console.log(req.body);
@@ -245,7 +239,7 @@ router.post('/edit/generateuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */
     var quantity = req.body.quantity;
     var cid = req.params.cid;
 
-    if( !MyUtil.isNumeric(quantity)  )
+    if( !MyUtil.isNumeric(quantity) )
         return next(new Error('404'));
 
     if( quantity< 0 || quantity > 100 ){
@@ -291,8 +285,8 @@ router.post('/edit/insertuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */fu
     var username = req.body.username;
     var name = req.body.name;
     var password = req.body.password;
-    var institute  = req.body.institute;
-    var random_password  =  !_.isUndefined(req.body.random_password);
+    var institute = req.body.institute;
+    var random_password = !_.isUndefined(req.body.random_password);
     var cid = req.params.cid;
 
     var insertObj = {
@@ -416,7 +410,7 @@ router.get('/edit/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, 
 
 
         res.render('contest/edit/edit',{
-            active_nav: "contest",
+            active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             cid: req.params.cid,
@@ -442,7 +436,7 @@ router.get('/edit/:cid/problems/new',isLoggedIn(true) , roles.is('admin'), funct
         if( rows.length === 0 ) return next(new Error('404, no contest found!'));
 
         res.render('contest/edit/problems/new',{
-            active_nav: "contest",
+            active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             cid: req.params.cid
@@ -455,15 +449,15 @@ router.get('/edit/:cid/problems/new',isLoggedIn(true) , roles.is('admin'), funct
 
 
 /**
- *
+ *  TODO: use cid for valid contest?
  */
 router.get('/edit/:cid/problems/:pid/preview', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-    var cid = req.params.cid;
+  //  var cid = req.params.cid;
     var pid = req.params.pid;
 
     Problems.findById(pid,[],function(err,rows){
-        if(err){ return next(new Error(err)) }
+        if(err) return next(new Error(err));
 
         res.send(JSON.stringify(Problems.decodeToHTML(rows[0])));
         res.end();
@@ -482,15 +476,15 @@ router.get('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin'
 
 
     Problems.findById(pid,[],function(err,rows){
-        if(err){ return next(new Error(err)) }
+        if(err) return next(new Error(err));
 
         if( !rows || rows.length === 0 ) return res.end('404!');
 
         console.log(rows);
 
         res.render('contest/edit/problems/step_1', {
-            active_nav: "contest",
-            title: "editproblem | JUST Online Judge",
+            active_nav: 'contest',
+            title: 'editproblem | JUST Online Judge',
             locals: req.app.locals,
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
@@ -540,8 +534,8 @@ router.get('/edit/:cid/problems/:pid/step2',isLoggedIn(true) , roles.is('admin')
         if( error ) return next(new Error(error));
 
         res.render('contest/edit/problems/step_2', {
-            active_nav: "contest",
-            title: "editproblem | JUST Online Judge",
+            active_nav: 'contest',
+            title: 'editproblem | JUST Online Judge',
             locals: req.app.locals,
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
@@ -600,8 +594,8 @@ router.get('/edit/:cid/problems/:pid/step3',isLoggedIn(true) , roles.is('admin')
         }
 
         res.render('contest/edit/problems/step_3', {
-            active_nav: "contest",
-            title: "editproblem | JUST Online Judge",
+            active_nav: 'contest',
+            title: 'editproblem | JUST Online Judge',
             locals: req.app.locals,
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
@@ -633,7 +627,7 @@ router.get('/edit/:cid/publish',isLoggedIn(true) , roles.is('admin'), function(r
 /**
  *  NOTE: if pdf-phantomjs error, run $ node node_modules/phantomjs-prebuilt/install.js
  */
-router.get('/participants/download/:cid',   function(req, res, next) {
+router.get('/participants/download/:cid', function(req, res, next) {
 
     if( !req.isAuthenticated() || req.user.role !== 'admin' )
         return next(new Error('404'));
@@ -660,12 +654,12 @@ router.get('/participants/download/:cid',   function(req, res, next) {
 /**
  *  contest dashboard
  */
-router.get('/:cid',  function(req, res, next) {
+router.get('/:cid', function(req, res, next) {
 
     var cid = req.params.cid;
     var isAuthenticated = req.isAuthenticated();
     var user = req.user;
-    var notStarted = false, ended = false;
+    var notStarted = false;
 
     async.waterfall([
         function(callback) {
@@ -680,7 +674,7 @@ router.get('/:cid',  function(req, res, next) {
         function(details,callback) {
 
 
-            if(!isAuthenticated  ) return callback(null,details,false); //not resistered
+            if(!isAuthenticated ) return callback(null,details,false); //not resistered
 
             Contest.isRegistered(cid,user.id,function(err,rows){
                 if(err) return callback(err);
@@ -714,7 +708,7 @@ router.get('/:cid',  function(req, res, next) {
 
         if( notStarted) { // not started
             return res.render('contest/view/announcement',{
-                active_nav: "contest",
+                active_nav: 'contest',
                 isLoggedIn: req.isAuthenticated(),
                 user: req.user,
                 errors: req.flash('err'),
@@ -726,8 +720,8 @@ router.get('/:cid',  function(req, res, next) {
         }
 
         res.render('contest/view/dashboard', {
-            active_contest_nav: "problems",
-            active_nav: "contest",
+            active_contest_nav: 'problems',
+            active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             errors: req.flash('err'),
@@ -786,8 +780,8 @@ router.get('/:cid/clarifications/view/:clid', isLoggedIn(true), function(req, re
         }
 
         res.render('contest/view/clarifications/view',{
-            active_contest_nav: "clarifications",
-            active_nav: "contest",
+            active_contest_nav: 'clarifications',
+            active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             moment: moment,
@@ -806,7 +800,6 @@ router.get('/:cid/clarifications/request', isLoggedIn(true), function(req, res, 
 
     var cid = req.params.cid;
     var user = req.user;
-    var notStarted = false;
     var usrid = user.id;
 
     Contest.getDetailsIsReg(cid,usrid,function(err,rows){
@@ -834,9 +827,9 @@ router.get('/:cid/clarifications/request', isLoggedIn(true), function(req, res, 
             problems = JSON.parse('{' + contest.problemList + '}');
 
         res.render('contest/view/clarifications/request', {
-            active_contest_nav: "clarifications",
-            active_nav: "contest",
-            title: "Problems | JUST Online Judge",
+            active_contest_nav: 'clarifications',
+            active_nav: 'contest',
+            title: 'Problems | JUST Online Judge',
             isLoggedIn: req.isAuthenticated(),
             user: user,
             contest: contest,
@@ -926,9 +919,9 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
         console.log(problems);
 
         res.render('contest/view/clarifications/clarifications', {
-            active_contest_nav: "clarifications",
-            active_nav: "contest",
-            title: "Problems | JUST Online Judge",
+            active_contest_nav: 'clarifications',
+            active_nav: 'contest',
+            title: 'Problems | JUST Online Judge',
             isLoggedIn: isAuthenticated,
             user: user,
             moment: moment,
@@ -992,9 +985,9 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
             return res.redirect('/contests/' + cid);
 
         res.render('contest/view/submissions', {
-            active_contest_nav: "submissions",
-            active_nav: "contest",
-            title: "Problems | JUST Online Judge",
+            active_contest_nav: 'submissions',
+            active_nav: 'contest',
+            title: 'Problems | JUST Online Judge',
             locals: req.app.locals,
             user: user,
             moment: moment,
@@ -1014,7 +1007,7 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
  * TODO: if from browser, it shows json array
  *   submissions of a problem of a contest
  */
-router.get('/:cid/submission',  function(req, res, next) {
+router.get('/:cid/submission', function(req, res, next) {
 
     var isJson = req.headers.accept.indexOf('application/json') > -1;
 
@@ -1084,9 +1077,9 @@ router.get('/:cid/submission',  function(req, res, next) {
         console.log(rows);
 
         res.render('contest/view/user_problem_submissions', {
-            active_contest_nav: "submissions",
-            active_nav: "contest",
-            title: "Problems | JUST Online Judge",
+            active_contest_nav: 'submissions',
+            active_nav: 'contest',
+            title: 'Problems | JUST Online Judge',
             locals: req.app.locals,
             user: req.user,
             moment: moment,
@@ -1161,13 +1154,13 @@ router.get('/:cid/submissions/u/:username', isLoggedIn(true), function(req, res,
 
         console.log(rows);
 
-        if( !rows.length || !rows[0].id ||  rows[0].id === null )
+        if( !rows.length || !rows[0].id || rows[0].id === null )
             rows = [];
 
         res.render('contest/view/user_submissions', {
             active_contest_nav: active_contest_nav,
-            active_nav: "contest",
-            title: "Problems | JUST Online Judge",
+            active_nav: 'contest',
+            title: 'Problems | JUST Online Judge',
             locals: req.app.locals,
             isLoggedIn: isAuthenticated,
             user: user,
@@ -1219,7 +1212,7 @@ router.get('/:cid/submissions/:sid', isLoggedIn(true), function(req, res, next) 
 
                     var runs = rows[0];
 
-                    if(  !has(runs,'cases') || runs.cases === null  )
+                    if( !has(runs,'cases') || runs.cases === null )
                         runs['cases'] = [];
                     else
                         runs['cases'] = JSON.parse('[' + runs.cases + ']');
@@ -1245,8 +1238,8 @@ router.get('/:cid/submissions/:sid', isLoggedIn(true), function(req, res, next) 
 
         res.render('contest/view/submission_info', {
             active_contest_nav: 'submissions',
-            active_nav: "contest",
-            title: "Problems | JUST Online Judge",
+            active_nav: 'contest',
+            title: 'Problems | JUST Online Judge',
             locals: req.app.locals,
             submissionId: submissionId,
             isLoggedIn: req.isAuthenticated(),
@@ -1321,12 +1314,12 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
         if( notStarted )
             return res.redirect('/contests/' + cid);
 
-        if( moment().isAfter(contest.end)  ){ //ended
+        if( moment().isAfter(contest.end) ){ //ended
 
             contest = Problems.decodeToHTML(contest);  //TODO: please recheck this
             return res.render('contest/view/problem',{
-                active_contest_nav: "problems",
-                active_nav: "contest",
+                active_contest_nav: 'problems',
+                active_nav: 'contest',
                 isLoggedIn: req.isAuthenticated(),
                 user: req.user,
                 errors: req.flash('err'),
@@ -1343,8 +1336,8 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
 
         contest = Problems.decodeToHTML(contest); //TODO: please recheck this
         res.render('contest/view/problem',{
-            active_contest_nav: "problems",
-            active_nav: "contest",
+            active_contest_nav: 'problems',
+            active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             errors: req.flash('err'),
@@ -1420,15 +1413,15 @@ router.get('/:cid/standings', function(req, res, next) {
         if(err) return next(new Error(err));
 
         console.log(contest);
-        console.log("Begin: " +  moment(contest.begin).format("YYYY-MM-DD HH:mm:ss") );
+        console.log('Begin: ' + moment(contest.begin).format('YYYY-MM-DD HH:mm:ss') );
         console.log(ranks);
         console.log(problemStats);
 
 
 
         res.render('contest/view/standings',{
-            active_contest_nav: "standings",
-            active_nav: "contest",
+            active_contest_nav: 'standings',
+            active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
             errors: req.flash('err'),
@@ -1455,19 +1448,19 @@ router.post('/edit/:cid/problems/:pid/step3', isLoggedIn(true) , roles.is('admin
 
     if( !cpu || !memory || !MyUtil.isNumeric(cpu) || !MyUtil.isNumeric(memory) ){
         req.flash('error', 'invalid or empty limits, please check again');
-        res.redirect('/contests/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
+        res.redirect('/contests/edit/' + req.params.cid + '/problems/' + req.params.pid + '/step3');
         return;
     }
 
     if( parseFloat(cpu) < 0.0 || parseFloat(cpu)>5.0 ){
         req.flash('error', 'cpu limit should not be less than zero or greater than 5s');
-        res.redirect('/contests/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
+        res.redirect('/contests/edit/' + req.params.cid + '/problems/' + req.params.pid + '/step3');
         return;
     }
 
     if( parseInt(memory) < 0.0 || parseInt(memory)>256 ){
         req.flash('error', 'memory limit should not be less than zero or greater than 256mb');
-        res.redirect('/contests/edit/' + req.params.cid  + '/problems/' + req.params.pid + '/step3');
+        res.redirect('/contests/edit/' + req.params.cid + '/problems/' + req.params.pid + '/step3');
         return;
     }
 
@@ -1559,8 +1552,8 @@ router.post('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin
  */
 router.post('/edit/:cid/problems/:pid/step2', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-    var uniquename =  uuid.v4();
-    var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid +  '/' + uniquename);
+    var uniquename = uuid.v4();
+    var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid + '/' + uniquename);
     var namemap = [saveTo + '/i.txt', saveTo + '/o.txt'];
 
     async.waterfall([
@@ -1577,7 +1570,7 @@ router.post('/edit/:cid/problems/:pid/step2', isLoggedIn(true) , roles.is('admin
             mkdirp(saveTo, function (err) {
                 if (err) return callback(err);
 
-                console.log(namemap[0] + " created!");
+                console.log(namemap[0] + ' created!');
                 callback();
             });
         }
@@ -1621,7 +1614,7 @@ router.post('/edit/:cid/problems/rtc', isLoggedIn(true) , roles.is('admin'), fun
     if( !req.body.pid || !req.body.casename )
         return next(new Error('No Request body found'));
 
-    var TCDir =  path.normalize(process.cwd() + '/files/tc/p/' + req.body.pid +  '/' + req.body.casename);
+    var TCDir = path.normalize(process.cwd() + '/files/tc/p/' + req.body.pid + '/' + req.body.casename);
 
     console.log('tc to remove ' + TCDir);
     rimraf(TCDir, function (err) {
@@ -1698,13 +1691,14 @@ router.post('/edit/detail/:cid', isLoggedIn(true) , roles.is('admin'), function(
     }
 
     var len = moment(lenTime, 'HH:mm:ss');
-    var begin = moment(beginDate + ' ' + beginTime).format("YYYY-MM-DD HH:mm:ss");
-    var end   = moment(beginDate + ' ' + beginTime).add({
+    var begin = moment(beginDate + ' ' + beginTime).format('YYYY-MM-DD HH:mm:ss');
+    var end = moment(beginDate + ' ' + beginTime).add({
         days: parseInt(lenDay),
         hours: parseInt(len.get('hour')),
         minutes: parseInt(len.get('minute')),
         seconds: parseInt(len.get('second'))
-    }).format("YYYY-MM-DD HH:mm:ss");
+    })
+        .format('YYYY-MM-DD HH:mm:ss');
 
     Contest.update({
         title: title,
@@ -1746,13 +1740,14 @@ router.post('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, 
     }
 
     var len = moment(lenTime, 'HH:mm:ss');
-    var begin = moment(beginDate + ' ' + beginTime).format("YYYY-MM-DD HH:mm:ss");
-    var end   = moment(beginDate + ' ' + beginTime).add({
+    var begin = moment(beginDate + ' ' + beginTime).format('YYYY-MM-DD HH:mm:ss');
+    var end = moment(beginDate + ' ' + beginTime).add({
         days: parseInt(lenDay),
         hours: parseInt(len.get('hour')),
         minutes: parseInt(len.get('minute')),
         seconds: parseInt(len.get('second'))
-    }).format("YYYY-MM-DD HH:mm:ss");
+    })
+        .format('YYYY-MM-DD HH:mm:ss');
 
 
     Contest.create({
@@ -1780,9 +1775,9 @@ router.post('/:cid/submit/:pid',isLoggedIn(true) , function(req, res, next) {
     Contest.findAndisRegistered(cid,uid,function (err,rows) {
         if(err) return next(new Error(err));
 
-        if( rows.length === 0  )  return next(new Error('404'));
+        if( rows.length === 0 ) return next(new Error('404'));
 
-        if( !rows[0].resistered  )  return next(new Error('401'));
+        if( !rows[0].resistered ) return next(new Error('401'));
 
         ContestSubmit.submit(req, res, next);
     });

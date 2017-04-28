@@ -1,11 +1,8 @@
-var Problems    = require('../../models/problems');
-var MyUtil      = require('../../helpers/myutil');
-var _           = require('lodash');
-var Busboy      = require('busboy');
-var fse         = require('fs-extra');
-var fs          = require('fs');
-var path        = require("path");
-var async       = require('async');
+var Problems = require('../../models/problems');
+var MyUtil = require('../../helpers/myutil');
+var fs = require('fs');
+var path = require('path');
+var async = require('async');
 
 
 module.exports = function(req,res,next){
@@ -51,8 +48,8 @@ module.exports = function(req,res,next){
             }
 
             res.render('problem/edit/step_3', {
-                active_nav: "problems",
-                title: "editproblem | JUST Online Judge",
+                active_nav: 'problems',
+                title: 'editproblem | JUST Online Judge',
                 locals: req.app.locals,
                 isLoggedIn: req.isAuthenticated(),
                 user: req.user,
@@ -122,11 +119,11 @@ module.exports = function(req,res,next){
                 };
 
                 Problems.updateLimits(req.params.pid,limits,function(err,row){
-                     if(err){
-                         console.log('Set limit db error');
-                         console.log(err);
-                         return callback(err);
-                     }
+                    if(err){
+                        console.log('Set limit db error');
+                        console.log(err);
+                        return callback(err);
+                    }
 
                     callback();
                 });

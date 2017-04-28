@@ -1,21 +1,21 @@
 
-var path        = require('path');
-var fs          = require('fs');
-var exec        = require('child_process').exec;
+var path = require('path');
+var fs = require('fs');
+var exec = require('child_process').exec;
 
-var async       = require('async');
-var _           = require('lodash');
-var uuid        = require('node-uuid');
-var rimraf      = require('rimraf');
-var mkdirp      = require('mkdirp');
-var has         = require('has');
+var async = require('async');
+var _ = require('lodash');
+var uuid = require('uuid');
+var rimraf = require('rimraf');
+var mkdirp = require('mkdirp');
+var has = require('has');
 
-var MyUtil      = require('../../myutil');
-var Contest     = require('../../../models/contest');
-var Problems    = require('../../../models/problems');
-var Compiler    = require('./compiler');
+var MyUtil = require('../../myutil');
+var Contest = require('../../../models/contest');
+var Problems = require('../../../models/problems');
+var Compiler = require('./compiler');
 
-var colors      = require('colors');
+var colors = require('colors');
 
 
 /**
@@ -26,8 +26,8 @@ var colors      = require('colors');
 exports.run = function(opts,cb){
 
     opts['runName'] = opts.submissionId;
-    opts['runDir']  = MyUtil.RUN_DIR + '/' + opts.runName;
-    opts['testCaseDir']   = MyUtil.TC_DIR + '/' + opts.problemId;
+    opts['runDir'] = MyUtil.RUN_DIR + '/' + opts.runName;
+    opts['testCaseDir'] = MyUtil.TC_DIR + '/' + opts.problemId;
 
     console.log('In judge!............................'.green);
     console.log(opts);
@@ -72,15 +72,15 @@ exports.run = function(opts,cb){
                     return Contest.UpdateSubmission(opts.submissionId, { status: '8' }, cb);
 
                 //compiler error
-                if( runs !== null && typeof runs === 'object' &&  has(runs,'compiler') ){
+                if( runs !== null && typeof runs === 'object' && has(runs,'compiler') ){
                     async.series([
-                            function(callback){
-                                Contest.UpdateRank(opts.contestId,opts.userId,opts.problemId,7,callback);
-                            },
-                            function(callback){
-                                Contest.UpdateSubmission(opts.submissionId, { status: '7' }, callback);
-                            }
-                        ],
+                        function(callback){
+                            Contest.UpdateRank(opts.contestId,opts.userId,opts.problemId,7,callback);
+                        },
+                        function(callback){
+                            Contest.UpdateSubmission(opts.submissionId, { status: '7' }, callback);
+                        }
+                    ],
                         function(err, results){
                             if(err) console.log('something wrong while updating contest rank and submisison!'.red);
                             cb(null,runs);
@@ -138,7 +138,7 @@ var compileCode = function (opts,cb) {
             console.log(stderr);
             console.log('stdout');
             console.log(stdout);
-            return cb(stderr,{ compiler: 'Compiler Error'})
+            return cb(stderr,{ compiler: 'Compiler Error'});
         };
 
         console.log(('Compiled Successfully').green);
@@ -219,7 +219,7 @@ var runTestCase = function(opts,testCase,cb){
         }
     ], function (error, result) {
 
-        console.log('Case ' + testCase.index  + ' results:');
+        console.log('Case ' + testCase.index + ' results:');
         console.log(result);
 
 
@@ -329,8 +329,8 @@ var compareResult = function (opts,testCase,resultObj,cb) {
     return cb(null,resultObj);
 
     var judgeOutput = testCase + '/o.txt';
-    var userOutput  = opts.runDir +'/output.txt';
-    var command =  './helpers/compiler/sandbox/compare ' + judgeOutput + ' ' + userOutput;
+    var userOutput = opts.runDir +'/output.txt';
+    var command = './helpers/compiler/sandbox/compare ' + judgeOutput + ' ' + userOutput;
 
     exec(command, {
         env: process.env,
@@ -361,7 +361,7 @@ var compareResult = function (opts,testCase,resultObj,cb) {
 
         if( resCode === 3 || resCode === 2 ){
 
-            console.log('Wrong ans code ' +  stdout);
+            console.log('Wrong ans code ' + stdout);
 
             resultObj.code = '9';
             resultObj['result'] = 'Wrong Answer';
@@ -408,7 +408,7 @@ var getFinalResult = function(runs,opts,cb){
     var finalCode = '8';
     var cpu = 0.0;
     var memory = 0.0;
-    var whyError =  null;
+    var whyError = null;
 
     _.forEach(runs,function(value) {
         cpu = Math.max(cpu, parseFloat(value.cpu));
@@ -425,17 +425,17 @@ var getFinalResult = function(runs,opts,cb){
     console.log(('finalCode: ' + finalCode).green);
 
     async.parallel([
-            function(callback){
-                Contest.UpdateSubmission(opts.submissionId, {
-                    status: String(finalCode),
-                    cpu: String(parseInt(parseFloat(cpu) * 1000)),
-                    memory: String(memory)
-                }, callback);
-            },
-            function(callback){
-                Contest.UpdateRank(opts.contestId,opts.userId,opts.problemId,finalCode,callback);
-            }
-        ],
+        function(callback){
+            Contest.UpdateSubmission(opts.submissionId, {
+                status: String(finalCode),
+                cpu: String(parseInt(parseFloat(cpu) * 1000)),
+                memory: String(memory)
+            }, callback);
+        },
+        function(callback){
+            Contest.UpdateRank(opts.contestId,opts.userId,opts.problemId,finalCode,callback);
+        }
+    ],
         function(err, results){
             if(err) console.log('error while getFinalResult updating of contest!');
             cb(null,runs);

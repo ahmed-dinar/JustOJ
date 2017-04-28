@@ -1,5 +1,5 @@
 
-var exec  = require('child_process').exec;
+var exec = require('child_process').exec;
 
 var colors = require('colors');
 
@@ -12,14 +12,14 @@ var colors = require('colors');
  */
 exports.run = function run(opts,testCase,fn){
 
-    var command =  './helpers/compiler/sandbox/safejudge ';
+    var command = './helpers/compiler/sandbox/safejudge ';
     command += opts.runName + '/code ';
-    command += "-i " + testCase + '/i.txt ';
-    command += "-o " + '/home/runs/' + opts.runName + '/output.txt ';
-    command += "-e " + '/home/runs/' + opts.runName + '/error.txt ';
-    command += "-r " + opts.runDir + '/result.txt ';
-    command += "-t " + String(opts.timeLimit) + ' ';
-    command += "-m " + String(opts.memoryLimit);
+    command += '-i ' + testCase + '/i.txt ';
+    command += '-o ' + '/home/runs/' + opts.runName + '/output.txt ';
+    command += '-e ' + '/home/runs/' + opts.runName + '/error.txt ';
+    command += '-r ' + opts.runDir + '/result.txt ';
+    command += '-t ' + String(opts.timeLimit) + ' ';
+    command += '-m ' + String(opts.memoryLimit);
 
 
     console.log('[CODE-RUN]: '.red + command.cyan);
@@ -43,7 +43,7 @@ exports.compile = function compile(opts,fn){
             command = 'gcc -Wall -O2 -fomit-frame-pointer -lm -o ' + opts.runDir +'/code code.c';
             break;
         case 'cpp':
-            command =  'g++ -w -O2 -fomit-frame-pointer -lm -o ' + opts.runDir + '/code code.cpp';
+            command = 'g++ -w -O2 -fomit-frame-pointer -lm -o ' + opts.runDir + '/code code.cpp';
             break;
         case 'java':
             return fn('Java will be supported soon!','');
@@ -53,7 +53,7 @@ exports.compile = function compile(opts,fn){
     }
 
 
-    console.log('[CODE-COMPILE]: '.red +  (opts.codeDir).cyan);
+    console.log('[CODE-COMPILE]: '.red + (opts.codeDir).cyan);
     console.log((command).yellow);
 
     var cnfg = {
@@ -65,12 +65,12 @@ exports.compile = function compile(opts,fn){
 
     exec(command, cnfg, function(err, stdout, stderr) {
 
-        console.log("we are in compiler");
-        console.log("err:");
+        console.log('we are in compiler');
+        console.log('err:');
         console.log(err);
         console.log('stderr:');
         console.log(stderr);
-        console.log("we are out of compiler");
+        console.log('we are out of compiler');
 
         if (err) {
             return fn(err,stderr);

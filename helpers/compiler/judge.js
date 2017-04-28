@@ -1,10 +1,10 @@
-var Compiler    = require('./compiler');
-var Problems    = require('../../models/problems');
-var _           = require('lodash');
-var path        = require('path');
-var jsdiff      = require('diff');
-var fs          = require('fs');
-var async       = require('async');
+var Compiler = require('./compiler');
+var Problems = require('../../models/problems');
+var _ = require('lodash');
+var path = require('path');
+var jsdiff = require('diff');
+var fs = require('fs');
+var async = require('async');
 
 /**
  * Initialize judge data
@@ -86,9 +86,9 @@ var findTestCases = function(problemId,callback){
         }
     },function(err,testCases){
 
-        if( err ) { return  callback(err); }
+        if( err ) { return callback(err); }
 
-        if( testCases.length === 0 ) { return  callback('No Test Case Found!'); }
+        if( testCases.length === 0 ) { return callback('No Test Case Found!'); }
 
         callback(null,testCases);
 
@@ -148,7 +148,7 @@ var judgeTestCases = function(testCases,problemId,runPath,runName,compiler,callb
 var runTestCase = function(runPath,runName,testCasePath,compiler,runCallback){
     compiler.run(runPath,runName,testCasePath+'\\i.txt',function(stdRunErr,stdRunOut){
 
-        if( stdRunErr ){  return  runCallback(stdRunErr); }
+        if( stdRunErr ){ return runCallback(stdRunErr); }
 
         runCallback(null,stdRunOut);
     });
