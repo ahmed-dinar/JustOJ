@@ -10,9 +10,8 @@
 # proper next() error handling
 # implement error page
 # Contest hosting
-# User profile
 # forgot password
-# Ranks
+# Ranks 
 # update registration process
     - better way to  use tepm user? may be avoid this db?
     - setup cron job for deleting expired temp user
@@ -32,6 +31,7 @@
 
 
 ---- IN FUTURE ----
+# integrate MOSS for Detecting Plagiarism
 # set different language for problems
 # open compiler for custom test
 # activate score in contest problems

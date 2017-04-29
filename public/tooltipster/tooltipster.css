@@ -141,7 +141,7 @@
 }
 
 
-/* Some CSS magic for the awesome animations - feel free to make your own custom animations and reference it in your Tooltipster settings! */
+/* Some CSS magic for the awesome animations - feel free to make your own custom animations and reference it in your Tooltipster profile.ejs! */
 
 .tooltipster-fade {
 	opacity: 0;

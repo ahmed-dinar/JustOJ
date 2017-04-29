@@ -43,11 +43,12 @@ app.locals.site = {
     description: 'SOMETHING'
 };
 
+/*
 app.locals.defines = {
-    RUN_DIR: '/SECURITY/JAIL/home/run',
-    SUBMISSION_DIR: process.cwd() + '/files/submissions'
+  //  RUN_DIR: '/SECURITY/JAIL/home/run',
+ //   SUBMISSION_DIR: process.cwd() + '/files/submissions'
    // RUN_DIR: '/home/ahmed-dinar/Desktop/testRun'
-};
+};*/
 
 
 // view engine setup.

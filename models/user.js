@@ -4,6 +4,7 @@ var bcrypt = require('bcryptjs');
 
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
+var CustomError = require('../helpers/custom-error');
 
 function User(){}
 
@@ -104,6 +105,66 @@ User.problemStatus = function(id,callback){
 
 /**
  *
+ * @param credentials
+ * @param callback
+ */
+User.updateProfile = function(credentials,callback){
+
+    var sql = Query('users')
+        .update(credentials.fields)
+        .where('id', credentials.id);
+
+    DB.execute(sql.toString(), callback);
+};
+
+
+
+/**
+ *
+ * @param credentials
+ * @param fn
+ */
+User.changePassword = function(credentials,fn){
+
+    async.waterfall([
+        function (callback) {
+            bcrypt.compare(credentials.currentpassword, credentials.password, function(err, res) {
+
+                if(err) return callback(new CustomError(err,'passcompare'));
+
+                if(res) return callback();
+
+                callback(new CustomError('invalid current password','form'));
+            });
+        },
+        function(callback) {
+            bcrypt.genSalt(10, function (err, salt) {
+                if (err) return callback(new CustomError(err,'genSalt'));
+
+                callback(null, salt);
+            });
+        },
+        function(salt,callback) {
+            bcrypt.hash(credentials.newpassword, salt, function (err, hash) {
+                if (err) return callback(new CustomError(err,'hash'));
+
+                callback(null, hash);
+            });
+        },
+        function (hash, callback) {
+
+            var sql = Query('users')
+                .update({ password: hash })
+                .where('id', credentials.id);
+
+            DB.execute(sql.toString(), callback);
+        }
+    ], fn);
+};
+
+
+/**
+ *
  * @param username
  */
 User.getProfile = function (username , fn) {
@@ -127,7 +188,8 @@ User.getProfile = function (username , fn) {
         function (userData , callback) {
             var sql = Query.select([
                 'contest_participants.cid',
-                'contest.title'
+                'contest.title',
+                'contest.begin'
             ])
                 .from('contest_participants')
                 .leftJoin('contest' , 'contest_participants.cid' ,'contest.id')

@@ -941,7 +941,7 @@ validateVast = function(){
 
     /**
      * By default, the template delimiters used by lodash are like those in
-     * embedded Ruby (ERB). Change the following template settings to use
+     * embedded Ruby (ERB). Change the following template profile.ejs to use
      * alternative delimiters.
      *
      * @static
@@ -7286,7 +7286,7 @@ validateVast = function(){
      * @returns {Function} Returns the new restricted function.
      * @example
      *
-     * var saves = ['profile', 'settings'];
+     * var saves = ['profile', 'profile.ejs'];
      *
      * var done = _.after(saves.length, function() {
      *   console.log('done saving!');

@@ -21,14 +21,15 @@
     "lint-fix": "./node_modules/.bin/eslint -c .eslintrc --fix routes/** models/** helpers/** bin/** middlewares/** "
   },
   "dependencies": {
-    "async": "^2.1.2",
-    "bcryptjs": "^2.3.0",
-    "body-parser": "^1.15.0",
+    "async": "^2.3.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.17.1",
     "busboy": "^0.2.12",
     "connect-flash": "^0.1.1",
     "connect-roles": "^3.1.2",
     "cookie-parser": "~1.4.3",
-    "debug": "^2.2.0",
+    "country-data": "0.0.31",
+    "debug": "^2.6.6",
     "ejs": "~2.5.2",
     "entities": "^1.1.1",
     "express": "~4.15.2",
@@ -43,10 +44,10 @@
     "kue": "^0.11.5",
     "lodash": "^4.6.1",
     "mkdirp": "^0.5.1",
-    "moment": "^2.10.6",
+    "moment": "^2.18.1",
     "morgan": "~1.8.1",
     "mv": "^2.1.1",
-    "mysql": "^2.10.2",
+    "mysql": "^2.13.0",
     "nodemailer": "^4.0.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
@@ -54,7 +55,8 @@
     "serve-favicon": "~2.4.2",
     "socket.io": "^1.4.5",
     "url": "^0.11.0",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "validator": "^7.0.0"
   },
   "devDependencies": {
     "browserify": "^14.3.0",

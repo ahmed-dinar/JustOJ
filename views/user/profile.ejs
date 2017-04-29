@@ -21,44 +21,154 @@
 
     <div class="row">
 
-        <div class="col-md-8">
+        <div class="col-md-4">
 
             <div class="panel panel-default">
+
+                <% if(isLoggedIn && user.id === profile.userData.id){ %>
+                    <div class="panel-heading">
+                        <a href="/user/settings/profile" class="pull-right" ><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                        <div class="clearfix"></div>
+                    </div>
+                <% } %>
+
                 <div class="panel-body">
 
-                    <div class="col-md-4">
-                        <div class="profile-pic-container">
-                            <div class="profile-pic-img">
-                                <img class="img-thumbnail" src="<%= profile.profilePicture %>" />
-                                <h5 class="profile-name-container">
-                                    <span class="profile-name"><%= profile.userData.name %></span>
-                                    <br/>
-                                    (<a href="/user/<%= profile.userData.username %>" ><%= profile.userData.username %></a>)
-                                </h5>
-                            </div>
+                    <div class="profile-pic-container">
+                        <div class="profile-pic-img">
+                            <img class="img-thumbnail" src="<%= profile.profilePicture %>" />
+                            <h5 class="profile-name-container">
+                                <span class="profile-name"><%= profile.userData.name %></span>
+                                <br/>
+                                (<a href="/user/<%= profile.userData.username %>" ><%= profile.userData.username %></a>)
+                            </h5>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <p>Joined: <%= moment(profile.userData.joined).format("MMM D, YYYY") %></p>
-                    </div>
+                    <table class="table table-responsive">
+                        <tbody>
+
+                            <% if(profile.userData.website && profile.userData.website.length){ %>
+                            <tr>
+                                <td class="text-center">
+                                    <i class="fa fa-link" aria-hidden="true"></i>&nbsp; <a target="_blank" href="<%= profile.userData.website %>">
+                                        <%= profile.userData.website %>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% } %>
+
+                            <% if(profile.userData.role != 'genuser' && profile.userData.publicemail){ %>
+                            <tr>
+                                <td class="text-center">
+                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp; <a target="_blank" href="mailto:<%= profile.userData.email %>">
+                                        <%= profile.userData.email %>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% } %>
+
+
+                            <% if(profile.userData.institute && profile.userData.institute.length){ %>
+                            <tr>
+                                <td class="text-center">
+                                    <i class="fa fa-graduation-cap" aria-hidden="true"></i>&nbsp; <%= profile.userData.institute %>
+                                </td>
+                            </tr>
+                            <% } %>
+
+                            <% if(profile.userData.country && profile.userData.country.length){ %>
+                            <tr>
+                                <td class="text-center">
+                                    <i class="fa fa-globe" aria-hidden="true"></i>&nbsp; <%= profile.userData.country %>
+                                </td>
+                            </tr>
+                            <% } %>
+
+                            <% if(profile.userData.city && profile.userData.city.length){ %>
+                            <tr>
+                                <td class="text-center">
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp; <%= profile.userData.city %>
+                                </td>
+                            </tr>
+                            <% } %>
+
+                            <tr>
+                                <td class="text-center">
+                                    <i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp; Joined on <%= moment(profile.userData.joined).format("MMM D, YYYY") %>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
                 </div>
             </div>
 
+        </div>
+
+        <div class="col-md-8">
+
             <div class="panel panel-default">
-                <div class="panel-heading">SUBMISSIONS</div>
+                <table class="table table-responsive">
+                    <tbody>
+                    <tr>
+                        <td class="text-center">Contests</td>
+                        <td class="text-center">Submissions</td>
+                        <td class="text-center">Accepted</td>
+                        <td class="text-center">Problem Solved</td>
+                    </tr>
+                    <tr style="font-size: 22px; font-weight: 600; color: #4a5868;">
+                        <td class="text-center"><%= profile.contestHistory.length %></td>
+                        <td class="text-center"><%= profile.submissionHistory.totalSubmission %></td>
+                        <td class="text-center"><%= profile.submissionHistory.accepted %></td>
+                        <td class="text-center"><%= profile.submissionHistory.solved %></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Contest History</div>
+
+
+                <% if(profile.contestHistory.length){ %>
+                <ul class="list-group">
+                    <% for(var i=0;i<profile.contestHistory.length; i++){ %>
+                    <li class="list-group-item" style="padding: 15px 15px;">
+                            Participated in <a href="/contests/<%= profile.contestHistory[i].cid %>"><%- profile.contestHistory[i].title %></a>
+                            <span class="pull-right" style="color: #808080"><%= moment(profile.contestHistory[i].begin).from() %></span>
+                    </li>
+                    <% } %>
+                </ul>
+                <% }else{ %>
+                <div class="panel-body text-center">
+                    <h5>Not participated in any contest yet.</h5>
+                </div>
+                <% } %>
+
+            </div>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Solved Problems</div>
+                <div class="panel-body">
+                <% if(profile.solvedList.length){ %>
+                    <% for(var i=0; i<profile.solvedList.length; i++){ %>
+                        <a class="label label-default" style="padding: 4px 12px; line-height: 2.6" href="/problems/JOP0<%= profile.solvedList[i] %>">JOP0<%= profile.solvedList[i] %></a>
+                    <% } %>
+                <% }else{ %>
+                        <h5>-</h5>
+                <% } %>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Submissions</div>
                 <div class="panel-body">
                     <div id="chart-container"></div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                </div>
-            </div>
         </div>
 
 

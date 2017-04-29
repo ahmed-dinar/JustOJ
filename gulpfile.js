@@ -50,14 +50,20 @@ gulp.task('debug', function () {
 });
 
 
+
+
+
 gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
 
   //  livereload.listen();
 
+    var nodemonExec = args.sudo ? 'sudo ' : '';
+    nodemonExec +=  'DEBUG=isloggedIn,routes:*,models:* node ';
+
     var options = {
         script: 'bin/www',
         ext: 'ejs js',
-        exec: 'sudo DEBUG=isloggedIn,routes:*,models:* node  ',
+        exec: nodemonExec,
         nodeArgs: []
     };
 

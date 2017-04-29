@@ -14,10 +14,10 @@ var TempUser = require('../models/tempuser');
 var User = require('../models/user');
 var Schema = require('../config/form-validation-schema');
 var CustomError = require('../helpers/custom-error');
-
 var Secrets = require('../files/secrets/Secrets');
 
 var debug = require('debug')('routes:resister');
+
 
 router.get('/', isLoggedIn(false) , function(req, res, next) {
 
