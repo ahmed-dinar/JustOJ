@@ -4,8 +4,8 @@
  */
 
 
+var has = require('has');
 var bcrypt      = require('bcryptjs');
-var _           = require('lodash');
 var moment      = require("moment");
 var uuid        = require('uuid');
 var Nodemailer  = require('nodemailer');
@@ -33,25 +33,16 @@ exports.resister = function (req, cb) {
     var role     = 'user';
 
     async.waterfall([
-
         function(callback) {
-            bcrypt.genSalt(10, function (err, salt) {
-                if (err) { return callback('salt error');}
-
-                callback(null, salt);
-            });
+            bcrypt.genSalt(10, callback);
         },
         function(salt,callback) {
-            bcrypt.hash(password, salt, function (err, hash) {
-                if (err) { return callback('hash error'); }
-
-                callback(null, hash);
-            });
+            bcrypt.hash(password, salt, callback);
         },
         function(hash,callback) {
 
             var token = uuid.v4();
-            var now = _.now();
+            var now = moment();
             var created = moment(now).format("YYYY-MM-DD HH:mm:ss");
             var expire = moment(now).add(24, 'hours').format("YYYY-MM-DD HH:mm:ss");
 
@@ -67,29 +58,30 @@ exports.resister = function (req, cb) {
             })
                 .into('temp_user');
 
+            debug('saving temp user..');
+
             DB.execute(
                 sql.toString()
                 ,function(err,rows){
-                    if (err) { return callback('insert temp user error', null); }
+                    if (err) return callback(err);
 
                     callback(null, token);
                 });
         },
-
         function(token, callback) {
 
             var transporter = Nodemailer.createTransport({
-                service: 'Gmail',
+                service: "Gmail",
                 auth: {
-                    type: 'login',
-                    user: Secrets.gmail.username,
-                    pass: Secrets.gmail.password
+                    type: 'OAuth2',
+                    user: Secrets.mail,
+                    clientId: Secrets.gmailOAuth2.client_id,
+                    clientSecret: Secrets.gmailOAuth2.client_secret,
+                    refreshToken: Secrets.gmailOAuth2.refresh_token
                 }
             });
 
-            debug('sending mail..');
-
-            var link = "http://" + req.get('host') + "/verify?verification=" + token;
+            var link = "http://" + req.get('host') + "/user/verify?verification=" + token;
             var html = "Hello," + username + "<br><br>Please Follow the link to verify your email.<br><br>"
                 + "<a href=\"" + link + "\">" + link + "</a><br><br>Thank you,<br>JUSTOJ";
 
@@ -100,38 +92,20 @@ exports.resister = function (req, cb) {
                 html: html
             };
 
-            transporter.sendMail(mailOptions, function (error, info) {
+            debug('sending mail..');
 
-                if (error) {
-                    console.log('send mail error::');
-                    console.log(error);
-                    return callback('Error resistration');
-                }
-
-                callback();
-            });
+            transporter.sendMail(mailOptions, callback);
         }
     ], cb);
-
 };
 
 
 /**
  *
- * @param req
- * @param res
- * @param next
+ * @param token
+ * @param cb
  */
-exports.verify = function (req, res, next) {
-
-    var thishost      = "http://localhost:8888";
-    var requestedhost = req.protocol + "://" + req.get('host');
-
-    if( thishost !== requestedhost ){ return next(new Error('Page Not Found')); }
-
-    var token = req.query.verification;
-
-    if(!token){ return next(new Error('Page Not Found')); }
+exports.verify = function (token, cb) {
 
     async.waterfall([
 
@@ -139,17 +113,19 @@ exports.verify = function (req, res, next) {
 
             var sql = Query.select(['name','username','password','email','role'])
                 .from('temp_user')
-                .where({ 'token': token })
+                .where('token', token)
                 .limit(1);
 
             DB.execute(
                 sql.toString()
                 ,function(err,rows){
-                    if( err ){ return callback(err);  }
+                    if( err )
+                        return callback(err);
 
-                    if( rows.length ) { return callback(null,rows[0]); }
+                    if( !rows.length )
+                        return  callback('Expired or invalid token');
 
-                    callback('Expired or invalid token');
+                    callback(null,rows[0]);
                 });
         },
         function (rows,callback) {
@@ -163,36 +139,15 @@ exports.verify = function (req, res, next) {
             })
                 .into('users');
 
-            DB.execute(
-                sql.toString()
-                ,function(err,rows){
-                    if (err) { return callback('insert user error', null); }
-
-                    callback();
-                });
-
+            DB.execute(sql.toString(), callback);
         },
+        function (ignorepls, callback) {
 
-        function (callback) {
+            var sql = Query('temp_user')
+                .where('token', token)
+                .del();
 
-            var sql = Query('temp_user').where({ 'token': token }).del();
-
-            DB.execute(
-                sql.toString()
-                ,function(err,rows){
-                    if (err) { return callback('delete temp-user error', null); }
-
-                    callback();
-                });
+            DB.execute(sql.toString(),callback);
         }
-                
-    ], function (err, result) {
-        if(err){
-            res.status(404).send(err);
-        }
-        else {
-            req.flash('success', 'Email verified,You can login now!');
-            res.redirect('/login');
-        }
-    });
+    ], cb);
 };

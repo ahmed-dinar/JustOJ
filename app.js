@@ -27,9 +27,9 @@ var status        = require('./routes/status');
 var ranks         = require('./routes/ranks');
 var contest       = require('./routes/contest');
 var ucheck        = require('./routes/ucheck');
-var verify        = require('./routes/verify');
 var s3p           = require('./routes/s3');
 var sockettest    = require('./routes/sockettest');
+var auth          = require('./routes/auth');
 
 
 
@@ -98,9 +98,9 @@ app.use('/ranks', ranks);
 app.use('/user', user);
 app.use('/contests', contest);
 app.use('/ucheck', ucheck);
-app.use('/verify', verify);
 app.use('/s3', s3p);
 app.use('/sockettest', sockettest);
+app.use('/auth', auth);
 
 
 // catch 404 and forward to error handler

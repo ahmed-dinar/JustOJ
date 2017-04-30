@@ -6,7 +6,7 @@ var Query = require('../config/database/knex/query');
 var Paginate = require('../helpers/paginate');
 var MyUtil = require('../helpers/myutil');
 var bcrypt = require('bcryptjs');
-var shortid = require('shortid');
+var rndm = require('rndm');
 var Hashids = require('hashids');
 
 var User = require('./user');
@@ -19,7 +19,7 @@ var User = require('./user');
  */
 exports.generateUser = function (cid,indx, cb) {
 
-    var password = shortid.generate();
+    var password = rndm(10);
     async.waterfall([
         function(callback) {
             bcrypt.genSalt(10, function (err, salt) {
@@ -111,7 +111,7 @@ exports.insertUser = function (cid, random_password, insertObj, cb) {
         function(salt,callback) {
 
             if(random_password)
-                insertObj.password = shortid.generate();
+                insertObj.password = rndm(10);
 
             insertObj.email = insertObj.password;
 

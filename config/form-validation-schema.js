@@ -4,7 +4,7 @@
 
 module.exports = {
 
-    resistration: {
+    'resistration': {
         'username': {
             notEmpty: true,
             isLength: {
@@ -28,7 +28,7 @@ module.exports = {
             errorMessage: 'Invalid Password'
         },
         'name': { //
-            optional: true,
+            notEmpty: true,
             isLength: {
                 options: [{ min: 3, max: 250 }],
                 errorMessage: 'Must be between 3 and 250 chars long'

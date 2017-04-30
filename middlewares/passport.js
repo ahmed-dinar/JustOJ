@@ -14,15 +14,17 @@ module.exports = function(passport) {
             passReqToCallback : true
         },
         function(req, username, password, done){
-
             User.login(username,password,function(err,user){
 
-                if (err) { return done(null, false, req.flash('loginFailure', err) ); }
+                if (err)
+                    return done(null, false, req.flash('loginFailure', err) );
 
                 done(null, user);
             });
         }
     ));
+
+
 
 
     // used to serialize the user for the session

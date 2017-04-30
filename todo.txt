@@ -11,13 +11,14 @@
 # implement error page
 # Contest hosting
 # forgot password
-# Ranks 
+# Ranks
 # update registration process
     - better way to  use tepm user? may be avoid this db?
     - setup cron job for deleting expired temp user
 # add ace editor
 # may be separate judge server?
 # cluster for multithreading??
+# convert all callbacks to promises!!
 
 
 ## of course possible tests!

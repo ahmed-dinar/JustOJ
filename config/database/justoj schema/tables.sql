@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS `problems`;
+
 CREATE TABLE `problems` (
   `id` INT(11) NOT NULL,
   `isContest` TINYINT(1) NOT NULL DEFAULT 0,
@@ -84,6 +85,7 @@ CREATE TABLE `temp_user` (
 ) ENGINE=InnoDB;
 
 
+
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` INT(11) NOT NULL,
@@ -97,8 +99,16 @@ CREATE TABLE `users` (
   `country` VARCHAR(3) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `city` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `institute` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `github_token` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `stack_token` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `fb_token` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `linkedin_token` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `google_token` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `cf_username` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `uva_userid` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `role` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB;
+
 
 
 DROP TABLE IF EXISTS `contest`;

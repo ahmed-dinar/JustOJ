@@ -18,12 +18,40 @@ var CustomError = require('../helpers/custom-error');
 var async = require('async');
 var countries = require('country-data').countries;
 var isEmail = require('validator').isEmail;
+var TempUser = require('../models/tempuser');
 
 router.get('/',function(req, res, next) {
     res.status(404)        // HTTP status 404: NotFound
         .send('Not found');
 });
 
+
+/**
+ * TODO: check protocol in production
+ *  verify a user with toekn from sent to email
+ */
+router.get('/verify', function(req, res, next) {
+
+    var thishost      = "http://localhost:8888";
+    var requestedhost = req.protocol + "://" + req.get('host');
+
+    if( thishost !== requestedhost || !has(req.query,'verification') || !req.query.verification )
+        return next(new Error('Page Not Found'));
+
+    var token = req.query.verification;
+    TempUser.verify(token, function (err,rows) {
+        if(err)
+            return next(new Error(err));
+
+        req.flash('success', 'Email verified,You can login now!');
+        res.redirect('/login');
+    });
+});
+
+
+/**
+ *
+ */
 router.get('/:username',function(req, res, next) {
 
     var username = req.params.username;
@@ -151,7 +179,9 @@ router.post('/settings/changepassword', function(req, res, next) {
     });
 });
 
-var fs = require('fs');
+
+
+
 /**
  *
  */
