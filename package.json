@@ -54,6 +54,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "recaptcha": "^1.2.1",
+    "request": "^2.81.0",
     "rndm": "^1.2.0",
     "serve-favicon": "~2.4.2",
     "socket.io": "^1.4.5",

@@ -216,6 +216,8 @@ router.get('/settings/profile', isLoggedIn(true), function(req, res, next) {
             success: req.flash('success'),
             username: username,
             profile: profile,
+            auth_error: req.flash('auth_error'),
+            auth_success: req.flash('auth_success'),
             moment: moment
         });
     });

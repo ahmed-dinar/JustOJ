@@ -17,7 +17,6 @@ function User(){}
  */
 User.login = function(username, password, fn) {
 
-    
     async.waterfall([
         //find user by username
         function (callback) {

@@ -6,7 +6,7 @@ body {
   font-family: 'PT Sans', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px ;
   color: #333 ;
-  background: #f1f1f1;
+  background: #F5F5F5;
 }
 
 .c-h{
@@ -252,7 +252,7 @@ hr {
 }
 
 .panel-default>.panel-heading {
-  background-color: #f6f6f6;
+  background-color: #f9f9f9;
   background-image: none;
 }
 
@@ -314,6 +314,12 @@ input[type="text"],input[type="password"],input[type="username"],input[type="ema
   border: 0px;
   border-radius: 2px;
 }
+
+.btn-primary{
+  background-color: #3598dc;
+  background-image: none;
+}
+
 
 .avatar-img
 {
@@ -796,4 +802,31 @@ pre{
    font-size: 18px;
   font-weight: 600;
   line-height: 1.5;
+}
+
+.btn-default{
+    border: 1px solid #ccc;
+    background: transparent;
+}
+
+
+.account-btn{
+  width: 160px;
+}
+
+.social-btn-group > .list-group-item:first-child{
+  margin-top: 0;
+}
+
+.social-btn-group > .list-group-item{
+  margin-top: 5px;
+  padding: 8px 15px;
+}
+
+.social-btn-group > .list-group-item > i{
+  font-size: 17px;
+}
+
+.social-btn-group > .nocon {
+  color: #ffffff;
 }
