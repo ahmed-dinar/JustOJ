@@ -6,7 +6,7 @@ body {
   font-family: 'PT Sans', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px ;
   color: #333 ;
-  background: #F5F5F5;
+  background: #ffffff;
 }
 
 .c-h{
@@ -252,7 +252,7 @@ hr {
 }
 
 .panel-default>.panel-heading {
-  background-color: #f9f9f9;
+  background-color: #FAFAFA;
   background-image: none;
 }
 
@@ -316,8 +316,7 @@ input[type="text"],input[type="password"],input[type="username"],input[type="ema
 }
 
 .btn-primary{
-  background-color: #3598dc;
-  background-image: none;
+  background-color: #086fb9;
 }
 
 
@@ -626,14 +625,16 @@ nav.nopadding, div.nopadding {
   margin-bottom: 0px;
 }
 
-.nav>li>a {
-  padding: 7px 15px;
-}
 
 .navbar-inverse {
-  background-color: #1c2536;
+  background-color: #3b6678; /*  518CA3, 012B43  */
   background-image: none;
   border-color: transparent;
+}
+
+.navbar-default{
+  background-image: none;
+  background-color: #ffffff;
 }
 
 
@@ -650,11 +651,23 @@ nav.nopadding, div.nopadding {
 
 .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover{
   background-color: transparent;
+
 }
 
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover{
   background-image: none;
   background-color: transparent;
+}
+
+.navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  color: #cccccc;
+  -webkit-transition: all 200ms ease;
+  -moz-transition: all 200ms ease;
+  transition: all 200ms ease;
 }
 
 .contest-nav >li>a {
@@ -740,11 +753,12 @@ nav.nopadding, div.nopadding {
 
 
 .navbar-brand{
-  font-family: 'Lobster', cursive;
   font-family: 'Lobster Two', cursive;
-  font-size: 26px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
   padding-left: 30px;
-  font-weight: normal;
+  letter-spacing: 2px;
+  font-weight: 600;
 }
 
 .navbar-inverse .navbar-brand {
@@ -769,7 +783,7 @@ li.L1, li.L3, li.L5, li.L7, li.L9 {
 }
 
 pre{
-  background-color: transparent;
+  background-color: #f8f8f8;
   font-size: 12px;
 }
 
@@ -830,3 +844,33 @@ pre{
 .social-btn-group > .nocon {
   color: #ffffff;
 }
+
+.dropdown-menu{
+  border: none;
+}
+
+.btn-default, .btn-primary, .btn-success, .btn-info, .btn-warning, .btn-danger {
+  background-image: none;
+}
+
+.alert-success, .alert-info, .alert-warning, .alert-danger{
+  background-image: none;
+}
+
+.alert-message{
+  font-size: 15px;
+}
+
+/* http://stackoverflow.com/questions/14294476/add-arrow-shaped-to-active-tab */
+.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0px;
+  left: 37px;
+  border-width: 0 7px 6px;
+  border-style: solid;
+  border-color: #FFFFFF transparent;
+  display: block;
+  width: 0;
+}
+

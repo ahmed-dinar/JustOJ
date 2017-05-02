@@ -9,20 +9,29 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href="/"  class="navbar-brand"  >
-                    JOJ <sup><i class="fa fa-terminal" aria-hidden="true"></i></sup>
+                    JOJ
                 </a>
             </div>
 
             <div class="collapse navbar-collapse Navbar-main transparent">
+
+                <ul class="nav navbar-nav" style="margin-left: 15px;">
+                    <li class="<%= active_nav === "" ? 'active' : '' %>"><a href="/"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
+                    <li class="<%= active_nav === "problems" ? 'active' : '' %>" ><a href="/problems" style="padding-left: 3px;"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Problems</a></li>
+                    <li class="<%= active_nav === "ranks" ? 'active' : '' %>"><a href="/ranks"><i class="fa fa-trophy" aria-hidden="true"></i> Ranks</a></li>
+                    <li class="<%= active_nav === "status" ? 'active' : '' %>"><a href="/status"><i class="fa fa-dot-circle-o" aria-hidden="true"></i> Status</a></li>
+                    <li class="<%= active_nav === "contest" ? 'active' : '' %>"><a href="/contests"><i class="fa fa-hourglass" aria-hidden="true"></i> Contests</a></li>
+                </ul>
+
                 <% if(!isLoggedIn){ %>
-                <ul class="nav navbar-nav navbar-right" style="margin-top: 5px;">
-                    <li><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
-                    <li>
+                <ul class="nav navbar-nav navbar-right">
+                    <li style="border-right: 1px solid rgba(255, 255, 255, 0.1);" class="<%= active_nav === "login" ? 'active' : '' %>"><a href="/login"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
+                    <li class="<%= active_nav === "resister" ? 'active' : '' %>">
                         <a href="/resister"><i class="fa fa-user-plus" aria-hidden="true"></i> Resister</a>
                     </li>
                 </ul>
                 <% } else{ %>
-                <ul class="nav navbar-right navbar-nav"  style="margin-top: 5px;">
+                <ul class="nav navbar-right navbar-nav">
 
                     <li class="dropdown">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle">
@@ -40,12 +49,16 @@
                     </li>
                 </ul>
                 <% } %>
+
+
+
             </div>
         </div>
     </div>
 </div>
 
-<div class="navbar navbar-inverse transparent hidden-xs" style="border-bottom: 1px solid #D7D7D7; min-height: 35px; background-color: #364150; border-radius: 0; ">
+<!--
+<div class="navbar navbar-default transparent hidden-xs" style="border-bottom: 1px solid #D7D7D7; min-height: 35px;  border-radius: 0; ">
     <div class="container">
         <div class="row">
             <div class="collapse navbar-collapse Navbar-main transparent" style="padding-left: 0;">
@@ -60,7 +73,7 @@
         </div>
     </div>
 </div>
-
+-->
 
 
 

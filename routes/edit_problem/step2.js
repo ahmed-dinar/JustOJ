@@ -1,6 +1,6 @@
 var Problems = require('../../models/problems');
 var Busboy = require('busboy');
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 var fs = require('fs');
 var path = require('path');
 var async = require('async');

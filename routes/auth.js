@@ -22,7 +22,38 @@ var csrfToken;
 
 
 router.get('/' , function(req, res, next) {
-    res.end('yay!');
+
+    var access_token = req.query.token;
+
+   // https://api.github.com/repos/:owner/:repo/stats/contributors
+
+        var userAgent = 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36';
+        var profileUrl = 'https://api.github.com/user?access_token=' + access_token;
+        debug(profileUrl);
+        request
+            .get({
+                url: profileUrl,
+                headers: {
+                    'User-Agent': userAgent
+                }
+            } , function (err, response, body) {
+                if(err)
+                    return next(new Error(err));
+
+                if( response.statusCode !== 200 )
+                    return next(response.statusCode);
+
+              //  body = JSON.parse(body);
+
+             //   debug(body);
+
+                var gitData = {
+                    public_repos: body.public_repos,
+                    followers: body.followers
+                };
+
+                res.end( JSON.stringify(body) );
+            });
 });
 
 
@@ -32,7 +63,8 @@ router.get('/' , function(req, res, next) {
  * NOTE: ask user id and ask to change username
  */
 router.get('/uva' , function(req, res, next) {
-    res.end('yay!');
+    req.flash('auth_error', 'uva will be added soon!');
+    res.redirect('/user/settings/profile');
 });
 
 
@@ -42,7 +74,8 @@ router.get('/uva' , function(req, res, next) {
  * NOTE: ask to change email {random}@example.com and make public
  */
 router.get('/codeforces' , function(req, res, next) {
-    res.end('yay!');
+    req.flash('auth_error', 'codeforces will be added soon!');
+    res.redirect('/user/settings/profile');
 });
 
 
@@ -391,18 +424,60 @@ router.get('/github/callback', isLoggedIn(true), function (req, res) {
         return;
     }
 
-    OAuth2.getOAuthAccessToken(code, {}, function (err, access_token, refresh_token, results) {
-        if (err) {
-            debug('error github accessToken');
-            debug(err);
-            res.redirect('/auth');
-            return;
+    async.waterfall([
+        function (callback) {
+
+            OAuth2.getOAuthAccessToken(code, {}, function (err, access_token, refresh_token, results) {
+                if (err)
+                    return callback(err);
+
+                debug('github access info: ');
+                debug(results);
+
+
+                callback(null,access_token);
+            });
+        },
+        /*
+        function (access_token , callback) {
+
+            var profileUrl = 'https://api.github.com/user?access_token=' + access_token;
+            request
+                .get(profileUrl , function (err, response, body) {
+                    if(err)
+                        return callback(err);
+
+                    body = JSON.parse(body);
+                    debug(body);
+
+
+                    callback(null,linkedinId);
+                });
+        },*/
+        function (access_token, callback) {
+
+            User.updateProfile({
+                id: req.user.id,
+                fields: {
+                    github_token: access_token
+                }
+            } , function (err,rows) {
+                if(err)
+                    return callback(err);
+
+                callback(null,access_token);
+            });
         }
+    ], function (err , access_token) {
 
-        debug('github access info: ');
-        debug(results);
+        if (err) {
+            debug(err);
+            req.flash('auth_error', 'failed to connect github account');
+        }
+        else
+            req.flash('auth_success', 'github account has been  connected');
 
-        res.redirect('https://api.github.com/user?access_token=' + access_token);
+        res.redirect('/user/settings/profile');
     });
 });
 
@@ -445,20 +520,60 @@ router.get('/stackexchange/callback', isLoggedIn(true), function (req, res) {
         return;
     }
 
-    OAuth2.getOAuthAccessToken(code, {
-        redirect_uri: 'http://localhost:8888/auth/stackexchange/callback'
-    }, function (err, access_token, refresh_token, results) {
-        if (err) {
-            debug('error stackexchange accessToken');
-            debug(err);
-            res.redirect('/auth');
-            return;
+    async.waterfall([
+        function (callback) {
+
+            OAuth2.getOAuthAccessToken(code, {
+                redirect_uri: 'http://localhost:8888/auth/stackexchange/callback'
+            }, function (err, access_token, refresh_token, results) {
+                if (err)
+                    return callback(err);
+
+                debug('stackexchange access info: ');
+                debug(results);
+
+                callback(null,access_token);
+            });
+        },
+        /*
+         function (access_token , callback) {
+
+         var profileUrl = 'https://api.stackexchange.com/2.2/me?site=stackoverflow&key=' + Secrets.stackexchange.key + '&access_token=' + access_token;
+         request
+         .get(profileUrl , function (err, response, body) {
+         if(err)
+         return callback(err);
+
+         body = JSON.parse(body);
+         debug(body);
+
+         callback(null,linkedinId);
+         });
+         },*/
+        function (access_token, callback) {
+
+            User.updateProfile({
+                id: req.user.id,
+                fields: {
+                    stack_token: access_token
+                }
+            } , function (err,rows) {
+                if(err)
+                    return callback(err);
+
+                callback(null,access_token);
+            });
         }
+    ], function (err , access_token) {
 
-        debug('stackexchange access info: ');
-        debug(results);
+        if (err) {
+            debug(err);
+            req.flash('auth_error', 'failed to connect stackexchange account');
+        }
+        else
+            req.flash('auth_success', 'stackexchange account has been  connected');
 
-        res.redirect('https://api.stackexchange.com/2.2/me?site=stackoverflow&key=' + Secrets.stackexchange.key + '&access_token=' + access_token);
+        res.redirect('/user/settings/profile');
     });
 });
 
@@ -514,7 +629,7 @@ var disconnectOAuth = function (accountType, fields, req, res) {
         if(err)
             req.flash('auth_error', 'failed to disconnect ' + accountType  + ' account');
         else
-            req.flash('auth_success', accountType + ' account disconnected successfully');
+            req.flash('auth_success',  'You have disconnected your ' + accountType + ' account successfully');
 
         res.redirect('/user/settings/profile');
     });

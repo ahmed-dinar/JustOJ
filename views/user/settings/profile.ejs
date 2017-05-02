@@ -46,7 +46,7 @@
         <div class="col-md-12">
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <%= auth_error %>
+                <div class="text-center alert-message"><%= auth_error %></div>
             </div>
         </div>
         <% } %>
@@ -56,7 +56,7 @@
         <div class="col-md-12">
             <div class="alert alert-success alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <%= auth_success %>
+                <div class="text-center alert-message"><%= auth_success %></div>
             </div>
         </div>
         <% } %>
@@ -76,24 +76,6 @@
                     </div>
                 </div>
                 </div>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">Connect Profiles</div>
-                <ul class="list-group">
-                    <li class="list-group-item text-center">
-                        <a href="/auth/stackexchange" class="btn btn-lg btn-default account-btn"><i class="fa fa-stack-overflow" aria-hidden="true"></i> Stack Overflow</a>
-                    </li>
-                    <li class="list-group-item text-center">
-                        <a href="/auth/github" class="btn btn-lg btn-default account-btn"><i class="fa fa-github" aria-hidden="true"></i> Github</a>
-                    </li>
-                    <li class="list-group-item text-center">
-                        <a href="/auth/codeforces" class="btn btn-lg btn-default account-btn"><img src="/images/codeforces32x32.png"/> Codeforces</a>
-                    </li>
-                    <li class="list-group-item text-center">
-                        <a href="/auth/uva" class="btn btn-lg btn-default account-btn"><img src="/images/uva22x22.png" /> UVA</a>
-                    </li>
-                </ul>
             </div>
 
             <div class="panel panel-default">
@@ -492,12 +474,55 @@
 
 
         <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">Connect Profiles</div>
+                <ul class="list-group">
+
+                    <% if(profile.userData.stack_token.length){ %>
+                    <li class="list-group-item text-center">
+                        <button style="border: 2px solid #419641;" class="btn btn-lg btn-default account-btn"><i class="fa fa-stack-overflow" aria-hidden="true"></i> Stack Overflow</button>
+                        <a href="/auth/stackexchange?process=disconnect" class="clearfix">Disconnect</a>
+                    </li>
+                    <% }else{ %>
+                    <li class="list-group-item text-center">
+                        <a href="/auth/stackexchange" class="btn btn-lg btn-default account-btn"><i class="fa fa-stack-overflow" aria-hidden="true"></i> Stack Overflow</a>
+                    </li>
+                    <% } %>
+
+                    <% if(profile.userData.github_token.length){ %>
+                    <li class="list-group-item text-center">
+                        <button style="border: 2px solid #419641;" class="btn btn-lg btn-default account-btn"><i class="fa fa-github" aria-hidden="true"></i> Github</button>
+                        <a href="/auth/github?process=disconnect" class="clearfix">Disconnect</a>
+                    </li>
+                    <% }else{ %>
+                    <li class="list-group-item text-center">
+                        <a href="/auth/github" class="btn btn-lg btn-default account-btn"><i class="fa fa-github" aria-hidden="true"></i> Github</a>
+                    </li>
+                    <% } %>
+
+                    <li class="list-group-item text-center">
+                        <a href="/auth/codeforces" class="btn btn-lg btn-default account-btn"><img src="/images/codeforces32x32.png"/> Codeforces</a>
+                    </li>
+                    <li class="list-group-item text-center">
+                        <a href="/auth/uva" class="btn btn-lg btn-default account-btn"><img src="/images/uva22x22.png" /> UVA</a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
     </div>
 </div>
 
+<script>
 
+    //http://stackoverflow.com/a/23102317/4839437
+    $(document).ready (function(){
+        $(".alert").fadeTo(3500, 500).slideUp(500, function(){
+            $(".alert").slideUp(500);
+        });
+    });
+
+</script>
 
 <!-- footer -->
 <% include ../../templates/footer.ejs %>

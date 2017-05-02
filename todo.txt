@@ -1,3 +1,6 @@
+
+***** checkout async.apply! [http://caolan.github.io/async/docs.html#apply]
+
 # set problem status to incomplete when remove all test cases
 # no test case option for a problem and judge
 # compare result program
