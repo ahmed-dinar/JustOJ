@@ -79,7 +79,7 @@
                     <% for(var i=0; i<data.length; i++){ %>
                     <tr>
                         <td class="col-md-4">
-                            <input type='button' class="btn btn-primary btn-xs remove btn-danger" value="remove"  >
+                            <button type='button' class="btn btn-xs remove btn-danger"  ><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
                         </td>
                         <td>
                             Test Case:  <%= i+1 %>
@@ -138,6 +138,13 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+
+            //alert auto hide
+            $(document).ready (function(){
+                $(".alert").fadeTo(3500, 500).slideUp(500, function(){
+                    $(".alert").slideUp(500);
+                });
+            });
 
             //remove TC
             $(document).on('click', '.remove', function () {

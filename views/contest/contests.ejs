@@ -16,10 +16,9 @@
 
 <!-- Main Content -->
 <div class="content container c-h" >
-
     <div class="row">
 
-        <div class="col-md-9 nopadding">
+        <div class="col-md-9">
 
             <div class="panel panel-default">
                 <div class="panel-heading"><i class="fa fa-hourglass-half" aria-hidden="true"></i> Running Contests</div>
@@ -27,22 +26,22 @@
                 <% if(running.length){ %>
 
 
-                <table class="table">
+                <table class="table table-responsive table-contest-list">
 
                     <tbody>
 
                     <% for(var i=0; i<running.length; i++){ %>
 
                     <tr>
-                        <td style="width: 68%; ">
-                            <a href = "/contests/<%= running[i].id %>" style="font-size: 15px; margin-left: 10px;">
+                        <td class="col-md-8">
+                            <a href = "/contests/<%= running[i].id %>" >
                                 <%= running[i].title %>
                             </a>
                         </td>
-                        <td style="width: 30%">
+                        <td class="col-md-3">
                             Ends <%= moment(running[i].end).from() %>
                         </td>
-                        <td style="width: 2%">
+                        <td class="col-md-1">
                             <span class = "badge badge-info">
                                 <i class="fa fa-user" aria-hidden="true"></i> x <%= running[i].users %>
                             </span>
@@ -54,6 +53,10 @@
                     </tbody>
                 </table>
 
+                <% }else{ %>
+                <div class="panel-body text-center">
+                    <h5 class="help-block">No running contest found</h5>
+                </div>
                 <% } %>
             </div>
 
@@ -62,22 +65,22 @@
                 <div class="panel-heading"><i class="fa fa-hourglass-o" aria-hidden="true"></i> Future Contests</div>
             <% if(future.length){ %>
 
-            <table class="table">
+            <table class="table table-responsive table-contest-list">
                 <tbody>
 
                 <% for(var i=0; i<future.length; i++){ %>
 
                 <tr>
 
-                    <td style="width: 68%">
-                        <a href = "/contests/<%= future[i].id %>" style="font-size: 15px; margin-left: 10px;">
+                    <td class="col-md-8">
+                        <a href = "/contests/<%= future[i].id %>">
                             <%= future[i].title %>
                         </a>
                     </td>
-                    <td style="width: 30%">
+                    <td class="col-md-3">
                         Starts <%= moment(future[i].begin).from() %>
                     </td>
-                    <td style="width: 2%">
+                    <td class="col-md-1">
                             <span class = "badge">
                                 <i class="fa fa-user" aria-hidden="true"></i> x <%= future[i].users %>
                             </span>
@@ -89,6 +92,10 @@
                 </tbody>
             </table>
 
+            <% }else{ %>
+                <div class="panel-body text-center">
+                    <h5 class="help-block">No upcoming contest found</h5>
+                </div>
             <% } %>
             </div>
 
@@ -98,33 +105,27 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-hourglass-end" aria-hidden="true"></i> Past Contests
-                    <span class="pull-right"><a href="/contests/past">View All</a></span>
+                    <span class="pull-right">
+                        <a class="btn btn-xs btn-dark" href="/contests/past">View All</a>
+                    </span>
                 </div>
             <% if(ended.length){ %>
 
-                <table class="table">
-
+                <table class="table table-responsive table-contest-list">
                     <tbody>
-
-
-
-
 
                 <% for(var i=0; i<ended.length; i++){ %>
 
-
                 <tr>
-
-
-                    <td style="width: 68%">
-                        <a href = "/contests/<%= ended[i].id %>" style="font-size: 15px; margin-left: 10px;">
+                    <td class="col-md-8">
+                        <a href = "/contests/<%= ended[i].id %>">
                             <%= ended[i].title %>
                         </a>
                     </td>
-                    <td style="width: 30%">
+                    <td class="col-md-3">
                         Ended <%= moment(ended[i].begin).from() %>
                     </td>
-                    <td style="width: 2%">
+                    <td class="col-md-1">
                             <span class = "badge">
                                 <i class="fa fa-user" aria-hidden="true"></i> x <%= ended[i].users %>
                             </span>
@@ -137,6 +138,10 @@
                     </tbody>
                 </table>
 
+            <% }else{ %>
+                <div class="panel-body text-center">
+                    <h5 class="help-block">No past contest found</h5>
+                </div>
             <% } %>
             </div>
 

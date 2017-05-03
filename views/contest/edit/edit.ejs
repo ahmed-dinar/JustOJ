@@ -148,7 +148,7 @@
 
                                     <div class="form-group">
                                         <div class="col-sm-offset-1 col-sm-11">
-                                            <input type="button" name="btn" value="UPDATE" id="submitBtn"  class="btn btn-primary" />
+                                            <input type="button" name="btn" value="Update" id="submitBtn"  class="btn btn-primary" />
                                         </div>
                                     </div>
                                 </form>
@@ -195,11 +195,13 @@
                                                         </span>
                                                     </td>
                                                     <td class="col-sm-1">
-                                                        <button class="btn btn-sm btn-primary previewBtn" >PREVIEW</button>
+                                                        <button class="btn btn-sm btn-primary previewBtn" >
+                                                            <i class="fa fa-eye" aria-hidden="true"></i> Preview
+                                                        </button>
                                                     </td>
                                                     <td class="col-sm-1">
                                                         <a class="btn btn-sm btn-primary" href="/contests/edit/<%= cid %>/problems/<%= problems[i].pid %>/step1">
-                                                            EDIT
+                                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -221,7 +223,7 @@
 
                             <div class="panel-heading clearfix">
                                 <div class="pull-left">
-                                <h4>Participants List</h4>
+                                <h4><i class="fa fa-users" aria-hidden="true"></i> Participants List</h4>
                                 </div>
                                 <% if(participants.length){ %>
                                 <div class="pull-right">
@@ -277,8 +279,16 @@
                                         <td title="<%= participants[i].username %>"><%= participants[i].username %></td>
                                         <td title="<%= participants[i].password %>"><%= participants[i].password %></td>
                                         <td title="<%= participants[i].institute %>"><%= participants[i].institute %></td>
-                                        <td><button type="button" class="button btn-xs btn-primary edit-user-btn">Edit</button></td>
-                                        <td><button type="button" userid="<%= participants[i].uid %>" class="button btn-xs btn-danger remove-user-btn">Remove</button></td>
+                                        <td>
+                                            <button type="button" class="button btn-xs btn-primary edit-user-btn">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" userid="<%= participants[i].uid %>" class="button btn-xs btn-danger remove-user-btn">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i> Remove
+                                            </button>
+                                        </td>
                                     </tr>
                                     <% } %>
                                     </tbody>
@@ -333,12 +343,14 @@
                                                     <label for="iUsername" class="control-label">Username</label>
                                                     <input id="iUsername" type="username" name="username" class="form-control" required />
                                                 </div>
-                                                <div class="form-group">
-                                                    <div class="big-checkbox">
+
+                                                <div class="checkbox">
+                                                    <label>
                                                         <input type="checkbox" id="randPass" name="random_password" />
-                                                        <label>Random Password</label>
-                                                    </div>
+                                                        Random Password
+                                                    </label>
                                                 </div>
+
                                                 <div class="form-group" id="passInput">
                                                     <label for="iPassword" class="control-label">Password</label>
                                                     <input id="iPassword" type="password" name="password" class="form-control" required>
@@ -440,18 +452,11 @@
                                 </div>
                             </div>
 
-
-
-
                             <!-- ############### END MODALS #################################### -->
-
-
 
                         </div>
                     </div>
                     <% } %>
-
-
 
                 </div>
             </div>
@@ -466,6 +471,13 @@
 <script type="text/javascript">
 
     jQuery(document).ready(function(){
+
+        //alert auto hide
+        $(document).ready (function(){
+            $(".alert").fadeTo(3500, 500).slideUp(500, function(){
+                $(".alert").slideUp(500);
+            });
+        });
 
         var table = $('#user_data_table').DataTable({
             paging: false,

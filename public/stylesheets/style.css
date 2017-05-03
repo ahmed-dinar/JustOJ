@@ -9,10 +9,31 @@ body {
   background: #ffffff;
 }
 
+.navbar-brand{
+  /*font-family: 'Baloo', cursive;
+  font-family: 'Black Ops One', cursive;
+    font-family: 'Limelight', cursive;*/
+  font-family: 'Russo One', sans-serif;
+  font-size: 26px;
+  padding-left: 30px;
+  letter-spacing: 2px;
+  font-weight: normal;
+}
+
+
+.navbar-brand > .brand-logo{
+  margin-top: -7px;
+  color: #3b6678;
+  background-color: #e3e4e8;
+  border: none;
+  padding: 7px 10px 5px 10px;
+  border-radius: 4px;
+}
+
+
 .c-h{
   min-height: 580px;
   /*border: 1px solid #ccc;*/
-
 }
 
 .main-wraper > .container{
@@ -254,10 +275,17 @@ hr {
 .panel-default>.panel-heading {
   background-color: #FAFAFA;
   background-image: none;
+  border: none;
+  color: #737373;
+  font-weight: 400;
+  font-size: 16px;
 }
 
 .panel-default {
-  border-color: #dfe8f1;
+  box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;
+
+
+  border: none;
 }
 
 
@@ -298,11 +326,14 @@ hr {
 
 input[type="text"],input[type="password"],input[type="username"],input[type="email"], select{
   border-radius: 1px;
-  padding: 20px 14px ;
+  padding: 15px 14px;
+
 }
 
 .form-control {
   border-radius: 1px;
+  box-shadow: none;
+  border: 1px solid #d9d9d9;
 }
 
 .form-control:focus {
@@ -517,6 +548,7 @@ position: relative;
 }
 
 
+/*
 #brand-logo {
   z-index: 1;
   text-decoration: none;
@@ -561,6 +593,7 @@ position: relative;
   border-top-color: initial;
   bottom: 0;
 }
+*/
 
 
 
@@ -627,7 +660,7 @@ nav.nopadding, div.nopadding {
 
 
 .navbar-inverse {
-  background-color: #3b6678; /*  518CA3, 012B43  */
+  background-color: #546E7A; /*  518CA3, 012B43  */
   background-image: none;
   border-color: transparent;
 }
@@ -717,7 +750,7 @@ nav.nopadding, div.nopadding {
   color: #f56b3d;
 }
 
-.big-checkbox > input {width: 27px; height: 27px;}
+.big-checkbox > label > input {width: 22px; height: 22px;}
 
 .big-checkbox > label{
   font-size: 16px;
@@ -751,15 +784,6 @@ nav.nopadding, div.nopadding {
   font-weight: normal;
 }
 
-
-.navbar-brand{
-  font-family: 'Lobster Two', cursive;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 20px;
-  padding-left: 30px;
-  letter-spacing: 2px;
-  font-weight: 600;
-}
 
 .navbar-inverse .navbar-brand {
   color: #ffffff;
@@ -818,11 +842,6 @@ pre{
   line-height: 1.5;
 }
 
-.btn-default{
-    border: 1px solid #ccc;
-    background: transparent;
-}
-
 
 .account-btn{
   width: 160px;
@@ -851,7 +870,20 @@ pre{
 
 .btn-default, .btn-primary, .btn-success, .btn-info, .btn-warning, .btn-danger {
   background-image: none;
+  box-shadow: 0 2px 2px 0 rgba(153,153,153,.14),0 3px 1px -2px rgba(153,153,153,.2),0 1px 5px 0 rgba(153,153,153,.12);
 }
+
+
+.btn-default{
+  border: 1px solid #d9d9d9;
+  border-bottom: none;
+  background: transparent;
+}
+
+.btn-default:hover{
+  border: 1px solid #d9d9d9;
+}
+
 
 .alert-success, .alert-info, .alert-warning, .alert-danger{
   background-image: none;
@@ -873,4 +905,13 @@ pre{
   display: block;
   width: 0;
 }
+
+.table-contest-list > tbody > tr > td > a{
+  font-size: 15px;
+  margin-left: 5px;
+}
+
+.table-contest-list > tbody > tr > td{
+   padding: 15px 8px;
+ }
 

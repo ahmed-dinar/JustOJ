@@ -79,7 +79,7 @@
             </div>
 
             <div class="panel panel-default">
-                <div class="panel-heading">Connect Social Accounts</div>
+                <div class="panel-heading"><i class="fa fa-share-alt" aria-hidden="true"></i> Share Social Accounts</div>
                 <div class="list-group social-btn-group">
 
                     <% if(profile.userData.google_id.length){ %>
@@ -122,7 +122,7 @@
         <div class="col-md-6">
 
             <div class="panel panel-default ">
-                <div class="panel-heading">Personal Information</div>
+                <div class="panel-heading"><i class="fa fa-info-circle" aria-hidden="true"></i> Personal Information</div>
                 <div class="panel-body">
                     <div >
 
@@ -437,7 +437,7 @@
                                     <option value="ZW">Zimbabwe</option>
                                 </select>
                             </div>
-                            <input type="submit" class="btn btn-primary" value="UPDATE" />
+                            <input type="submit" class="btn btn-primary" value="Update" />
                         </form>
 
                     </div>
@@ -445,7 +445,7 @@
             </div>
 
             <div class="panel panel-default">
-                <div class="panel-heading">Change Password</div>
+                <div class="panel-heading"><i class="fa fa-unlock-alt" aria-hidden="true"></i> Change Password</div>
                 <div class="panel-body">
                     <div >
 
@@ -463,7 +463,7 @@
                                 <label for="inputconfirmpassword">Confirm</label>
                                 <input type="password" name="confirmpassword" class="form-control" id="inputconfirmpassword" placeholder="confirm new password">
                             </div>
-                            <input type="submit" class="btn btn-primary" value="UPDATE" />
+                            <input type="submit" class="btn btn-primary" value="Submit" />
                         </form>
 
                     </div>
@@ -475,7 +475,7 @@
 
         <div class="col-md-3">
             <div class="panel panel-default">
-                <div class="panel-heading">Connect Profiles</div>
+                <div class="panel-heading"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Connect Profiles</div>
                 <ul class="list-group">
 
                     <% if(profile.userData.stack_token.length){ %>
@@ -513,16 +513,8 @@
     </div>
 </div>
 
-<script>
 
-    //http://stackoverflow.com/a/23102317/4839437
-    $(document).ready (function(){
-        $(".alert").fadeTo(3500, 500).slideUp(500, function(){
-            $(".alert").slideUp(500);
-        });
-    });
-
-</script>
+<script type="text/javascript" src="/javascripts/pageFunctions/common-util.js"></script>
 
 <!-- footer -->
 <% include ../../templates/footer.ejs %>

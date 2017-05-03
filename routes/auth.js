@@ -2,7 +2,6 @@
 var express = require('express');
 var router = express.Router();
 
-
 var oauth = require("oauth").OAuth2;
 var Tokens = require('csrf');
 var async = require('async');
@@ -130,9 +129,14 @@ router.get('/google/callback', isLoggedIn(true), function (req, res) {
                 
                 if(err)
                     return callback(err);
-                
+
+                var errorAccess = access_token === undefined || !access_token;
+                if( errorAccess )
+                    return callback(results);
+
                 debug('google callbacks: ');
                 debug(results);
+                debug('accessToken: ' + access_token);
 
                 callback(null,access_token);
             });
@@ -235,8 +239,13 @@ router.get('/facebook/callback', isLoggedIn(true), function (req, res) {
                 if (err)
                     return callback(err);
 
+                var errorAccess = access_token === undefined || !access_token;
+                if( errorAccess )
+                    return callback(results);
+
                 debug('facebook access infos: ');
                 debug(results);
+                debug('accessToken: ' + access_token);
 
                 callback(null,access_token);
             });
@@ -334,8 +343,13 @@ router.get('/linkedin/callback', isLoggedIn(true), function (req, res) {
                 if (err)
                     return callback(err);
 
+                var errorAccess = access_token === undefined || !access_token;
+                if( errorAccess )
+                    return callback(results);
+
                 debug('linkedin access info: ');
                 debug(results);
+                debug('accessToken: ' + access_token);
 
                 callback(null,access_token);
             });
@@ -431,9 +445,13 @@ router.get('/github/callback', isLoggedIn(true), function (req, res) {
                 if (err)
                     return callback(err);
 
+                var errorAccess = has(results,'error') || access_token === undefined || !access_token;
+                if( errorAccess )
+                    return callback(results);
+
                 debug('github access info: ');
                 debug(results);
-
+                debug('accessToken: ' + access_token);
 
                 callback(null,access_token);
             });
@@ -523,14 +541,19 @@ router.get('/stackexchange/callback', isLoggedIn(true), function (req, res) {
     async.waterfall([
         function (callback) {
 
-            OAuth2.getOAuthAccessToken(code, {
+            OAuth2.getOAuthAccessToken(code , {
                 redirect_uri: 'http://localhost:8888/auth/stackexchange/callback'
             }, function (err, access_token, refresh_token, results) {
                 if (err)
                     return callback(err);
 
+                var errorAccess = access_token === undefined || !access_token;
+                if( errorAccess )
+                    return callback(results);
+
                 debug('stackexchange access info: ');
                 debug(results);
+                debug('accessToken: ' + access_token);
 
                 callback(null,access_token);
             });
