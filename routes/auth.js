@@ -8,6 +8,7 @@ var async = require('async');
 var request = require('request');
 var has = require('has');
 var url = require('url');
+var qs = require('qs');
 
 var User = require('../models/user');
 var isLoggedIn = require('../middlewares/isLoggedIn');
@@ -24,35 +25,37 @@ router.get('/' , function(req, res, next) {
 
     var access_token = req.query.token;
 
-   // https://api.github.com/repos/:owner/:repo/stats/contributors
+    var profileUrl = 'https://api.stackexchange.com/2.2/me?' + qs.stringify({
+        site: 'stackoverflow',
+        key: Secrets.stackexchange.key,
+        access_token: access_token
+    });
 
-        var userAgent = 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36';
-        var profileUrl = 'https://api.github.com/user?access_token=' + access_token;
-        debug(profileUrl);
-        request
-            .get({
-                url: profileUrl,
-                headers: {
-                    'User-Agent': userAgent
-                }
-            } , function (err, response, body) {
-                if(err)
-                    return next(new Error(err));
+    debug(profileUrl);
 
-                if( response.statusCode !== 200 )
-                    return next(response.statusCode);
+    request
+        .get({
+            url: profileUrl,
+            gzip: true
+        } , function (err, response, body) {
+            if(err)
+                return next(new Error(err));
 
-              //  body = JSON.parse(body);
+            if(response.statusCode !== 200)
+                return next(new Error(response.statusCode));
 
-             //   debug(body);
+            body = JSON.parse(body);
+            debug(body);
 
-                var gitData = {
-                    public_repos: body.public_repos,
-                    followers: body.followers
-                };
+            var stackoverflow = {
+                reputation: body.items[0].reputation,
+                badges: body.items[0].badge_counts,
+            };
 
-                res.end( JSON.stringify(body) );
-            });
+            debug(stackoverflow);
+
+            res.end(JSON.stringify(response.statusCode));
+        });
 });
 
 
@@ -64,6 +67,64 @@ router.get('/' , function(req, res, next) {
 router.get('/uva' , function(req, res, next) {
     req.flash('auth_error', 'uva will be added soon!');
     res.redirect('/user/settings/profile');
+});
+
+
+router.post('/uva' , function(req, res, next) {
+
+    if( !req.isAuthenticated() ){
+        res.send( JSON.stringify({ error: '403' }));
+        return;
+    }
+
+    var uvaUsename = req.body.uvaUsename;
+    var uvaId = req.body.uvaID;
+
+    debug(req.body);
+
+    //
+    var  profileUrl = 'http://uhunt.felix-halim.net/api/ranklist/'+uvaId+'/0/0';
+    debug(profileUrl);
+    request
+        .get(profileUrl, function (err, response, body) {
+            if(err){
+                debug(err);
+                res.send(JSON.stringify({
+                    error: true
+                }));
+                return;
+            }
+
+            debug(response.statusCode);
+            debug(body);
+
+            if(response.statusCode !== 200){
+                res.send(JSON.stringify({
+                    error: true
+                }));
+                return;
+            }
+
+            body = JSON.parse(body);
+            if( !body.length ){
+                res.send(JSON.stringify({
+                    verified: false,
+                    status: 404
+                }));
+                return;
+            }
+
+            var realUserName = body[0].username;
+            if( realUserName !== uvaUsename ){
+                res.send(JSON.stringify({
+                    verified: false,
+                    status: 403
+                }));
+                return;
+            }
+
+            res.send( JSON.stringify({ verified: true }));
+        });
 });
 
 

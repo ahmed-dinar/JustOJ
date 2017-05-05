@@ -13,7 +13,9 @@ var request = require('request');
 var async = require('async');
 var countries = require('country-data').countries;
 var isEmail = require('validator').isEmail;
+var rndm = require('rndm');
 
+var Secrets = require('../files/secrets/Secrets');
 var User = require('../models/user');
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var ValidationSchema = require('../config/form-validation-schema');
@@ -91,6 +93,7 @@ router.get('/:username',function(req, res, next) {
             profile.userData.publicemail = 0;
 
         debug(profile);
+        debug(userData.social);
 
         res.render('user/profile',{
             active_nav: '',
@@ -151,11 +154,26 @@ router.get('/:username',function(req, res, next) {
  */
 function getSocialStatus(userData , contestHistory, submissionHistory, callback) {
 
-    var access_token = userData.github_token;
+    async.parallel([
+            async.apply(getGithubInfo,userData.github_token),
+            async.apply(getStackoverflowInfo,userData.stack_token),
+        ],
+        function(err, results) {
+            userData.social = results;
+            callback(null,userData , contestHistory, submissionHistory);
+        });
+}
+
+
+/**
+ *
+ * @param githubToken
+ * @param callback
+ */
+function getGithubInfo(githubToken, callback) {
 
     var userAgent = 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36';
-    var profileUrl = 'https://api.github.com/user?access_token=' + userData.github_token;
-
+    var profileUrl = 'https://api.github.com/user?access_token=' + githubToken;
     request
         .get({
             url: profileUrl,
@@ -164,21 +182,50 @@ function getSocialStatus(userData , contestHistory, submissionHistory, callback)
             }
         }, function (err, response, body) {
 
-            debug(body);
+            var gitData = null;
+            if(err || response.statusCode !== 200) {
+                debug(err);
+            }
+            else {
+                body = JSON.parse(body);
+                gitData = {
+                    repos: body.public_repos,
+                    followers: body.followers
+                };
+            }
 
-            if(err || response.statusCode !== 200)
-                userData.github = [];
-
-            body = JSON.parse(body);
-            userData.github = {
-                repos: body.public_repos,
-                followers: body.followers
-            };
-
-            callback(null,userData , contestHistory, submissionHistory);
+            callback(null,gitData);
         });
 }
 
+
+/**
+ *
+ * @param stackToken
+ * @param callback
+ */
+function getStackoverflowInfo(stackToken, callback) {
+
+    var profileUrl = 'https://api.stackexchange.com/2.2/me?site=stackoverflow&key=' + Secrets.stackexchange.key + '&access_token=' + stackToken;
+    request
+        .get({
+            url: profileUrl,
+            gzip: true
+        } , function (err, response, body) {
+
+            var stackData = null;
+            if(err || response.statusCode !== 200) {
+                debug(err);
+            }else{
+                body = JSON.parse(body);
+                stackData = {
+                    reputation: body.items[0].reputation,
+                    badges: body.items[0].badge_counts,
+                };
+            }
+            callback(null,stackData);
+        });
+}
 
 /**
  *
@@ -223,6 +270,8 @@ router.post('/settings/profile', function(req, res, next) {
             }
             return next(new Error(err));
         }
+
+
 
         req.flash('success','profile updated');
         res.redirect('/user/settings/profile');
@@ -283,8 +332,9 @@ router.get('/settings/profile', isLoggedIn(true), function(req, res, next) {
         if( submissionHistory.length && submissionHistory[0].solvedList )
             solvedList = JSON.parse('[' + submissionHistory[0].solvedList + ']');
 
-        submissionHistory = submissionHistory.length ? submissionHistory[0] : { solved: 0, accepted: 0, re: 0, tle: 0, mle: 0, ce: 0, wa: 0, totalSubmission: 0 };
-
+        submissionHistory = submissionHistory.length
+            ? submissionHistory[0]
+            : { solved: 0, accepted: 0, re: 0, tle: 0, mle: 0, ce: 0, wa: 0, totalSubmission: 0 };
         var profile = {
             contestHistory: contestHistory,
             userData: userData,
@@ -292,6 +342,9 @@ router.get('/settings/profile', isLoggedIn(true), function(req, res, next) {
             solvedList: solvedList,
             profilePicture: gravatar.url(userData.email, {s: '150'}, true)
         };
+
+        if( !userData.uva_userid.length )
+            profile.randomUvaName = rndm(10);
 
         debug(profile);
 

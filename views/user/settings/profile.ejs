@@ -8,6 +8,9 @@
 
     <script src="//code.highcharts.com/highcharts.src.js"></script>
 
+
+    <script src="/javascripts/notify.min.js"></script>
+
 </head>
 <body>
 
@@ -500,12 +503,31 @@
                     </li>
                     <% } %>
 
+                    <% if(profile.userData.uva_userid.length){ %>
                     <li class="list-group-item text-center">
-                        <a href="/auth/codeforces" class="btn btn-lg btn-default account-btn"><img src="/images/codeforces32x32.png"/> Codeforces</a>
+                        <button style="border: 2px solid #419641;" class="btn btn-lg btn-default account-btn"><img src="/images/uva22x22.png" /> UVA</button>
+                        <a href="/auth/uva?process=disconnect" class="clearfix">Disconnect</a>
                     </li>
+                    <% }else{ %>
                     <li class="list-group-item text-center">
-                        <a href="/auth/uva" class="btn btn-lg btn-default account-btn"><img src="/images/uva22x22.png" /> UVA</a>
+                        <a href="#" class="btn btn-lg btn-default account-btn" data-toggle="modal" data-target="#uvaModal"><img src="/images/uva22x22.png" /> UVA</a>
                     </li>
+                    <% } %>
+
+
+                    <% if(profile.userData.cf_username.length){ %>
+                    <li class="list-group-item text-center">
+                        <button style="border: 2px solid #419641;" class="btn btn-lg btn-default account-btn"><img src="/images/codeforces32x32.png" /> Codeforces</button>
+                        <a href="/auth/codeforces?process=disconnect" class="clearfix">Disconnect</a>
+                    </li>
+                    <% }else{ %>
+                    <li class="list-group-item text-center">
+                        <a href="#" class="btn btn-lg btn-default account-btn" ><img src="/images/codeforces32x32.png" /> Codeforces</a>
+                    </li>
+                    <% } %>
+
+
+
                 </ul>
             </div>
         </div>
@@ -513,6 +535,7 @@
     </div>
 </div>
 
+<% include ../../templates/connect_uva_modal.ejs %>
 
 <script type="text/javascript" src="/javascripts/pageFunctions/common-util.js"></script>
 

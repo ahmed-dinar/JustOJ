@@ -1,6 +1,3 @@
-
-***** checkout async.apply! [http://caolan.github.io/async/docs.html#apply]
-
 # set problem status to incomplete when remove all test cases
 # no test case option for a problem and judge
 # compare result program
@@ -40,3 +37,5 @@
 # open compiler for custom test
 # activate score in contest problems
 # may be, may be optimize database query?
+
+2c2c35,  518CA3, 012B43 , 00887A 014081 2d1c4a

@@ -6,6 +6,7 @@
 
     <% include ../templates/head.ejs %>
 
+    <link rel="stylesheet" href="/stylesheets/bootstrap-social.css">
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
 
 </head>
@@ -45,7 +46,46 @@
                         </div>
                     </div>
 
-                    <table class="table table-responsive">
+                    <div class=" text-center panel-heading">
+
+                        <%
+                        scLink = '#';
+                        isDisabled = 'disabled-link';
+                        if(profile.userData.fb_id.length){
+                            scLink = 'https://www.facebook.com/' + profile.userData.fb_id;
+                            isDisabled = '';
+                        }
+                        %>
+                        <a target="_blank" href="<%= scLink %>" class="btn btn-social-icon btn-facebook <%= isDisabled %>">
+                            <span class="fa fa-facebook"></span>
+                        </a>
+
+                        <%
+                        scLink = '#';
+                        isDisabled = 'disabled-link';
+                        if(profile.userData.google_id.length){
+                            scLink = 'https://plus.google.com/' + profile.userData.google_id;
+                            isDisabled = '';
+                        }
+                        %>
+                        <a target="_blank" href="<%= scLink %>" class="btn btn-social-icon btn-google <%= isDisabled %>">
+                            <span class="fa fa-google-plus"></span>
+                        </a>
+
+                        <%
+                        scLink = '#';
+                        isDisabled = 'disabled-link';
+                        if(profile.userData.linkedin_id.length){
+                            scLink = 'https://www.linkedin.com/in/' + profile.userData.linkedin_id;
+                            isDisabled = '';
+                        }
+                        %>
+                        <a target="_blank" href="<%= scLink %>" class="btn btn-social-icon btn-linkedin <%= isDisabled %>">
+                            <span class="fa fa-linkedin"></span>
+                        </a>
+                    </div>
+
+                    <table class="table table-responsive no-margin-bottom">
                         <tbody>
 
                             <% if(profile.userData.website && profile.userData.website.length){ %>
@@ -98,11 +138,57 @@
                                     <i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp; Joined on <%= moment(profile.userData.joined).format("MMM D, YYYY") %>
                                 </td>
                             </tr>
+
+
+
+
                         </tbody>
                     </table>
 
                 </div>
             </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><span class="fa fa-github"></span> Github</div>
+                <% if(profile.userData.social.length && profile.userData.social[0]){ %>
+                <div class="panel-body">
+                    <div class="col-md-6 text-center">
+                        <div class="clearfix">Repositories</div>
+                        <h3 class="no-margin-top text-bold"><%= profile.userData.social[0].repos %></h3>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="clearfix">Followers</div>
+                        <h3 class="no-margin-top text-bold"><%= profile.userData.social[0].followers %></h3>
+                    </div>
+                </div>
+                <%  }else{ %>
+                    <div class="panel-body text-center">
+                        <div class="help-block">Not connected</div>
+                    </div>
+                <%  } %>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><span class="fa fa-stack-overflow"></span> Stackoverflow</div>
+                <% if(profile.userData.social.length > 1 && profile.userData.social[1]){ %>
+                <div class="panel-body">
+                    <div class="col-md-4 text-center">
+                        <div class="clearfix">Reputation</div>
+                        <h3 class="no-margin-top text-bold"><%= profile.userData.social[1].reputation %></h3>
+                    </div>
+                    <div class="col-md-8 text-center">
+                        <i class="fa fa-trophy trophy-gold" aria-hidden="true"></i> <%= profile.userData.social[1].badges.gold %>
+                        <i class="fa fa-trophy trophy-silver" aria-hidden="true"></i> <%= profile.userData.social[1].badges.silver %>
+                        <i class="fa fa-trophy trophy-bronze" aria-hidden="true"></i> <%= profile.userData.social[1].badges.bronze %>
+                    </div>
+                </div>
+                <%  }else{ %>
+                <div class="panel-body text-center">
+                    <div class="help-block">Not connected</div>
+                </div>
+                <%  } %>
+            </div>
+
 
         </div>
 
@@ -175,6 +261,7 @@
     </div>
 
 </div>
+
 
 <script>
 

@@ -53,6 +53,7 @@
     "oauth": "^0.9.15",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
+    "qs": "^6.4.0",
     "recaptcha": "^1.2.1",
     "request": "^2.81.0",
     "rndm": "^1.2.0",
