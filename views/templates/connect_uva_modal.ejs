@@ -12,7 +12,7 @@
                 <h4>We need to verify that the account belongs to you. Please follow these steps.</h4>
                 <div class="row nopadding">
                     <p>1. Change your username on UVA online judge to:</p>
-                    <h3 class="text-bold" id="uvaUsename" style="letter-spacing: 1.5px;"><%= profile.randomUvaName %></h3>
+                    <h3 class="text-bold" id="uvaUsename" style="letter-spacing: 1.2px;"><%= profile.randomUvaName %></h3>
                     <div class="help-block">* You can change your username after verification</div>
                 </div>
                 <div class="row nopadding">
@@ -36,17 +36,12 @@
 
 <script>
 
-    $(document).ready(function() {
-
-    });
-
     $("#verifyUvaId").click(function (e) {
 
         if( $('#uvaId').val() === '' ){
             $('#uvaId').notify('Please enter uva id', 'error');
             return;
         }
-
 
         $.ajax({
             url: "/auth/uva",
@@ -58,30 +53,53 @@
                 uvaID: $("#uvaId").val()
             },
             beforeSend: function (xhr) {
-
+                swal('Please wait');
+                swal.showLoading();
             }
         })
             .done(function (data) {
 
                 if( data.error ){
-                    alert('error!');
+                    swal(
+                        'Error!',
+                        'Error while verifying',
+                        'error'
+                    );
                     return;
                 }
 
                 if( data.verified ){
-                    alert('varified!');
+                    swal({
+                        title: 'Verified!',
+                        text: "You can change your username now!",
+                        type: 'success'
+                    }).then(function () {
+                        window.location.replace("/user/settings/profile");
+                    });
                     return;
                 }
 
-                if( data.status == 404 ){
-                    alert('not found');
+               /* if( data.status == 404 ){
+                    swal(
+                        'Sorry!',
+                        'No account found',
+                        'error'
+                    );
                     return;
-                }
+                }*/
 
-                alert('username does not match');
+                swal(
+                    'Sorry!',
+                    'No account found',
+                    'error'
+                );
             })
             .fail(function () {
-                alert('failed!');
+                swal(
+                    'Failed!',
+                    'Error while verifying',
+                    'error'
+                );
             })
             .always(function () {
 

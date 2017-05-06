@@ -9,6 +9,7 @@ var request = require('request');
 var has = require('has');
 var url = require('url');
 var qs = require('qs');
+var cheerio = require('cheerio');
 
 var User = require('../models/user');
 var isLoggedIn = require('../middlewares/isLoggedIn');
@@ -65,8 +66,13 @@ router.get('/' , function(req, res, next) {
  * NOTE: ask user id and ask to change username
  */
 router.get('/uva' , function(req, res, next) {
-    req.flash('auth_error', 'uva will be added soon!');
-    res.redirect('/user/settings/profile');
+
+    if( has(req.query, 'process')  && req.query.process === 'disconnect')
+        return disconnectOAuth('UVA', { uva_userid: '' } , req, res);
+
+    res.send(404);
+  //  req.flash('auth_error', '404');
+  //  res.redirect('/user/settings/profile');
 });
 
 
@@ -77,56 +83,82 @@ router.post('/uva' , function(req, res, next) {
         return;
     }
 
-    var uvaUsename = req.body.uvaUsename;
-    var uvaId = req.body.uvaID;
-
     debug(req.body);
+    var uvaUsername = req.body.uvaUsename;
+    var uvaId = req.body.uvaID;
+    
+    async.waterfall([
+        async.apply(verifyUva, uvaId, uvaUsername),
+        async.apply(User.updateProfile, {
+            id: req.user.id,
+            fields: {
+                uva_userid: uvaId
+            }
+        })
+    ], function (err,rows) {
 
-    //
-    var  profileUrl = 'http://uhunt.felix-halim.net/api/ranklist/'+uvaId+'/0/0';
+        if(err){
+
+            debug(err);
+            if( !has(err,'verified') )
+                err = { error: true };
+
+            res.send(JSON.stringify(err));
+            return;
+        }
+
+        res.send( JSON.stringify({ verified: true }));
+    });
+});
+
+
+/**
+ *
+ * @param uvaId
+ * @param uvaUsername
+ * @param callback
+ */
+function verifyUva(uvaId,uvaUsername,callback) {
+
+    var profileUrl = getUvaProfileLink(uvaId);
     debug(profileUrl);
     request
         .get(profileUrl, function (err, response, body) {
-            if(err){
+
+            if(err || response.statusCode !== 200){
                 debug(err);
-                res.send(JSON.stringify({
-                    error: true
-                }));
-                return;
+                return callback({ verified: false, error: true });
             }
 
-            debug(response.statusCode);
-            debug(body);
+            var $ = cheerio.load(body, { decodeEntities: true });
+            var nameContainer = $('.componentheading').next();
+            if( !$(nameContainer).hasClass('contentheading') )
+                return callback({ verified: false, status: 404 });
 
-            if(response.statusCode !== 200){
-                res.send(JSON.stringify({
-                    error: true
-                }));
-                return;
-            }
+            var currentName = $(nameContainer).text().match(/\(([^)]+)\)/);
+            debug(currentName);
+            if( !currentName || currentName.length < 2 )
+                return callback({ verified: false, status: 404 });
 
-            body = JSON.parse(body);
-            if( !body.length ){
-                res.send(JSON.stringify({
-                    verified: false,
-                    status: 404
-                }));
-                return;
-            }
+            debug(currentName[1] + ' == ' + uvaUsername);
+            if( currentName[1] !== uvaUsername )
+                return callback({ verified: false, status: 403 });
 
-            var realUserName = body[0].username;
-            if( realUserName !== uvaUsename ){
-                res.send(JSON.stringify({
-                    verified: false,
-                    status: 403
-                }));
-                return;
-            }
-
-            res.send( JSON.stringify({ verified: true }));
+            callback();
         });
-});
+}
 
+
+
+/**
+ *
+ * @param userId
+ * @returns {string}
+ */
+function getUvaProfileLink(userId) {
+    var  profileUrl = 'https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_authorstats&userid=' + userId;
+    return profileUrl;
+}
 
 
 /**

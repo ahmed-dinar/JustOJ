@@ -7,9 +7,13 @@
     <% include ../../templates/head.ejs %>
 
     <script src="//code.highcharts.com/highcharts.src.js"></script>
-
-
     <script src="/javascripts/notify.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.2/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.2/sweetalert2.min.css" />
+
+    <!-- Include a polyfill for ES6 Promises (optional) for IE11 and Android browser -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 
 </head>
 <body>
@@ -535,10 +539,11 @@
     </div>
 </div>
 
-<% include ../../templates/connect_uva_modal.ejs %>
 
 <script type="text/javascript" src="/javascripts/pageFunctions/common-util.js"></script>
 
+<!-- modal -->
+<% include ../../templates/connect_uva_modal.ejs %>
 <!-- footer -->
 <% include ../../templates/footer.ejs %>
 
