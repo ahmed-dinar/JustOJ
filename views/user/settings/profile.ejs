@@ -9,11 +9,15 @@
     <script src="//code.highcharts.com/highcharts.src.js"></script>
     <script src="/javascripts/notify.min.js"></script>
 
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.2/sweetalert2.min.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.2/sweetalert2.min.css" />
-
     <!-- Include a polyfill for ES6 Promises (optional) for IE11 and Android browser -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.tooltipster/4.2.5/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.tooltipster/4.2.5/css/tooltipster.bundle.min.css" />
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.tooltipster/4.2.5/js/tooltipster.bundle.min.js"></script>
 
 </head>
 <body>
@@ -526,7 +530,7 @@
                     </li>
                     <% }else{ %>
                     <li class="list-group-item text-center">
-                        <a href="#" class="btn btn-lg btn-default account-btn" ><img src="/images/codeforces32x32.png" /> Codeforces</a>
+                        <a href="#" class="btn btn-lg btn-default account-btn" data-toggle="modal" data-target="#cfModal"><img src="/images/codeforces32x32.png" /> Codeforces</a>
                     </li>
                     <% } %>
 

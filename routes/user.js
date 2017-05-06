@@ -14,6 +14,7 @@ var async = require('async');
 var countries = require('country-data').countries;
 var isEmail = require('validator').isEmail;
 var rndm = require('rndm');
+var Codeforces = require('codeforces-api');
 
 var Secrets = require('../files/secrets/Secrets');
 var User = require('../models/user');
@@ -157,6 +158,8 @@ function getSocialStatus(userData , contestHistory, submissionHistory, callback)
     async.parallel([
             async.apply(getGithubInfo,userData.github_token),
             async.apply(getStackoverflowInfo,userData.stack_token),
+            async.apply(getCodeforcesInfo,userData.cf_username),
+            async.apply(getUvaInfo,userData.uva_userid)
         ],
         function(err, results) {
             userData.social = results;
@@ -167,10 +170,79 @@ function getSocialStatus(userData , contestHistory, submissionHistory, callback)
 
 /**
  *
+ * @param uvaId
+ * @param callback
+ */
+function getUvaInfo(uvaId, callback) {
+
+    if( uvaId == '' )
+        return callback(null,null);
+
+    var profileUrl = 'http://uhunt.felix-halim.net/api/ranklist/'+uvaId+'/0/0';
+    request
+        .get(profileUrl, function (err, response, body) {
+
+            var uvaData = null;
+            if(err || response.statusCode !== 200) {
+                debug(err);
+            }
+            else{
+                body = JSON.parse(body);
+                if( body.length ) {
+                    uvaData = {
+                        rank: body[0].rank,
+                        solved: body[0].ac
+                    };
+                }
+            }
+
+            callback(null,uvaData);
+        });
+}
+
+
+/**
+ *
+ * @param cf_username
+ * @param callback
+ */
+function getCodeforcesInfo(cf_username, callback) {
+
+    if( cf_username == '' )
+        return callback(null,null);
+
+    Codeforces.setApis(Secrets.codeforces.key, Secrets.codeforces.secret);
+    Codeforces.user.info({ handles: cf_username } , function (err, data) {
+
+        var cfData = null;
+        if(err) {
+            debug(err);
+        }
+        else if( data.length ){
+            data = data[0];
+            cfData = {
+                rating: data.rating,
+                rank: data.rank,
+                maxRating: data.maxRating,
+                maxRank: data.maxRank,
+                contribution: data.contribution
+            };
+        }
+
+        callback(null,cfData);
+    });
+}
+
+
+/**
+ *
  * @param githubToken
  * @param callback
  */
 function getGithubInfo(githubToken, callback) {
+
+    if( githubToken == '' )
+        return callback(null,null);
 
     var userAgent = 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36';
     var profileUrl = 'https://api.github.com/user?access_token=' + githubToken;
@@ -205,6 +277,9 @@ function getGithubInfo(githubToken, callback) {
  * @param callback
  */
 function getStackoverflowInfo(stackToken, callback) {
+
+    if( stackToken == '' )
+        return callback(null,null);
 
     var profileUrl = 'https://api.stackexchange.com/2.2/me?site=stackoverflow&key=' + Secrets.stackexchange.key + '&access_token=' + stackToken;
     request
@@ -345,6 +420,9 @@ router.get('/settings/profile', isLoggedIn(true), function(req, res, next) {
 
         if( !userData.uva_userid.length )
             profile.randomUvaName = rndm(10);
+
+        if( !userData.cf_username.length )
+            profile.randomCfEmail = rndm(8);
 
         debug(profile);
 

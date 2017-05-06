@@ -10,6 +10,7 @@ var has = require('has');
 var url = require('url');
 var qs = require('qs');
 var cheerio = require('cheerio');
+var Codeforces = require('codeforces-api');
 
 var User = require('../models/user');
 var isLoggedIn = require('../middlewares/isLoggedIn');
@@ -76,6 +77,9 @@ router.get('/uva' , function(req, res, next) {
 });
 
 
+/**
+ *
+ */
 router.post('/uva' , function(req, res, next) {
 
     if( !req.isAuthenticated() ){
@@ -110,6 +114,7 @@ router.post('/uva' , function(req, res, next) {
         res.send( JSON.stringify({ verified: true }));
     });
 });
+
 
 
 /**
@@ -166,10 +171,84 @@ function getUvaProfileLink(userId) {
  * NOTE: ask to change email {random}@example.com and make public
  */
 router.get('/codeforces' , function(req, res, next) {
-    req.flash('auth_error', 'codeforces will be added soon!');
-    res.redirect('/user/settings/profile');
+
+    if( has(req.query, 'process')  && req.query.process === 'disconnect')
+        return disconnectOAuth('Codeforces', { cf_username: '' } , req, res);
+
+    res.send(404);
 });
 
+
+
+router.post('/codeforces' , function(req, res, next) {
+
+    if( !req.isAuthenticated() ){
+        res.send( JSON.stringify({ error: '403' }));
+        return;
+    }
+
+    debug(req.body);
+    var cfUsername = req.body.cfUsername;
+    var cfEmail = req.body.cfEmail;
+
+    async.waterfall([
+        async.apply(verifyCodeforces, cfUsername, cfEmail),
+        async.apply(User.updateProfile, {
+            id: req.user.id,
+            fields: {
+                cf_username: cfUsername
+            }
+        })
+    ], function (err,rows) {
+
+        if(err){
+
+            debug(err);
+            if( !has(err,'verified') )
+                err = { error: true };
+
+            res.send(JSON.stringify(err));
+            return;
+        }
+
+        res.send( JSON.stringify({ verified: true }));
+    });
+});
+
+
+/**
+ *
+ * @param cfUsername
+ * @param cfEmail
+ * @param callback
+ */
+function verifyCodeforces(cfUsername, cfEmail, callback) {
+
+    Codeforces.setApis(Secrets.codeforces.key, Secrets.codeforces.secret);
+    Codeforces.user.info({ handles: cfUsername } , function (err, data) {
+        if(err){
+            debug(err);
+
+            if( !has(err,'handles') )
+                return callback({ verified: false, error: true });
+            else
+                return callback({ verified: false, status: 404 });
+        }
+
+        if( !data.length )
+            return callback({ verified: false, status: 404 });
+
+        data = data[0];
+        if( !has(data,'email') )
+            return callback({ verified: false, status: 401 });
+
+        debug(data.email + ' == ' + cfEmail);
+        if( data.email !== cfEmail )
+            return callback({ verified: false, status: 403 });
+
+        callback();
+    });
+}
 
 
 /**

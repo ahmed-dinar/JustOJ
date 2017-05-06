@@ -190,6 +190,47 @@
             </div>
 
 
+            <div class="panel panel-default">
+                <div class="panel-heading">UVA</div>
+                <% if(profile.userData.social.length > 3 && profile.userData.social[3]){ %>
+                <div class="panel-body">
+                    <div class="col-md-6 text-center">
+                        <div class="clearfix">Rank</div>
+                        <h3 class="no-margin-top text-bold"><%= profile.userData.social[3].rank %></h3>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="clearfix">Solved</div>
+                        <h3 class="no-margin-top text-bold"><%= profile.userData.social[3].solved %></h3>
+                    </div>
+                </div>
+                <%  }else{ %>
+                <div class="panel-body text-center">
+                    <div class="help-block">Not connected</div>
+                </div>
+                <%  } %>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Codeforces</div>
+                <% if(profile.userData.social.length > 2 && profile.userData.social[2]){ %>
+                <div class="panel-body">
+                    <div class="col-md-6 text-center">
+                        <div class="clearfix">Rating</div>
+                        <h3 class="no-margin-top text-bold"><%= profile.userData.social[2].rating %></h3>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="clearfix">Contribution</div>
+                        <h3 class="no-margin-top text-bold"><%= profile.userData.social[2].contribution %></h3>
+                    </div>
+                </div>
+                <%  }else{ %>
+                <div class="panel-body text-center">
+                    <div class="help-block">Not connected</div>
+                </div>
+                <%  } %>
+            </div>
+
+
         </div>
 
         <div class="col-md-8">
