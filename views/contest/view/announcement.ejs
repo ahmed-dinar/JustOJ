@@ -6,6 +6,7 @@
 
     <% include ../../templates/head.ejs %>
 
+
 </head>
 <body>
 
@@ -14,43 +15,29 @@
 <% include ../../templates/header2.ejs %>
 
 
+<div class="text-center contest-banner">
+    <div class="col-md-12">
+        <h1 class="no-margin-top"><%= contest.title %></h1>
+        <br>
+        <p>Starts In</p>
+        <div id="countdown" style="font-size: 30px; font-weight: 200; margin-bottom: 15px;  "></div>
+    </div>
+</div>
+
 <!-- Main Content -->
-<div class="content container c-h" style="font-family: 'PT Sans', sans-serif;" >
+<div class="content container" style="min-height: 250px;">
     <div class="row">
 
-        <div class="col-md-12 text-center">
-            <h1><%= contest.title %></h1>
-            <br>
-            <p>STARTS IN</p>
+        <div class=" text-center">
 
-
-
-            <div class="col-md-4 col-md-offset-3" style="border: 1px solid #000;">
-
-                <div class="cd-row">
-                    <div class="col-md-2">
-                        <div class="countdown-d"></div>
-                        <div class="countdown-d"></div>
-                    </div>
-                    <div class="bottom-align-text col-md-1">
-                        <h5>Days</h5>
-                    </div>
-                </div>
-
-            </div>
-
-<!--
-            <div id="countdown" style="font-size: 24px; font-weight: 200"></div><br>-->
-
-            <br><br><br><br><br>
 
             <% if(contest.privacy){ %>
                 <% if(!isLoggedIn){ %>
-                    <a class="btn btn-primary" href="/login">LOGIN TO RESISTER</a>
+                    <a class="btn btn-primary btn-lg" href="/login">Login To Resister</a>
                 <% }else if(user.role === 'admin'){ %>
                     <a class="btn btn-primary" href="/contests/edit/<%= contest.id %>">EDIT</a>
                 <% }else if(!registered){ %>
-                    <a class="btn btn-primary" href="/contests/<%= contest.id %>/resister">RESISTER</a>
+                    <a class="btn btn-primary btn-lg" href="/contests/<%= contest.id %>/resister">Resister</a>
                 <% }else{ %>
                     <h5>You Are Perticipating in this contest</h5>
                 <% } %>
