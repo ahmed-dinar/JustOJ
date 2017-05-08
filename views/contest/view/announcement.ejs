@@ -16,37 +16,45 @@
 
 
 <div class="text-center contest-banner">
-    <div class="col-md-12">
-        <h1 class="no-margin-top"><%= contest.title %></h1>
-        <br>
-        <p>Starts In</p>
-        <div id="countdown" style="font-size: 30px; font-weight: 200; margin-bottom: 15px;  "></div>
+    <div class="container">
+        <div class="col-md-12">
+            <h1 class="no-margin-top text-bold"><%= contest.title %></h1>
+            <br>
+            <p>
+                <% if(state === 'scheduled'){ %>
+                    Starts In
+                <% }else{ %>
+                    <%= state %>
+                <% } %>
+            </p>
+            <div id="countdown" style="font-size: 30px; font-weight: 200; margin-bottom: 15px;  "></div>
+        </div>
     </div>
 </div>
 
 <!-- Main Content -->
 <div class="content container" style="min-height: 250px;">
-    <div class="row">
+    <div class=" text-center">
 
-        <div class=" text-center">
-
-
-            <% if(contest.privacy){ %>
-                <% if(!isLoggedIn){ %>
-                    <a class="btn btn-primary btn-lg" href="/login">Login To Resister</a>
-                <% }else if(user.role === 'admin'){ %>
-                    <a class="btn btn-primary" href="/contests/edit/<%= contest.id %>">EDIT</a>
-                <% }else if(!registered){ %>
-                    <a class="btn btn-primary btn-lg" href="/contests/<%= contest.id %>/resister">Resister</a>
-                <% }else{ %>
-                    <h5>You Are Perticipating in this contest</h5>
-                <% } %>
+            <% if(state !== 'scheduled'){ %>
+                <a class="btn btn-primary btn-lg" href="/contests/<%= contest.id %>">Enter</a>
             <% }else{ %>
-                <h4>It's a Private Contest. Only invited participants are allowed.</h4>
+                <% if(contest.privacy){ %>
+                    <% if(!isLoggedIn){ %>
+                    <a class="btn btn-primary btn-lg" href="/login">Login To Resister</a>
+                    <% }else if(user.role === 'admin'){ %>
+                    <a class="btn btn-primary" href="/contests/edit/<%= contest.id %>">EDIT</a>
+                    <% }else if(!registered){ %>
+                    <a class="btn btn-primary btn-lg" href="/contests/<%= contest.id %>/resister">Resister</a>
+                    <% }else{ %>
+                    <h5>You Are Perticipating in this contest</h5>
+                    <% } %>
+                <% }else{ %>
+                    <h4>
+                        <i class="fa fa-lock" aria-hidden="true"></i> It's a Private Contest. Only invited participants are allowed.
+                    </h4>
+                <% } %>
             <% } %>
-
-        </div>
-
 
     </div>
 </div>
@@ -54,7 +62,7 @@
 <script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>
 <script type="text/javascript">
     $( document ).ready(function() {
-        CountDownTimer('<%= contest.begin %>',document.getElementById("countdown"));
+        CountDownTimer('<%= contest.end %>',document.getElementById("countdown"));
     });
 </script>
 

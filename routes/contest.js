@@ -28,7 +28,7 @@ var Submission = require('../models/submission');
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var roles = require('../middlewares/userrole');
 
-
+var debug = require('debug')('routes:contest');
 
 /**
  *
@@ -706,17 +706,9 @@ router.get('/:cid', function(req, res, next) {
         console.log('resitered? : ' + registered);
         console.log(problems);
 
-        if( notStarted) { // not started
-            return res.render('contest/view/announcement',{
-                active_nav: 'contest',
-                isLoggedIn: req.isAuthenticated(),
-                user: req.user,
-                errors: req.flash('err'),
-                contest: details,
-                registered: registered,
-                moment: moment,
-                decodeToHTML: entities.decodeHTML
-            });
+        if( notStarted) {
+            res.redirect('/contests/' + cid + '/info');
+            return;
         }
 
         res.render('contest/view/dashboard', {
@@ -734,6 +726,71 @@ router.get('/:cid', function(req, res, next) {
         });
     });
 });
+
+
+/**
+ *  contest dashboard
+ */
+router.get('/:cid/info', function(req, res, next) {
+
+    debug('yo');
+
+    var cid = req.params.cid;
+    var isAuthenticated = req.isAuthenticated();
+    var user = req.user;
+
+    async.waterfall([
+        function(callback) {
+            Contest.getDetails(cid,function(err,rows){
+                if(err) return callback(err);
+
+                if( !rows || rows.length === 0 ) return callback('404');
+
+                callback(null,rows[0]);
+            });
+        },
+        function(details,callback) {
+
+            if(!isAuthenticated ) return callback(null,details,false); //not resistered
+
+            Contest.isRegistered(cid,user.id,function(err,rows){
+                if(err) return callback(err);
+
+                if(rows.length)
+                    return callback(null,details,true);
+
+                callback(null,details,false);
+            });
+        }
+    ], function (error,details,registered) {
+
+        if( error )
+            return next(new Error(error));
+
+        debug(details);
+        debug('resitered? : ' + registered);
+
+        var state = 'ended';
+        if( moment().isBefore(details.begin) )
+            state = 'scheduled';
+        else if( !moment().isAfter(details.end) )
+            state = 'running';
+
+        debug(state);
+
+        res.render('contest/view/announcement',{
+            active_nav: 'contest',
+            isLoggedIn: req.isAuthenticated(),
+            user: req.user,
+            errors: req.flash('err'),
+            contest: details,
+            registered: registered,
+            state: state,
+            moment: moment
+        });
+    });
+});
+
 
 
 

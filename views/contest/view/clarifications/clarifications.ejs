@@ -17,105 +17,98 @@
 <% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; var i; %>
 
 
-<div class="panel-body" style="min-height: 400px;">
-<div class="col-md-10">
+<div class="container content c-h">
+    <div class="col-md-10 nopadding">
 
 
-    <div class="panel panel-default" >
+        <div class="panel panel-default" >
 
-        <div class="panel-heading" style="padding: 15px 20px;"  >
-            CLARIFICATIONS
-            <div class="pull-right">
-                <a style="margin-top: -4px;" href="/contests/<%= contest.id %>/clarifications/request" class="btn btn-sm btn-primary">REQUEST</a>
+            <div class="panel-heading" style="padding: 15px 20px;"  >
+                <i class="fa fa-question-circle-o" aria-hidden="true"></i> Clarifications
+                <div class="pull-right">
+                    <a style="margin-top: -4px;" href="/contests/<%= contest.id %>/clarifications/request" class="btn btn-sm btn-dark">Request</a>
+                </div>
             </div>
-        </div>
 
 
-        <div class="panel-heading" style="padding: 20px;">
+            <div class="panel-heading" style="padding: 20px;">
 
-    <select class="form-control" id="dropd" style="padding: 10px 12px;  height: 45px;"  >
+                <select class="form-control" id="dropd" style="padding: 10px 12px;  height: 45px;"  >
 
-        <option value="/contests/<%= contest.id %>/clarifications/all">ALL</option>
+                    <option value="/contests/<%= contest.id %>/clarifications/all">ALL</option>
 
-        <% if(selected==='my'){ %>
-        <option value="/contests/<%= contest.id %>/clarifications/my" selected>MY</option>
-        <option value="/contests/<%= contest.id %>/clarifications/general">GENERAL</option>
-        <% }else if(selected==='general'){ %>
-        <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
-        <option value="/contests/<%= contest.id %>/clarifications/general" selected>GENERAL</option>
-        <% }else{ %>
-        <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
-        <option value="/contests/<%= contest.id %>/clarifications/general" >GENERAL</option>
-        <% } %>
-
-
-        <% i=0; _.forEach(problems,function(value, key){ %>
-
-        <% if(selected===value.pid){ %>
-        <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
-            [<%= ch.charAt(i++) %>] <%- value.title %>
-        </option>
-        <% }else{ %>
-        <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>">
-            [<%= ch.charAt(i++) %>] <%- value.title %>
-        </option>
-        <% } %>
-
-        <% }); %>
-
-    </select>
-
-        </div>
-
-    <% if(clarifications.length){ %>
-
-    <div class="list-group">
-
-        <% for(i=0; i<clarifications.length; i++){ %>
-        <a href="/contests/<%= contest.id %>/clarifications/view/<%= clarifications[i].id %>" class="list-group-item">
-
-            <%  if( clarifications[i].response === 'ignore' ){ %>
-             <div class="badge badge-warning">Ignored</div>
-            <%  }else if( clarifications[i].response.length  ){   %>
-            <div class="badge badge-success">Answered</div>
-            <%  }else{   %>
-            <div class="badge">In queue</div>
-            <%  }   %>
+                    <% if(selected==='my'){ %>
+                    <option value="/contests/<%= contest.id %>/clarifications/my" selected>MY</option>
+                    <option value="/contests/<%= contest.id %>/clarifications/general">GENERAL</option>
+                    <% }else if(selected==='general'){ %>
+                    <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
+                    <option value="/contests/<%= contest.id %>/clarifications/general" selected>GENERAL</option>
+                    <% }else{ %>
+                    <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
+                    <option value="/contests/<%= contest.id %>/clarifications/general" >GENERAL</option>
+                    <% } %>
 
 
+                    <% i=0; _.forEach(problems,function(value, key){ %>
 
-                <% if(clarifications[i].pname==='General'){ %>
-            <h4><b>[General]</b></h4>
-                <% }else{ %>
+                    <% if(selected===value.pid){ %>
+                    <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
+                        [<%= ch.charAt(i++) %>] <%- value.title %>
+                    </option>
+                    <% }else{ %>
+                    <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>">
+                        [<%= ch.charAt(i++) %>] <%- value.title %>
+                    </option>
+                    <% } %>
+
+                    <% }); %>
+
+                </select>
+
+            </div>
+
+            <% if(clarifications.length){ %>
+
+            <div class="list-group">
+
+                <% for(i=0; i<clarifications.length; i++){ %>
+                <a href="/contests/<%= contest.id %>/clarifications/view/<%= clarifications[i].id %>" class="list-group-item">
+
+                    <%  if( clarifications[i].response === 'ignore' ){ %>
+                    <div class="badge badge-warning">Ignored</div>
+                    <%  }else if( clarifications[i].response.length  ){   %>
+                    <div class="badge badge-success">Answered</div>
+                    <%  }else{   %>
+                    <div class="badge">In queue</div>
+                    <%  }   %>
+
+
+
+                    <% if(clarifications[i].pname==='General'){ %>
+                    <h4><b>[General]</b></h4>
+                    <% }else{ %>
                     <h4 class="ellips">
                         <b>[<%= ch.charAt(clarifications[i].pname-1) %>. <%- clarifications[i].title %>]</b>
                     </h4>
+                    <% } %>
+
+                    <h5 class="ellips"><%- clarifications[i].request %></h5>
+
+                </a>
                 <% } %>
 
-            <h5 class="ellips"><%- clarifications[i].request %></h5>
-
-        </a>
-        <% } %>
 
 
 
+            </div>
+            <% include ../../../templates/pagination.ejs %>
+            <% } %>
 
+        </div>
     </div>
-    <% include ../../../templates/pagination.ejs %>
-    <% } %>
-
-</div>
-</div>
 </div>
 
 
-
-
-<!-- ending of contest header  -->
-</div>
-</div>
-</div>
-</div>
 
 
 <script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>

@@ -1,56 +1,52 @@
 
-<div class="content container">
+<div class="text-center contest-arena-heading">
+    <div class="container">
+        <h3 class="no-margin-top text-bold"><%= contest.title %></h3>
+        <div id="countdown" style="font-size: 24px; margin-bottom: 15px;  "></div>
+    </div>
+</div>
+
+<div class="content container" style="padding-top: 0px;">
     <div class="row">
-        <div class="col-md-12">
-
-            <div class="panel panel-default" style="margin-bottom: 20px; box-shadow: none; border-radius: 0; border-top: 1px solid #03A9F4;">
-                <div class="panel-heading" style="border: none; background-color: #FFFFFF; margin-left: 16px; padding: 0px 15px;">
-                    <h3 style="margin-top: 12px;"><%- contest.title %></h3>
-                    <div id="countdown" style="font-size: 18px; font-weight: 200; margin-bottom: 15px;  "></div>
-                </div>
-
-                <div class="navbar navbar-default" style="border-radius: 0; background: #f1f1f1; min-height: 36px; box-shadow: none; border-right: 0; border-left: 0; margin-bottom: 40px;">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle"  data-toggle="collapse" data-target=".navbar-contest">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                    </div>
-                    <div class="collapse navbar-collapse navbar-contest" >
-                        <ul class="nav navbar-nav contest-nav">
-                            <li class="<%= active_contest_nav === "problems" ? 'active' : '' %>">
-                                <a href="/contests/<%= contest.id %>">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
-                                </a>
-                            </li>
-                            <li class="<%= active_contest_nav === "clarifications" ? 'active' : '' %>">
-                                <a href="/contests/<%= contest.id %>/clarifications/all">
-                                    <i class="fa fa-question-circle" aria-hidden="true"></i> Clarifications
-                                </a>
-                            </li>
-                            <li class="<%= active_contest_nav === "standings" ? 'active' : '' %>">
-                                <a href="/contests/<%= contest.id %>/standings">
-                                    <i class="fa fa-trophy" aria-hidden="true"></i> Standings
-                                </a>
-                            </li>
-                            <li class="<%= active_contest_nav === "submissions" ? 'active' : '' %>">
-                                <a href="/contests/<%= contest.id %>/submissions">
-                                    <i class="fa fa-paper-plane" aria-hidden="true"></i> Submissions
-                                </a>
-                            </li>
-                            <% if(isLoggedIn){ %>
-                            <li class="<%= active_contest_nav === "submissionsmy" ? 'active' : '' %>">
-                                <a href="/contests/<%= contest.id %>/submissions/u/my">
-                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i> My Submissions
-                                </a>
-                            </li>
-                            <% } %>
-                        </ul>
-                    </div>
-                </div>
-
-
-
-
-
+        <div class="navbar navbar-default" style="border-radius: 0; background: transparent; min-height: 36px; box-shadow: none; border: none; ">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle"  data-toggle="collapse" data-target=".navbar-contest">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse navbar-contest" >
+                <ul class="nav navbar-nav contest-nav">
+                    <li class="<%= active_contest_nav === "problems" ? 'active' : '' %>">
+                        <a href="/contests/<%= contest.id %>">
+                            <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="<%= active_contest_nav === "clarifications" ? 'active' : '' %>">
+                        <a href="/contests/<%= contest.id %>/clarifications/all">
+                            <i class="fa fa-question-circle" aria-hidden="true"></i> Clarifications
+                        </a>
+                    </li>
+                    <li class="<%= active_contest_nav === "standings" ? 'active' : '' %>">
+                        <a href="/contests/<%= contest.id %>/standings">
+                            <i class="fa fa-trophy" aria-hidden="true"></i> Standings
+                        </a>
+                    </li>
+                    <li class="<%= active_contest_nav === "submissions" ? 'active' : '' %>">
+                        <a href="/contests/<%= contest.id %>/submissions">
+                            <i class="fa fa-paper-plane" aria-hidden="true"></i> Submissions
+                        </a>
+                    </li>
+                    <% if(isLoggedIn){ %>
+                    <li class="<%= active_contest_nav === "submissionsmy" ? 'active' : '' %>">
+                        <a href="/contests/<%= contest.id %>/submissions/u/my">
+                            <i class="fa fa-paper-plane-o" aria-hidden="true"></i> My Submissions
+                        </a>
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

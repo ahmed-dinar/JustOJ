@@ -12,130 +12,126 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
 </head>
-<body>
-
-
-<!-- header and menu -->
-<% include templates/header2.ejs %>
-
-
+<body class="resister-body">
 
 
 <!-- Main Content -->
-<div class="content container" style="min-height: 550px;">
+<div class="content container">
 
-    <div class="row-fluid">
+    <!-- errors -->
+    <% if (errors.length) { %>
+    <div class="col-md-6 col-md-offset-3">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <%= errors %>
+        </div>
+    </div>
+    <% } %>
 
-        <!-- errors -->
-        <% if (errors.length) { %>
-            <div class="col-md-6 col-md-offset-3">
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <%= errors %>
-                </div>
+    <!-- succes -->
+    <% if (success.length) { %>
+    <div class="col-md-6 col-md-offset-3">
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <%= success %>
+        </div>
+    </div>
+    <% } %>
+
+    <div class="col-md-5 col-md-offset-3" style="margin-bottom: 25px;">
+        <div class="form-center">
+            <div class="panel-body text-center form-title">
+                <a href="/" class="link-no-effect">
+                    <div class="brand-logo">
+                        J
+                    </div>
+                    <h3 class="web-title">Just Online Judge</h3>
+                </a>
             </div>
-        <% } %>
-
-        <!-- succes -->
-        <% if (success.length) { %>
-            <div class="col-md-6 col-md-offset-3">
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <%= success %>
-                </div>
-            </div>
-        <% } %>
-
-
-        <div class="col-md-4 col-md-offset-4">
-
-            <div class="panel panel-default" style="margin-top: 80px; " >
-
-                <div class="panel-body">
-
-                    <h4>LOG IN</h4><br/>
-
-                    <!-- Login Form -->
-                    <form method="post" action="<%= postUrl %>" id="logform">
-
-
-                        <div class="form-group">
-                            <label for="iUsername" class="control-label">Username</label>
-                            <input id="iUsername" type="username" name="username" class="form-control valpop" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="iPassword" class="control-label">Password</label>
-                            <input id="iPassword" type="password" name="password" class="form-control valpop" required>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="checkbox" value="remember-me" /> Remember me
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" data-loading-text="Logging in.." class="btn btn-primary">LOGIN</button>
-                            <a href="#" class="btn btn-link pull-right">FORGOT PASSWORD?</a>
-                        </div>
-
-                    </form>
-
-
-                    <script type="text/javascript">
-
-                        jQuery(document).ready(function(){
-
-
-                            $('.valpop').tooltipster({
-
-                                trigger: 'custom', // default is 'hover' which is no good here
-                                onlyOne: false,    // allow multiple tips to be open at a time
-                                position: 'right',  // display the tips to the right of the element
-
-                                theme: 'tooltipster-shadow'
-                            });
-
-
-
-                            var validator = $("#logform").validate({
-
-                                highlight: function(element) {
-                                    $(element).addClass('val-error');
-                                },
-
-                                unhighlight: function(element) {
-                                    $(element).removeClass('val-error');
-                                },
-
-
-                                errorPlacement: function (error, element) {
-                                    $(element).tooltipster('update', $(error).text());
-                                    $(element).tooltipster('show');
-                                },
-                                success: function (label, element) {
-                                    $(element).tooltipster('hide');
-                                }
-
-                            });
-
-
-                        });
-
-                    </script>
-
-
-                </div>
-            </div>
-
         </div>
 
-    </div>
 
+        <div class="panel panel-default form-center">
+
+            <div class="panel-body">
+
+                <div class="text-center help-block" style="margin-bottom: 20px; border-bottom: 1px dotted #ddd; padding-bottom: 5px;">Login</div>
+
+                <!-- Login Form -->
+                <form method="post" action="<%= postUrl %>" id="logform">
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <input id="iUsername" type="username" name="username" placeholder="Username" class="form-control valpop" required>
+                    </div>
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <input id="iPassword" type="password" name="password" placeholder="Password" class="form-control valpop" required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="checkbox" value="remember-me" /> Remember me
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" data-loading-text="Logging in.." class="btn btn-dark btn-md">Login</button>
+                        <a href="#" class="btn btn-link pull-right">Forgot Password?</a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+        <div class="text-center help-block">
+            &copy; CSE , JUST
+        </div>
+    </div>
 </div>
 
 
-<!-- footer -->
-<% include templates/footer.ejs %>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function(){
+
+
+        $('.valpop').tooltipster({
+
+            trigger: 'custom', // default is 'hover' which is no good here
+            onlyOne: false,    // allow multiple tips to be open at a time
+            position: 'right',  // display the tips to the right of the element
+
+            theme: 'tooltipster-shadow'
+        });
+
+
+
+        var validator = $("#logform").validate({
+
+            highlight: function(element) {
+                $(element).addClass('val-error');
+            },
+
+            unhighlight: function(element) {
+                $(element).removeClass('val-error');
+            },
+
+
+            errorPlacement: function (error, element) {
+                $(element).tooltipster('update', $(error).text());
+                $(element).tooltipster('show');
+            },
+            success: function (label, element) {
+                $(element).tooltipster('hide');
+            }
+
+        });
+
+
+    });
+
+</script>
 
 
 </body>

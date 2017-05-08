@@ -12,13 +12,7 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
 </head>
-<body>
-
-
-<!-- header and menu -->
-<% include templates/header2.ejs %>
-
-
+<body class="resister-body">
 
 
 <script type="text/javascript">
@@ -31,116 +25,102 @@
 <!-- Main Content -->
 <div class="content container">
 
-    <div class="row-fluid">
 
+    <% if (errors.length) { %>
+    <div>
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 
-        <!-- errors -->
-        <% if (errors.length) { %>
-            <div class="col-md-6 col-md-offset-2">
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <% if(errors[0].name==='captcha'){ %>
+            <%= errors[0].message %><br>
+            <% }else if(errors[0].name === 'form'){ %>
+            <% _.forEach(errors[0].message,function(value){ %>
+            <%= value.param + ' ' +  value.msg %><br>
+            <% }); %>
+            <% }else{ %>
+            Unknown Error
+            <% } %>
 
-                    <% if(errors[0].name==='captcha'){ %>
-                        <%= errors[0].message %><br>
-                    <% }else if(errors[0].name === 'form'){ %>
-                        <% _.forEach(errors[0].message,function(value){ %>
-                            <%= value.param + ' ' +  value.msg %><br>
-                        <% }); %>
-                    <% }else{ %>
-                        Unknown Error
-                    <% } %>
+        </div>
+    </div>
+    <% } %>
 
-                </div>
+    <div class="col-md-5 col-md-offset-3" style="margin-bottom: 25px;">
+        <div class="form-center">
+            <div class="panel-body text-center form-title">
+                <a href="/" class="link-no-effect">
+                    <div class="brand-logo">
+                        J
+                    </div>
+                    <h3 class="web-title">Just Online Judge</h3>
+                </a>
             </div>
-        <% } %>
+        </div>
+        <div class="panel panel-default form-center">
 
-        <div class="col-md-8">
-            <div class="panel panel-default" style="margin-bottom: 70px; ">
-                <div class="panel-body">
+            <div class="panel-body">
 
+                <div class="text-center help-block" style="margin-bottom: 20px; border-bottom: 1px dotted #ddd; padding-bottom: 5px;">Resister for an account</div>
 
-                    <!-- res Form -->
-                    <form method="post" action="/resister" class="form-horizontal" id="resform">
+                <!-- res Form -->
+                <form method="post" action="/resister" id="resform">
 
-                        <div class="form-group">
-                            <div class="col-sm-6 col-sm-offset-2">
-                                <h3 style="color: #98978B;">Resister</h3><br/>
-                            </div>
+                    <div class="form-group input-icon">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <input id="iName" type="text" name="name" class="form-control valpop" placeholder="Full name" required />
+                    </div>
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <input id="iUsername" type="username" name="username" placeholder="Username" class="form-control valpop" required />
+                    </div>
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                        <input id="iEmail" type="email" name="email" placeholder="E-mail" class="form-control valpop" required />
+                    </div>
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <input id="iPassword" type="password" name="password" placeholder="Password" class="form-control valpop" required />
+                    </div>
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <input id="iConPassword" type="password" placeholder="Confirm Password" name="conpassword" class="form-control valpop" />
+                    </div>
+
+                    <div class="form-group input-icon">
+
+                            <%- recaptcha_form %>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-6 col-sm-offset-4">
+                            <button type="submit" class="btn btn-dark btn-lg">Resister</button>
                         </div>
+                    </div>
+                </form>
 
-                        <div class="form-group">
-                            <label for="iName" class="col-sm-2 control-label">Name</label>
+                <script type="text/javascript" src="/javascripts/validate-form.js"></script>
 
-                            <div class="col-sm-6">
-                                <input id="iName" type="text" name="name" class="form-control valpop" required />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="iUsername" class="col-sm-2 control-label">Username</label>
-
-                            <div class="col-sm-6">
-                                <input id="iUsername" type="username" name="username" class="form-control valpop" required />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="iEmail" class="col-sm-2 control-label">Email</label>
-
-                            <div class="col-sm-6">
-                                <input id="iEmail" type="email" name="email" class="form-control valpop" required />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="iPassword" class="col-sm-2 control-label">Password</label>
-
-                            <div class="col-sm-6">
-                                <input id="iPassword" type="password" name="password" class="form-control valpop" required />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="iConPassword" class="col-sm-2 control-label">Confirm</label>
-
-                            <div class="col-sm-6">
-                                <input id="iConPassword" type="password" name="conpassword" class="form-control valpop" />
-                            </div>
-                        </div>
-
-                        <br>
-                        <div class="form-group">
-                            <div class="col-sm-6 col-sm-offset-2">
-                                <%- recaptcha_form %>
-                            </div>
-                        </div>
-                        <br>
-
-
-                        <div class="form-group">
-                            <div class="col-sm-6 col-sm-offset-2">
-                                <button type="submit" class="btn btn-primary">Resister</button>
-                            </div>
-                        </div>
-
-
-
-                    </form>
-
-                    <script type="text/javascript" src="/javascripts/validate-form.js"></script>
-
-                </div>
             </div>
+            <div class="text-center help-block">
+                Already have an account? <a href="/login">Login</a>
+            </div>
+        </div>
 
+
+
+        <div class="text-center help-block">
+            &copy; CSE , JUST
         </div>
 
     </div>
-
 </div>
 
 
-<!-- footer -->
-<% include templates/footer.ejs %>
 
 </body>
 </html>

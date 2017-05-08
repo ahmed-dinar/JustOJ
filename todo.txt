@@ -1,7 +1,6 @@
 # set problem status to incomplete when remove all test cases
 # no test case option for a problem and judge
 # compare result program
-# repair contest announcement page
 # add object status of every ajax call
 # admin panel
     - contest admin panel
@@ -15,10 +14,8 @@
 # update registration process
     - better way to  use tepm user? may be avoid this db?
     - setup cron job for deleting expired temp user
-# add ace editor
 # may be separate judge server?
 # cluster for multithreading??
-# convert all callbacks to promises!!
 
 
 ## of course possible tests!
