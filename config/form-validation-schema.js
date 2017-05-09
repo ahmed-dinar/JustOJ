@@ -1,9 +1,17 @@
 /**
  * Created by ahmed-dinar on 6/6/16.
  */
-
 module.exports = {
-
+    'password': {
+        'password': {
+            notEmpty: true,
+            isLength: {
+                options: [{min: 6, max: 30}],
+                errorMessage: 'Must be between 6 and 30 chars long'
+            },
+            errorMessage: 'Password should not be empty'
+        }
+    },
     'resistration': {
         'username': {
             notEmpty: true,

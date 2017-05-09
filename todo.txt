@@ -1,3 +1,6 @@
+
+#**#  USE mysql triggers for contest rank and problem status
+
 # set problem status to incomplete when remove all test cases
 # no test case option for a problem and judge
 # compare result program
@@ -9,7 +12,6 @@
 # proper next() error handling
 # implement error page
 # Contest hosting
-# forgot password
 # Ranks
 # update registration process
     - better way to  use tepm user? may be avoid this db?

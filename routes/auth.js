@@ -23,8 +23,19 @@ var OAuth2;
 var csrfToken;
 
 
+var crypto = require('crypto');
+
 router.get('/' , function(req, res, next) {
 
+    crypto.randomBytes(32, function(err, buf) {
+        if(err)
+            return next(new Error(err));
+
+        var token = buf.toString('hex');
+        res.end(token);
+    });
+
+    /*
     var access_token = req.query.token;
 
     var profileUrl = 'https://api.stackexchange.com/2.2/me?' + qs.stringify({
@@ -57,7 +68,7 @@ router.get('/' , function(req, res, next) {
             debug(stackoverflow);
 
             res.end(JSON.stringify(response.statusCode));
-        });
+        });*/
 });
 
 

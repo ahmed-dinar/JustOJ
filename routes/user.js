@@ -6,6 +6,7 @@
 var express = require('express');
 var router = express.Router();
 
+var crypto = require('crypto');
 var gravatar = require('gravatar');
 var moment = require('moment');
 var has = require('has');
@@ -15,6 +16,8 @@ var countries = require('country-data').countries;
 var isEmail = require('validator').isEmail;
 var rndm = require('rndm');
 var Codeforces = require('codeforces-api');
+var Nodemailer  = require('nodemailer');
+
 
 var Secrets = require('../files/secrets/Secrets');
 var User = require('../models/user');
@@ -33,6 +36,8 @@ router.get('/',function(req, res, next) {
     res.status(404)        // HTTP status 404: NotFound
         .send('Not found');
 });
+
+
 
 
 /**
@@ -56,6 +61,45 @@ router.get('/verify', function(req, res, next) {
         res.redirect('/login');
     });
 });
+
+
+/**
+ *
+ */
+router.get('/reset', function(req, res, next) {
+
+    if( req.isAuthenticated() ){
+        res.redirect('/');
+        return;
+    }
+
+    if( !has(req.query,'token') )
+        return next(new Error('404'));
+
+    var token = req.query.token;
+
+    User.getResetToken(token, function (err,rows) {
+        if(err)
+            return next(new Error(err));
+
+        if(!rows.length)
+            return next(new Error('invalid token'));
+
+        debug(rows);
+
+        if( moment().isAfter(rows[0].token_expires) )
+            return next(new Error('invalid token'));
+
+        res.render('user/reset_pass',{
+            active_nav: '',
+            errors: req.flash('errors'),
+            success: req.flash('success'),
+            isLoggedIn: false,
+            resetToken: token
+        });
+    });
+});
+
 
 
 /**
@@ -106,18 +150,285 @@ router.get('/:username',function(req, res, next) {
         });
 
     });
+});
 
-/*
-    User.getProfile(username, function (err, userData , contestHistory, submissionHistory) {
+
+/**
+ *  update password from reset password token request
+ */
+router.post('/resetPassword', function(req, res, next) {
+
+    if( req.isAuthenticated() ){
+        res.redirect('/');
+        return;
+    }
+
+    var resetToken = req.body.resetToken;
+    debug(req.body);
+
+    async.waterfall([
+        function (callback) {
+
+            User.getResetToken(resetToken, function (err,rows) {
+                if(err)
+                    return callback(err);
+
+                debug(rows);
+
+                if( !rows.length || moment().isAfter(rows[0].token_expires) )
+                    return callback('invalid token');
+
+                callback(null,rows[0].id);
+            });
+        },
+        function (uid,callback) {
+
+            req.checkBody(ValidationSchema.password);
+            req.assert('conpassword', 'Password does not match').equals(req.body.password);
+
+            req.getValidationResult().then(function(result) {
+                if (!result.isEmpty())
+                    return callback('formerror', result.array());
+
+                callback(null, uid);
+            });
+        },
+        function (uid, callback) {
+            User.resetPassword(uid, req.body.password, callback);
+        }
+    ], function (err, info) {
+
+        if(err){
+
+            if(!info)
+                return next(new Error(err));
+
+            debug(info);
+            req.flash('errors', info);
+            res.redirect('/user/reset?token=' + resetToken);
+            return;
+        }
+
+        req.flash('success','password reset successful');
+        res.redirect('/login');
+    });
+});
+
+
+/**
+ *  send reset password link
+ */
+router.post('/reset', function(req, res, next) {
+
+    if( req.isAuthenticated() ){
+        res.redirect('/');
+        return;
+    }
+
+    var email = req.body.email;
+
+    async.waterfall([
+        async.apply(User.available, null, email),
+        generateToken,
+        function (token, callback) {
+            User.setResetToken(email, token, function (err, rows) {
+                if(err)
+                    return callback(err);
+
+                callback(null, token, email, req.get('host'));
+            });
+        },
+        sendResetLink
+    ], function (err, info) {
+
+        if(err) {
+            if(!info)
+                return callback(new Error(err));
+
+            debug(info);
+            req.flash('loginFailure', info);
+            res.redirect('/login');
+            return;
+        }
+
+        debug(info);
+        req.flash('success','An email has been sent to ' + email);
+        res.redirect('/login');
+    });
+});
+
+
+/**
+ *
+ * @param token
+ * @param email
+ * @param host
+ * @param callback
+ */
+function sendResetLink(token, email, host, callback) {
+
+    var transporter = Nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+            type: 'OAuth2',
+            user: Secrets.mail,
+            clientId: Secrets.gmailOAuth2.client_id,
+            clientSecret: Secrets.gmailOAuth2.client_secret,
+            refreshToken: Secrets.gmailOAuth2.refresh_token
+        }
+    });
+
+    var link = "http://" + host + "/user/reset?token=" + token;
+    var html = "Hello," + "<br><br>Please follow the link to reset your JUSTOJ account password.<br><br>"
+        + "<a href=\"" + link + "\">" + link + "</a><br><br>Thank you,<br>JUSTOJ";
+
+    var mailOptions = {
+        to: email,
+        subject: 'Reset password',
+        text: '',
+        html: html
+    };
+
+    debug('sending mail..');
+    debug(link);
+
+    transporter.sendMail(mailOptions, callback);
+}
+
+
+
+/**
+ *
+ * @param rows
+ * @param callback
+ * @returns {*}
+ */
+function generateToken(rows, callback) {
+
+    if( !rows.length )
+        return callback('404','no user found with this email');
+
+    debug('generating token..');
+    crypto.randomBytes(20, function(err, buf) {
         if(err)
+            return callback(err);
+
+        var token = buf.toString('hex');
+        callback(null,token);
+    });
+}
+
+
+/**
+ *
+ */
+router.post('/settings/profile', function(req, res, next) {
+
+    if( !req.isAuthenticated() )
+        return next(new Error('403'));
+
+    async.waterfall([
+        function (callback) {
+
+            req.checkBody(ValidationSchema.settings.profile);
+
+            req.getValidationResult().then(function(result) {
+                if (!result.isEmpty()) 
+                    return callback(new CustomError(result,'form'));
+                
+                return callback();
+            });
+        },
+        function (callback) {
+
+            var fileds = {
+                'name': req.body.name,
+                'website': req.body.website,
+                'institute': req.body.institution,
+                'country': req.body.country,
+                'city': req.body.location
+            };
+
+            User.updateProfile({ id: req.user.id, fields: fileds }, callback);
+        }
+    ], function (err,rows) {
+        
+        if(err){
+            if( has(err,'name') && err.name === 'form' ){
+                debug(err.message.array());
+                req.flash('err','form error');
+                res.redirect('/user/settings/profile');
+                return;
+            }
             return next(new Error(err));
+        }
+
+
+
+        req.flash('success','profile updated');
+        res.redirect('/user/settings/profile');
+    });
+});
+
+
+
+
+/**
+ *  change password from edit profile page
+ */
+router.post('/settings/changepassword', function(req, res, next) {
+
+    if( !req.isAuthenticated() )
+        return next(new Error('403'));
+
+    if( req.body.newpassword !== req.body.confirmpassword ){
+        req.flash('err','please confirm password');
+        res.redirect('/user/settings/profile');
+        return;
+    }
+
+    var credentials = {
+        'id': req.user.id,
+        'password': req.user.password,
+        'currentpassword': req.body.currentpassword,
+        'newpassword': req.body.newpassword
+    };
+
+    User.changePassword(credentials, function (err,rows) {
+        if(err) {
+            if( has(err,'name') && err.name === 'form'){
+                req.flash('err',err.message);
+                res.redirect('/user/settings/profile');
+                return;
+            }
+            return next(err);
+        }
+
+        req.flash('success','password updated');
+        res.redirect('/user/settings/profile');
+    });
+});
+
+
+
+
+/**
+ *
+ */
+router.get('/settings/profile', isLoggedIn(true), function(req, res, next) {
+
+    var username = req.user.username;
+
+    User.getProfile(username, function (err, userData , contestHistory, submissionHistory) {
+        if(err) return next(new Error(err));
 
         var solvedList = [];
         if( submissionHistory.length && submissionHistory[0].solvedList )
             solvedList = JSON.parse('[' + submissionHistory[0].solvedList + ']');
 
-        submissionHistory = submissionHistory.length ? submissionHistory[0] : { solved: 0, accepted: 0, re: 0, tle: 0, mle: 0, ce: 0, wa: 0, totalSubmission: 0 };
-
+        submissionHistory = submissionHistory.length
+            ? submissionHistory[0]
+            : { solved: 0, accepted: 0, re: 0, tle: 0, mle: 0, ce: 0, wa: 0, totalSubmission: 0 };
         var profile = {
             contestHistory: contestHistory,
             userData: userData,
@@ -126,24 +437,29 @@ router.get('/:username',function(req, res, next) {
             profilePicture: gravatar.url(userData.email, {s: '150'}, true)
         };
 
-        if( countries[userData.country].name )
-            profile.userData.country = countries[userData.country].name;
+        if( !userData.uva_userid.length )
+            profile.randomUvaName = rndm(10);
 
-        if(  profile.userData.publicemail && !isEmail(profile.userData.email) )
-            profile.userData.publicemail = 0;
+        if( !userData.cf_username.length )
+            profile.randomCfEmail = rndm(8);
 
         debug(profile);
 
-        res.render('user/profile',{
+        res.render('user/settings/profile',{
             active_nav: '',
             isLoggedIn: req.isAuthenticated(),
             user: req.user,
+            error: req.flash('err'),
+            success: req.flash('success'),
             username: username,
             profile: profile,
+            auth_error: req.flash('auth_error'),
+            auth_success: req.flash('auth_success'),
             moment: moment
         });
-    });*/
+    });
 });
+
 
 
 /**
@@ -302,144 +618,6 @@ function getStackoverflowInfo(stackToken, callback) {
         });
 }
 
-/**
- *
- */
-router.post('/settings/profile', function(req, res, next) {
-
-    if( !req.isAuthenticated() )
-        return next(new Error('403'));
-
-    async.waterfall([
-        function (callback) {
-
-            req.checkBody(ValidationSchema.settings.profile);
-
-            req.getValidationResult().then(function(result) {
-                if (!result.isEmpty()) 
-                    return callback(new CustomError(result,'form'));
-                
-                return callback();
-            });
-        },
-        function (callback) {
-
-            var fileds = {
-                'name': req.body.name,
-                'website': req.body.website,
-                'institute': req.body.institution,
-                'country': req.body.country,
-                'city': req.body.location
-            };
-
-            User.updateProfile({ id: req.user.id, fields: fileds }, callback);
-        }
-    ], function (err,rows) {
-        
-        if(err){
-            if( has(err,'name') && err.name === 'form' ){
-                debug(err.message.array());
-                req.flash('err','form error');
-                res.redirect('/user/settings/profile');
-                return;
-            }
-            return next(new Error(err));
-        }
-
-
-
-        req.flash('success','profile updated');
-        res.redirect('/user/settings/profile');
-    });
-});
-
-
-/**
- *
- */
-router.post('/settings/changepassword', function(req, res, next) {
-
-    if( !req.isAuthenticated() )
-        return next(new Error('403'));
-
-    if( req.body.newpassword !== req.body.confirmpassword ){
-        req.flash('err','please confirm password');
-        res.redirect('/user/settings/profile');
-        return;
-    }
-
-    var credentials = {
-        'id': req.user.id,
-        'password': req.user.password,
-        'currentpassword': req.body.currentpassword,
-        'newpassword': req.body.newpassword
-    };
-
-    User.changePassword(credentials, function (err,rows) {
-        if(err) {
-            if( has(err,'name') && err.name === 'form'){
-                req.flash('err',err.message);
-                res.redirect('/user/settings/profile');
-                return;
-            }
-            return next(err);
-        }
-
-        req.flash('success','password updated');
-        res.redirect('/user/settings/profile');
-    });
-});
-
-
-
-
-/**
- *
- */
-router.get('/settings/profile', isLoggedIn(true), function(req, res, next) {
-
-    var username = req.user.username;
-
-    User.getProfile(username, function (err, userData , contestHistory, submissionHistory) {
-        if(err) return next(new Error(err));
-
-        var solvedList = [];
-        if( submissionHistory.length && submissionHistory[0].solvedList )
-            solvedList = JSON.parse('[' + submissionHistory[0].solvedList + ']');
-
-        submissionHistory = submissionHistory.length
-            ? submissionHistory[0]
-            : { solved: 0, accepted: 0, re: 0, tle: 0, mle: 0, ce: 0, wa: 0, totalSubmission: 0 };
-        var profile = {
-            contestHistory: contestHistory,
-            userData: userData,
-            submissionHistory: submissionHistory,
-            solvedList: solvedList,
-            profilePicture: gravatar.url(userData.email, {s: '150'}, true)
-        };
-
-        if( !userData.uva_userid.length )
-            profile.randomUvaName = rndm(10);
-
-        if( !userData.cf_username.length )
-            profile.randomCfEmail = rndm(8);
-
-        debug(profile);
-
-        res.render('user/settings/profile',{
-            active_nav: '',
-            isLoggedIn: req.isAuthenticated(),
-            user: req.user,
-            error: req.flash('err'),
-            success: req.flash('success'),
-            username: username,
-            profile: profile,
-            auth_error: req.flash('auth_error'),
-            auth_success: req.flash('auth_success'),
-            moment: moment
-        });
-    });
-});
 
 
 module.exports = router;

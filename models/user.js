@@ -1,6 +1,7 @@
 
 var async = require('async');
 var bcrypt = require('bcryptjs');
+var moment = require('moment');
 
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
@@ -83,6 +84,85 @@ User.available = function(username,email,fn){
 
 /**
  *
+ * @param email
+ * @param token
+ * @param callback
+ */
+User.setResetToken = function (email,token, callback) {
+
+    var expire = moment().add(24, 'hours').format("YYYY-MM-DD HH:mm:ss");
+
+    var sql = Query('users')
+        .update({
+            reset_token: token,
+            token_expires: expire
+        })
+        .where('email', email);
+
+    DB.execute(sql.toString(), callback);
+};
+
+
+
+/**
+ *
+ * @param token
+ * @param callback
+ */
+User.getResetToken = function (token, callback) {
+
+    var sql = Query.select(['token_expires','id'])
+        .from('users')
+        .where('reset_token', token)
+        .limit(1);
+
+    DB.execute(sql.toString(), callback);
+};
+
+
+
+/**
+ *
+ * @param uid
+ * @param password
+ * @param fn
+ */
+User.resetPassword = function (uid, password, fn) {
+
+    async.waterfall([
+        function(callback) {
+            bcrypt.genSalt(10, function (err, salt) {
+                if (err)
+                    return callback(new CustomError(err,'genSalt'));
+
+                callback(null, salt);
+            });
+        },
+        function(salt,callback) {
+            bcrypt.hash(password, salt, function (err, hash) {
+                if (err)
+                    return callback(new CustomError(err,'hash'));
+
+                callback(null, hash);
+            });
+        },
+        function (hash, callback) {
+
+            var sql = Query('users')
+                .update({
+                    password: hash,
+                    reset_token: ''
+                })
+                .where('id', uid);
+
+            DB.execute(sql.toString(), callback);
+        }
+    ], fn);
+};
+
+
+/**
+ *
  * @param id
  * @param callback
  */
@@ -94,11 +174,7 @@ User.problemStatus = function(id,callback){
             'uid': id
         });
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            callback(err,rows);
-        });
+    DB.execute(sql.toString(), callback);
 };
 
 

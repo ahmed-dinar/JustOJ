@@ -7,7 +7,7 @@
 var has = require('has');
 var bcrypt      = require('bcryptjs');
 var moment      = require("moment");
-var uuid        = require('uuid');
+var crypto = require('crypto');
 var Nodemailer  = require('nodemailer');
 var async       = require('async');
 
@@ -18,11 +18,11 @@ var Secrets     = require('../files/secrets/Secrets');
 
 var debug = require('debug')('models:tempuser');
 
+
 /**
  *
  * @param req
- * @param res
- * @param next
+ * @param cb
  */
 exports.resister = function (req, cb) {
 
@@ -39,9 +39,19 @@ exports.resister = function (req, cb) {
         function(salt,callback) {
             bcrypt.hash(password, salt, callback);
         },
-        function(hash,callback) {
+        function (hash, callback) {
 
-            var token = uuid.v4();
+            debug('generating token...');
+            crypto.randomBytes(20, function(err, buf) {
+                if(err)
+                    return callback(err);
+
+                var token = buf.toString('hex');
+                callback(null,hash,token);
+            });
+        },
+        function(hash, token, callback) {
+
             var now = moment();
             var created = moment(now).format("YYYY-MM-DD HH:mm:ss");
             var expire = moment(now).add(24, 'hours').format("YYYY-MM-DD HH:mm:ss");

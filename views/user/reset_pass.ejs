@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <% include ../templates/head.ejs %>
+
+</head>
+<body class="resister-body">
+
+
+<!-- Main Content -->
+<div class="content container">
+
+
+    <div class="form-center">
+        <div>
+            <div class="panel-body text-center form-header">
+                <a href="/" class="link-no-effect">
+                    <div class="brand-logo">
+                        J
+                    </div>
+                    <h3 class="web-title">Just Online Judge</h3>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="panel panel-default">
+
+            <div class="panel-body">
+
+                <div class="text-center help-block form-title">Reset password</div>
+
+
+                <!-- errors -->
+                <% if (errors.length) { %>
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <div class="text-center">
+                        <% if(typeof errors === 'string'){ %>
+                            <%= errors %>
+                        <% }else if(errors.length){ %>
+                            <%= errors[0].msg %>
+                        <% } %>
+                    </div>
+                </div>
+                <% } %>
+
+
+                <!-- Login Form -->
+                <form method="post" action="/user/resetPassword" >
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <input type="password" name="password" placeholder="New Password" class="form-control">
+                    </div>
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <input type="password" name="conpassword" placeholder="Confirm New Password" class="form-control">
+                    </div>
+
+                    <input type="hidden" name="resetToken" value="<%= resetToken %>" />
+                    <div class="form-group" style="margin-top: 15px;">
+                        <button type="submit" data-loading-text="Logging in.." class="btn btn-dark btn-md">Change Password</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+        <div class="text-center help-block">
+            &copy; CSE , JUST
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".alert").fadeTo(3500, 500).slideUp(500, function(){
+            $(".alert").slideUp(500);
+        });
+    });
+</script>
+
+
+</body>
+</html>
