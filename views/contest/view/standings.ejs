@@ -29,7 +29,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                 <th class="text-center fixed-cell">#</th>
                 <th>Username</th>
                 <th class="text-center fixed-cell">Slv.</th>
-                <th class="text-center fixed-cell">Time</th>
+                <th class="text-center fixed-cell"></th>
 
                 <% for(var i=0; i<problemStats.length; i++){ %>
                 <th class="text-center standings-cell fixed-cell ellips" title="<%- problemStats[i].title %> [ <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %> ]">
@@ -37,7 +37,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                 </th>
                 <% }
                 for(var i=problemStats.length; i<colspan; i++){ %>
-                <th class="fixed-cell"></th>
+                <!--<th class="fixed-cell"></th>-->
                 <% } %>
 
             </tr>
@@ -70,10 +70,17 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
             <% var up = JSON.parse('{' + ranks[i].problems + '}'); %>
 
             <tr>
-                <td class="text-center " style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
-                <td style="vertical-align: middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
-                <td class="text-center " style="vertical-align: middle"><%= ranks[i].solved %></td>
-                <td class="text-center " style="vertical-align: middle"><%= parseInt(ranks[i].penalty) < 0 ? 0 : ranks[i].penalty %></td>
+                <td class="text-center vertical-middle"><%= pagination.offset() + i + 1 %></td>
+                <td class="vertical-middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
+                <td class="text-center solved-count vertical-middle"><%= ranks[i].solved %></td>
+                <td class="text-center standings-cell vertical-middle">
+                    <a href="/contests/<%= contest.id %>/submissions/u/<%= ranks[i].username %>" class="label label-info">
+                        <p>.</p>
+                        <p>
+                            <%= parseInt(ranks[i].penalty) < 0 ? 0 : ranks[i].penalty %>
+                        </p>
+                    </a>
+                </td>
 
                 <% for(var j=0; j<problemStats.length; j++){ %>
                 <td class="text-center standings-cell">
@@ -83,7 +90,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
 
                     <% if(up[problemStats[j].pid].status === 0){ %>
 
-                    <a class="label label-success show-runs" href="#" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
+                    <a class="label label-success show-runs" href="#" data-problem-id="<%= problemStats[j].pid %>" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
                         <p>( <%= up[problemStats[j].pid].tried %> )</p>
                         <p class="penalty-label" time-penalty="<%= up[problemStats[j].pid].penalty_time  %>">
                                                 <span>
@@ -95,7 +102,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                     <% }else{ %>
 
 
-                    <a class="label label-danger show-runs" href="#" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
+                    <a class="label label-danger show-runs" href="#" data-problem-id="<%= problemStats[j].pid %>" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>" >
                         <p>( <%= up[problemStats[j].pid].tried %> )</p>
                         <p>-</p>
                     </a>
@@ -167,6 +174,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
 
             var URL = $(this).attr('data-link');
             var problemNo = $(this).attr('data-problem-index');
+            var problemId = $(this).attr('data-problem-id');
             var dataUser = URL.match(/username=(.*)&/)[1];
 
             $.ajax({
@@ -180,7 +188,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                     if( typeof data === 'string' )
                         document.getElementById('run-info').innerHTML = '<h3 style="color:#f56b3d">error while retrieving information</h3>';
                     else {
-                        document.getElementById('run-info-header').innerHTML = '<b>' + dataUser + '</b>\'s submissions for problem ' + problemNo;
+                        document.getElementById('run-info-header').innerHTML = '<b>' + dataUser + '</b>\'s submissions for problem ' + problemNo + ' , <a href="/contests/<%= contest.id %>/submission?username='+ dataUser +'&problem='+ problemId +'">#</a>';
                         document.getElementById('run-info').innerHTML = submissionHTML(data);
                     }
 

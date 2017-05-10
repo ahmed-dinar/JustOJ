@@ -58,7 +58,11 @@
                                             <span class="label label-success">PUBLIC</span>
                                         <% } %>
                                     </td>
-                                    <td class="col-sm-1"><a class="btn btn-xs btn-primary" href="/contests/edit/<%= contests[i].id %>">EDIT</a></td>
+                                    <td class="col-sm-1">
+                                        <a class="btn btn-xs btn-primary" href="/contests/edit/<%= contests[i].id %>">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit
+                                        </a>
+                                    </td>
 
 
 
@@ -66,7 +70,11 @@
                                         <input type="hidden" name="cid" value="" id="cidField" />
                                     </form>
 
-                                    <td class="col-sm-1"><a class="btn btn-xs btn-danger del-contest-btn" data-cid="<%= contests[i].id %>" href="#">DELETE</a></td>
+                                    <td class="col-sm-1">
+                                        <a class="btn btn-xs btn-danger del-contest-btn" data-cid="<%= contests[i].id %>" href="#">
+                                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+                                        </a>
+                                    </td>
 
                                 </tr>
                             <% } %>

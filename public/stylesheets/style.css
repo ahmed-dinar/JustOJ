@@ -4,9 +4,9 @@ body {
   margin: 0px ;
 
   font-family: 'PT Sans','Open Sans',  "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px ;
+  font-size: 14px;
   color: #333 ;
-  background: #F4F4F4;
+  background: #F2F2F2;
 }
 
 .navbar-brand{
@@ -50,11 +50,11 @@ body {
   transform-style: preserve-3d;
   margin: 0px auto;
   margin-top: -7px;
-  background: #0391c9; /* 07AD91  0391c9*/
-  color: #ffffff;
+  background: #ffffff; /* 07AD91  0391c9*/
+  color: #293A48;
   border: none;
   padding: 0px 10px;
-  border-radius: 4px;
+  border-radius: 2px;
   max-width: 35px;
   position: relative;
   box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
@@ -222,11 +222,14 @@ footer{
   padding: 9.5px;
   margin: 0 0 10px;
   overflow: auto;
-  font-size: 13px;
-  line-height: 1.42857143;
   word-break: break-all;
   word-wrap: break-word;
   white-space: pre-wrap;
+
+  font-family: 'Ubuntu Mono', monospace;
+  font-size: 15px;
+  line-height: 20px;
+
 }
 
 .btn-dark{
@@ -435,8 +438,14 @@ td,th{
 }
 */
 
+.scoreboard .solved-count{
+  font-size: 17px;
+  font-weight: 600;
+}
+
+
 .scoreboard > tbody > tr {
-  background-color: #ffffff;
+  background-color: transparent;
 }
 
 .scoreboard > tbody > tr > td {
@@ -456,6 +465,10 @@ td,th{
   font-weight: bold;
   font-size: 11px;
   border-radius: 4px;
+}
+
+.standings-cell > .label-info{
+  background-color: #29ABE0;
 }
 
 .standings-cell > a > p {
@@ -739,33 +752,6 @@ nav.nopadding, div.nopadding {
 
 
 
-.contest-nav >li>a {
-  padding: 10px 15px;
-}
-
-.navbar-default  .contest-nav > .active > a{
-  background-image: none;
-  background-color: transparent;
-  box-shadow: none;
-}
-
-.contest-nav > li.active{
-    border-bottom: 1px solid #03A9F4;
-}
-
-.contest-problem-table > tbody > tr>td{
-  padding: 15px;
-}
-
-.contest-problem-table h3 , .contest-problem-table h4{
-  margin: 0;
-}
-
-.contest-problem-table h4{
-  margin-top: 4px;
-}
-
-
 .label-danger{
   background-color: #f56b3d;
 }
@@ -905,17 +891,21 @@ pre{
   border: none;
 }
 
-.btn-default, .btn-primary, .btn-success, .btn-info, .btn-warning, .btn-danger {
+ .btn-primary, .btn-success, .btn-info, .btn-warning, .btn-danger {
   background-image: none;
   /*box-shadow: 0 2px 2px 0 rgba(153,153,153,.14),0 3px 1px -2px rgba(153,153,153,.2),0 1px 5px 0 rgba(153,153,153,.12);*/
-box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
 }
 
+.btn-primary:hover, .btn-success:hover, .btn-info:hover, .btn-warning:hover, .btn-danger:hover, .btn-dark:hover{
+  color: #ffffff;
+}
 
 .btn-default{
+  background-image: none;
   border: 1px solid #d9d9d9;
-  border-bottom: none;
   background: transparent;
+  box-shadow: none;
 }
 
 .btn-default:hover{
@@ -983,24 +973,6 @@ box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
 
 .navbar{
   box-shadow: 0 2px 2px rgba(0,0,0,.05),0 1px 0 rgba(0,0,0,.05);
-}
-
-.contest-banner{
-  padding-top: 50px;
-  background-image: url('../images/mk.png');
-  min-height: 300px;
-  background-position:  bottom;
-  background-repeat: no-repeat;
-  background-color: #07AD91; /* 07AD91 185568 */
-  color: #ffffff;
-  text-shadow: rgb(3, 3, 3) 4px 4px 6px;
-}
-
-.contest-arena-heading{
-  padding-top: 25px;
-  background-color: #07AD91; /* 07AD91 185568 */
-  color: #ffffff;
-  text-shadow: rgba(3, 3, 3, 0.5) 1px 1px 1px;
 }
 
 .nav-tabs>li{
@@ -1092,4 +1064,83 @@ box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
 .forgot-password:hover{
   text-decoration: none;
   color: inherit;
+}
+
+
+.contest-banner{
+  padding-top: 50px;
+  background-image: url('../images/mk.png');
+  min-height: 300px;
+  background-position:  bottom;
+  background-repeat: no-repeat;
+  background-color: #07AD91; /* 07AD91 185568 */
+  color: #ffffff;
+  text-shadow: rgb(3, 3, 3) 4px 4px 6px;
+}
+
+.contest-arena-heading{
+  padding-top: 25px;
+  background-color: #07AD91; /* 07AD91 185568 */
+  color: #ffffff;
+  text-shadow: rgba(3, 3, 3, 0.5) 1px 1px 1px;
+}
+
+.contest-nav-wrapper{
+  background-color: #06937b;
+  border-top: 1px solid rgba(5, 122, 103,.3);
+}
+
+.contest-navbar{
+  border-radius: 0;
+  background: transparent;
+  min-height: 36px;
+  box-shadow: none;
+  border: none;
+}
+
+
+.contest-nav >li>a {
+  padding: 10px 15px;
+}
+
+.navbar-default  .contest-nav > .active > a{
+  background-image: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.contest-nav > li.active:after{
+  position: absolute;
+  bottom: -20px;
+  height: 0;
+  width: 0;
+  left: 37%;
+  border: 12px solid transparent;
+  border-top-color: #06937b;
+  content: "";
+}
+
+
+.contest-problem-table > tbody > tr>td{
+  padding: 15px;
+}
+
+.contest-problem-table h3 , .contest-problem-table h4{
+  margin: 0;
+}
+
+.contest-problem-table h4{
+  margin-top: 4px;
+}
+
+.img-polaroid{
+  border-radius: 2px;
+}
+
+.navbar-img{
+  margin-top: -3px;
+}
+
+.vertical-middle{
+  vertical-align: middle !important;
 }

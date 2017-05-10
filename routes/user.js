@@ -228,6 +228,15 @@ router.post('/reset', function(req, res, next) {
     var email = req.body.email;
 
     async.waterfall([
+        function (callback) {
+            req.checkBody(ValidationSchema.email);
+            req.getValidationResult().then(function(result) {
+                if (!result.isEmpty())
+                    return callback('formerror', result.array());
+
+                callback();
+            });
+        },
         async.apply(User.available, null, email),
         generateToken,
         function (token, callback) {
@@ -243,7 +252,7 @@ router.post('/reset', function(req, res, next) {
 
         if(err) {
             if(!info)
-                return callback(new Error(err));
+                return next(new Error(err));
 
             debug(info);
             req.flash('loginFailure', info);

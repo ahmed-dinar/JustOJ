@@ -1061,7 +1061,6 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
 
 
 /**
- * TODO: if from browser, it shows json array
  *   submissions of a problem of a contest
  */
 router.get('/:cid/submission', function(req, res, next) {
@@ -1157,6 +1156,7 @@ router.get('/:cid/submission', function(req, res, next) {
  */
 router.get('/:cid/submissions/u/:username', isLoggedIn(true), function(req, res, next) {
 
+    var problem = req.query.problem;
     var username = req.params.username;
     var cur_page = req.query.page;
     var cid = req.params.cid;

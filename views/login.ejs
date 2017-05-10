@@ -6,6 +6,8 @@
 
     <% include templates/head.ejs %>
 
+    <script src="/javascripts/notify.min.js"></script>
+
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.js"></script>
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-shadow.css">
@@ -13,6 +15,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/2.2.1/pretty.min.css" />
+
 </head>
 <body class="resister-body">
 
@@ -53,7 +56,13 @@
                 <% if (errors.length) { %>
                     <div class="alert alert-danger alert-dismissible" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <div class="text-center"><%= errors %></div>
+                        <div class="text-center">
+                            <% if(typeof errors === 'string'){ %>
+                            <%= errors %>
+                            <% }else if(errors.length){ %>
+                            <%= errors[0].msg %>
+                            <% } %>
+                        </div>
                     </div>
                 <% } %>
 
@@ -105,13 +114,13 @@
             </div>
             <div class="modal-body">
                 <div style="width: 420px; margin: 0px auto;">
-                    <form method="post" action="/user/reset" >
+                    <form method="post" action="/user/reset" id="reset-form" >
                         <div class="form-group input-icon">
                             <i class="fa fa-envelope" aria-hidden="true"></i>
-                            <input type="email" name="email" placeholder="Enter your email" class="form-control">
+                            <input type="email" name="email" id="reset-email" placeholder="Enter your email" class="form-control notify">
                         </div>
                         <div class="form-group" style="margin-top: 15px;">
-                            <button type="submit" data-loading-text="Sending.." class="btn btn-dark btn-md">Send Password Reset Link</button>
+                            <button type="submit" data-loading-text="Sending.." class="btn btn-dark btn-md" id="reset-btn" >Send Password Reset Link</button>
                         </div>
                     </form>
                 </div>
@@ -125,7 +134,17 @@
 
     $(document).ready(function(){
 
-        $(".alert").fadeTo(3500, 500).slideUp(500, function(){
+        $('#reset-btn').click(function (event) {
+            event.preventDefault();
+            if ($('#reset-email').val() === '') {
+                $('#reset-email').notify('Please enter your email', { position: 'top left' , className: 'error' });
+                return;
+            }
+            $('#reset-form').submit();
+        });
+
+
+            $(".alert").fadeTo(3500, 500).slideUp(500, function(){
             $(".alert").slideUp(500);
         });
 

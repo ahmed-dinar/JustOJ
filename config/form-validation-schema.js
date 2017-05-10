@@ -2,6 +2,14 @@
  * Created by ahmed-dinar on 6/6/16.
  */
 module.exports = {
+    'email': {
+        'email': {
+            notEmpty: true,
+            isEmail: {
+                errorMessage: 'Invalid Email'
+            }
+        }
+    },
     'password': {
         'password': {
             notEmpty: true,

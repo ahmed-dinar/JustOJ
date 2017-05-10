@@ -11,8 +11,8 @@
             - clarifications
 # proper next() error handling
 # implement error page
-# Contest hosting
 # Ranks
+# add csrf
 # update registration process
     - better way to  use tepm user? may be avoid this db?
     - setup cron job for deleting expired temp user
@@ -36,5 +36,6 @@
 # open compiler for custom test
 # activate score in contest problems
 # may be, may be optimize database query?
+# Contest hosting
 
 2c2c35,  518CA3, 012B43 , 00887A 014081 2d1c4a

@@ -18,8 +18,8 @@
 
 
 <div class="container content c-h">
-    <div class="col-md-10 nopadding">
 
+    <div class="col-md-9">
 
         <div class="panel panel-default" >
 
@@ -31,41 +31,6 @@
             </div>
 
 
-            <div class="panel-heading" style="padding: 20px;">
-
-                <select class="form-control" id="dropd" style="padding: 10px 12px;  height: 45px;"  >
-
-                    <option value="/contests/<%= contest.id %>/clarifications/all">ALL</option>
-
-                    <% if(selected==='my'){ %>
-                    <option value="/contests/<%= contest.id %>/clarifications/my" selected>MY</option>
-                    <option value="/contests/<%= contest.id %>/clarifications/general">GENERAL</option>
-                    <% }else if(selected==='general'){ %>
-                    <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
-                    <option value="/contests/<%= contest.id %>/clarifications/general" selected>GENERAL</option>
-                    <% }else{ %>
-                    <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
-                    <option value="/contests/<%= contest.id %>/clarifications/general" >GENERAL</option>
-                    <% } %>
-
-
-                    <% i=0; _.forEach(problems,function(value, key){ %>
-
-                    <% if(selected===value.pid){ %>
-                    <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
-                        [<%= ch.charAt(i++) %>] <%- value.title %>
-                    </option>
-                    <% }else{ %>
-                    <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>">
-                        [<%= ch.charAt(i++) %>] <%- value.title %>
-                    </option>
-                    <% } %>
-
-                    <% }); %>
-
-                </select>
-
-            </div>
 
             <% if(clarifications.length){ %>
 
@@ -106,6 +71,41 @@
 
         </div>
     </div>
+
+    <div class="col-md-3">
+        <select class="form-control" id="dropd" style="padding: 10px 12px;  height: 45px;"  >
+
+            <option value="/contests/<%= contest.id %>/clarifications/all">ALL</option>
+
+            <% if(selected==='my'){ %>
+            <option value="/contests/<%= contest.id %>/clarifications/my" selected>MY</option>
+            <option value="/contests/<%= contest.id %>/clarifications/general">GENERAL</option>
+            <% }else if(selected==='general'){ %>
+            <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
+            <option value="/contests/<%= contest.id %>/clarifications/general" selected>GENERAL</option>
+            <% }else{ %>
+            <option value="/contests/<%= contest.id %>/clarifications/my" >MY</option>
+            <option value="/contests/<%= contest.id %>/clarifications/general" >GENERAL</option>
+            <% } %>
+
+
+            <% i=0; _.forEach(problems,function(value, key){ %>
+
+            <% if(selected===value.pid){ %>
+            <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>" selected>
+                [<%= ch.charAt(i++) %>] <%- value.title %>
+            </option>
+            <% }else{ %>
+            <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>">
+                [<%= ch.charAt(i++) %>] <%- value.title %>
+            </option>
+            <% } %>
+
+            <% }); %>
+
+        </select>
+    </div>
+
 </div>
 
 
