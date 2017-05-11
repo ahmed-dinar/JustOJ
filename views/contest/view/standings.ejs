@@ -32,7 +32,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                 <th class="text-center fixed-cell"></th>
 
                 <% for(var i=0; i<problemStats.length; i++){ %>
-                <th class="text-center standings-cell fixed-cell ellips" title="<%- problemStats[i].title %> [ <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %> ]">
+                <th class="text-center fixed-cell ellips" title="<%- problemStats[i].title %> [ <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %> ]">
                     <a href="/contests/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a>
                 </th>
                 <% }
@@ -50,10 +50,10 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
             <% if( ranks[i].penalty === null || _.isUndefined(ranks[i].penalty) ){ %>
 
             <tr>
-                <td  class="text-center" style="vertical-align: middle"><%= pagination.offset() + i + 1 %></td>
-                <td  style="vertical-align: middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
-                <td class="text-center"  style="vertical-align: middle">0</td>
-                <td class="text-center"  style="vertical-align: middle">0</td>
+                <td  class="text-center vertical-middle"><%= pagination.offset() + i + 1 %></td>
+                <td  class="vertical-middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
+                <td class="text-center vertical-middle">0</td>
+                <td class="text-center vertical-middle" >0</td>
                 <% for(var j=0; j<problemStats.length; j++){ %>
                 <td class="text-center standings-cell" >
                     <div class="label label-default">

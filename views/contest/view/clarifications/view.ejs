@@ -18,20 +18,38 @@
 <% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; %>
 
 <div class="container content c-h">
-    <div class="col-md-10 nopadding">
+    <div class="col-md-10">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                    <% if(clarification.pname==='General'){ %>
+                    General
+                    <% }else{ %>
+                    [<%= ch.charAt(parseInt(clarification.pname)) %>] <%- clarification.title %>
+                    <% } %>
 
-        <h3 class="ellips">
-            <% if(clarification.pname==='General'){ %>
-            General
-            <% }else{ %>
-            [<%= ch.charAt(parseInt(clarification.pname)) %>] <%= decodeToHTML(clarification.title) %>
-            <% } %>
-        </h3>
-        <br>
-        <h4><%= decodeToHTML(clarification.request) %></h4>
-        by-<a href="/user/<%= clarification.username %>"><%= clarification.username %></a>
-        <hr>
-        <p><%= decodeToHTML(clarification.response) %></p>
+                <div class="pull-right">
+                    <%  if( clarification.status === 'ignore' ){ %>
+                    <div class="label label-warning"><i class="fa fa-eye-slash" aria-hidden="true"></i> Ignored</div>
+                    <%  }else if( clarification.response.length  ){   %>
+                    <div class="label label-success"><i class="fa fa-comment-o" aria-hidden="true"></i> Answered</div>
+                    <%  }else{   %>
+                    <div class="label label-default"><i class="fa fa-angle-double-right" aria-hidden="true"></i> In queue</div>
+                    <%  }   %>
+                </div>
+
+            </div>
+
+            <div class="panel-body">
+                <h4><%- clarification.request %></h4>
+
+                <% if(clarification.status !== 'general'){ %>
+                by-<a href="/user/<%= clarification.username %>"><%= clarification.username %></a>
+                <hr>
+                <p><%- clarification.response %></p>
+                <% } %>
+
+            </div>
+        </div>
     </div>
 </div>
 

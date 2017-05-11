@@ -13,9 +13,22 @@
             border: 1px solid #098ddf;
         }
     </style>
+
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
 </head>
 <body>
 
+    <form action="/s3" method="POST">
+        <div class="g-recaptcha" data-sitekey="<%= SITE_KEY %>"></div>
+        <br/>
+        <input type="submit" value="Submit">
+    </form>
+
+
+<!--
     <select id="languages" name="Language">
         <option value="0">C</option>
         <option value="1">C++</option>
@@ -87,6 +100,6 @@
     }
 
 
-</script>
+</script>-->
 </body>
 </html>

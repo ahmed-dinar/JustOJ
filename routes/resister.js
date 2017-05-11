@@ -7,7 +7,7 @@ var router = express.Router();
 
 var async = require('async');
 var _ = require('lodash');
-var Recaptcha = require('recaptcha').Recaptcha;
+var reCAPTCHA = require('recaptcha2');
 
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var TempUser = require('../models/tempuser');
@@ -22,12 +22,10 @@ var debug = require('debug')('routes:resister');
 
 router.get('/', isLoggedIn(false) , function(req, res, next) {
 
-    var recaptcha = new Recaptcha(Secrets.recaptcha.SITE_KEY, Secrets.recaptcha.SECRET_KEY);
-
     res.render('resister', {
         active_nav: 'resister',
         layout: true,
-        recaptcha_form: recaptcha.toHTML(),
+        RECAPTCHA_KEY: Secrets.recaptcha2.SITE_KEY,
         errors: req.flash('resFailure'),
         isLoggedIn: false,
         _: _
@@ -80,10 +78,14 @@ router.post('/', isLoggedIn(false) , function(req, res, next) {
 
             debug(err);
 
-            if( !has(err,'name') ) return next(new Error(err));
+            if( !has(err,'name') )
+                return next(new Error(err));
 
             switch (err.name){
                 case 'captcha':
+                    req.flash('resFailure', err);
+                    res.redirect('/resister');
+                    break;
                 case 'form':
                     req.flash('resFailure', err.message);
                     res.redirect('/resister');
@@ -108,18 +110,19 @@ router.post('/', isLoggedIn(false) , function(req, res, next) {
  */
 var verifyRecaptcha = function(req,cb){
 
-    var recaptchaData = {
-        remoteip:  req.connection.remoteAddress,
-        challenge: req.body.recaptcha_challenge_field,
-        response:  req.body.recaptcha_response_field
-    };
-    var recaptcha = new Recaptcha(Secrets.recaptcha.SITE_KEY, Secrets.recaptcha.SECRET_KEY, recaptchaData);
-
-    recaptcha.verify(function(success, error_code) {
-        if(!success) return cb(new CustomError('Captcha does not match','captcha'));
-
-        cb();
+    var recaptcha = new reCAPTCHA({
+        siteKey: Secrets.recaptcha2.SITE_KEY,
+        secretKey: Secrets.recaptcha2.SECRET_KEY
     });
+
+    recaptcha.validateRequest(req)
+        .then(function(){
+            cb();
+        })
+        .catch(function(errorCodes){
+            debug(recaptcha.translateErrors(errorCodes));
+            cb(new CustomError('Captcha does not match','captcha'));
+        });
 };
 
 module.exports = router;

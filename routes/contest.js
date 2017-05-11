@@ -851,6 +851,69 @@ router.get('/:cid/clarifications/view/:clid', isLoggedIn(true), function(req, re
 
 
 /**
+ *
+ */
+router.get('/:cid/clarifications/respond/:clid', isLoggedIn(true), roles.is('admin'),  function(req, res, next) {
+
+    var cid = req.params.cid;
+    var clarificationId = req.params.clid;
+    var notStarted = false;
+
+    async.waterfall([
+        function(callback) {
+            Contest.getDetails(cid,function(err,rows){
+                if(err)
+                    return callback(err);
+
+                if(!rows || !rows.length)
+                    return callback('404');
+
+                callback(null,rows[0]);
+            });
+        },
+        function(contest,callback){
+            notStarted = moment().isBefore(contest.begin);
+            if( notStarted )
+                return callback(null,contest);
+
+            Contest.getClarification(cid,clarificationId,function(err,rows){
+                if(err)
+                    return callback(err);
+
+                if(!rows || !rows.length)
+                    return callback('404');
+
+                callback(null,contest,rows[0]);
+            });
+        }
+    ], function (error,contest,clarification) {
+        if( error )
+            return next(new Error(error));
+
+        if( notStarted ){ // not started
+            req.flash('err','Contest not started yet');
+            res.redirect('/contests/' + cid);
+            return;
+        }
+
+        debug(clarification);
+
+        res.render('contest/view/clarifications/respond',{
+            active_contest_nav: 'clarifications',
+            active_nav: 'contest',
+            isLoggedIn: req.isAuthenticated(),
+            user: req.user,
+            moment: moment,
+            contest: contest,
+            err: req.flash('error'),
+            clarification: clarification,
+            clarificationId: clarificationId
+        });
+    });
+});
+
+
+/**
  *  request a clarification
  */
 router.get('/:cid/clarifications/request', isLoggedIn(true), function(req, res, next) {
@@ -871,7 +934,7 @@ router.get('/:cid/clarifications/request', isLoggedIn(true), function(req, res, 
             return;
         }
 
-        if( parseInt(contest.isReg) === -1 ){
+        if( user.role !== 'admin' && parseInt(contest.isReg) === -1 ){
             req.flash('err','You are not participating in this contest');
             res.redirect('/contests/' + cid);
             return;
@@ -1839,6 +1902,211 @@ router.post('/:cid/submit/:pid',isLoggedIn(true) , function(req, res, next) {
         ContestSubmit.submit(req, res, next);
     });
 });
+
+
+
+/**
+ *
+ */
+router.post('/:cid/clarifications/delete', isLoggedIn(true), roles.is('admin'),  function(req, res, next) {
+
+    var cid = req.params.cid;
+    var clarid = req.body.clar_id;
+
+    debug(req.body);
+
+    var notStarted = false, isEnded = false;
+    async.waterfall([
+        function(callback) {
+            Contest.getDetails(cid, function(err,rows){
+                if(err)
+                    return callback(err);
+
+                if(!rows.length)
+                    return callback('404');
+
+                callback(null,rows[0]);
+            });
+        },
+        function(contest,callback){
+
+            notStarted = moment().isBefore(contest.begin);
+            if( notStarted )
+                return callback(null,contest);
+
+            isEnded = moment().isAfter(contest.end);
+            if( isEnded )
+                return callback(null,contest);
+
+            Contest.deleteClarification(cid, clarid, function (err, rows) {
+                    if(err)
+                        return callback(err);
+
+                    callback(null,contest);
+            });
+        }
+    ], function (error,contest) {
+
+        if( error )
+            return next(new Error(error));
+
+        if( notStarted ){
+            req.flash('error','Contest not started yet');
+            res.redirect('/contests/' + cid);
+            return;
+        }
+
+        if( isEnded ){
+            req.flash('error','Contest Ended');
+            res.redirect('/contests/' + cid);
+            return;
+        }
+
+        res.redirect('/contests/' + cid + '/clarifications/all');
+    });
+});
+
+
+/**
+ *
+ */
+router.post('/:cid/clarifications/respond', isLoggedIn(true), roles.is('admin'),  function(req, res, next) {
+
+    var cid = req.params.cid;
+    var clarid = req.body.clar_id;
+    var response = req.body.response;
+    var ignore = has(req.body,'ignore');
+
+    debug(req.body);
+
+    if( !ignore && (!response || response === '') ){
+        req.flash('error','empty response');
+        res.redirect('/contests/' + cid + '/clarifications/respond/' + clarid);
+        return;
+    }
+
+    var notStarted = false, isEnded = false;
+    async.waterfall([
+        function(callback) {
+            Contest.getDetails(cid, function(err,rows){
+                if(err)
+                    return callback(err);
+
+                if(!rows.length)
+                    return callback('404');
+
+                callback(null,rows[0]);
+            });
+        },
+        function(contest,callback){
+
+            notStarted = moment().isBefore(contest.begin);
+            if( notStarted )
+                return callback(null,contest);
+
+            isEnded = moment().isAfter(contest.end);
+            if( isEnded )
+                return callback(null,contest);
+
+            var updateObj = ignore
+                ? { status: 'ignore' }
+                : { status: 'accepted' , response: response };
+            Contest.updateClarification(cid, clarid, updateObj , function (err,rows) {
+                if( err )
+                    return callback(err);
+
+                callback(null, contest);
+            });
+        }
+    ], function (error,contest) {
+
+        if( error )
+            return next(new Error(error));
+
+        if( notStarted ){
+            req.flash('error','Contest not started yet');
+            res.redirect('/contests/' + cid);
+            return;
+        }
+
+        if( isEnded ){
+            req.flash('error','Contest Ended');
+            res.redirect('/contests/' + cid);
+            return;
+        }
+
+        res.redirect('/contests/' + cid + '/clarifications/all');
+    });
+});
+
+
+/**
+ * clarification post
+ */
+router.post('/:cid/clarifications/post',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
+
+    var problem = req.body.problem;
+    var reqText = req.body.request;
+    var cid = req.params.cid;
+
+    if( reqText === '' ){
+        req.flash('err','empty request');
+        res.redirect('/contests/' + cid + '/clarifications/request');
+        return;
+    }
+
+    var isEnded = false;
+    async.waterfall([
+        function(callback) {
+            Contest.getDetails(cid, function(err,rows){
+                if(err)
+                    return callback(err);
+
+                if(!rows.length)
+                    return callback('404');
+
+                callback(null,rows[0]);
+            });
+        },
+        function(contest,callback){
+
+            isEnded = moment().isAfter(contest.end);
+            if( isEnded )
+                return callback(null,contest);
+
+            if(problem === 'general')
+                problem = 0;
+
+            Contest.insertClarification({
+                cid: cid,
+                pid: problem,
+                uid: req.user.id,
+                request: reqText,
+                response: 'General',
+                status: 'general'
+            },function(err,rows){
+                if(err)
+                    return callback(err);
+
+                callback(null,contest);
+            });
+        }
+    ], function (error,contest) {
+
+        if( error )
+            return next(new Error(error));
+
+        if( isEnded ){
+            req.flash('err','Contest Ended');
+            res.redirect('/contests/' + cid);
+            return;
+        }
+
+        res.redirect('/contests/' + cid + '/clarifications/all');
+    });
+});
+
+
 
 
 /**

@@ -11,39 +11,12 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-shadow.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="resister-body">
 
-
-<script type="text/javascript">
-    var RecaptchaOptions = {
-        theme : 'clean',
-        lang  : 'en'
-    };
-</script>
-
 <!-- Main Content -->
 <div class="content container">
-
-
-    <% if (errors.length) { %>
-    <div>
-        <div class="alert alert-danger alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
-            <% if(errors[0].name==='captcha'){ %>
-            <%= errors[0].message %><br>
-            <% }else if(errors[0].name === 'form'){ %>
-            <% _.forEach(errors[0].message,function(value){ %>
-            <%= value.param + ' ' +  value.msg %><br>
-            <% }); %>
-            <% }else{ %>
-            Unknown Error
-            <% } %>
-
-        </div>
-    </div>
-    <% } %>
 
     <div class="form-center">
         <div>
@@ -61,6 +34,21 @@
             <div class="panel-body">
 
                 <div class="text-center help-block form-title">Resister for an account</div>
+
+                <% if (errors.length) { %>
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <% if(errors[0].name==='captcha'){ %>
+                        <%= errors[0].message %><br>
+                        <% }else if(errors[0].name === 'form'){ %>
+                        <% _.forEach(errors[0].message,function(value){ %>
+                        <%= value.param + ' ' +  value.msg %><br>
+                        <% }); %>
+                        <% }else{ %>
+                        Unknown Error
+                        <% } %>
+                    </div>
+                <% } %>
 
                 <!-- res Form -->
                 <form method="post" action="/resister" id="resform">
@@ -90,10 +78,8 @@
                         <input id="iConPassword" type="password" placeholder="Confirm Password" name="conpassword" class="form-control valpop" />
                     </div>
 
-                    <div class="form-group input-icon">
-
-                            <%- recaptcha_form %>
-
+                    <div class="form-group">
+                        <div class="g-recaptcha" data-sitekey="<%= RECAPTCHA_KEY %>"></div>
                     </div>
 
                     <div class="form-group">
@@ -120,6 +106,13 @@
     </div>
 </div>
 
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".alert").fadeTo(4500, 500).slideUp(500, function(){
+            $(".alert").slideUp(500);
+        });
+    });
+</script>
 
 
 </body>

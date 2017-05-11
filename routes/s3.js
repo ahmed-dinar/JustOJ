@@ -7,17 +7,39 @@ var mime = require('mime-types');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var util = require('util');
+var reCAPTCHA = require('recaptcha2');
 
-
-
+var Secrets = require('../files/secrets/Secrets');
 
 
 
 /* GET resister page. */
 router.get('/' , function(req, res, next) {
-    res.render('s3');
+
+    console.log(Secrets.recaptcha2.SITE_KEY);
+
+    res.render('s3', {
+        SITE_KEY: Secrets.recaptcha2.SITE_KEY
+    });
 });
 
+router.post('/' , function(req, res, next) {
+
+    var recaptcha = new reCAPTCHA({
+        siteKey: Secrets.recaptcha2.SITE_KEY,
+        secretKey: Secrets.recaptcha2.SECRET_KEY
+    });
+
+    recaptcha.validateRequest(req)
+        .then(function(){
+            res.end('yay!')
+        })
+        .catch(function(errorCodes){
+            res.end(
+               JSON.stringify(  recaptcha.translateErrors(errorCodes))
+            );
+        });
+});
 
 router.post('/:pid/', function(req, res, next) {
 

@@ -1233,6 +1233,7 @@ exports.getClarification = function(cid,clid,cb){
     var sql = Query.select([
         'cc.request',
         'cc.response',
+        'cc.status',
         'cu.username',
         Query.raw('ifnull(`pp`.`title`,\'\') as `title`'),
         Query.raw('ifnull(`cp`.`pname`,\'General\') as `pname`')
@@ -1253,6 +1254,45 @@ exports.getClarification = function(cid,clid,cb){
 /**
  *
  * @param cid
+ * @param clid
+ * @param updateObj
+ * @param fn
+ */
+exports.updateClarification = function(cid, clid, updateObj, fn){
+
+    var sql = Query('contest_clarifications')
+        .update(updateObj)
+        .where({
+            'id': clid,
+            'cid': cid
+        });
+
+    DB.execute(sql.toString(), fn);
+};
+
+
+/**
+ *
+ * @param cid
+ * @param clid
+ * @param fn
+ */
+exports.deleteClarification = function(cid, clid, fn){
+
+    var sql = Query('contest_clarifications')
+        .where({
+            'id': clid,
+            'cid': cid
+        })
+        .del();
+
+    DB.execute(sql.toString(), fn);
+};
+
+
+/**
+ *
+ * @param cid
  * @param qid
  * @param cur_page
  * @param url
@@ -1264,6 +1304,7 @@ exports.getClarifications = function(cid,uid,qid,cur_page,url,cb){
         'cc.id',
         'cc.request',
         'cc.response',
+        'cc.status',
         Query.raw('ifnull(`pp`.`title`,\'\') as `title`'),
         Query.raw('ifnull(`cp`.`pname`,\'General\') as `pname`')
     ])

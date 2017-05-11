@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <% include ../../../templates/head.ejs %>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/2.2.1/pretty.min.css" />
+
+</head>
+<body>
+
+<!-- header and menu -->
+<% include ../../../templates/header2.ejs %>
+
+<% include ../../../templates/contest_header.ejs %>
+<% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; %>
+
+
+<div class="container content c-h">
+    <div class="col-md-10">
+
+        <h4><i class="fa fa-reply" aria-hidden="true"></i> Respond Clarification</h4><br>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                    <% if(clarification.pname==='General'){ %>
+                    General
+                    <% }else{ %>
+                    [<%= ch.charAt(parseInt(clarification.pname)) %>] <%- clarification.title %>
+                    <% } %>
+
+                <div class="pull-right">
+                    <form role="form" method="post"  action="/contests/<%= contest.id %>/clarifications/delete">
+                        <input type="hidden" name="clar_id"  value="<%= clarificationId %>" />
+                        <button class = "btn btn-xs btn-danger panel-heading-btn" type="submit">
+                            <i class="fa fa-trash-o"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="panel-heading">
+                By - <a href="/user/<%= clarification.username %>"><%= clarification.username %></a>
+            </div>
+            <div class="panel-body">
+
+                <% if (err.length) { %>
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="text-center">
+                            <%= err %>
+                        </div>
+                    </div>
+                <% } %>
+
+
+                    <textarea readonly="readonly" class="form-control" rows="6"><%= clarification.request %></textarea><br>
+
+                    <form role="form" method="post"  action="/contests/<%= contest.id %>/clarifications/respond">
+
+                        <input type="hidden" name="clar_id"  value="<%= clarificationId %>" />
+
+                        <div class="form-group pretty danger" style="font-size: 18px;">
+                            <input type="checkbox" name="ignore" id="remCheckbox" value="IGNORE" />
+                            <label for="remCheckbox">
+                                <i class="fa fa-check"></i> IGNORE
+                            </label>
+                        </div>
+
+                        <div class = "form-group">
+                            <textarea name="response" id="respondArea" class="form-control" rows="6"><%= clarification.response %></textarea>
+                        </div>
+
+                        <div class = "form-group">
+                            <input class = "btn btn-md btn-dark" type="submit" value="Send" />
+                        </div>
+
+                    </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>
+<script type="text/javascript">
+
+    $( document ).ready(function() {
+
+        CountDownTimer('<%= contest.end %>',document.getElementById("countdown"));
+
+        $('#remCheckbox').on('click', function () {
+            if( $(this).is(':checked') ){
+                $('#respondArea').hide();
+            } else {
+                $('#respondArea').show();
+            }
+        });
+
+        $(".alert").fadeTo(3500, 500).slideUp(500, function(){
+            $(".alert").slideUp(500);
+        });
+    });
+</script>
+
+<!-- footer -->
+<% include ../../../templates/footer.ejs %>
+
+</body>
+</html>

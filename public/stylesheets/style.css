@@ -458,7 +458,6 @@ td,th{
 
 .standings-cell > .label{
   min-width: 40px;
-  max-width: 64px;
   display: block;
   padding: 3px 6px;
   margin: 0 0;
@@ -466,6 +465,7 @@ td,th{
   font-size: 11px;
   border-radius: 4px;
 }
+
 
 .standings-cell > .label-info{
   background-color: #29ABE0;
@@ -491,6 +491,11 @@ td,th{
 }
 
 
+.fixed-cell{
+  max-width: 55px;
+  width: 55px;
+}
+
 /*
 .table-striped>tbody>tr:nth-child(4n+1)>td,
 .table-striped>tbody>tr:nth-child(4n+2)>td {
@@ -509,10 +514,7 @@ td,th{
 */
 
 
-.fixed-cell{
-  max-width: 55px;
-  width: 55px;
-}
+
 
 .last-border{
   margin-top: 0px;
@@ -1143,4 +1145,20 @@ pre{
 
 .vertical-middle{
   vertical-align: middle !important;
+}
+
+.clar-table > tbody > tr > td:first-child{
+  padding-left: 15px;
+}
+
+.badge{
+  border-radius: 2px;
+}
+
+ .form-control[readonly] {
+   background-color: #ffffff;
+ }
+
+.panel-heading-btn{
+  margin-top: -4px;
 }
