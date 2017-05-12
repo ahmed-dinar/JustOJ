@@ -827,6 +827,7 @@ exports.delete = function (cid,cb) {
 exports.getUserSubmissions = function(cid,username,cur_page,URL,cb){
 
     var sql = Query.select([
+        'user.username',
         'submissions.id',
         'submissions.status',
         'submissions.language',

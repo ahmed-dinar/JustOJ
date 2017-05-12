@@ -17,11 +17,11 @@
 <!-- Main Content -->
 <div class="content container c-h" >
     <div class="row">
-        <div class="col-md-9 nopadding">
+        <div class="col-md-9">
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    PREVIOUS CONTESTS
+                    <i class="fa fa-hourglass-end" aria-hidden="true"></i> Previous Contests
                 </div>
                 <% if(ended.length){ %>
 
@@ -54,6 +54,12 @@
                     </tbody>
                 </table>
 
+                <% }else{ %>
+                <div class="panel-body">
+                    <div class="text-center help-block">
+                        There is no previous contest
+                    </div>
+                </div>
                 <% } %>
 
 

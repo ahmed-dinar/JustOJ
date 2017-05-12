@@ -1,13 +1,13 @@
+'use strict';
+
 /**
  * Route for home page
  * @type {*|exports|module.exports}
  */
 
 var express = require('express');
-var Contest = require('../models/contest');
-var ContestSubmit = require('../models/contestSubmit');
-var Problems = require('../models/problems');
 var router = express.Router();
+
 
 var json2csv = require('json2csv');
 var has = require('has');
@@ -27,6 +27,9 @@ var MyUtil = require('../helpers/myutil');
 var Submission = require('../models/submission');
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var roles = require('../middlewares/userrole');
+var Contest = require('../models/contest');
+var ContestSubmit = require('../models/contestSubmit');
+var Problems = require('../models/problems');
 
 var debug = require('debug')('routes:contest');
 
@@ -40,9 +43,9 @@ router.get('/' , function(req, res, next) {
             return next(new Error(err));
         }
 
-        console.log(running);
-        console.log(future);
-        console.log(ended);
+        debug(running);
+        debug(future);
+        debug(ended);
 
         res.render('contest/contests',{
             active_nav: 'contest',
@@ -76,7 +79,7 @@ router.get('/past' , function(req, res, next) {
     Contest.getPastContests(cur_page,URL, function (err,rows,pagination) {
         if(err) return next(new Error(err));
 
-        console.log(rows);
+        debug(rows);
         res.render('contest/past_contests',{
             active_nav: 'contest',
             isLoggedIn: req.isAuthenticated(),
@@ -89,6 +92,9 @@ router.get('/past' , function(req, res, next) {
 });
 
 
+/**
+ *
+ */
 router.get('/host' , function(req, res, next) {
     return res.end('coming soon');
     /* res.render('contest/host',{
@@ -100,9 +106,9 @@ router.get('/host' , function(req, res, next) {
 
 
 /**
- *
+ *  Create a contest
  */
-router.get('/create', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res, next) {
+router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     if( !req.isAuthenticated() )
         return res.end('unauthorized');
@@ -118,22 +124,21 @@ router.get('/create', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, re
 
 
 /**
- *
- *
+ * Delete a contest
  */
-router.post('/delete', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res, next) {
+router.post('/delete', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var cid = req.body.cid;
 
-    console.log('contest id: ' + cid);
+    debug('contest id: ' + cid);
 
     Contest.delete(cid, function (err ,rows) {
         if(err){
-            console.log(err);
+            debug(err);
             return next(new Error(err));
         }
 
-        console.log('contest deleted');
+        debug('contest deleted');
         req.flash('success','contest successfully removed');
         res.redirect('/contests/edit');
     });
@@ -154,7 +159,7 @@ router.get('/edit', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res,
 
         if(err){ return next(new Error(err)); }
 
-        console.log(rows);
+        debug(rows);
 
         res.render('contest/edit/contest_list',{
             active_nav: 'contest',
@@ -190,7 +195,7 @@ router.post('/edit/removealluser',/*isLoggedIn(true) , roles.is('admin'), */func
 /**
  *
  */
-router.post('/edit/edituser/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+router.post('/edit/edituser/:cid', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var cid = req.params.cid;
     var uid = req.body.userid;
@@ -199,9 +204,7 @@ router.post('/edit/edituser/:cid',/*isLoggedIn(true) , roles.is('admin'), */func
     var password = req.body.password;
     var institute = req.body.institute;
 
-
-    console.log(req.body);
-
+    debug(req.body);
 
     var insertObj = {
         username: username,
@@ -214,7 +217,7 @@ router.post('/edit/edituser/:cid',/*isLoggedIn(true) , roles.is('admin'), */func
     Contest.editUser(cid,uid,insertObj,function (err,rows) {
 
         if(err){
-            console.log(err);
+            debug(err);
 
             if( typeof err === 'string' )
                 res.send(JSON.stringify(err));
@@ -234,7 +237,7 @@ router.post('/edit/edituser/:cid',/*isLoggedIn(true) , roles.is('admin'), */func
 /**
  * Generate random user for a contest
  */
-router.post('/edit/generateuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+router.post('/edit/generateuser/:cid', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var quantity = req.body.quantity;
     var cid = req.params.cid;
@@ -266,7 +269,7 @@ router.post('/edit/generateuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */
         }
     ],function (err,rows) {
         if(err){
-            console.log(err);
+            debug(err);
             return next(new Error('error while...'));
         }
 
@@ -280,7 +283,7 @@ router.post('/edit/generateuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */
 /**
  * Insert a user for a contest
  */
-router.post('/edit/insertuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+router.post('/edit/insertuser/:cid', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var username = req.body.username;
     var name = req.body.name;
@@ -319,7 +322,7 @@ router.post('/edit/insertuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */fu
 /**
  *
  */
-router.post('/edit/removeuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+router.post('/edit/removeuser/:cid', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var cid = req.params.cid;
     var isJson = req.headers['content-type'] === 'application/json';
@@ -351,11 +354,10 @@ router.post('/edit/removeuser/:cid',/*isLoggedIn(true) , roles.is('admin'), */fu
 
 
 
-
-
-
-
-router.get('/edit/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, res, next) {
+/**
+ *   Edit a contest
+ */
+router.get('/edit/:cid', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     async.waterfall([
         function(callback) {
@@ -397,11 +399,11 @@ router.get('/edit/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, 
         if( error ) return next(new Error(error));
 
 
-        console.log(details);
-        console.log('problems:');
-        console.log(problems);
-        console.log('participants:');
-        console.log(participants);
+        debug(details);
+        debug('problems:');
+        debug(problems);
+        debug('participants:');
+        debug(participants);
 
 
         var detail = details[0];
@@ -426,7 +428,7 @@ router.get('/edit/:cid',/*isLoggedIn(true) , roles.is('admin'), */function(req, 
 
 
 /**
- *
+ *  Create a new problem of a contest
  */
 router.get('/edit/:cid/problems/new',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
@@ -446,9 +448,8 @@ router.get('/edit/:cid/problems/new',isLoggedIn(true) , roles.is('admin'), funct
 
 
 
-
-
 /**
+ *  Contest problem preview in edit arena
  *  TODO: use cid for valid contest?
  */
 router.get('/edit/:cid/problems/:pid/preview', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
@@ -467,7 +468,7 @@ router.get('/edit/:cid/problems/:pid/preview', isLoggedIn(true) , roles.is('admi
 
 
 /**
- *
+ *  Contest problem edit step 1, problem details, content etc
  */
 router.get('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
@@ -480,7 +481,7 @@ router.get('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin'
 
         if( !rows || rows.length === 0 ) return res.end('404!');
 
-        console.log(rows);
+        debug(rows);
 
         res.render('contest/edit/problems/step_1', {
             active_nav: 'contest',
@@ -498,6 +499,9 @@ router.get('/edit/:cid/problems/:pid/step1', isLoggedIn(true) , roles.is('admin'
 });
 
 
+/**
+ *  Problem edit step 2 , add test cases
+ */
 router.get('/edit/:cid/problems/:pid/step2',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
     var cid = req.params.cid;
@@ -519,8 +523,8 @@ router.get('/edit/:cid/problems/:pid/step2',isLoggedIn(true) , roles.is('admin')
                 if( err ){
                     if( err.code === 'ENOENT' ) return callback(null,[]);
 
-                    console.log('getTestCases of contest error:: ');
-                    console.log(err);
+                    debug('getTestCases of contest error:: ');
+                    debug(err);
                     return callback('getTestCases of contest error');
                 }
 
@@ -553,7 +557,7 @@ router.get('/edit/:cid/problems/:pid/step2',isLoggedIn(true) , roles.is('admin')
 
 
 /**
- *
+ *  Problem edit step 3 - Test and set time limit
  */
 router.get('/edit/:cid/problems/:pid/step3',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
@@ -573,8 +577,8 @@ router.get('/edit/:cid/problems/:pid/step3',isLoggedIn(true) , roles.is('admin')
                 if( err ){
                     if( err.code === 'ENOENT' ) return callback(null,'Please add test case first');   //no test cases added yet!
 
-                    console.log('getTestCases error:: ');
-                    console.log(err);
+                    debug('getTestCases error:: ');
+                    debug(err);
                     return callback(err);
                 }
 
@@ -608,7 +612,7 @@ router.get('/edit/:cid/problems/:pid/step3',isLoggedIn(true) , roles.is('admin')
 
 
 /**
- *
+ *  Publish a contest for view from web
  */
 router.get('/edit/:cid/publish',isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
@@ -618,13 +622,14 @@ router.get('/edit/:cid/publish',isLoggedIn(true) , roles.is('admin'), function(r
         if( err ) return next(new Error(err));
 
 
-        console.log('published!');
+        debug('published!');
         res.redirect('/contests/edit');
     });
 });
 
 
 /**
+ *  Download a contest participants list
  *  NOTE: if pdf-phantomjs error, run $ node node_modules/phantomjs-prebuilt/install.js
  */
 router.get('/participants/download/:cid', function(req, res, next) {
@@ -652,7 +657,7 @@ router.get('/participants/download/:cid', function(req, res, next) {
 
 
 /**
- *  contest dashboard
+ *  contest dashboard / problem list
  */
 router.get('/:cid', function(req, res, next) {
 
@@ -702,9 +707,9 @@ router.get('/:cid', function(req, res, next) {
         if( error )
             return next(new Error(error));
 
-        console.log(details);
-        console.log('resitered? : ' + registered);
-        console.log(problems);
+        debug(details);
+        debug('resitered? : ' + registered);
+        debug(problems);
 
         if( notStarted) {
             res.redirect('/contests/' + cid + '/info');
@@ -722,14 +727,14 @@ router.get('/:cid', function(req, res, next) {
             running: !moment().isAfter(details.end),
             moment: moment,
             problems: problems,
-            decodeToHTML: entities.decodeHTML
+            problemDownloadLink: null //TODO: implement download link generator also db
         });
     });
 });
 
 
 /**
- *  contest dashboard
+ *  contest announcement,info,details
  */
 router.get('/:cid/info', function(req, res, next) {
 
@@ -828,7 +833,7 @@ router.get('/:cid/clarifications/view/:clid', isLoggedIn(true), function(req, re
     ], function (error,contest,clarification) {
         if( error ) return next(new Error(error));
 
-        console.log(clarification);
+        debug(clarification);
 
         if( notStarted ){ // not started
             req.flash('err','Contest not started yet');
@@ -843,7 +848,7 @@ router.get('/:cid/clarifications/view/:clid', isLoggedIn(true), function(req, re
             user: req.user,
             moment: moment,
             contest: contest,
-            decodeToHTML: entities.decodeHTML,
+            clarificationId: clarificationId,
             clarification: clarification
         });
     });
@@ -851,7 +856,7 @@ router.get('/:cid/clarifications/view/:clid', isLoggedIn(true), function(req, re
 
 
 /**
- *
+ *  Respond a clarification
  */
 router.get('/:cid/clarifications/respond/:clid', isLoggedIn(true), roles.is('admin'),  function(req, res, next) {
 
@@ -955,7 +960,6 @@ router.get('/:cid/clarifications/request', isLoggedIn(true), function(req, res, 
             contest: contest,
             moment: moment,
             problems: problems,
-            decodeToHTML: entities.decodeHTML,
             err: req.flash('err'),
             _: _
         });
@@ -1018,9 +1022,9 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
     ], function (error,contest,clarifications,pagination) {
         if( error ) return next(new Error(error));
 
-        console.log(contest);
-        console.log('clarifications--');
-        console.log(clarifications);
+        debug(contest);
+        debug('clarifications--');
+        debug(clarifications);
 
         if( notStarted ){ // not started
             req.flash('err','Contest not started yet');
@@ -1035,8 +1039,8 @@ router.get('/:cid/clarifications/:q', isLoggedIn(true), function(req, res, next)
             problems = JSON.parse('{' + contest.problemList + '}');
 
 
-        console.log('problems');
-        console.log(problems);
+        debug('problems');
+        debug(problems);
 
         res.render('contest/view/clarifications/clarifications', {
             active_contest_nav: 'clarifications',
@@ -1116,7 +1120,6 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
             contest: contest,
             runStatus: MyUtil.runStatus(),
             langNames: MyUtil.langNames(),
-            decodeToHTML: entities.decodeHTML,
             pagination: _.isUndefined(pagination) ? {} : pagination
         });
     });
@@ -1193,7 +1196,7 @@ router.get('/:cid/submission', function(req, res, next) {
             return;
         }
 
-        console.log(rows);
+        debug(rows);
 
         res.render('contest/view/user_problem_submissions', {
             active_contest_nav: 'submissions',
@@ -1272,7 +1275,7 @@ router.get('/:cid/submissions/u/:username', isLoggedIn(true), function(req, res,
             return;
         }
 
-        console.log(rows);
+        debug(rows);
 
         if( !rows.length || !rows[0].id || rows[0].id === null )
             rows = [];
@@ -1309,6 +1312,7 @@ router.get('/:cid/submissions/:sid', isLoggedIn(true), function(req, res, next) 
 
     if( !MyUtil.isNumeric(submissionId) ) return next(new Error('404'));
 
+    var notStarted = true;
     async.waterfall([
         function(callback) {
             Contest.getDetails(contestId,function(err,rows){
@@ -1348,8 +1352,8 @@ router.get('/:cid/submissions/:sid', isLoggedIn(true), function(req, res, next) 
             return;
         }
 
-        console.log(contest);
-        console.log(runs);
+        debug(contest);
+        debug(runs);
 
         if( runs.username !== req.user.username ){
             res.end('unauthorized');
@@ -1427,9 +1431,9 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
 
         if( error ) return next(new Error(error));
 
-        console.log(contest);
-        console.log('res? : ' + registered);
-        console.log(submissions);
+        debug(contest);
+        debug('res? : ' + registered);
+        debug(submissions);
 
         if( notStarted )
             return res.redirect('/contests/' + cid);
@@ -1447,8 +1451,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
                 contest: contest,
                 registered: registered,
                 running: false,
-                moment: moment,
-                decodeToHTML: entities.decodeHTML
+                moment: moment
             });
         }
 
@@ -1467,8 +1470,7 @@ router.get('/:cid/problem/:pid', function(req, res, next) {
             running: true,
             moment: moment,
             submissions: submissions,
-            runStatus: MyUtil.runStatus(),
-            decodeToHTML: entities.decodeHTML
+            runStatus: MyUtil.runStatus()
         });
     });
 });
@@ -1532,10 +1534,10 @@ router.get('/:cid/standings', function(req, res, next) {
 
         if(err) return next(new Error(err));
 
-        console.log(contest);
-        console.log('Begin: ' + moment(contest.begin).format('YYYY-MM-DD HH:mm:ss') );
-        console.log(ranks);
-        console.log(problemStats);
+        debug(contest);
+        debug('Begin: ' + moment(contest.begin).format('YYYY-MM-DD HH:mm:ss') );
+        debug(ranks);
+        debug(problemStats);
 
 
 
@@ -1600,8 +1602,8 @@ router.post('/edit/:cid/problems/:pid/step3', isLoggedIn(true) , roles.is('admin
                 if( err ){
                     if( err.code === 'ENOENT' ) return callback('noTest','Please add test case first');   //no test cases added yet!
 
-                    console.log('getTestCases error:: ');
-                    console.log(err);
+                    debug('getTestCases error:: ');
+                    debug(err);
                     return callback(err);
                 }
 
@@ -1621,8 +1623,8 @@ router.post('/edit/:cid/problems/:pid/step3', isLoggedIn(true) , roles.is('admin
 
             Problems.updateLimits(req.params.pid,limits,function(err,row){
                 if(err){
-                    console.log('Set limit db error');
-                    console.log(err);
+                    debug('Set limit db error');
+                    debug(err);
                     return callback(err);
                 }
                 callback();
@@ -1690,7 +1692,7 @@ router.post('/edit/:cid/problems/:pid/step2', isLoggedIn(true) , roles.is('admin
             mkdirp(saveTo, function (err) {
                 if (err) return callback(err);
 
-                console.log(namemap[0] + ' created!');
+                debug(namemap[0] + ' created!');
                 callback();
             });
         }
@@ -1736,10 +1738,10 @@ router.post('/edit/:cid/problems/rtc', isLoggedIn(true) , roles.is('admin'), fun
 
     var TCDir = path.normalize(process.cwd() + '/files/tc/p/' + req.body.pid + '/' + req.body.casename);
 
-    console.log('tc to remove ' + TCDir);
+    debug('tc to remove ' + TCDir);
     rimraf(TCDir, function (err) {
         if( err ){
-            console.log(err);
+            debug(err);
             req.flash('tcRemErr','Something wrong');
         }else{
             req.flash('tcRemSuccess', 'Test Case Removed');
@@ -1802,8 +1804,8 @@ router.post('/edit/detail/:cid', isLoggedIn(true) , roles.is('admin'), function(
         _.isUndefined(lenDay) || _.isUndefined(lenTime) || !type.length || !title.length || !beginDate.length ||
         !beginTime.length || !lenDay.length || !lenTime.length){
 
-        // console.log('type: ' + type + ' title: ' + title + ' beginDate: ' + beginDate);
-        // console.log('beginTime: ' + beginTime + ' lenDay: ' + lenDay + ' lenTime: ' + lenTime);
+        // debug('type: ' + type + ' title: ' + title + ' beginDate: ' + beginDate);
+        // debug('beginTime: ' + beginTime + ' lenDay: ' + lenDay + ' lenTime: ' + lenTime);
 
         req.flash('err','Invalid or Empty Form');
         res.redirect('/contests/edit/'+req.params.cid);
@@ -2009,7 +2011,7 @@ router.post('/:cid/clarifications/respond', isLoggedIn(true), roles.is('admin'),
                 return callback(null,contest);
 
             var updateObj = ignore
-                ? { status: 'ignore' }
+                ? { status: 'ignore' , response: '' }
                 : { status: 'accepted' , response: response };
             Contest.updateClarification(cid, clarid, updateObj , function (err,rows) {
                 if( err )
@@ -2200,9 +2202,9 @@ var clearUpload = function(remDir,req,res){
 
     rimraf(remDir, function(error){
         if( error )
-            console.log(error);
+            debug(error);
         else
-            console.log('Cleaned uploaded TC');
+            debug('Cleaned uploaded TC');
 
         req.flash('tcUpErr', 'Please Select File');
         res.redirect('/contests/edit/'+ req.params.cid +'/problems/'+ req.params.pid +'/step2');

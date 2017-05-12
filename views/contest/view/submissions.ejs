@@ -15,95 +15,97 @@
 <% include ../../templates/contest_header.ejs %>
 
 <div class="container content c-h">
-    <div class="panel-body" >
-        <div class="pull-left">
-            <h4>Submissions</h4>
-        </div>
-        <div class="pull-right">
-            <div class="btn-group-sm" role="group" >
-                <a href="/contests/<%= contest.id %>/submissions" class="btn btn-sm btn-default disabled">ALL</a>
-                <a href="/contests/<%= contest.id %>/submissions/u/my" class="btn btn-sm btn-default">MY</a>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" >
+            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            <div class="pull-right">
+                <div class="btn-group panel-heading-btn" role="group" >
+                    <a href="/contests/<%= contest.id %>/submissions" class="btn btn-sm btn-dark disabled">All</a>
+                    <a href="/contests/<%= contest.id %>/submissions/u/my" class="btn btn-sm btn-dark">My</a>
+                </div>
             </div>
         </div>
-    </div>
 
 
-    <table class="table table-responsive table-striped">
-        <thead>
-        <tr>
-            <th style="padding-left: 15px;">#</th>
-            <th>Author</th>
-            <th>Problem</th>
-            <th>Time</th>
-            <th>Language</th>
-            <th>CPU</th>
-            <th>Memory</th>
-            <th>Verdict</th>
-        </tr>
-        </thead>
+        <table class="table table-responsive table-striped">
+            <thead>
+            <tr>
+                <th style="padding-left: 15px;">#</th>
+                <th>Author</th>
+                <th>Problem</th>
+                <th>Time</th>
+                <th>Language</th>
+                <th>CPU</th>
+                <th>Memory</th>
+                <th>Verdict</th>
+            </tr>
+            </thead>
 
 
-        <% if(status.length){ %>
+            <% if(status.length){ %>
 
-        <tbody>
-        <% for(var i=0; i<status.length; i++){ %>
-        <tr>
-            <td style="padding-left: 15px; max-width: 100px;">
-                <a href="/contests/<%= contest.id %>/submissions/<%= status[i].id %>" >
-                    <%= status[i].id %>
-                </a>
-            </td>
-            <td class="ellips" style=" max-width: 180px;">
-                <a href="/user/<%= status[i].username %>">
-                    <%= status[i].username %>
-                </a>
-            </td>
-            <td class="ellips" style=" max-width: 200px;">
-                <a href="/contests/<%= contest.id %>/problem/<%= status[i].pid %>" title="<%- status[i].title %>">
-                    <%- status[i].title %>
-                </a>
-            </td>
-            <td title="<%= status[i].submittime %>" class="ellips" style="max-width: 150px;">
-                <%= moment(status[i].submittime).from() %>
-            </td>
-            <td class="ellips" style="max-width: 80px;"><%= langNames[status[i].language] %></td>
-            <td class="ellips" style="max-width: 80px;">
-                <% if( parseInt(status[i].cpu) === 0){ %>
-                0.00s
-                <% }else{ %>
-                <%= parseFloat( parseInt(status[i].cpu)/1000.0).toString().match(/^-?\d+(?:\.\d{0,2})?/)[0] %>s
-                <% } %>
-            </td>
-            <td class="ellips" style="max-width: 80px;"><%= status[i].memory %>KB</td>
-            <td style="">
-                <% var st = parseInt(status[i].status); %>
-                <% if(st === 0){ %>
-                <span class="label label-success">
-                    <% }else if(st === 5){ %>
-                    <span class="label label-default">
-                        <% }else if(st === 6){ %>
-                        <span class="label label-info">
-                            <% }else if(st === 8){ %>
-                            <span class="label label-warning">
-                                <% }else{ %>
-                                <span class="label label-danger">
-                                    <% } %>
-                                    <%= runStatus[st] %>
+            <tbody>
+            <% for(var i=0; i<status.length; i++){ %>
+            <tr>
+                <td style="padding-left: 15px; max-width: 100px;">
+                    <a href="/contests/<%= contest.id %>/submissions/<%= status[i].id %>" >
+                        <%= status[i].id %>
+                    </a>
+                </td>
+                <td class="ellips" style=" max-width: 180px;">
+                    <a href="/user/<%= status[i].username %>">
+                        <%= status[i].username %>
+                    </a>
+                </td>
+                <td class="ellips" style=" max-width: 200px;">
+                    <a href="/contests/<%= contest.id %>/problem/<%= status[i].pid %>" title="<%- status[i].title %>">
+                        <%- status[i].title %>
+                    </a>
+                </td>
+                <td title="<%= status[i].submittime %>" class="ellips" style="max-width: 150px;">
+                    <%= moment(status[i].submittime).from() %>
+                </td>
+                <td class="ellips" style="max-width: 80px;"><%= langNames[status[i].language] %></td>
+                <td class="ellips" style="max-width: 80px;">
+                    <% if( parseInt(status[i].cpu) === 0){ %>
+                    0.00s
+                    <% }else{ %>
+                    <%= parseFloat( parseInt(status[i].cpu)/1000.0).toString().match(/^-?\d+(?:\.\d{0,2})?/)[0] %>s
+                    <% } %>
+                </td>
+                <td class="ellips" style="max-width: 80px;"><%= status[i].memory %>KB</td>
+                <td style="">
+                    <% var st = parseInt(status[i].status); %>
+                    <% if(st === 0){ %>
+                    <span class="label label-success">
+                        <% }else if(st === 5){ %>
+                        <span class="label label-default">
+                            <% }else if(st === 6){ %>
+                            <span class="label label-info">
+                                <% }else if(st === 8){ %>
+                                <span class="label label-warning">
+                                    <% }else{ %>
+                                    <span class="label label-danger">
+                                        <% } %>
+                                        <%= runStatus[st] %>
                                                     </span>
-            </td>
-        </tr>
-        <% } %>
+                </td>
+            </tr>
+            <% } %>
 
 
 
-        </tbody>
+            </tbody>
 
 
 
 
-        <% } %>
+            <% } %>
 
-    </table>
+        </table>
+
+    </div>
 
     <% include ../../templates/pagination.ejs %>
 

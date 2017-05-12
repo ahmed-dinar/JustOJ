@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Route for home page
  * @type {*|exports|module.exports}

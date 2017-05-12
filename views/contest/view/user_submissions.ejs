@@ -16,14 +16,15 @@
 
 
 <div class="container content c-h">
-    <div class="panel-body" >
-        <div class="pull-left">
-            <h4><%- active_contest_nav === 'submissions' ? '<b>' + foruser + '</b>\'s' : 'My' %> Submissions</h4>
-        </div>
+    <div class="panel panel-default">
+    <div class="panel-heading" >
+
+        <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+
         <div class="pull-right">
-            <div class="btn-group-sm" role="group" >
-                <a href="/contests/<%= contest.id %>/submissions" class="btn btn-sm btn-default">ALL</a>
-                <a href="/contests/<%= contest.id %>/submissions/u/my" class="btn btn-sm btn-default <%= active_contest_nav === 'submissions' ? '' : 'disabled' %>">MY</a>
+            <div class="btn-group panel-heading-btn" role="group" >
+                <a href="/contests/<%= contest.id %>/submissions" class="btn btn-sm btn-dark">All</a>
+                <a href="/contests/<%= contest.id %>/submissions/u/my" class="btn btn-sm btn-dark <%= active_contest_nav === 'submissions' ? '' : 'disabled' %>">My</a>
             </div>
         </div>
     </div>
@@ -33,6 +34,7 @@
         <thead>
         <tr>
             <th style="padding-left: 15px;">#</th>
+            <th>Author</th>
             <th>Problem</th>
             <th>Time</th>
             <th>Language</th>
@@ -47,6 +49,11 @@
             <td style="padding-left: 15px;">
                 <a href="/contests/<%= contest.id %>/submissions/<%= status[i].id %>" >
                     <%= status[i].id %>
+                </a>
+            </td>
+            <td class="ellips" style=" max-width: 180px;">
+                <a href="/user/<%= status[i].username %>">
+                    <%= status[i].username %>
                 </a>
             </td>
             <td class="ellips" style="max-width: 100px;">
@@ -86,7 +93,7 @@
         <% } %>
         </tbody>
     </table>
-
+    </div>
 
     <% include ../../templates/pagination.ejs %>
 

@@ -23,6 +23,13 @@
 
             <div class="panel-heading" >
                 <i class="fa fa-puzzle-piece" aria-hidden="true"></i> Problems
+                <% if(problemDownloadLink){ %>
+                <div class="pull-right">
+                    <a href="<%= problemDownloadLink %>" class="btn btn-sm btn-default panel-heading-btn">
+                        <i class="fa fa-download" aria-hidden="true"></i> Download PDF
+                    </a>
+                </div>
+                <% } %>
             </div>
 
             <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
@@ -34,12 +41,12 @@
 
                 <tr>
                     <td style="width: 3%; padding-left: 18px;">
-                        <h3><%= ch.charAt(i).toUpperCase() %></h3>
+                        <h4><%= ch.charAt(i).toUpperCase() %></h4>
                     </td>
 
                     <td style="width: 89%">
                         <a href="/contests/<%= contest.id %>/problem/<%= problems[i].pid %>">
-                            <h4><%- problems[i].title %></h4>
+                            <div class="contest-problem-title"><%- problems[i].title %></div>
                         </a>
                     </td>
 

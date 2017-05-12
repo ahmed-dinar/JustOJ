@@ -22,115 +22,118 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
 
 
 <div class="container content c-h">
-    <div class="table-responsive">
-        <table class="table table-hover scoreboard">
-            <thead>
-            <tr>
-                <th class="text-center fixed-cell">#</th>
-                <th>Username</th>
-                <th class="text-center fixed-cell">Slv.</th>
-                <th class="text-center fixed-cell"></th>
+    <div class="panel panel-default">
+        <div class="table-responsive">
+            <table class="table table-hover scoreboard">
+                <thead>
+                <tr>
+                    <th title="Ranks" class="text-center fixed-cell"><i class="fa fa-trophy" aria-hidden="true"></i></th>
+                    <th title="User"><i class="fa fa-user" aria-hidden="true"></i></th>
+                    <th title="Solved" class="text-center fixed-cell"><i class="fa fa-check" aria-hidden="true"></i></th>
+                    <th title="Penalty" class="text-center fixed-cell"><i class="fa fa-clock-o" aria-hidden="true"></i></th>
 
-                <% for(var i=0; i<problemStats.length; i++){ %>
-                <th class="text-center fixed-cell ellips" title="<%- problemStats[i].title %> [ <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %> ]">
-                    <a href="/contests/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a>
-                </th>
-                <% }
-                for(var i=problemStats.length; i<colspan; i++){ %>
-                <!--<th class="fixed-cell"></th>-->
-                <% } %>
+                    <% for(var i=0; i<problemStats.length; i++){ %>
+                    <th class="text-center fixed-cell ellips" title="<%- problemStats[i].title %> [ <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %> ]">
+                        <a href="/contests/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a>
+                    </th>
+                    <% }
+                    for(var i=problemStats.length; i<colspan; i++){ %>
+                    <!--<th class="fixed-cell"></th>-->
+                    <% } %>
 
-            </tr>
-            </thead>
-            <tbody>
+                </tr>
+                </thead>
+                <tbody>
 
-            <% for(var i=0; i<ranks.length; i++){ %>
-
-
-            <% if( ranks[i].penalty === null || _.isUndefined(ranks[i].penalty) ){ %>
-
-            <tr>
-                <td  class="text-center vertical-middle"><%= pagination.offset() + i + 1 %></td>
-                <td  class="vertical-middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
-                <td class="text-center vertical-middle">0</td>
-                <td class="text-center vertical-middle" >0</td>
-                <% for(var j=0; j<problemStats.length; j++){ %>
-                <td class="text-center standings-cell" >
-                    <div class="label label-default">
-                        <p></p>
-                        <p>-</p>
-                    </div>
-                </td>
-                <% } %>
-            </tr>
+                <% for(var i=0; i<ranks.length; i++){ %>
 
 
-            <% }else{ %>
+                <% if( ranks[i].penalty === null || _.isUndefined(ranks[i].penalty) ){ %>
 
-            <% var up = JSON.parse('{' + ranks[i].problems + '}'); %>
-
-            <tr>
-                <td class="text-center vertical-middle"><%= pagination.offset() + i + 1 %></td>
-                <td class="vertical-middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
-                <td class="text-center solved-count vertical-middle"><%= ranks[i].solved %></td>
-                <td class="text-center standings-cell vertical-middle">
-                    <a href="/contests/<%= contest.id %>/submissions/u/<%= ranks[i].username %>" class="label label-info">
-                        <p>.</p>
-                        <p>
-                            <%= parseInt(ranks[i].penalty) < 0 ? 0 : ranks[i].penalty %>
-                        </p>
-                    </a>
-                </td>
-
-                <% for(var j=0; j<problemStats.length; j++){ %>
-                <td class="text-center standings-cell">
-
-                    <% if( !_.isUndefined(up[problemStats[j].pid]) ){ %>
+                <tr>
+                    <td  class="text-center vertical-middle"><%= pagination.offset() + i + 1 %></td>
+                    <td  class="vertical-middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
+                    <td class="text-center vertical-middle">0</td>
+                    <td class="text-center vertical-middle" >0</td>
+                    <% for(var j=0; j<problemStats.length; j++){ %>
+                    <td class="text-center standings-cell" >
+                        <div class="label label-default">
+                            <p></p>
+                            <p>-</p>
+                        </div>
+                    </td>
+                    <% } %>
+                </tr>
 
 
-                    <% if(up[problemStats[j].pid].status === 0){ %>
+                <% }else{ %>
 
-                    <a class="label label-success show-runs" href="#" data-problem-id="<%= problemStats[j].pid %>" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
-                        <p>( <%= up[problemStats[j].pid].tried %> )</p>
-                        <p class="penalty-label" time-penalty="<%= up[problemStats[j].pid].penalty_time  %>">
+                <% var up = JSON.parse('{' + ranks[i].problems + '}'); %>
+
+                <tr>
+                    <td class="text-center vertical-middle"><%= pagination.offset() + i + 1 %></td>
+                    <td class="vertical-middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
+                    <td class="text-center solved-count vertical-middle"><%= ranks[i].solved %></td>
+                    <td class="text-center standings-cell vertical-middle">
+                        <a href="/contests/<%= contest.id %>/submissions/u/<%= ranks[i].username %>" class="label label-info">
+                            <p>.</p>
+                            <p>
+                                <%= parseInt(ranks[i].penalty) < 0 ? 0 : ranks[i].penalty %>
+                            </p>
+                        </a>
+                    </td>
+
+                    <% for(var j=0; j<problemStats.length; j++){ %>
+                    <td class="text-center standings-cell">
+
+                        <% if( !_.isUndefined(up[problemStats[j].pid]) ){ %>
+
+
+                        <% if(up[problemStats[j].pid].status === 0){ %>
+
+                        <a class="label label-success show-runs" href="#" data-problem-id="<%= problemStats[j].pid %>" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>">
+                            <p>( <%= up[problemStats[j].pid].tried %> )</p>
+                            <p class="penalty-label" time-penalty="<%= up[problemStats[j].pid].penalty_time  %>">
                                                 <span>
                                                     <%= up[problemStats[j].pid].penalty < 0 ? 0 : up[problemStats[j].pid].penalty %>
                                                 </span>
-                        </p>
-                    </a>
+                            </p>
+                        </a>
 
-                    <% }else{ %>
+                        <% }else{ %>
 
 
-                    <a class="label label-danger show-runs" href="#" data-problem-id="<%= problemStats[j].pid %>" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>" >
-                        <p>( <%= up[problemStats[j].pid].tried %> )</p>
-                        <p>-</p>
-                    </a>
+                        <a class="label label-danger show-runs" href="#" data-problem-id="<%= problemStats[j].pid %>" data-problem-index="<%= probNames.charAt(j) %>" data-link="/contests/<%= contest.id %>/submission?username=<%= ranks[i].username %>&problem=<%= problemStats[j].pid %>" >
+                            <p>( <%= up[problemStats[j].pid].tried %> )</p>
+                            <p>-</p>
+                        </a>
 
+                        <% } %>
+
+
+
+                        <% }else{ %>
+                        <div class="label label-default">
+                            <p></p>
+                            <p>-</p>
+                        </div>
+                        <% } %>
+
+                    </td>
                     <% } %>
+                </tr>
 
-
-
-                    <% }else{ %>
-                    <div class="label label-default">
-                        <p></p>
-                        <p>-</p>
-                    </div>
-                    <% } %>
-
-                </td>
                 <% } %>
-            </tr>
 
-            <% } %>
-
-            <% } %>
+                <% } %>
 
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
+        </div>
     </div>
+
 
     <% include ../../templates/pagination.ejs %>
 
@@ -207,7 +210,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
 
         var statusName = ['Accepted','Runtime Error','Time Limit Exceeded','Memory Limit Exceeded','Output Limit Exceeded','In Queue','Running','Compilation Error','System Error', 'Wrong Answer'];
 
-        var ret = '<table class="table table-responsive table-striped table-bordered"> <thead><tr><th style="padding-left: 15px;">#</th>' +
+        var ret = '<div class="table-responsive"><table class="table  table-striped table-bordered"> <thead><tr><th style="padding-left: 15px;">#</th>' +
             '<th>Time</th>' +
             '<th>Language</th>' +
             '<th>CPU</th>' +
@@ -255,7 +258,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
             ret +=  '  </tr>';
         }
         ret += '   </tbody>';
-        ret += '   </table>';
+        ret += '   </table></div>';
         return ret;
     }
 

@@ -8,7 +8,6 @@
 # admin panel
     - contest admin panel
             - rejudge
-            - clarifications
 # proper next() error handling
 # implement error page
 # Ranks

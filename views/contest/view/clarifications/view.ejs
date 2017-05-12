@@ -18,9 +18,10 @@
 <% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; %>
 
 <div class="container content c-h">
-    <div class="col-md-10">
+    <div class="col-md-10 nopadding">
         <div class="panel panel-default">
             <div class="panel-heading">
+
                     <% if(clarification.pname==='General'){ %>
                     General
                     <% }else{ %>
@@ -43,12 +44,33 @@
                 <h4><%- clarification.request %></h4>
 
                 <% if(clarification.status !== 'general'){ %>
-                by-<a href="/user/<%= clarification.username %>"><%= clarification.username %></a>
-                <hr>
-                <p><%- clarification.response %></p>
+                    <br><p>by-<a href="/user/<%= clarification.username %>"><%= clarification.username %></a></p>
+                    <hr>
+                    <% if( clarification.response &&  clarification.response.length ){ %>
+                         <h4><%- clarification.response %></h4>
+                    <% } %>
                 <% } %>
-
             </div>
+
+            <% if(user.role === 'admin'){ %>
+                <div class="panel-body">
+                    <hr>
+                    <div class="pull-right">
+                        <div class="btn-group" role="group">
+                            <form role="form" method="post"  action="/contests/<%= contest.id %>/clarifications/delete">
+                                <input type="hidden" name="clar_id"  value="<%= clarificationId %>" />
+                                <a href="/contests/<%= contest.id %>/clarifications/respond/<%= clarificationId %>" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-reply" aria-hidden="true"></i> Respond
+                                </a>
+                                <button class="btn btn-sm btn-danger" type="submit">
+                                    <i class="fa fa-trash-o"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+
         </div>
     </div>
 </div>

@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Login page route
  * @type {*|exports|module.exports}
