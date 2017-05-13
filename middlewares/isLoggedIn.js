@@ -1,5 +1,6 @@
+'use strict';
 
-var debug = require('debug')('isloggedIn');
+var debug = require('debug')('middlewares:isloggedIn');
 
 /**
  *

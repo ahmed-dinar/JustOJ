@@ -12,8 +12,6 @@ var expressValidator = require('express-validator');
 
 var roles            = require('./middlewares/userrole');
 
-//testing ubuntu commit
-
 
 //routes
 var routes        = require('./routes/index');
@@ -35,7 +33,7 @@ var auth          = require('./routes/auth');
 
 var app = express();
 
-//app.disable('x-powered-by');
+app.disable('x-powered-by');
 
 app.locals.site = {
     title: 'JUST OJ',
@@ -65,14 +63,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
 //sesssion
 app.use(expressSession({
     secret: process.env.SESSION_SECRET || 'secretisalwayssecret',
     resave: false,
     saveUninitialized: false
 }));
-
 
 
 //passport authenticator

@@ -36,40 +36,6 @@ router.get('/' , function(req, res, next) {
         res.end(token);
     });
 
-    /*
-    var access_token = req.query.token;
-
-    var profileUrl = 'https://api.stackexchange.com/2.2/me?' + qs.stringify({
-        site: 'stackoverflow',
-        key: Secrets.stackexchange.key,
-        access_token: access_token
-    });
-
-    debug(profileUrl);
-
-    request
-        .get({
-            url: profileUrl,
-            gzip: true
-        } , function (err, response, body) {
-            if(err)
-                return next(new Error(err));
-
-            if(response.statusCode !== 200)
-                return next(new Error(response.statusCode));
-
-            body = JSON.parse(body);
-            debug(body);
-
-            var stackoverflow = {
-                reputation: body.items[0].reputation,
-                badges: body.items[0].badge_counts,
-            };
-
-            debug(stackoverflow);
-
-            res.end(JSON.stringify(response.statusCode));
-        });*/
 });
 
 
@@ -83,9 +49,7 @@ router.get('/uva' , function(req, res, next) {
     if( has(req.query, 'process')  && req.query.process === 'disconnect')
         return disconnectOAuth('UVA', { uva_userid: '' } , req, res);
 
-    res.send(404);
-  //  req.flash('auth_error', '404');
-  //  res.redirect('/user/settings/profile');
+    res.status(404);
 });
 
 
@@ -95,7 +59,7 @@ router.get('/uva' , function(req, res, next) {
 router.post('/uva' , function(req, res, next) {
 
     if( !req.isAuthenticated() ){
-        res.send( JSON.stringify({ error: '403' }));
+        res.json({ status: 'error', error: '403' });
         return;
     }
 
@@ -119,11 +83,11 @@ router.post('/uva' , function(req, res, next) {
             if( !has(err,'verified') )
                 err = { error: true };
 
-            res.send(JSON.stringify(err));
+            res.json({ status: 'error', error: err });
             return;
         }
 
-        res.send( JSON.stringify({ verified: true }));
+        res.json({ status: 'success' });
     });
 });
 
@@ -187,7 +151,7 @@ router.get('/codeforces' , function(req, res, next) {
     if( has(req.query, 'process')  && req.query.process === 'disconnect')
         return disconnectOAuth('Codeforces', { cf_username: '' } , req, res);
 
-    res.send(404);
+    res.status(404);
 });
 
 
@@ -195,7 +159,7 @@ router.get('/codeforces' , function(req, res, next) {
 router.post('/codeforces' , function(req, res, next) {
 
     if( !req.isAuthenticated() ){
-        res.send( JSON.stringify({ error: '403' }));
+        res.json({ status: 'error', error: '403' });
         return;
     }
 
@@ -219,11 +183,11 @@ router.post('/codeforces' , function(req, res, next) {
             if( !has(err,'verified') )
                 err = { error: true };
 
-            res.send(JSON.stringify(err));
+            res.json({ status: 'error', error: err });
             return;
         }
 
-        res.send( JSON.stringify({ verified: true }));
+        res.json({ status: 'success' });
     });
 });
 

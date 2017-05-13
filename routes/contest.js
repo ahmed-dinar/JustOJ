@@ -67,17 +67,15 @@ router.get('/past' , function(req, res, next) {
 
     var cur_page = req.query.page;
 
-    if( _.isUndefined(cur_page) )
+    if( _.isUndefined(cur_page) || parseInt(cur_page) < 1 )
         cur_page = 1;
     else
         cur_page = parseInt(cur_page);
 
-    if( cur_page<1 )
-        return next(new Error('400'));
-
     var URL = url.parse(req.originalUrl).pathname;
     Contest.getPastContests(cur_page,URL, function (err,rows,pagination) {
-        if(err) return next(new Error(err));
+        if(err)
+            return next(new Error(err));
 
         debug(rows);
         res.render('contest/past_contests',{
@@ -220,16 +218,14 @@ router.post('/edit/edituser/:cid', isLoggedIn(true) , roles.is('admin'), functio
             debug(err);
 
             if( typeof err === 'string' )
-                res.send(JSON.stringify(err));
+                res.json({ status: 'error', error: err });
             else
-                res.send(JSON.stringify('error'));
+                res.json({ status: 'error', error: 'error' });
 
-            res.end();
             return;
         }
 
-        res.send(JSON.stringify('success'));
-        res.end();
+        res.json({ status: 'success' });
     });
 });
 
@@ -332,8 +328,7 @@ router.post('/edit/removeuser/:cid', isLoggedIn(true) , roles.is('admin'), funct
         if(err){
             if( isJson ){
                 req.flash('err', 'error while processing request');
-                res.send(JSON.stringify('error'));
-                res.end();
+                res.json({ status: 'error', error: 'error' });
                 return;
             }
             return next(new Error(err));
@@ -347,8 +342,7 @@ router.post('/edit/removeuser/:cid', isLoggedIn(true) , roles.is('admin'), funct
         }
 
         req.flash('success', 'users successfully removed');
-        res.send(JSON.stringify('success'));
-        res.end();
+        res.json({ status: 'success' });
     });
 });
 
@@ -458,12 +452,14 @@ router.get('/edit/:cid/problems/:pid/preview', isLoggedIn(true) , roles.is('admi
     var pid = req.params.pid;
 
     Problems.findById(pid,[],function(err,rows){
-        if(err) return next(new Error(err));
+        if(err) {
+            debug(err);
+            res.json({ status: 'error', error: 'error' });
+            return;
+        }
 
-        res.send(JSON.stringify(Problems.decodeToHTML(rows[0])));
-        res.end();
+        res.json({ status: 'success', data: Problems.decodeToHTML(rows[0]) });
     });
-
 });
 
 
@@ -1128,6 +1124,7 @@ router.get('/:cid/submissions', isLoggedIn(true), function(req, res, next) {
 
 /**
  *   submissions of a problem of a contest
+ *   TODO: Mixing normal route and json api is very bad! Create separate API?
  */
 router.get('/:cid/submission', function(req, res, next) {
 
@@ -1135,13 +1132,11 @@ router.get('/:cid/submission', function(req, res, next) {
 
     if( !has(req.query,'username') || !has(req.query,'problem') ){
         if( isJson ){
-            res.send(JSON.stringify('404'));
-            res.end();
+            res.status(404).json({ status: 'error', error: '404' });
             return;
         }
         return next(new Error('404'));
     }
-
 
     var cid = req.params.cid;
     var username = req.query.username;
@@ -1173,8 +1168,7 @@ router.get('/:cid/submission', function(req, res, next) {
 
         if( error ) {
             if( isJson ){
-                res.send(JSON.stringify('error'));
-                res.end();
+                res.json({ status: 'error', error: 'error' });
                 return;
             }
             return next(new Error(error));
@@ -1182,21 +1176,19 @@ router.get('/:cid/submission', function(req, res, next) {
 
         if( notStarted ) {
             if( isJson ){
-                res.send(JSON.stringify('contest not started yet!'));
-                res.end();
+                res.status(400).json({ status: 'error', error: 'Bad Request' });
                 return;
             }
             res.redirect('/contests/' + cid);
             return;
         }
 
+        debug(rows);
+
         if( isJson ){
-            res.send(JSON.stringify(rows));
-            res.end();
+            res.json({ status: 'success', data: rows });
             return;
         }
-
-        debug(rows);
 
         res.render('contest/view/user_problem_submissions', {
             active_contest_nav: 'submissions',

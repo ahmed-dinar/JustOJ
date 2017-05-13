@@ -58,7 +58,7 @@ gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
   //  livereload.listen();
 
     var nodemonExec = args.sudo ? 'sudo ' : '';
-    nodemonExec +=  'DEBUG=isloggedIn,routes:*,models:* node ';
+    nodemonExec +=  'DEBUG=routes:*,models:*,middlewares:* node ';
 
     var options = {
         script: 'bin/www',

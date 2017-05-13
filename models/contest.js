@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var async = require('async');
 
@@ -146,25 +148,30 @@ exports.editUser = function (cid, uid, insertObj, cb) {
     async.waterfall([
         function (callback) {
             findById(cid,function (err,rows) {
-                if(err) return callback(err);
+                if(err)
+                    return callback(err);
 
-                if(!rows || rows.length === 0) return callback('404','404');
+                if(!rows || rows.length === 0)
+                    return callback('404','404');
 
                 callback();
             });
         },
         function (callback) {
             User.available(insertObj.username, null,function(err,rows){
-                if(err) return callback(err);
+                if(err)
+                    return callback(err);
 
-                if( rows.length ) return callback('username not available' , 'username already taken');
+                if( rows.length )
+                    return callback('username not available' , 'username already taken');
 
                 callback();
             });
         },
         function(callback) {
             bcrypt.genSalt(10, function (err, salt) {
-                if (err) return callback('salt error');
+                if (err)
+                    return callback('salt error');
 
                 callback(null, salt);
             });
@@ -173,7 +180,8 @@ exports.editUser = function (cid, uid, insertObj, cb) {
 
             insertObj.email = insertObj.password;
             bcrypt.hash(insertObj.password, salt, function (err, hash) {
-                if (err) return callback('hash error');
+                if (err)
+                    return callback('hash error');
 
                 callback(null, hash);
             });
