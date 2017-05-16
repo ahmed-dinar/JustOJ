@@ -12,17 +12,15 @@ var url = require('url');
 var qs = require('qs');
 var cheerio = require('cheerio');
 var Codeforces = require('codeforces-api');
+var logger = require('winston');
 
 var User = require('../models/user');
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var Secrets = require('../files/secrets/Secrets');
 
-var debug = require('debug')('routes:auth');
-
 var tokens = new Tokens();
 var OAuth2;
 var csrfToken;
-
 
 var crypto = require('crypto');
 
@@ -63,7 +61,6 @@ router.post('/uva' , function(req, res, next) {
         return;
     }
 
-    debug(req.body);
     var uvaUsername = req.body.uvaUsename;
     var uvaId = req.body.uvaID;
     
@@ -78,8 +75,8 @@ router.post('/uva' , function(req, res, next) {
     ], function (err,rows) {
 
         if(err){
+            logger.error(err);
 
-            debug(err);
             if( !has(err,'verified') )
                 err = { error: true };
 
@@ -102,12 +99,11 @@ router.post('/uva' , function(req, res, next) {
 function verifyUva(uvaId,uvaUsername,callback) {
 
     var profileUrl = getUvaProfileLink(uvaId);
-    debug(profileUrl);
     request
         .get(profileUrl, function (err, response, body) {
 
             if(err || response.statusCode !== 200){
-                debug(err);
+                logger.error(err);
                 return callback({ verified: false, error: true });
             }
 
@@ -117,11 +113,10 @@ function verifyUva(uvaId,uvaUsername,callback) {
                 return callback({ verified: false, status: 404 });
 
             var currentName = $(nameContainer).text().match(/\(([^)]+)\)/);
-            debug(currentName);
             if( !currentName || currentName.length < 2 )
                 return callback({ verified: false, status: 404 });
 
-            debug(currentName[1] + ' == ' + uvaUsername);
+            logger.debug(currentName[1] + ' == ' + uvaUsername);
             if( currentName[1] !== uvaUsername )
                 return callback({ verified: false, status: 403 });
 
@@ -163,7 +158,6 @@ router.post('/codeforces' , function(req, res, next) {
         return;
     }
 
-    debug(req.body);
     var cfUsername = req.body.cfUsername;
     var cfEmail = req.body.cfEmail;
 
@@ -179,7 +173,7 @@ router.post('/codeforces' , function(req, res, next) {
 
         if(err){
 
-            debug(err);
+            logger.error(err);
             if( !has(err,'verified') )
                 err = { error: true };
 
@@ -190,6 +184,7 @@ router.post('/codeforces' , function(req, res, next) {
         res.json({ status: 'success' });
     });
 });
+
 
 
 /**
@@ -203,7 +198,7 @@ function verifyCodeforces(cfUsername, cfEmail, callback) {
     Codeforces.setApis(Secrets.codeforces.key, Secrets.codeforces.secret);
     Codeforces.user.info({ handles: cfUsername } , function (err, data) {
         if(err){
-            debug(err);
+            logger.error(err);
 
             if( !has(err,'handles') )
                 return callback({ verified: false, error: true });
@@ -218,7 +213,7 @@ function verifyCodeforces(cfUsername, cfEmail, callback) {
         if( !has(data,'email') )
             return callback({ verified: false, status: 401 });
 
-        debug(data.email + ' == ' + cfEmail);
+        logger.debug(data.email + ' == ' + cfEmail);
         if( data.email !== cfEmail )
             return callback({ verified: false, status: 403 });
 
@@ -259,10 +254,9 @@ router.get('/google', isLoggedIn(true), function(req, res, next) {
 router.get('/google/callback', isLoggedIn(true), function (req, res) {
 
     var code = req.query.code;
-    debug('google code ' + code);
-    debug(req.query);
 
     if ( !tokens.verify(csrfToken, req.query.state) ){
+        logger.warn('google oAuth token does not match');
         res.end('session expired or 403?');
         return;
     }
@@ -282,10 +276,6 @@ router.get('/google/callback', isLoggedIn(true), function (req, res) {
                 if( errorAccess )
                     return callback(results);
 
-                debug('google callbacks: ');
-                debug(results);
-                debug('accessToken: ' + access_token);
-
                 callback(null,access_token);
             });
         },
@@ -299,7 +289,6 @@ router.get('/google/callback', isLoggedIn(true), function (req, res) {
                         return callback(err);
 
                     body = JSON.parse(body);
-                    debug(body);
 
                     if( response.statusCode !== 200 )
                         return callback(body);
@@ -327,7 +316,7 @@ router.get('/google/callback', isLoggedIn(true), function (req, res) {
     ], function (err , googleId) {
 
         if (err) {
-            debug(err);
+            logger.error(err);
             req.flash('auth_error', 'failed to connect g+ account');
         }
         else if( !googleId )
@@ -370,8 +359,6 @@ router.get('/facebook' , isLoggedIn(true), function(req, res, next) {
 router.get('/facebook/callback', isLoggedIn(true), function (req, res) {
 
     var code = req.query.code;
-    debug('facebook callbacks:');
-    debug(req.query);
 
     if ( !tokens.verify(csrfToken, req.query.state) ){
         res.end('session expired or 403?');
@@ -391,10 +378,6 @@ router.get('/facebook/callback', isLoggedIn(true), function (req, res) {
                 if( errorAccess )
                     return callback(results);
 
-                debug('facebook access infos: ');
-                debug(results);
-                debug('accessToken: ' + access_token);
-
                 callback(null,access_token);
             });
         },
@@ -407,7 +390,6 @@ router.get('/facebook/callback', isLoggedIn(true), function (req, res) {
                         return callback(err);
 
                     body = JSON.parse(body);
-                    debug(body);
 
                     if( response.statusCode !== 200 || !has(body,'id')  )
                         return callback(body);
@@ -432,7 +414,7 @@ router.get('/facebook/callback', isLoggedIn(true), function (req, res) {
     ], function (err , fbId) {
 
         if (err) {
-            debug(err);
+            logger.error(err);
             req.flash('auth_error', 'failed to connect facebook account');
         }
         else
@@ -473,8 +455,6 @@ router.get('/linkedin' , isLoggedIn(true), function(req, res, next) {
 router.get('/linkedin/callback', isLoggedIn(true), function (req, res) {
 
     var code = req.query.code;
-    debug('linkedin callbacks  ');
-    debug(req.query);
 
     if ( !tokens.verify(csrfToken, req.query.state) ){
         res.end('session expired or 403?');
@@ -495,10 +475,6 @@ router.get('/linkedin/callback', isLoggedIn(true), function (req, res) {
                 if( errorAccess )
                     return callback(results);
 
-                debug('linkedin access info: ');
-                debug(results);
-                debug('accessToken: ' + access_token);
-
                 callback(null,access_token);
             });
         },
@@ -511,7 +487,6 @@ router.get('/linkedin/callback', isLoggedIn(true), function (req, res) {
                         return callback(err);
 
                     body = JSON.parse(body);
-                    debug(body);
 
                     if( response.statusCode !== 200 || !has(body,'siteStandardProfileRequest')  )
                         return callback(body);
@@ -539,7 +514,7 @@ router.get('/linkedin/callback', isLoggedIn(true), function (req, res) {
     ], function (err , fbId) {
 
         if (err) {
-            debug(err);
+            logger.error(err);
             req.flash('auth_error', 'failed to connect linkedin account');
         }
         else
@@ -578,8 +553,6 @@ router.get('/github' , isLoggedIn(true), function(req, res, next) {
 router.get('/github/callback', isLoggedIn(true), function (req, res) {
 
     var code = req.query.code;
-    debug('github callbacks ');
-    debug(req.query);
 
     if ( !tokens.verify(csrfToken, req.query.state) ){
         res.end('session expired or 403?');
@@ -596,10 +569,6 @@ router.get('/github/callback', isLoggedIn(true), function (req, res) {
                 var errorAccess = has(results,'error') || access_token === undefined || !access_token;
                 if( errorAccess )
                     return callback(results);
-
-                debug('github access info: ');
-                debug(results);
-                debug('accessToken: ' + access_token);
 
                 callback(null,access_token);
             });
@@ -637,7 +606,7 @@ router.get('/github/callback', isLoggedIn(true), function (req, res) {
     ], function (err , access_token) {
 
         if (err) {
-            debug(err);
+            logger.error(err);
             req.flash('auth_error', 'failed to connect github account');
         }
         else
@@ -678,8 +647,6 @@ router.get('/stackexchange' , isLoggedIn(true), function(req, res, next) {
 router.get('/stackexchange/callback', isLoggedIn(true), function (req, res) {
 
     var code = req.query.code;
-    debug('stackexchange callbacks ');
-    debug(req.query);
 
     if ( !tokens.verify(csrfToken, req.query.state) ){
         res.end('session expired or 403?');
@@ -698,10 +665,6 @@ router.get('/stackexchange/callback', isLoggedIn(true), function (req, res) {
                 var errorAccess = access_token === undefined || !access_token;
                 if( errorAccess )
                     return callback(results);
-
-                debug('stackexchange access info: ');
-                debug(results);
-                debug('accessToken: ' + access_token);
 
                 callback(null,access_token);
             });
@@ -738,7 +701,7 @@ router.get('/stackexchange/callback', isLoggedIn(true), function (req, res) {
     ], function (err , access_token) {
 
         if (err) {
-            debug(err);
+            logger.error(err);
             req.flash('auth_error', 'failed to connect stackexchange account');
         }
         else
@@ -766,9 +729,6 @@ var authorizeUser = function (oAuthOptions, authOptions , req, res, next) {
 
         csrfToken = sec;
         var token = tokens.create(sec);
-
-        debug('secret_csrf: ' + csrfToken);
-        debug('public_csrf: ' + token);
 
         OAuth2 = new oauth(
             oAuthOptions.client_id,

@@ -23,7 +23,7 @@ var rimraf = require('rimraf');
 var url = require('url');
 var mkdirp = require('mkdirp');
 
-var MyUtil = require('../helpers/myutil');
+var MyUtil = require('../lib/myutil');
 var Submission = require('../models/submission');
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var roles = require('../middlewares/userrole');

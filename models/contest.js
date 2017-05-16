@@ -5,8 +5,8 @@ var async = require('async');
 
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
-var Paginate = require('../helpers/paginate');
-var MyUtil = require('../helpers/myutil');
+var Paginate = require('../lib/pagination/paginate');
+var MyUtil = require('../lib/myutil');
 var bcrypt = require('bcryptjs');
 var rndm = require('rndm');
 var Hashids = require('hashids');

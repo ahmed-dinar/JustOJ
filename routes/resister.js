@@ -7,6 +7,7 @@
 var express = require('express');
 var router = express.Router();
 
+var has = require('has');
 var async = require('async');
 var _ = require('lodash');
 var reCAPTCHA = require('recaptcha2');
@@ -15,9 +16,8 @@ var isLoggedIn = require('../middlewares/isLoggedIn');
 var TempUser = require('../models/tempuser');
 var User = require('../models/user');
 var Schema = require('../config/form-validation-schema');
-var CustomError = require('../helpers/custom-error');
+var CustomError = require('../lib/custom-error');
 var Secrets = require('../files/secrets/Secrets');
-var has = require('has');
 
 var debug = require('debug')('routes:resister');
 

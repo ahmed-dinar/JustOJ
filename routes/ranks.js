@@ -7,9 +7,9 @@ var _ = require('lodash');
 var url = require('url');
 
 var entities = require('entities');
-var MyUtil = require('../helpers/myutil');
+var MyUtil = require('../lib/myutil');
 var Problems = require('../models/problems');
-var Paginate = require('../helpers/paginate');
+var Paginate = require('../lib/pagination/paginate');
 var moment = require('moment');
 var async = require('async');
 

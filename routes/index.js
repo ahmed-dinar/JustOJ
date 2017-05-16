@@ -7,12 +7,13 @@
 
 var express = require('express');
 var router = express.Router();
+var logger = require('winston');
 
 var gravatar = require('gravatar');
 
 router.get('/',function(req, res, next) {
 
-    console.log(req.user);
+    logger.debug(req.user);
 
     if(req.isAuthenticated()){
         var pro = gravatar.url(req.user.email, {s: '20'}, true);

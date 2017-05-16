@@ -1,7 +1,7 @@
 var express          = require('express');
 var path             = require('path');
 var favicon          = require('serve-favicon');
-var logger           = require('morgan');
+var morgan           = require('morgan');
 var cookieParser     = require('cookie-parser');
 var bodyParser       = require('body-parser');
 var expressSession   = require('express-session');
@@ -11,7 +11,6 @@ var io               = require('socket.io')();
 var expressValidator = require('express-validator');
 
 var roles            = require('./middlewares/userrole');
-
 
 //routes
 var routes        = require('./routes/index');
@@ -28,8 +27,14 @@ var ucheck        = require('./routes/ucheck');
 var s3p           = require('./routes/s3');
 var sockettest    = require('./routes/sockettest');
 var auth          = require('./routes/auth');
+var logger        = require('winston');
+var nconf         = require('nconf');
 
+require('./config/logger'); //init our logger settings
 
+nconf.argv()
+    .env('_')
+    .file({ file: path.join(__dirname, 'config/config.json') });
 
 var app = express();
 
@@ -41,21 +46,16 @@ app.locals.site = {
     description: 'SOMETHING'
 };
 
-/*
-app.locals.defines = {
-  //  RUN_DIR: '/SECURITY/JAIL/home/run',
- //   SUBMISSION_DIR: process.cwd() + '/files/submissions'
-   // RUN_DIR: '/home/ahmed-dinar/Desktop/testRun'
-};*/
-
 
 // view engine setup.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+
+//middlewares
 app.use('$', express.static(__dirname + '/node_modules/jquery/dist/'));
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
@@ -107,8 +107,6 @@ app.use(function(req, res, next) {
 });
 
 
-
-
 // csurf error handlers
 app.use(function (err, req, res, next) {
     if (err.code !== 'EBADCSRFTOKEN') return next(err);
@@ -119,10 +117,9 @@ app.use(function (err, req, res, next) {
 });
 
 
-
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (nconf.get('NODE:ENV') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
@@ -145,43 +142,16 @@ app.use(function(err, req, res, next) {
 });
 
 
-
-
-
-
-
-/**
- * Get port from environment and store in Express.
- */
-var port = normalizePort(process.env.PORT || '8888'); //if EADDRINUSE error run  $sudo killall -9 node
-
-
 /**
  * set port
  */
-app.set('port', port);
+app.set('port', normalizePort(nconf.get('PORT') || '8888') ); //
 
 
 /**
  * Create HTTP server.
  */
-var server = require('http').createServer(app);
-
-
-/**
- * socket.io server
- */
-io.listen(server);
-require('./config/socket.io/socketio')(io);
-
-
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port);
-
-
+require('http').createServer(app);
 
 
 /**
@@ -202,8 +172,6 @@ function normalizePort(val) {
 
     return false;
 }
-
-
 
 
 module.exports = app;

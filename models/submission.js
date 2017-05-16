@@ -1,10 +1,12 @@
+'use strict';
+
 
 var _ = require('lodash');
 var async = require('async');
 var has = require('has');
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
-var Paginate = require('../helpers/paginate');
+var Paginate = require('../lib/pagination/paginate');
 
 
 exports.insert = function(inserts,cb){

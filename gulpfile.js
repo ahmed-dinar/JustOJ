@@ -85,5 +85,4 @@ gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
                // .pipe(livereload({ auto: false }));
                 //.pipe(notify('Page Reloading...'));
         });
-
 });

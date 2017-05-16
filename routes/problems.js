@@ -16,7 +16,7 @@ var url = require('url');
 var has = require('has');
 
 
-var MyUtil = require('../helpers/myutil');
+var MyUtil = require('../lib/myutil');
 var Problems = require('../models/problems');
 var entities = require('entities');
 var isLoggedIn = require('../middlewares/isLoggedIn');

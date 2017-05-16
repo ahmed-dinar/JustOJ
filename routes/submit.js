@@ -12,8 +12,8 @@ var has = require('has');
 var entities = require('entities');
 
 var isLoggedIn = require('../middlewares/isLoggedIn');
-var Judge = require('../helpers/compiler/sandbox/judge');
-var MyUtil = require('../helpers/myutil');
+var Judge = require('../lib/compiler/sandbox/judge');
+var MyUtil = require('../lib/myutil');
 var Problems = require('../models/problems');
 var Submission = require('../models/submission');
 

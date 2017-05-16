@@ -5,7 +5,7 @@
   "private": true,
   "main": "app.js",
   "author": "Ahmed Dinar <madinar.cse@gmail.com>",
-  "license": "GNU",
+  "license": "GPL",
   "repository": {
     "type": "git",
     "url": "https://github.com/ahmed-dinar/JustOJ.git"
@@ -51,6 +51,7 @@
     "morgan": "~1.8.1",
     "mv": "^2.1.1",
     "mysql": "^2.13.0",
+    "nconf": "^0.8.4",
     "nodemailer": "^4.0.1",
     "oauth": "^0.9.15",
     "passport": "^0.3.2",
@@ -63,7 +64,8 @@
     "socket.io": "^1.4.5",
     "url": "^0.11.0",
     "uuid": "^3.0.1",
-    "validator": "^7.0.0"
+    "validator": "^7.0.0",
+    "winston": "^2.3.1"
   },
   "devDependencies": {
     "browserify": "^14.3.0",

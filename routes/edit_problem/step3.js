@@ -1,5 +1,5 @@
 var Problems = require('../../models/problems');
-var MyUtil = require('../../helpers/myutil');
+var MyUtil = require('.././myutil');
 var fs = require('fs');
 var path = require('path');
 var async = require('async');

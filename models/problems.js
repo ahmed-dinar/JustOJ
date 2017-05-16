@@ -1,9 +1,11 @@
-var MyUtil = require('../helpers/myutil');
+'use strict';
+
 var _ = require('lodash');
 var entities = require('entities');
 var async = require('async');
 
-var Paginate = require('../helpers/paginate');
+var MyUtil = require('../lib/myutil');
+var Paginate = require('../lib/pagination/paginate');
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
 

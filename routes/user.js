@@ -25,7 +25,7 @@ var Secrets = require('../files/secrets/Secrets');
 var User = require('../models/user');
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var ValidationSchema = require('../config/form-validation-schema');
-var CustomError = require('../helpers/custom-error');
+var CustomError = require('../lib/custom-error');
 var TempUser = require('../models/tempuser');
 
 var debug = require('debug')('routes:user');

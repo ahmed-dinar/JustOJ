@@ -6,8 +6,8 @@ var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 var async = require('async');
 
-var MyUtil = require('../../helpers/myutil');
-var Judge = require('../../helpers/problemSetter/settersJudge');
+var MyUtil = require('.././myutil');
+var Judge = require('.././problemSetter/settersJudge');
 
 
 var colors = require('colors');

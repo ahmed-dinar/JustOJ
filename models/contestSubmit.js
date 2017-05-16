@@ -1,8 +1,8 @@
+'use strict';
+
+
 var path = require('path');
 var fs = require('fs');
-
-
-
 var mkdirp = require('mkdirp');
 var _ = require('lodash');
 var moment = require('moment');
@@ -18,8 +18,8 @@ var has = require('has');
 var entities = require('entities');
 var Contest = require('../models/contest');
 var Problems = require('../models/problems');
-var MyUtil = require('../helpers/myutil');
-var Judge = require('../helpers/compiler/sandbox/contestJudge');
+var MyUtil = require('../lib/myutil');
+var Judge = require('../lib/compiler/sandbox/contestJudge');
 
 
 exports.submit = function(req, res, next){

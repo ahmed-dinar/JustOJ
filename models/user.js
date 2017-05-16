@@ -1,3 +1,5 @@
+'use strict';
+
 
 var async = require('async');
 var bcrypt = require('bcryptjs');
@@ -5,7 +7,7 @@ var moment = require('moment');
 
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
-var CustomError = require('../helpers/custom-error');
+var CustomError = require('../lib/custom-error');
 
 function User(){}
 

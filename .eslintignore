@@ -14,3 +14,4 @@ routes/s3.js
 config
 public
 views
+logs

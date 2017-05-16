@@ -4,18 +4,17 @@ var express = require('express');
 var User = require('../models/user');
 var router = express.Router();
 
+var moment = require('moment');
+var async = require('async');
 var _ = require('lodash');
 var url = require('url');
 var entities = require('entities');
 
 var isLoggedIn = require('../middlewares/isLoggedIn');
-var MyUtil = require('../helpers/myutil');
+var MyUtil = require('../lib/myutil');
 var Problems = require('../models/problems');
 var Submission = require('../models/submission');
-var Paginate = require('../helpers/paginate');
-var moment = require('moment');
-var async = require('async');
-
+var Paginate = require('../lib/pagination/paginate');
 
 var Query = require('../config/database/knex/query');
 

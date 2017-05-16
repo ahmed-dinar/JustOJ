@@ -23,11 +23,12 @@
     <div class="col-md-12">
 
         <div class="panel panel-default">
-            <div class="panel-heading">SUBMISSION STATUS</div>
+            <div class="panel-heading">General</div>
 
                 <table class="table table-striped">
                     <thead>
                     <tr>
+                        <th style="width: 5px;"></th>
                         <th>#</th>
                         <th>User</th>
                         <th>Problem</th>
@@ -40,6 +41,7 @@
                     </thead>
                     <tbody>
                         <tr>
+                            <td></td>
                             <td><%= submissionId %></td>
                             <td>
                                 <a href="/user/<%= runs.username %>">
@@ -87,11 +89,12 @@
 
         <% if(runs.cases.length){ %>
             <div class="panel panel-default">
-                <div class="panel-heading">TEST CASES</div>
+                <div class="panel-heading">Test Cases</div>
 
                     <table class="table table-striped">
                         <thead>
                         <tr>
+                            <th style="width: 5px;"></th>
                             <th>#</th>
                             <th>CPU</th>
                             <th>Memory</th>
@@ -103,6 +106,7 @@
                         <% for(var i=0; i<runs.cases.length; i++){ %>
 
                             <tr>
+                                <td></td>
                                 <td><%= (i+1) %></td>
                                 <td>
                                     <% if( parseInt(runs.cases[i].cpu) === 0){ %>
