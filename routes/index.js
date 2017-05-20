@@ -8,8 +8,8 @@
 var express = require('express');
 var router = express.Router();
 var logger = require('winston');
-
 var gravatar = require('gravatar');
+
 
 router.get('/',function(req, res, next) {
 

@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var entities = require('entities');
 var async = require('async');
+var logger = require('winston');
 
 var MyUtil = require('../lib/myutil');
 var Paginate = require('../lib/pagination/paginate');

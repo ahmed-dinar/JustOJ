@@ -1,6 +1,0 @@
-{
-  "logger": {
-    "maxsize": 4194304,
-    "maxFiles": 5
-  }
-}

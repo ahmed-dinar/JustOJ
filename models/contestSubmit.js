@@ -7,7 +7,6 @@ var mkdirp = require('mkdirp');
 var _ = require('lodash');
 var moment = require('moment');
 var async = require('async');
-var fse = require('fs-extra');
 var Busboy = require('busboy');
 var uuid = require('uuid');
 var rimraf = require('rimraf');

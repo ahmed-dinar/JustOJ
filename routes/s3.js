@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-var fse = require('fs-extra');
 var uuid = require('uuid');
 var mime = require('mime-types');
 var path = require('path');
@@ -62,7 +61,7 @@ router.post('/:pid/', function(req, res, next) {
         });
 
 
-        file.pipe(fse.createOutputStream(path.normalize(saveTo)));
+        file.pipe(fs.createOutputStream(path.normalize(saveTo)));
 
       //  file.pipe(fs.createWriteStream(saveTo));
 

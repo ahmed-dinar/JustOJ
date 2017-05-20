@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/2.2.1/pretty.min.css" />
 
 </head>
-<body class="resister-body">
+<body class="form-center-body">
 
 
 <!-- Main Content -->
@@ -28,9 +28,7 @@
         <div>
             <div class="panel-body text-center form-header">
                 <a href="/" class="link-no-effect">
-                    <div class="brand-logo">
-                        J
-                    </div>
+
                     <h3 class="web-title">Just Online Judge</h3>
                 </a>
             </div>
@@ -41,7 +39,9 @@
 
             <div class="panel-body">
 
-                <div class="text-center help-block form-title">Login</div>
+                <div class="text-center help-block form-title">
+                    <span>Login</span>
+                </div>
 
                 <!-- success message -->
                 <% if (success.length) { %>
@@ -87,19 +87,25 @@
                         </label>
                     </div>
 
-                    <div class="form-group" style="margin-top: 15px;">
-                        <button type="submit" data-loading-text="Logging in.." class="btn btn-dark btn-md">Login</button>
-                        <a href="#" class="forgot-password btn-link pull-right" data-toggle="modal" data-target=".forgot-modal">Forgot Password?</a>
+                    <div class="form-group" style="margin-top: 10px;">
+                        <button type="submit" data-loading-text="Logging in.." class="btn btn-primary btn-lg btn-block">Login</button>
                     </div>
 
+                    <div class="form-group" style="margin-top: 25px;">
+                        <a href="/resister" class="btn-link">Create an account</a>
+                        <a href="#" class="forgot-password btn-link pull-right" data-toggle="modal" data-target=".forgot-modal">Forgot Password?</a>
+                    </div>
                 </form>
 
             </div>
         </div>
-        <div class="text-center help-block">
-            &copy; CSE , JUST
-        </div>
+
     </div>
+
+    <div class="text-center help-block">
+        &copy; CSE , JUST
+    </div>
+
 </div>
 
 

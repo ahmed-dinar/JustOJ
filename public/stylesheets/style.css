@@ -1,23 +1,47 @@
 
+html, body{
+  -webkit-font-smoothing: antialiased;
+}
+
 body {
 
   margin: 0px ;
 
-  font-family: 'PT Sans','Open Sans',  "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'PT Sans',  'Open Sans','Roboto', Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #333 ;
-  background: #E8EBF5;
+  background: #F1F1EB; /* f7f7f7 F1F1EB eef2f5*/
 }
+
+
 
 .navbar-brand{
   /*font-family: 'Baloo', cursive;
   font-family: 'Black Ops One', cursive;
     font-family: 'Limelight', cursive;*/
 
-  padding-left: 30px;
+ /* font-family: 'Bubblegum Sans', cursive;
+  padding-top: 0.9em;
 
+
+  font-family: 'Pacifico', cursive;
+ */
+
+
+  font-family: 'Sofia', cursive;
+  font-size: 15px;
+  padding-top: 8px;
+  line-height: 1.1em;
+
+  padding-left: 30px;
 }
 
+.navbar-brand p{
+  margin: 0;
+}
+.navbar-brand p:first-child{
+  padding-left: 3px;
+}
 
 /* http://www.developerdrive.com/2015/01/8-simple-css-hover-effects/ */
 @keyframes bounce {
@@ -43,25 +67,27 @@ body {
 
 
 .brand-logo{
+
   font-family: 'Russo One', sans-serif;
-  font-size: 26px;
+
+  font-size: 20px;
   letter-spacing: 2px;
   font-weight: normal;
   transform-style: preserve-3d;
   margin: 0px auto;
-  margin-top: -7px;
-  background: #ffffff; /* 07AD91  0391c9*/
-  color: #293A48;
+  margin-top: -5px;
+  background: #10A9F5; /* 07AD91  0391c9*/
+  color: #ddd;
   border: none;
-  padding: 0px 10px;
-  border-radius: 2px;
-  max-width: 35px;
+  border-radius: 50px;
+  width: 30px;
+  height: 30px;
   position: relative;
-  box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
+ /* box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);*/
 }
 
 .navbar-brand > .brand-logo{
-  padding: 7px 10px 5px 10px;
+  padding: 6px 11px 5px 11px;
 }
 
 .c-h{
@@ -77,7 +103,8 @@ body {
 
 a{
  /* color: #1D906A;*/
-  color: #06937B;
+ /* color: #06937B;*/
+  color: #239d60;
 }
 
 
@@ -114,7 +141,7 @@ a{
 }*/
 
 footer{
-  background: #272727;
+  background-color: #37474F;
   color: #DDD;
   padding: 20px 0px;
 }
@@ -327,12 +354,23 @@ hr {
   /*box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px;*/
 
   /*box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);*/
- /* box-shadow: 2px 2px 2px rgba(0,0,0,.03);
-  border: 1px solid #E2E2E2;*/
-  border: none;
-  box-shadow: 2px 2px 2px rgba(0,0,0,.03);
+ /* box-shadow: 2px 2px 2px rgba(0,0,0,.03);*/
+
+
+  border: 1px solid;
+  border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+
+
+
+  /*-webkit-box-shadow: 0 0 24px 0 rgba(0,0,0,0.055);
+  -moz-box-shadow: 0 0 24px 0 rgba(0,0,0,0.055);
+  box-shadow: 0 0 24px 0 rgba(0,0,0,0.055);*/
+  /*box-shadow: 2px 2px 2px rgba(0,0,0,.03);*/
 }
 
+.panel-free{
+  border: none;
+}
 
 
 /*
@@ -371,11 +409,11 @@ hr {
 
 input[type="text"],input[type="password"],input[type="username"],input[type="email"], select{
   border-radius: 1px;
-  padding: 15px 14px;
-
+  padding: 2px 14px;
 }
 
 .form-control {
+  height: 35px;
   border-radius: 1px;
   box-shadow: none;
   border: 1px solid #d9d9d9;
@@ -456,7 +494,7 @@ td,th{
 }
 
 .scoreboard > tbody > tr > td {
-  padding: 12px 4px;
+  padding: 5px 4px;
 }
 
 .scoreboard > tbody > tr > td:first-child{
@@ -728,8 +766,9 @@ nav.nopadding, div.nopadding {
 
 
 .navbar-inverse {
-  background-color: #293A48; /*  518CA3, 012B43 , 00887A , 2d1c4a , B3382C 293A48  */
-  background-image: url("../images/patterns/pattern-gplay.png");
+  background-color: #3f3861; /*  518CA3, 012B43 , 00887A , 2d1c4a , B3382C 293A48 3F51B5  */
+ /* background-image: url("../images/patterns/pattern-gplay.png");*/
+  background-image: none;
   border-color: transparent;
 }
 
@@ -762,7 +801,7 @@ nav.nopadding, div.nopadding {
 }
 
 .navbar-inverse .navbar-nav>li>a {
-  color: #cccccc;
+  color: rgba(255,255,255,0.75);
   -webkit-transition: all 200ms ease;
   -moz-transition: all 200ms ease;
   transition: all 200ms ease;
@@ -964,7 +1003,7 @@ pre{
 }
 
 .table-contest-list > tbody > tr > td{
-   padding: 15px 8px;
+   padding: 10px 8px;
  }
 
 .no-margin-top{
@@ -996,7 +1035,9 @@ pre{
 }
 
 .navbar{
-  box-shadow: 0 2px 2px rgba(0,0,0,.1),0 1px 0 rgba(0,0,0,.1);
+  box-shadow: 0 1px 1px rgba(0,0,0,.14);
+  /*box-shadow: 0 2px 2px rgba(0,0,0,.1),0 1px 0 rgba(0,0,0,.1);*/
+  /*box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);*/
 }
 
 .nav-tabs>li{
@@ -1021,20 +1062,17 @@ pre{
 
 .input-icon .fa{
   position: absolute;
-  padding: 15px;
-  width: 45px;
+  padding: 10px;
+  width: 32px;
   pointer-events: none;
   border-right: 1px solid #d6d6d6;
 }
 
 .input-icon input{
-  padding-left: 55px;
+  padding-left: 40px;
   font-size: 15px;
 }
 
-.form-control{
-  height: 45px;
-}
 
 .link-no-effect, .link-no-effect:hover, .link-no-effect:focus{
   text-decoration: none;
@@ -1044,7 +1082,9 @@ pre{
 
 .form-center{
   margin: 0px auto;
-  width: 425px;
+  width: 352px;
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2);
 }
 
 .form-center .panel-body{
@@ -1059,10 +1099,16 @@ pre{
 
 
 .form-title{
-  margin-bottom: 20px;
-  border-bottom: 1px dotted #ddd;
-  padding-bottom: 5px;
+  margin-bottom: 25px;
+  border-bottom: 1px dotted #cccccc;
   font-size: 16px;
+  line-height: 0.1em;
+}
+
+
+.form-title span{
+  background: #ffffff;
+  padding:0 10px;
 }
 
 .form-center .web-title{
@@ -1070,12 +1116,14 @@ pre{
   margin-bottom: 0px;
 }
 
-.resister-body{
-  background: url('../images/res_back.jpg') no-repeat center center fixed;
+.form-center-body{
+ /* background: url('../images/res_back.jpg') no-repeat center center fixed;
   -moz-background-size: cover;
   -webkit-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
+  background-size: cover;*/
+  background-color: #272C32;
+  background-image: url('../images/patterns/gplay-trans.png');
 }
 
 .forgot-password {
@@ -1102,19 +1150,21 @@ pre{
   text-shadow: rgb(3, 3, 3) 4px 4px 6px;
 }
 
+/*
 .contest-arena-heading{
   padding-top: 20px;
   background-image: url("../images/patterns/gplay-head3.png");
-  /*background-color: #07AD91; /* 07AD91 185568 */
+  /*background-color: #07AD91; /* 07AD91 185568
   color: #ffffff;
   text-shadow: rgba(3, 3, 3, 0.5) 1px 1px 1px;
 }
 
 
 .contest-nav-wrapper{
-  background-color: #06937b; /* B3382C 06937b  */
+  background-color: #06937b; /* B3382C 06937b
   border-top: 1px solid rgba(5, 122, 103,.3);
 }
+
 
 .contest-navbar{
   border-radius: 0;
@@ -1145,7 +1195,7 @@ pre{
   border-top-color: #06937b;
   content: "";
 }
-
+*/
 
 .contest-problem-table > tbody > tr>td{
   padding: 10px;
@@ -1194,3 +1244,58 @@ pre{
   height: 29px;
 }
 
+.modal-content, .swal2-modal {
+  border-radius: 1px !important;
+}
+
+
+
+.contest-wrapper{
+  background-color: #3949AB;
+  background-image: url("../images/patterns/contest-head-clean.png");
+  /*border-bottom: 1px solid #e8e8e8;*/
+  border-bottom: none;
+}
+
+.nav-con > li > a{
+  color: rgba(27,31,35,0.5);
+  border-radius: 4px 4px 0px 0px;
+  padding: 7px 12px;
+}
+
+.nav-con>li>a:hover,
+.nav-con>li>a:focus{
+  background-color: transparent;
+  border-color: transparent;
+  color: #24292e;
+}
+
+
+.nav-con>li.active>a,
+.nav-con>li.active>a:focus,
+.nav-con>li.active>a:hover{
+  border-top: 1px solid #337AB7;
+  border-left: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;
+  border-bottom-color: transparent;
+  background-color: #F1F1EB;
+}
+
+
+
+.nav-con > li{
+  margin-bottom: -1px;
+}
+
+.img-thumbnail{
+  padding: 0;
+  border: none;
+}
+
+.btn-block{
+  border-radius: 2px;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+}

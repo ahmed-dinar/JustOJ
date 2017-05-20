@@ -9,19 +9,20 @@ var router = express.Router();
 
 var has = require('has');
 var async = require('async');
-var _ = require('lodash');
 var reCAPTCHA = require('recaptcha2');
+var logger = require('winston');
 
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var TempUser = require('../models/tempuser');
 var User = require('../models/user');
-var Schema = require('../config/form-validation-schema');
+var Schema = require('../config/validator-schema');
 var CustomError = require('../lib/custom-error');
 var Secrets = require('../files/secrets/Secrets');
 
-var debug = require('debug')('routes:resister');
 
-
+/**
+ *
+ */
 router.get('/', isLoggedIn(false) , function(req, res, next) {
 
     res.render('resister', {
@@ -30,7 +31,7 @@ router.get('/', isLoggedIn(false) , function(req, res, next) {
         RECAPTCHA_KEY: Secrets.recaptcha2.SITE_KEY,
         errors: req.flash('resFailure'),
         isLoggedIn: false,
-        _: _
+        forEach: require('lodash/forEach')
     });
 });
 
@@ -53,11 +54,12 @@ router.post('/', isLoggedIn(false) , function(req, res, next) {
                 if (!result.isEmpty())
                     return callback(new CustomError(result,'form'));
 
-                callback();
+                return callback();
             });
         },
         function (callback) {
             User.available(req.body.username,req.body.email,function(err,rows){
+
                 if(err)
                     return callback(err);
 
@@ -68,7 +70,7 @@ router.post('/', isLoggedIn(false) , function(req, res, next) {
                         return callback(new CustomError('Email already taken','form'));
                 }
 
-                callback();
+                return callback();
             });
         },
         function(callback){
@@ -78,7 +80,7 @@ router.post('/', isLoggedIn(false) , function(req, res, next) {
 
         if(err){
 
-            debug(err);
+            logger.debug(err);
 
             if( !has(err,'name') )
                 return next(new Error(err));
@@ -122,7 +124,7 @@ var verifyRecaptcha = function(req,cb){
             cb();
         })
         .catch(function(errorCodes){
-            debug(recaptcha.translateErrors(errorCodes));
+            logger.debug(recaptcha.translateErrors(errorCodes));
             cb(new CustomError('Captcha does not match','captcha'));
         });
 };

@@ -58,7 +58,7 @@ gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
   //  livereload.listen();
 
     var nodemonExec = args.sudo ? 'sudo ' : '';
-    nodemonExec +=  'DEBUG=routes:*,models:*,middlewares:* node ';
+    nodemonExec +=  'NODE_ENV=development node ';
 
     var options = {
         script: 'bin/www',
@@ -67,10 +67,8 @@ gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
         nodeArgs: []
     };
 
-    if (args.debug) {
+    if (args.debug)
         options.nodeArgs.push('--debug-brk');
-    }
-
 
     nodemon(options)
         .on('crash', function () {

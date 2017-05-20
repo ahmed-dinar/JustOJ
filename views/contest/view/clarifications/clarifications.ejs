@@ -12,7 +12,7 @@
 <!-- header and menu -->
 <% include ../../../templates/header2.ejs %>
 
-<% include ../../../templates/contest_header.ejs %>
+<% include ../../../templates/contest_header2.ejs %>
 
 <% var ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; var i; %>
 
@@ -107,7 +107,7 @@
             <% } %>
 
 
-            <% i=0; _.forEach(problems,function(value, key){ %>
+            <% i=0; forEach(problems,function(value, key){ %>
 
             <% if(selected===value.pid){ %>
             <option value="/contests/<%= contest.id %>/clarifications/<%= value.pid %>" selected>

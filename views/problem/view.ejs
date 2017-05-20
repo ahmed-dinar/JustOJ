@@ -19,7 +19,7 @@
 <div class="content container c-h">
 
     <!-- errors -->
-    <% if (formError.length) { %>
+    <% if (formError && formError.length) { %>
         <div class="col-md-6 col-md-offset-3">
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -30,27 +30,17 @@
 
     <div class="row">
 
-        <div class="col-md-9">
+        <div class="col-md-9" style="padding-right: 0">
             <div class="panel panel-default">
-                <div class="panel-heading" style="background-color: #FFFFFF"><h4><%- problem.title %></h4>
-
-                    <p style="font-size: 84%;">CPU: <%= (problem.cpu/1000.0) %>s | Memory: <%= problem.memory %>MB</p>
+                <div class="panel-heading" style="background-color: #FFFFFF"><h4><%- decodeToHTML(problem.title) %></h4>
+                    <p style="font-size: 80%;">CPU: <%= (problem.cpu/1000.0) %>s | Memory: <%= problem.memory %>MB</p>
                 </div>
 
-
-
                 <div class="panel-body">
-
-
-
                     <p>
-                        <%- problem.statement %>
+                        <%- decodeToHTML(problem.statement) %>
                     </p>
-
                     <h3 id="h3">Sample</h3>
-
-
-
                     <table class="table" style="padding: 0px; margin: 0px">
                         <thead>
                             <tr style="border-bottom: 1px solid;">
@@ -60,12 +50,11 @@
                         </thead>
                         <tbody style="padding: 0px; margin: 0px">
                             <tr>
-                                <td class="col-md-1 codePre"><%- problem.input %></td>
-                                <td class="col-md-1 codePre"><%- problem.output %></td>
+                                <td class="col-md-1 codePre"><%- decodeToHTML(problem.input) %></td>
+                                <td class="col-md-1 codePre"><%- decodeToHTML(problem.output) %></td>
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
 
                 <table class="table" style="background: #f3f3f3">
@@ -193,7 +182,9 @@
                                 </tbody>
                             </table>
                     <div class="panel-body">
-                            <span class="pull-right"><a href="/status/u/<%= user.username %>/p/<%= problem.id %>">View All</a></span>
+                            <span class="pull-right">
+                                <a class="btn btn-xs btn-default" href="/status/u/<%= user.username %>/p/<%= problem.id %>">View All</a>
+                            </span>
                         </div>
                     <% }else{ %>
                         <span class="label label-default">No Submission Found!</span>
@@ -249,7 +240,9 @@
                             </tbody>
                         </table>
                 <div class="panel-body">
-                        <span class="pull-right"><a href="/ranks/p/<%= problem.id %>">View All</a></span>
+                        <span class="pull-right">
+                            <a class="btn btn-xs btn-default" href="/ranks/p/<%= problem.id %>">View All</a>
+                        </span>
                     </div>
 
 

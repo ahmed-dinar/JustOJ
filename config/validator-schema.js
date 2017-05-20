@@ -1,6 +1,5 @@
-/**
- * Created by ahmed-dinar on 6/6/16.
- */
+'use strict';
+
 module.exports = {
     'email': {
         'email': {
@@ -109,5 +108,4 @@ module.exports = {
             }
         }
     }
-
 };

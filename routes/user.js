@@ -24,7 +24,7 @@ var Nodemailer  = require('nodemailer');
 var Secrets = require('../files/secrets/Secrets');
 var User = require('../models/user');
 var isLoggedIn = require('../middlewares/isLoggedIn');
-var ValidationSchema = require('../config/form-validation-schema');
+var ValidationSchema = require('../config/validator-schema');
 var CustomError = require('../lib/custom-error');
 var TempUser = require('../models/tempuser');
 

@@ -30,11 +30,18 @@ var auth          = require('./routes/auth');
 var logger        = require('winston');
 var nconf         = require('nconf');
 
-require('./config/logger'); //init our logger settings
 
-nconf.argv()
-    .env('_')
-    .file({ file: path.join(__dirname, 'config/config.json') });
+nconf.argv().env('_');
+
+global.env = nconf.get('NODE:ENV') || 'development';
+
+var configPath =  'config/env/' + global.env + '.json';
+
+nconf.file({ file: path.join(__dirname, configPath) });
+
+console.log( nconf.get('test') );
+
+require('./config/logger'); //init our logger settings
 
 var app = express();
 

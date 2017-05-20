@@ -12,7 +12,7 @@
 <!-- header and menu -->
 <% include ../../templates/header2.ejs %>
 
-<% include ../../templates/contest_header.ejs %>
+<% include ../../templates/contest_header2.ejs %>
 
 
 <%
@@ -48,7 +48,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                 <% for(var i=0; i<ranks.length; i++){ %>
 
 
-                <% if( ranks[i].penalty === null || _.isUndefined(ranks[i].penalty) ){ %>
+                <% if( ranks[i].penalty === null || isUndefined(ranks[i].penalty) ){ %>
 
                 <tr>
                     <td  class="text-center vertical-middle"><%= pagination.offset() + i + 1 %></td>
@@ -86,7 +86,7 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                     <% for(var j=0; j<problemStats.length; j++){ %>
                     <td class="text-center standings-cell">
 
-                        <% if( !_.isUndefined(up[problemStats[j].pid]) ){ %>
+                        <% if( !isUndefined(up[problemStats[j].pid]) ){ %>
 
 
                         <% if(up[problemStats[j].pid].status === 0){ %>

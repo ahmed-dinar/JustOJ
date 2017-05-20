@@ -4,10 +4,6 @@ var winston = require('winston');
 var path = require('path');
 var nconf = require('nconf');
 
-nconf.argv()
-    .env('_')
-    .file({ file: path.resolve(__dirname, '../config/config.json') });
-
 var ENV = nconf.get('NODE:ENV') || 'development';
 
 Date.prototype.monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
