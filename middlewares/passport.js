@@ -1,7 +1,13 @@
+'use strict';
+
+/**
+ * Module dependencies.
+ */
 var passportLocal = require('passport-local');
 var User = require('../models/user');
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
+
 
 module.exports = function(passport) {
 
@@ -25,13 +31,10 @@ module.exports = function(passport) {
     ));
 
 
-
-
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
         done(null, user.id);
     });
-
 
 
     // used to deserialize the user
@@ -48,12 +51,13 @@ module.exports = function(passport) {
             sql.toString()
             ,function(err,rows){
 
-                if( err ){ return done(err); }
+                if(err)
+                    return done(err);
 
-                if( !rows.length ){ return done('404,no user'); }
+                if( !rows.length )
+                    return done('404,no user');
 
                 done(err, rows[0]);
             });
     });
-
 };

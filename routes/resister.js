@@ -1,8 +1,7 @@
 'use strict';
 
 /**
- *
- * @type {*|exports|module.exports}
+ * Module dependencies.
  */
 var express = require('express');
 var router = express.Router();

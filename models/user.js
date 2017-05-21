@@ -1,6 +1,8 @@
 'use strict';
 
-
+/**
+ * Module dependencies.
+ */
 var async = require('async');
 var bcrypt = require('bcryptjs');
 var moment = require('moment');
@@ -13,7 +15,7 @@ function User(){}
 
 
 /**
- *
+ * Login process
  * @param username
  * @param password
  * @param fn
@@ -56,7 +58,7 @@ User.login = function(username, password, fn) {
 
 
 /**
- * check if a username or user email is avaiable
+ * Check if a username or user email is avaiable
  * it can be use as user exists functionality
  * @param username
  * @param email
@@ -85,7 +87,7 @@ User.available = function(username,email,fn){
 
 
 /**
- *
+ * Insert a password reset token
  * @param email
  * @param token
  * @param callback
@@ -107,7 +109,7 @@ User.setResetToken = function (email,token, callback) {
 
 
 /**
- *
+ * Get password reset token
  * @param token
  * @param callback
  */
@@ -124,7 +126,7 @@ User.getResetToken = function (token, callback) {
 
 
 /**
- *
+ * Reset user password from reset token sent to email
  * @param uid
  * @param password
  * @param fn
@@ -164,7 +166,7 @@ User.resetPassword = function (uid, password, fn) {
 
 
 /**
- *
+ * Get problem status
  * @param id
  * @param callback
  */
@@ -181,7 +183,7 @@ User.problemStatus = function(id,callback){
 
 
 /**
- *
+ * Update user info
  * @param credentials
  * @param callback
  */
@@ -197,7 +199,7 @@ User.updateProfile = function(credentials,callback){
 
 
 /**
- *
+ * Change password from user profile settings
  * @param credentials
  * @param fn
  */

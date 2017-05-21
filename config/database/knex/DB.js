@@ -1,24 +1,31 @@
+'use strict';
 
-var async      = require('async');
-var dbPool     = require('./pool');
+/**
+ * Module dependencies.
+ */
+var async = require('async');
+var dbPool = require('./pool');
+var logger = require('winston');
 
 
-var colors      = require('colors');
-
+/**
+ *
+ * @param sql
+ * @param cb
+ */
 exports.execute = function(sql,cb){
 
-    console.log('[SQL-QUERY]: '.red + sql.cyan);
+    logger.debug('[SQL-QUERY]: ' + sql);
 
     async.waterfall([
         function(callback) {
 
             dbPool.getConnection(function(err, connection) {
                 if(err){
-                    connection.release();
-                    console.log('Error establishing connection with database'.red);
+                    logger.error('Error establishing connection with database');
                     return callback(err);
                 }
-                callback(null,connection);
+                return callback(null,connection);
             });
         },
         function(connection,callback) {
@@ -28,7 +35,7 @@ exports.execute = function(sql,cb){
                 connection.release();
 
                 if(err){
-                    console.log('Error querying database'.red);
+                    logger.error('Error querying database'.red);
                     return callback(err);
                 }
 
@@ -38,11 +45,11 @@ exports.execute = function(sql,cb){
     ], function (err, rows) {
 
         if(err){
-            console.log('[SQL-STAT]: Failed'.red);
-            console.error(err);
+            logger.error('[SQL-STAT]: Failed'.red);
+            logger.error(err);
             return cb(err);
         }
 
-        cb(null,rows);
+        return cb(null,rows);
     });
 };

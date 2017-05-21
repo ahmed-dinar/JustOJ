@@ -1,8 +1,14 @@
 'use strict';
 
+/**
+ * Module dependencies.
+ */
 var winston = require('winston');
 var path = require('path');
 var nconf = require('nconf');
+var chalk = require('chalk');
+
+console.log( chalk.cyan('Loading and setup logger...') );
 
 var ENV = nconf.get('NODE:ENV') || 'development';
 
@@ -12,6 +18,7 @@ Date.prototype.getMonthName = function() {
 };
 
 
+//logger custom log levels
 var levels = {
     levels: {
         fatal: 0,

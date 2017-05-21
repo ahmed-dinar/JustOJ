@@ -1,10 +1,8 @@
 'use strict';
 
 /**
- * Route for home page
- * @type {*|exports|module.exports}
+ * Module dependencies.
  */
-
 var express = require('express');
 var router = express.Router();
 
@@ -19,16 +17,14 @@ var isEmail = require('validator').isEmail;
 var rndm = require('rndm');
 var Codeforces = require('codeforces-api');
 var Nodemailer  = require('nodemailer');
+var config = require('nconf');
+var logger = require('winston');
 
-
-var Secrets = require('../files/secrets/Secrets');
 var User = require('../models/user');
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var ValidationSchema = require('../config/validator-schema');
 var CustomError = require('../lib/custom-error');
 var TempUser = require('../models/tempuser');
-
-var debug = require('debug')('routes:user');
 
 
 /**
@@ -87,7 +83,7 @@ router.get('/reset', function(req, res, next) {
         if(!rows.length)
             return next(new Error('invalid token'));
 
-        debug(rows);
+        logger.debug(rows);
 
         if( moment().isAfter(rows[0].token_expires) )
             return next(new Error('invalid token'));
@@ -139,8 +135,8 @@ router.get('/:username',function(req, res, next) {
         if(  profile.userData.publicemail && !isEmail(profile.userData.email) )
             profile.userData.publicemail = 0;
 
-        debug(profile);
-        debug(userData.social);
+        logger.debug(profile);
+        logger.debug(userData.social);
 
         res.render('user/profile',{
             active_nav: '',
@@ -166,7 +162,7 @@ router.post('/resetPassword', function(req, res, next) {
     }
 
     var resetToken = req.body.resetToken;
-    debug(req.body);
+    logger.debug(req.body);
 
     async.waterfall([
         function (callback) {
@@ -175,7 +171,7 @@ router.post('/resetPassword', function(req, res, next) {
                 if(err)
                     return callback(err);
 
-                debug(rows);
+                logger.debug(rows);
 
                 if( !rows.length || moment().isAfter(rows[0].token_expires) )
                     return callback('invalid token');
@@ -205,7 +201,7 @@ router.post('/resetPassword', function(req, res, next) {
             if(!info)
                 return next(new Error(err));
 
-            debug(info);
+            logger.debug(info);
             req.flash('errors', info);
             res.redirect('/user/reset?token=' + resetToken);
             return;
@@ -256,13 +252,13 @@ router.post('/reset', function(req, res, next) {
             if(!info)
                 return next(new Error(err));
 
-            debug(info);
+            logger.debug(info);
             req.flash('loginFailure', info);
             res.redirect('/login');
             return;
         }
 
-        debug(info);
+        logger.debug(info);
         req.flash('success','An email has been sent to ' + email);
         res.redirect('/login');
     });
@@ -282,10 +278,10 @@ function sendResetLink(token, email, host, callback) {
         service: "Gmail",
         auth: {
             type: 'OAuth2',
-            user: Secrets.mail,
-            clientId: Secrets.gmailOAuth2.client_id,
-            clientSecret: Secrets.gmailOAuth2.client_secret,
-            refreshToken: Secrets.gmailOAuth2.refresh_token
+            user: config.get('mail'),
+            clientId: config.get('gmail:oauth:clientId'),
+            clientSecret: config.get('gmail:oauth:clientSecret'),
+            refreshToken: config.get('gmail:oauth:refreshToken')
         }
     });
 
@@ -300,8 +296,8 @@ function sendResetLink(token, email, host, callback) {
         html: html
     };
 
-    debug('sending mail..');
-    debug(link);
+    logger.debug('sending mail..');
+    logger.debug(link);
 
     transporter.sendMail(mailOptions, callback);
 }
@@ -319,7 +315,7 @@ function generateToken(rows, callback) {
     if( !rows.length )
         return callback('404','no user found with this email');
 
-    debug('generating token..');
+    logger.debug('generating token..');
     crypto.randomBytes(20, function(err, buf) {
         if(err)
             return callback(err);
@@ -366,7 +362,7 @@ router.post('/settings/profile', function(req, res, next) {
         
         if(err){
             if( has(err,'name') && err.name === 'form' ){
-                debug(err.message.array());
+                logger.debug(err.message.array());
                 req.flash('err','form error');
                 res.redirect('/user/settings/profile');
                 return;
@@ -454,7 +450,7 @@ router.get('/settings/profile', isLoggedIn(true), function(req, res, next) {
         if( !userData.cf_username.length )
             profile.randomCfEmail = rndm(8);
 
-        debug(profile);
+        logger.debug(profile);
 
         res.render('user/settings/profile',{
             active_nav: '',
@@ -511,7 +507,7 @@ function getUvaInfo(uvaId, callback) {
 
             var uvaData = null;
             if(err || response.statusCode !== 200) {
-                debug(err);
+                logger.debug(err);
             }
             else{
                 body = JSON.parse(body);
@@ -538,12 +534,12 @@ function getCodeforcesInfo(cf_username, callback) {
     if( cf_username == '' )
         return callback(null,null);
 
-    Codeforces.setApis(Secrets.codeforces.key, Secrets.codeforces.secret);
+    Codeforces.setApis( config.get('codeforces:key'), config.get('codeforces:secret') );
     Codeforces.user.info({ handles: cf_username } , function (err, data) {
 
         var cfData = null;
         if(err) {
-            debug(err);
+            logger.debug(err);
         }
         else if( data.length ){
             data = data[0];
@@ -583,7 +579,7 @@ function getGithubInfo(githubToken, callback) {
 
             var gitData = null;
             if(err || response.statusCode !== 200) {
-                debug(err);
+                logger.debug(err);
             }
             else {
                 body = JSON.parse(body);
@@ -608,7 +604,7 @@ function getStackoverflowInfo(stackToken, callback) {
     if( stackToken == '' )
         return callback(null,null);
 
-    var profileUrl = 'https://api.stackexchange.com/2.2/me?site=stackoverflow&key=' + Secrets.stackexchange.key + '&access_token=' + stackToken;
+    var profileUrl = 'https://api.stackexchange.com/2.2/me?site=stackoverflow&key=' + config.get('stackexchange:key') + '&access_token=' + stackToken;
     request
         .get({
             url: profileUrl,
@@ -617,7 +613,7 @@ function getStackoverflowInfo(stackToken, callback) {
 
             var stackData = null;
             if(err || response.statusCode !== 200) {
-                debug(err);
+                logger.debug(err);
             }else{
                 body = JSON.parse(body);
                 stackData = {

@@ -1,7 +1,9 @@
 'use strict';
 
+/**
+ * Module dependencies.
+ */
 var express = require('express');
-var User = require('../models/user');
 var router = express.Router();
 
 var moment = require('moment');
@@ -9,13 +11,14 @@ var async = require('async');
 var _ = require('lodash');
 var url = require('url');
 var entities = require('entities');
+var logger = require('winston');
 
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var MyUtil = require('../lib/myutil');
 var Problems = require('../models/problems');
 var Submission = require('../models/submission');
 var Paginate = require('../lib/pagination/paginate');
-
+var User = require('../models/user');
 var Query = require('../config/database/knex/query');
 
 
@@ -54,11 +57,11 @@ router.get('/' , function(req, res, next) {
         function(err,rows,pagination) {
 
             if( err ){
-                console.log(err);
+                logger.debug(err);
                 return next(new Error(err));
             }
 
-            console.log(rows);
+            logger.debug(rows);
 
             res.render('status/status' , {
                 active_nav: 'status',
@@ -109,7 +112,7 @@ router.get('/u/:username' , isLoggedIn(true), function(req, res, next) {
     ] ,function (err, rows, pagination) {
         if( err ) return next(new Error(err));
 
-        console.log(rows);
+        logger.debug(rows);
 
         if( rows.length && rows[0].id === null )
             rows = [];
@@ -169,7 +172,7 @@ router.get('/u/:username/p/:pid' , isLoggedIn(true), function(req, res, next) {
     ], function (err, rows, pagination) {
         if( err ) return next(new Error(err));
 
-        console.log(rows);
+        logger.debug(rows);
 
         if( rows.length && rows[0].id === null )
             rows = [];
@@ -220,7 +223,7 @@ router.get('/:sid' , function(req, res, next) {
 
             runs.title = entities.decodeHTML(runs.title);
 
-            console.log(runs);
+            logger.debug(runs);
 
             res.render('status/cases' , {
                 active_nav: 'status',

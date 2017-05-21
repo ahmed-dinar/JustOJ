@@ -1,15 +1,22 @@
 'use strict';
 
+/**
+ * Module dependencies.
+ */
 var ConnectRoles = require('connect-roles');
-var debug = require('debug')('middlewares:role');
+var logger       = require('winston');
 
 
+/**
+ *
+ * @type {ConnectRoles}
+ */
 var roles = new ConnectRoles({
     failureHandler: function (req, res, action) {
 
         var accept = req.headers.accept || '';
 
-        debug('ACTION: ' + action);
+        logger.debug('userrole action ' + action);
 
         if( req.isAuthenticated() ){
             res.status(403).send('Access Denied');

@@ -1,14 +1,22 @@
 'use strict';
 
-
+/**
+ * Module dependencies.
+ */
 var _ = require('lodash');
 var async = require('async');
 var has = require('has');
+
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
 var Paginate = require('../lib/pagination/paginate');
 
 
+/**
+ *  Insert a submission
+ * @param inserts
+ * @param cb
+ */
 exports.insert = function(inserts,cb){
 
     var sql = Query.insert(inserts)
@@ -24,6 +32,12 @@ exports.insert = function(inserts,cb){
 };
 
 
+/**
+ * Update a submission
+ * @param sid
+ * @param inserts
+ * @param cb
+ */
 exports.update = function(sid,inserts,cb){
 
     var sql = Query('submissions').update(inserts).where('id',sid);
@@ -36,6 +50,11 @@ exports.update = function(sid,inserts,cb){
 };
 
 
+/**
+ * Add test case status of a submission
+ * @param inserts
+ * @param cb
+ */
 exports.addTestCase = function(inserts,cb){
     var sql = Query.insert(inserts)
         .into('submission_case');
@@ -49,7 +68,7 @@ exports.addTestCase = function(inserts,cb){
 
 
 /**
- *
+ * Insert submitted code
  * @param inserts
  * @param cb
  */
@@ -64,6 +83,14 @@ exports.insertCode = function(inserts,cb){
         });
 };
 
+
+/**
+ * Get individual test case status of a submission
+ * @param submissionId
+ * @param problemId
+ * @param userId
+ * @param cb
+ */
 exports.getTestCase = function(submissionId,problemId,userId,cb){
 
     var sql = Query.select(['sub.*','prob.title','cas.cases'])
@@ -97,7 +124,7 @@ exports.getTestCase = function(submissionId,problemId,userId,cb){
 
 
 /**
- *
+ * Get test case status to show of a specific submission
  * @param opts
  * @param cb
  */
@@ -137,15 +164,12 @@ exports.getPublicTestCase = function(opts,cb){
             .limit(1);
     }
 
-
-    DB.execute(
-        sql.toString()
-        ,cb);
+    DB.execute(sql.toString(),cb);
 };
 
 
 /**
- *
+ * Get a specific user submissions
  * @param username
  * @param cur_page
  * @param URL
@@ -188,7 +212,7 @@ exports.getUserSubmissions = function (username, cur_page, URL, cb) {
 
 
 /**
- *
+ * Get a specific user submission of a specific problem
  * @param username
  * @param problemId
  * @param cur_page

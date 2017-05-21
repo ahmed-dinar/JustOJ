@@ -1,10 +1,8 @@
 'use strict';
 
 /**
- * Route for home page
- * @type {*|exports|module.exports}
+ * Module dependencies.
  */
-
 var express = require('express');
 var router = express.Router();
 
@@ -24,6 +22,7 @@ var rimraf = require('rimraf');
 var url = require('url');
 var mkdirp = require('mkdirp');
 var logger = require('winston');
+var nconf = require('nconf');
 
 var MyUtil = require('../lib/myutil');
 var Submission = require('../models/submission');

@@ -1,17 +1,20 @@
 'use strict';
 
+/**
+ * Module dependencies.
+ */
 var _ = require('lodash');
 var async = require('async');
+var bcrypt = require('bcryptjs');
+var rndm = require('rndm');
+var Hashids = require('hashids');
 
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
 var Paginate = require('../lib/pagination/paginate');
 var MyUtil = require('../lib/myutil');
-var bcrypt = require('bcryptjs');
-var rndm = require('rndm');
-var Hashids = require('hashids');
-
 var User = require('./user');
+
 
 /**
  *

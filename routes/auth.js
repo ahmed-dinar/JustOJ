@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Module dependencies.
+ */
 var express = require('express');
 var router = express.Router();
 
@@ -13,27 +16,22 @@ var qs = require('qs');
 var cheerio = require('cheerio');
 var Codeforces = require('codeforces-api');
 var logger = require('winston');
+var config = require('nconf');
 
 var User = require('../models/user');
 var isLoggedIn = require('../middlewares/isLoggedIn');
-var Secrets = require('../files/secrets/Secrets');
 
+//token for oauth callback verification
 var tokens = new Tokens();
 var OAuth2;
 var csrfToken;
 
-var crypto = require('crypto');
 
+/**
+ *
+ */
 router.get('/' , function(req, res, next) {
-
-    crypto.randomBytes(32, function(err, buf) {
-        if(err)
-            return next(new Error(err));
-
-        var token = buf.toString('hex');
-        res.end(token);
-    });
-
+    res.status(404);
 });
 
 
@@ -195,7 +193,7 @@ router.post('/codeforces' , function(req, res, next) {
  */
 function verifyCodeforces(cfUsername, cfEmail, callback) {
 
-    Codeforces.setApis(Secrets.codeforces.key, Secrets.codeforces.secret);
+    Codeforces.setApis( config.get('codeforces:key'), config.get('codeforces:secret'));
     Codeforces.user.info({ handles: cfUsername } , function (err, data) {
         if(err){
             logger.error(err);
@@ -231,13 +229,13 @@ router.get('/google', isLoggedIn(true), function(req, res, next) {
          return disconnectOAuth('google+', { google_id: '' } , req, res);
 
     authorizeUser({
-        client_id: Secrets.google.client_id,
-        client_secret: Secrets.google.client_secret,
+        client_id: config.get('google:client_id'),
+        client_secret: config.get('google:client_secret'),
         baseUrl: '',
         authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
         tokenUrl: 'https://www.googleapis.com/oauth2/v4/token'
     } , {
-        client_id: Secrets.google.client_id,
+        client_id: config.get('google:client_id'),
         redirect_uri: 'http://localhost:8888/auth/google/callback',
         response_type: 'code',
         scope: 'profile'
@@ -338,13 +336,13 @@ router.get('/facebook' , isLoggedIn(true), function(req, res, next) {
         return disconnectOAuth('facebook', { fb_id: '' } , req, res);
 
     authorizeUser({
-        client_id: Secrets.facebook.app_id,
-        client_secret: Secrets.facebook.app_secret,
+        client_id: config.get('facebook:app_id'),
+        client_secret: config.get('facebook:app_secret'),
         baseUrl: '',
         authUrl: "https://www.facebook.com/v2.9/dialog/oauth",
         tokenUrl: "https://graph.facebook.com/v2.9/oauth/access_token"
     }, {
-        client_id: Secrets.facebook.app_id,
+        client_id: config.get('facebook:app_id'),
         redirect_uri: 'http://localhost:8888/auth/facebook/callback',
         response_type: 'code',
         scope: 'public_profile'
@@ -434,14 +432,14 @@ router.get('/linkedin' , isLoggedIn(true), function(req, res, next) {
         return disconnectOAuth('linkedin', { linkedin_id: '' } , req, res);
 
     authorizeUser({
-        client_id: Secrets.linkedin.client_id,
-        client_secret: Secrets.linkedin.client_secret,
+        client_id: config.get('linkedin:client_id'),
+        client_secret: config.get('linkedin:client_secret'),
         baseUrl: 'https://www.linkedin.com/',
         authUrl: 'oauth/v2/authorization',
         tokenUrl: 'oauth/v2/accessToken'
     }, {
         response_type: 'code',
-        client_id: Secrets.linkedin.client_id,
+        client_id: config.get('linkedin:client_id'),
         redirect_uri: 'http://localhost:8888/auth/linkedin/callback',
         scope: "r_basicprofile"
     }, req, res, next);
@@ -534,8 +532,8 @@ router.get('/github' , isLoggedIn(true), function(req, res, next) {
         return disconnectOAuth('github', { github_token: '' } , req, res);
 
     authorizeUser({
-        client_id: Secrets.github.client_id,
-        client_secret: Secrets.github.client_secret,
+        client_id: config.get('github:client_id'),
+        client_secret: config.get('github:client_secret'),
         baseUrl: 'https://github.com/',
         authUrl: 'login/oauth/authorize',
         tokenUrl: 'login/oauth/access_token'
@@ -627,15 +625,15 @@ router.get('/stackexchange' , isLoggedIn(true), function(req, res, next) {
         return disconnectOAuth('stackoverflow', { stack_token: '' } , req, res);
 
     authorizeUser({
-        client_id: Secrets.stackexchange.client_id,
-        client_secret: Secrets.stackexchange.client_secret,
+        client_id: config.get('stackexchange:client_id'),
+        client_secret: config.get('stackexchange:client_secret'),
         baseUrl: 'https://stackexchange.com/',
         authUrl: 'oauth',
         tokenUrl: 'oauth/access_token'
     }, {
         redirect_uri: 'http://localhost:8888/auth/stackexchange/callback',
         scope: "read_inbox,no_expiry",
-        client_id: Secrets.stackexchange.client_id
+        client_id: config.get('stackexchange:client_id')
     }, req, res, next);
 });
 
@@ -672,7 +670,7 @@ router.get('/stackexchange/callback', isLoggedIn(true), function (req, res) {
         /*
          function (access_token , callback) {
 
-         var profileUrl = 'https://api.stackexchange.com/2.2/me?site=stackoverflow&key=' + Secrets.stackexchange.key + '&access_token=' + access_token;
+         var profileUrl = 'https://api.stackexchange.com/2.2/me?site=stackoverflow&key=' + config.get('stackexchange.key + '&access_token=' + access_token;
          request
          .get(profileUrl , function (err, response, body) {
          if(err)

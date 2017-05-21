@@ -1,10 +1,8 @@
 'use strict';
 
 /**
- * Login page route
- * @type {*|exports|module.exports}
+ * Module dependencies.
  */
-
 var express = require('express');
 var passport = require('passport');
 var isLoggedIn = require('../middlewares/isLoggedIn');

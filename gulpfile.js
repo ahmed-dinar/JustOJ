@@ -61,7 +61,7 @@ gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
     nodemonExec +=  'NODE_ENV=development node ';
 
     var options = {
-        script: 'bin/www',
+        script: 'server.js',
         ext: 'ejs js',
         exec: nodemonExec,
         nodeArgs: []
@@ -79,7 +79,7 @@ gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
         })
         .on('restart', function () {
 
-            gulp.src('bin/www');
+            gulp.src('server.js');
                // .pipe(livereload({ auto: false }));
                 //.pipe(notify('Page Reloading...'));
         });

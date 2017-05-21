@@ -1,28 +1,23 @@
 'use strict';
 
 /**
- *
- * @type {exports|module.exports}
+ * Module dependencies.
  */
-
-
 var has = require('has');
-var bcrypt      = require('bcryptjs');
-var moment      = require("moment");
+var bcrypt = require('bcryptjs');
+var moment = require("moment");
 var crypto = require('crypto');
-var Nodemailer  = require('nodemailer');
-var async       = require('async');
+var Nodemailer = require('nodemailer');
+var async = require('async');
+var config = require('nconf');
+var logger = require('winston');
 
-var DB          = require('../config/database/knex/DB');
-var Query       = require('../config/database/knex/query');
-
-var Secrets     = require('../files/secrets/Secrets');
-
-var debug = require('debug')('models:tempuser');
+var DB = require('../config/database/knex/DB');
+var Query = require('../config/database/knex/query');
 
 
 /**
- *
+ * Resister a user temporarily for further email confirmation
  * @param req
  * @param cb
  */
@@ -43,7 +38,7 @@ exports.resister = function (req, cb) {
         },
         function (hash, callback) {
 
-            debug('generating token...');
+            logger.debug('generating token...');
             crypto.randomBytes(20, function(err, buf) {
                 if(err)
                     return callback(err);
@@ -70,7 +65,7 @@ exports.resister = function (req, cb) {
             })
                 .into('temp_user');
 
-            debug('saving temp user..');
+            logger.debug('saving temp user..');
 
             DB.execute(
                 sql.toString()
@@ -86,10 +81,10 @@ exports.resister = function (req, cb) {
                 service: "Gmail",
                 auth: {
                     type: 'OAuth2',
-                    user: Secrets.mail,
-                    clientId: Secrets.gmailOAuth2.client_id,
-                    clientSecret: Secrets.gmailOAuth2.client_secret,
-                    refreshToken: Secrets.gmailOAuth2.refresh_token
+                    user: config.get('mail'),
+                    clientId: config.get('gmail:oauth:clientId'),
+                    clientSecret: config.get('gmail:oauth:clientSecret'),
+                    refreshToken: config.get('gmail:oauth:refreshToken')
                 }
             });
 
@@ -104,7 +99,7 @@ exports.resister = function (req, cb) {
                 html: html
             };
 
-            debug('sending mail..');
+            logger.debug('sending mail to '+ email +'..');
 
             transporter.sendMail(mailOptions, callback);
         }
@@ -113,7 +108,7 @@ exports.resister = function (req, cb) {
 
 
 /**
- *
+ * Verify a user by token sent to email
  * @param token
  * @param cb
  */

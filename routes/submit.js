@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Module dependencies.
+ */
 var express = require('express');
 var router = express.Router();
 
@@ -10,14 +13,13 @@ var mkdirp = require('mkdirp');
 var async = require('async');
 var has = require('has');
 var entities = require('entities');
+var logger = require('winston');
 
 var isLoggedIn = require('../middlewares/isLoggedIn');
 var Judge = require('../lib/compiler/sandbox/judge');
 var MyUtil = require('../lib/myutil');
 var Problems = require('../models/problems');
 var Submission = require('../models/submission');
-
-var colors = require('colors');
 
 router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
@@ -47,7 +49,7 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
 
         if( error ){
 
-            console.log(error);
+            logger.debug(error);
 
             if( typeof error !== 'object' ) return next(new Error(error));
 
@@ -69,18 +71,18 @@ router.post('/:pid', isLoggedIn(true), function(req, res, next) {
             return next(new Error(error));
         }
 
-        console.log('Successfully Submitted'.green);
+        logger.debug('Successfully Submitted'.green);
         res.redirect('/status/' + opts.submissionId);
 
 
         //run code against test cases in sandbox
         Judge.run(opts,function(err,runs){
             if( err ){
-                console.log('Judge Error!'.red);
+                logger.debug('Judge Error!'.red);
                 return;
             }
-            console.log('successfully run!'.green);
-            console.log(runs);
+            logger.debug('successfully run!'.green);
+            logger.debug(runs);
         });
     });
 });
@@ -135,7 +137,7 @@ var getForm = function(req,opts,cb){
 
     busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
         language = val;
-        console.log(('[' + fieldname + '] = ' + val).yellow);
+        logger.debug(('[' + fieldname + '] = ' + val).yellow);
     });
 
 
@@ -143,7 +145,7 @@ var getForm = function(req,opts,cb){
 
         if( filename.length ){
 
-            console.log((filename +' receieved with mimetype: ' + mimetype).yellow);
+            logger.debug((filename +' receieved with mimetype: ' + mimetype).yellow);
 
             fstream = fs.createWriteStream(opts.codeDir + '/code.txt');
 
@@ -163,19 +165,19 @@ var getForm = function(req,opts,cb){
     busboy.on('finish', function() {
 
         if( error === 1 ){
-            console.log('Submit Source Required'.red);
+            logger.debug('Submit Source Required'.red);
             return cb({ formError: 'Source Required' });
         }
 
         if( error === 2 ){
-            console.log('Source Size Limit Exceeded'.red);
+            logger.debug('Source Size Limit Exceeded'.red);
             return cb({ formError: 'Source Size Limit Exceeded' });
         }
 
 
         fstream.on('close', function () {
 
-            console.log('fstream closed');
+            logger.debug('fstream closed');
 
             if( language ){
                 opts['language'] = language;
@@ -185,7 +187,7 @@ var getForm = function(req,opts,cb){
                 return cb(null,opts);
             }
 
-            console.log('language Required'.red);
+            logger.debug('language Required'.red);
             cb({ formError: 'empty fields of sumission form' });
         });
     });
@@ -214,7 +216,7 @@ var insertSubmissionIntoDb = function (submissionStatus,opts,callback) {
                 memory: '0'
             },function(err,sid){
                 if( err ){
-                    console.log('inserting Submission error!'.bold.red);
+                    logger.debug('inserting Submission error!'.bold.red);
                     return cb(err);
                 }
                 opts['submissionId'] = String(sid);
@@ -227,10 +229,10 @@ var insertSubmissionIntoDb = function (submissionStatus,opts,callback) {
 
             fs.readFile(opts.codeDir + '/code.txt', 'utf8', function(err, submittedCode) {
                 if (err){
-                    console.log('error reading code file code'.red);
+                    logger.debug('error reading code file code'.red);
                     return cb(err);
                 }
-                console.log(submittedCode);
+                logger.debug(submittedCode);
                 cb(null,submittedCode);
             });
         },
@@ -244,14 +246,14 @@ var insertSubmissionIntoDb = function (submissionStatus,opts,callback) {
                 code: submittedCode
             },function(err){
                 if(err){
-                    console.log('error inserting code'.red);
+                    logger.debug('error inserting code'.red);
                     return cb(err);
                 }
                 cb();
             });
         }
     ], function (error) {
-        if(error) console.log(error);
+        if(error) logger.debug(error);
         callback(null,opts);
     });
 };
@@ -265,7 +267,7 @@ var insertSubmissionIntoDb = function (submissionStatus,opts,callback) {
 var incrementSubmission = function (opts,callback) {
     Problems.updateSubmission(opts.problemId, 'submissions', function(err){
         if( err ){
-            console.log('Updating submission errr'.red);
+            logger.debug('Updating submission errr'.red);
             return callback(err);
         }
         callback(null,opts);
@@ -281,10 +283,10 @@ var incrementSubmission = function (opts,callback) {
 var makeTempDir = function(opts,cb){
     mkdirp(opts.codeDir, function (err) {
         if (err) {
-            console.log(opts.codeDir + ' creation failed! permission denied!!'.underline.red);
+            logger.debug(opts.codeDir + ' creation failed! permission denied!!'.underline.red);
             return cb(err);
         }
-        console.log((opts.codeDir + ' Created').green);
+        logger.debug((opts.codeDir + ' Created').green);
         cb(null,opts);
     });
 };
@@ -297,8 +299,8 @@ var makeTempDir = function(opts,cb){
 var renameSource = function(opts,cb) {
     fs.rename(opts.codeDir + '/code.txt', opts.codeDir + '/code.' + opts.language, function(err) {
         if ( err ) {
-            console.log('ERROR renaming: ');
-            console.log(err);
+            logger.debug('ERROR renaming: ');
+            logger.debug(err);
             return cb({ systemError: 'error renaming code file' },opts);
         }
         cb(null,opts);

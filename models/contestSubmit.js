@@ -1,6 +1,8 @@
 'use strict';
 
-
+/**
+ * Module dependencies.
+ */
 var path = require('path');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
