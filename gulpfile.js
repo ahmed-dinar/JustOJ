@@ -58,7 +58,7 @@ gulp.task('default', /*(args.debug) ? ['debug'] : null,*/ function () {
   //  livereload.listen();
 
     var nodemonExec = args.sudo ? 'sudo ' : '';
-    nodemonExec +=  'NODE_ENV=development node ';
+    nodemonExec +=  'NODE_ENV='+ (process.env.NODE_ENV || 'development')  +' node ';
 
     var options = {
         script: 'server.js',

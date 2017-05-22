@@ -1,16 +1,18 @@
+'use strict';
 
+/**
+ * Module dependencies.
+ */
 var fs = require('fs');
 var Busboy = require('busboy');
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 var async = require('async');
+var logger = require('winston');
 
-var MyUtil = require('.././myutil');
-var Judge = require('.././problemSetter/settersJudge');
-
-
-var colors = require('colors');
+var MyUtil = require('../../lib/myutil');
+var Judge = require('../../lib/problemSetter/settersJudge');
 
 
 module.exports = function(req, res, next) {
@@ -28,7 +30,8 @@ module.exports = function(req, res, next) {
         },
         function(opts,callback){
             fs.rename(uploadFile+'/code.txt', uploadFile+'/code.' + opts['language'], function(err){
-                if(err ){ return callback(err); }
+                if(err )
+                    return callback(err);
 
                 callback(null,opts);
             });
@@ -41,7 +44,7 @@ module.exports = function(req, res, next) {
             opts['tcDir'] = MyUtil.TC_DIR + '/' + pID;
             opts['codeDir'] = uploadFile;
 
-            console.log('calling Judge runner....'.green);
+            logger.debug('calling Judge runner....'.green);
 
             Judge.run(opts,function(err,result){
                 callback(err,result);
@@ -49,29 +52,25 @@ module.exports = function(req, res, next) {
         }
     ], function (error, runs) {
 
-        cleanSubmit(uploadFile);
+        cleanSubmit(uploadFile, function (err) {
 
-        if( error ){
-            console.log('in tjs:');
-            console.log(error);
-            if( error.formError ){
-                res.json(error);
-            }
-            else if( runs.compiler ){
+            if( error ){
+                logger.error(error);
+                if( error.formError ){
+                    res.json(error);
+                }
+                else if( runs.compiler ){
+                    res.json(runs);
+                }
+                else{
+                    res.json({ system: error });
+                }
+            }else{
+                logger.debug(runs);
                 res.json(runs);
             }
-            else{
-                res.json({ system: error });
-            }
-        }else{
-            console.log(runs);
-            res.json(runs);
-        }
-
-        res.end();
-
+        });
     });
-
 };
 
 
@@ -96,7 +95,7 @@ var getForm = function(uploadFile,req,cb){
 
     busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
         limits[fieldname] = val;
-        console.log(('[' + fieldname + '] = ' + val).yellow);
+        logger.debug(('[' + fieldname + '] = ' + val).yellow);
     });
 
 
@@ -104,7 +103,7 @@ var getForm = function(uploadFile,req,cb){
 
         if( filename.length ){
 
-            console.log((filename +' receieved with mimetype: ' + mimetype).yellow);
+            logger.debug((filename +' receieved with mimetype: ' + mimetype).yellow);
 
             fstream = fs.createWriteStream(uploadFile + '/code.txt');
 
@@ -124,21 +123,19 @@ var getForm = function(uploadFile,req,cb){
     busboy.on('finish', function() {
 
         if( error === 1 ){
-            console.log('Submit Source Required'.red);
+            logger.debug('Submit Source Required'.red);
             return cb({ formError: 'Source Required' });
         }
 
         if( error === 2 ){
-            console.log('Source Size Limit Exceeded'.red);
+            logger.debug('Source Size Limit Exceeded'.red);
             return cb({ formError: 'Source Size Limit Exceeded' });
         }
 
 
         fstream.on('close', function () {
 
-            console.log('fstream closed');
-
-
+            logger.debug('fstream closed');
 
             if( limits['tl'] && limits['ml'] ){
                 opts['language'] = limits['language'];
@@ -147,11 +144,9 @@ var getForm = function(uploadFile,req,cb){
                 return cb(null,opts);
             }
 
-            console.log('Field Required'.red);
+            logger.debug('Field Required'.red);
             cb({ formError: 'Time limit and Memory limit required' });
         });
-
-
     });
 
     req.pipe(busboy);
@@ -162,10 +157,10 @@ var getForm = function(uploadFile,req,cb){
 var makeTempDir = function(saveTo,cb){
     mkdirp(saveTo, function (err) {
         if (err) {
-            console.log('OMG ' + saveTo + ' creation failed! permission denied!!');
+            logger.debug('OMG ' + saveTo + ' creation failed! permission denied!!');
             return cb(err);
         }
-        console.log((saveTo + ' Created').green);
+        logger.debug((saveTo + ' Created').green);
         cb();
     });
 };
@@ -173,13 +168,14 @@ var makeTempDir = function(saveTo,cb){
 
 
 //clean up submitted code and run files
-function cleanSubmit(codeDir){
+function cleanSubmit(codeDir, cb){
     rimraf(codeDir, function (err) {
         if( err ){
-            console.log(err);
-            return;
+            logger.debug(err);
+            return cb(err);
         }
 
-        console.log('success clean submit!'.green);
+        logger.debug('success clean submit!'.green);
+        cb();
     });
 }

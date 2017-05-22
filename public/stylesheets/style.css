@@ -13,8 +13,6 @@ body {
   background: #F1F1EB; /* f7f7f7 F1F1EB eef2f5*/
 }
 
-
-
 .navbar-brand{
   /*font-family: 'Baloo', cursive;
   font-family: 'Black Ops One', cursive;
@@ -25,16 +23,23 @@ body {
 
 
   font-family: 'Pacifico', cursive;
- */
 
+*/
 
   font-family: 'Sofia', cursive;
   font-size: 15px;
-  padding-top: 8px;
+
   line-height: 1.1em;
 
+  -webkit-perspective:1000;
+  perspective:1000;
+
+  padding-top: 8px;
   padding-left: 30px;
 }
+
+
+
 
 .navbar-brand p{
   margin: 0;
@@ -43,7 +48,7 @@ body {
   padding-left: 3px;
 }
 
-/* http://www.developerdrive.com/2015/01/8-simple-css-hover-effects/ */
+/* http://www.developerdrive.com/2015/01/8-simple-css-hover-effects/
 @keyframes bounce {
   0%, 20%, 60%, 100% {
     -webkit-transform: translateY(0);
@@ -64,8 +69,9 @@ body {
 .navbar-brand:hover{
   animation: bounce 1s;
 }
+*/
 
-
+/*
 .brand-logo{
 
   font-family: 'Russo One', sans-serif;
@@ -76,19 +82,20 @@ body {
   transform-style: preserve-3d;
   margin: 0px auto;
   margin-top: -5px;
-  background: #10A9F5; /* 07AD91  0391c9*/
+  background: #10A9F5; /* 07AD91  0391c9
   color: #ddd;
   border: none;
   border-radius: 50px;
   width: 30px;
   height: 30px;
   position: relative;
- /* box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);*/
+ /* box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
 }
 
 .navbar-brand > .brand-logo{
   padding: 6px 11px 5px 11px;
 }
+*/
 
 .c-h{
   min-height: 580px;
@@ -100,14 +107,11 @@ body {
   box-shadow: none;
 }
 
-
 a{
  /* color: #1D906A;*/
  /* color: #06937B;*/
   color: #239d60;
 }
-
-
 
 .content{
   padding-top: 30px;
@@ -152,7 +156,6 @@ footer{
 }*/
 
 
-
 .problem-list tr td:nth-child(1){
   width:1%;
 }
@@ -165,7 +168,6 @@ footer{
   width:65%;
 }
 
-
 .problem-list tr td:nth-child(4){
   width:7%;
 }
@@ -174,12 +176,9 @@ footer{
   width:7%;
 }
 
-
 .problem-list tr td:nth-child(6){
   width:17%;
 }
-
-
 
 .problem-list .pl-title{
   /*color: #1D906A;*/
@@ -187,13 +186,9 @@ footer{
   max-width: 100px;
 }
 
-
 .pl-title:hover{
   text-decoration: underline;
 }
-
-
-
 
 .recaptchatable #recaptcha_response_field {
   font-size: 11pt;

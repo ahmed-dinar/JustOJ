@@ -1,3 +1,8 @@
+'use strict';
+
+/**
+ * Module dependencies.
+ */
 var Problems = require('../../models/problems');
 var Busboy = require('busboy');
 var uuid = require('uuid');
@@ -6,6 +11,7 @@ var path = require('path');
 var async = require('async');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
+var logger = require('winston');
 
 module.exports = function(req,res,next){
     var module = {};
@@ -15,9 +21,10 @@ module.exports = function(req,res,next){
         async.waterfall([
             function(callback) {
                 Problems.findById(req.params.pid,['id'],function(err,row){
-                    if( err ) return callback(err);
+                    if( err )
+                        return callback(err);
 
-                    if( row.length === 0 ) return callback('what you r looking for!');
+                    if( row.length === 0 ) return callback('404 no problem found');
 
                     callback();
                 });
@@ -27,21 +34,24 @@ module.exports = function(req,res,next){
                 fs.readdir(rootDir, function(err, files) {
 
                     if( err ){
-                        if( err.code === 'ENOENT' ) return callback(null,[]);   //no test cases added yet!
+                        if( err.code === 'ENOENT' )
+                            return callback(null,[]);   //no test cases added yet!
 
-                        console.log('getTestCases error:: ');
-                        console.log(err);
-                        return callback('getTestCases error');
+                        return callback(err);
                     }
 
-                    if(files) return callback(null,files);
+                    if(files)
+                        return callback(null,files);
 
                     callback(null,[]);
                 });
             }
         ], function (error, row) {
 
-            if( error ) return next(error);
+            if( error ) {
+                logger.error(error);
+                return next(error);
+            }
 
             res.render('problem/edit/step_2', {
                 active_nav: 'problems',
@@ -69,24 +79,32 @@ module.exports = function(req,res,next){
         async.waterfall([
             function(callback) {
                 Problems.findById(req.params.pid,['id'],function(err,row){
-                    if( err ) return callback(err);
+                    if( err )
+                        return callback(err);
 
-                    if( row.length == 0 ) { return callback('what you r looking for!'); }
+                    if( row.length == 0 )
+                        return callback('404 no problem found');
 
                     callback();
                 });
             },
             function(callback) {
                 mkdirp(saveTo, function (err) {
-                    if (err) return callback(err);
 
-                    console.log(namemap[0] + ' created!');
+                    if (err)
+                        return callback(err);
+
+                    logger.info(namemap[0] + ' test case dir created! for problem id: ' + req.params.pid);
+
                     callback();
                 });
             }
         ], function (error) {
 
-            if(error) return next(error);
+            if(error) {
+                logger.error(error);
+                return next(error);
+            }
 
             var busboy = new Busboy({ headers: req.headers });
             var noFile = 0;
@@ -129,9 +147,9 @@ var clearUpload = function(remDir,req,res){
 
     rimraf(remDir, function(error){
         if( error )
-            console.log(error);
+            logger.error(error);
         else
-            console.log('Cleaned uploaded TC');
+            logger.debug('Cleaned uploaded TC');
 
         req.flash('tcUpErr', 'Please Select File');
         res.redirect('/problems/edit/' + req.params.pid + '/2');

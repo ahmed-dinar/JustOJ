@@ -210,7 +210,8 @@ exports.insertContestProblem = function(req,fn){
     DB.execute(
         sql.toString()
         ,function(err,rows){
-            if( err ) { return fn(err); }
+            if( err )
+                return fn(err);
 
             fn(null,rows.insertId);
         });
@@ -250,13 +251,7 @@ exports.updateLimits = function(pid,limits,fn){
     var sql = Query('problems').update(limits)
         .where({ 'id': pid });
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            if( err ){ return fn(err); }
-
-            fn();
-        });
+    DB.execute(sql.toString(), fn);
 };
 
 
@@ -269,15 +264,22 @@ exports.updateSubmission = function(pid,col,fn){
 
     var sql = Query('problems').increment(col,1).where('id',pid);
 
-    DB.execute(
-        sql.toString()
-        ,function(err,rows){
-            if( err ){ return fn(err); }
-
-            fn();
-        });
+    DB.execute(sql.toString(), fn);
 };
 
+
+/**
+ * Update problem by provided columns
+ * @param pid
+ * @param cols
+ * @param fn
+ */
+exports.updateByColumn = function (pid, cols, fn) {
+
+    var sql = Query('problems').update(cols).where({ 'id': pid });
+
+    DB.execute(sql.toString(), fn);
+};
 
 
 /**
@@ -300,8 +302,13 @@ exports.decodeToHTML = function(data){
 };
 
 
+/**
+ *
+ * @param req
+ * @param fn
+ */
 exports.updateContestProblem = function(req,fn){
-    updateProblem(req,fn);
+    return updateProblem(req,fn);
 };
 
 

@@ -23,7 +23,7 @@
 <div class="content container c-h">
     <div class="row">
 
-    <div class="col-md-10 nopadding">
+    <div class="col-md-10">
         <% if (successMsg.length) { %>
             <div class="col-md-6 col-md-offset-3">
                 <div class="alert alert-success alert-dismissible" role="alert">
@@ -68,7 +68,7 @@
 
     </div>
 
-    <div class="col-md-10 nopadding">
+    <div class="col-md-10">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4>Add Test Cases</h4>
@@ -149,6 +149,11 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+
+            $(".alert").fadeTo(3500, 500).slideUp(500, function(){
+                $(".alert").slideUp(500);
+            });
+
 
             //remove TC
             $(document).on('click', '.remove', function () {

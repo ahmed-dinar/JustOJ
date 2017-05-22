@@ -1717,10 +1717,28 @@ router.post('/edit/:cid/problems/rtc', isLoggedIn(true) , roles.is('admin'), fun
     if( !req.body.pid || !req.body.casename )
         return next(new Error('No Request body found'));
 
-    var TCDir = path.normalize(process.cwd() + '/files/tc/p/' + req.body.pid + '/' + req.body.casename);
+    async.waterfall([
+            function(callback) {
+                Problems.findById(req.body.pid, ['id'],function(err,row){
 
-    logger.debug('tc to remove ' + TCDir);
-    rimraf(TCDir, function (err) {
+                    if( err )
+                        return callback(err);
+
+                    if( !row || !row.length )
+                        return callback('404');
+
+                    return callback();
+                });
+            },
+            function(callback) {
+
+                var TCDir = path.normalize(process.cwd() + '/files/tc/p/' + req.body.pid + '/' + req.body.casename);
+
+                logger.debug('tc to remove ' + TCDir);
+
+                rimraf(TCDir, callback);
+            }
+    ], function (err) {
 
         if( err ){
             logger.error(err);
@@ -1732,6 +1750,7 @@ router.post('/edit/:cid/problems/rtc', isLoggedIn(true) , roles.is('admin'), fun
         res.redirect('/contests/edit/'+ req.params.cid +'/problems/'+ req.body.pid +'/step2');
     });
 });
+
 
 
 /**

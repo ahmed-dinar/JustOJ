@@ -31,7 +31,9 @@ module.exports.setupConfig = function () {
 
     console.log( chalk.cyan('Loading and setup configs...') );
 
-    nconf.argv().env('_');
+    nconf
+        .argv()
+        .env('_');
     global.env = nconf.get('NODE:ENV') || 'development';
 
     var configPath = path.join(__dirname, 'config/env/' + global.env + '.json');
@@ -139,7 +141,7 @@ module.exports.loadErrorRoutes = function (app) {
 
     // development error handler
     // will print stacktrace
-    if (nconf.get('NODE:ENV') === 'development') {
+    if (global.env === 'development') {
         app.use(function(err, req, res, next) {
             res.status(err.status || 500);
             res.render('error', {
@@ -191,7 +193,7 @@ module.exports.normalizePort = function (val) {
 module.exports.initServer = function (app) {
 
     //set port for express app server
-    app.set('port', this.normalizePort( nconf.get('PORT') || '8888') );
+    app.set('port', this.normalizePort( nconf.get('PORT') || '3000') );
 
     /*
     if ( nconf.get('ssl') ) {

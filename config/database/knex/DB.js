@@ -45,8 +45,7 @@ exports.execute = function(sql,cb){
     ], function (err, rows) {
 
         if(err){
-            logger.error('[SQL-STAT]: Failed'.red);
-            logger.error(err);
+            logger.error('[SQL-STAT]: Failed', err);
             return cb(err);
         }
 

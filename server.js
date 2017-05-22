@@ -37,9 +37,9 @@ function onError(error) {
         throw error;
     }
 
-    var bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
+    var bind = typeof app.get('port') === 'string'
+        ? 'Pipe ' + app.get('port')
+        : 'Port ' + app.get('port');
 
     // handle specific listen errors with friendly messages
     switch (error.code) {

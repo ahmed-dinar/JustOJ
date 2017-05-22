@@ -32,13 +32,13 @@ function onListening() {
  * Event listener for HTTP server "error" event.
  */
 function onError(error) {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
 
-    var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+    if (error.syscall !== 'listen')
+        throw error;
+
+    var bind = typeof app.get('port') === 'string'
+    ? 'Pipe ' + app.get('port')
+    : 'Port ' + app.get('port');
 
   // handle specific listen errors with friendly messages
     switch (error.code) {

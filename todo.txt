@@ -1,37 +1,23 @@
 
 #**#  USE mysql triggers for contest rank and problem status
 
-** avoid using body-parser, use middlewares / form packages
-
-# set problem status to incomplete when remove all test cases
 # no test case option for a problem and judge
-# compare result program
-# add object status of every ajax call
 # admin panel
     - contest admin panel
             - rejudge
 # proper next() error handling
 # implement error page
-# Ranks
-# add csrf
 # update registration process
     - better way to  use tepm user? may be avoid this db?
     - setup cron job for deleting expired temp user
-# may be separate judge server?
-# cluster for multithreading??
 
 
 ## of course possible tests!
-## java sandbox (java support)
-## C++11 and C++14 support
-
 ### ReactJS in front end
-
 # add test cases in datatbase insted of file system (or may be not?)
 
 
-
----- IN FUTURE ----
+---- FUTURE WORKS ----
 # integrate MOSS for Detecting Plagiarism
 # set different language for problems
 # open compiler for custom test

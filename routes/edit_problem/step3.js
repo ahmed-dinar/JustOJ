@@ -1,8 +1,14 @@
+'use strict';
+
+/**
+ * Module dependencies.
+ */
 var Problems = require('../../models/problems');
-var MyUtil = require('.././myutil');
+var MyUtil = require('../../lib/myutil');
 var fs = require('fs');
 var path = require('path');
 var async = require('async');
+var logger = require('winston');
 
 
 module.exports = function(req,res,next){
@@ -14,9 +20,11 @@ module.exports = function(req,res,next){
         async.waterfall([
             function(callback) {
                 Problems.findById(req.params.pid,['id'],function(err,row){
-                    if( err ) return callback(err);
+                    if( err )
+                        return callback(err);
 
-                    if( row.length === 0 ) return callback('what you r looking for!');
+                    if( !row.length )
+                        return callback('404, No problem found');
 
                     callback();
                 });
@@ -24,26 +32,29 @@ module.exports = function(req,res,next){
             function(callback){
                 var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid);
                 fs.readdir(rootDir, function(err, files) {
-                    if( err ){
-                        if( err.code === 'ENOENT' ) return callback(null,'Please add test case first');   //no test cases added yet!
 
-                        console.log('getTestCases error:: ');
-                        console.log(err);
+                    if( err ){
+                        if( err.code === 'ENOENT' )
+                            return callback(null,'Please add some test case first');   //no test cases added yet!
+
                         return callback(err);
                     }
 
-                    if(!files || files.length === 0)
-                        return callback(null,'Please add test case first');
+                    if(!files || !files.length)
+                        return callback(null,'Please add some test case first');
 
                     callback();
                 });
             }
         ], function (error, noTest) {
 
-            if (error) return next(error);
+            if (error) {
+                logger.error(error);
+                return next(error);
+            }
 
             if (noTest){
-                req.flash('noTestCase', 'Please add at least one test case');
+                req.flash('noTestCase', 'Please add some test case.');
                 return res.redirect('/problems/edit/' + req.params.pid + '/2');
             }
 
@@ -57,7 +68,6 @@ module.exports = function(req,res,next){
                 error: req.flash('error')
             });
         });
-
     };
 
     module.post = function(){
@@ -86,9 +96,11 @@ module.exports = function(req,res,next){
         async.waterfall([
             function(callback) {
                 Problems.findById(req.params.pid,['id'],function(err,row){
-                    if( err ) return next(new Error(err));
+                    if( err )
+                        return next(new Error(err));
 
-                    if( row.length == 0 ) return next(new Error('what you r looking for!'));
+                    if( row.length == 0 )
+                        return next(new Error('404 no problem found'));
 
                     callback();
                 });
@@ -97,10 +109,9 @@ module.exports = function(req,res,next){
                 var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + req.params.pid);
                 fs.readdir(rootDir, function(err, files) {
                     if( err ){
-                        if( err.code === 'ENOENT' ) return callback('noTest','Please add test case first');   //no test cases added yet!
+                        if( err.code === 'ENOENT' )
+                            return callback('noTest','Please add test case first');   //no test cases added yet!
 
-                        console.log('getTestCases error:: ');
-                        console.log(err);
                         return callback(err);
                     }
 
@@ -119,23 +130,24 @@ module.exports = function(req,res,next){
                 };
 
                 Problems.updateLimits(req.params.pid,limits,function(err,row){
-                    if(err){
-                        console.log('Set limit db error');
-                        console.log(err);
+
+                    if(err)
                         return callback(err);
-                    }
 
                     callback();
                 });
             }
         ], function (error, noTest) {
 
-            if( error && !noTest )
+            if( error && !noTest ) {
+                logger.error(error);
                 return next(new Error(error));
+            }
 
             if (noTest){
-                req.flash('noTestCase', 'Please add at least one test case');
-                return res.redirect('/problems/edit/' + req.params.pid + '/2');
+                req.flash('noTestCase', 'Please add some test case');
+                res.redirect('/problems/edit/' + req.params.pid + '/2');
+                return
             }
 
             res.redirect('/problems');
