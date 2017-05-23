@@ -17,8 +17,8 @@
   "scripts": {
     "start": "sudo node ./bin/www",
     "test": "./node_modules/.bin/mocha --reporter spec $(find test -name '*.js')",
-    "lint": "./node_modules/.bin/eslint -c .eslintrc routes/** models/** helpers/** bin/** middlewares/**",
-    "lint-fix": "./node_modules/.bin/eslint -c .eslintrc --fix routes/** models/** helpers/** bin/** middlewares/** "
+    "lint": "./node_modules/.bin/eslint -c .eslintrc app.js server.js routes/** models/** lib/** middlewares/**",
+    "lint-fix": "./node_modules/.bin/eslint -c .eslintrc --fix app.js server.js routes/** models/** lib/** middlewares/** "
   },
   "dependencies": {
     "async": "^2.3.0",

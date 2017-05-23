@@ -24,57 +24,57 @@ var User = require('./user');
  */
 exports.generateUser = function (cid,indx, cb) {
 
-    var password = rndm(10);
-    async.waterfall([
-        function(callback) {
-            bcrypt.genSalt(10, function (err, salt) {
-                if (err) return callback('salt error');
+  var password = rndm(10);
+  async.waterfall([
+    function(callback) {
+      bcrypt.genSalt(10, function (err, salt) {
+        if (err) return callback('salt error');
 
-                callback(null, salt);
-            });
-        },
-        function(salt,callback) {
-            bcrypt.hash(password, salt, function (err, hash) {
-                if (err) return callback('hash error');
+        callback(null, salt);
+      });
+    },
+    function(salt,callback) {
+      bcrypt.hash(password, salt, function (err, hash) {
+        if (err) return callback('hash error');
 
-                callback(null, hash);
-            });
-        },
-        function(hash,callback) {
+        callback(null, hash);
+      });
+    },
+    function(hash,callback) {
 
-            var sql = Query.insert({
-                username: password,   // we will change it
-                name: 'randomUser_' + cid + '_' + indx,
-                institute: '',
-                password: hash,
-                email   : password,  //we need password for download
-                role    : 'randuser'
-            })
+      var sql = Query.insert({
+        username: password,   // we will change it
+        name: 'randomUser_' + cid + '_' + indx,
+        institute: '',
+        password: hash,
+        email   : password,  //we need password for download
+        role    : 'randuser'
+      })
                 .into('users');
 
-            DB.execute(sql.toString(), callback);
-        },
-        function(rows, callback) {
+      DB.execute(sql.toString(), callback);
+    },
+    function(rows, callback) {
 
-            var hashids = new Hashids('randomuser' , 15);
-            var username = hashids.encode(rows.insertId);
-            console.log('user inserted id: ' + rows.insertId + ' and username: ' + username + ' and password: ' + password);
+      var hashids = new Hashids('randomuser' , 15);
+      var username = hashids.encode(rows.insertId);
+      console.log('user inserted id: ' + rows.insertId + ' and username: ' + username + ' and password: ' + password);
 
-            var sql = Query('users')
+      var sql = Query('users')
                         .update({ username: username })
                         .where({ 'id': rows.insertId });
-            DB.execute(sql.toString(), function (err,row2) {
-                if(err) return callback(err);
+      DB.execute(sql.toString(), function (err,row2) {
+        if(err) return callback(err);
 
-                callback(null,rows.insertId);
-            });
-        },
-        function (uid ,callback) {
-            var sql = Query.insert({ cid: cid, uid: uid }).into('contest_participants');
+        callback(null,rows.insertId);
+      });
+    },
+    function (uid ,callback) {
+      var sql = Query.insert({ cid: cid, uid: uid }).into('contest_participants');
 
-            DB.execute(sql.toString(), callback);
-        }
-    ], cb);
+      DB.execute(sql.toString(), callback);
+    }
+  ], cb);
 };
 
 
@@ -87,55 +87,55 @@ exports.generateUser = function (cid,indx, cb) {
  */
 exports.insertUser = function (cid, random_password, insertObj, cb) {
 
-    async.waterfall([
-        function (callback) {
-            findById(cid,function (err,rows) {
-                if(err) return callback(err);
+  async.waterfall([
+    function (callback) {
+      findById(cid,function (err,rows) {
+        if(err) return callback(err);
 
-                if(!rows || rows.length === 0) return callback('404');
+        if(!rows || rows.length === 0) return callback('404');
 
-                callback();
-            });
-        },
-        function (callback) {
-            User.available(insertObj.username, null,function(err,rows){
-                if(err) return callback(err);
+        callback();
+      });
+    },
+    function (callback) {
+      User.available(insertObj.username, null,function(err,rows){
+        if(err) return callback(err);
 
-                if( rows.length ) return callback('username not available' , 'username already taken by someone');
+        if( rows.length ) return callback('username not available' , 'username already taken by someone');
 
-                callback();
-            });
-        },
-        function(callback) {
-            bcrypt.genSalt(10, function (err, salt) {
-                if (err) return callback('salt error');
+        callback();
+      });
+    },
+    function(callback) {
+      bcrypt.genSalt(10, function (err, salt) {
+        if (err) return callback('salt error');
 
-                callback(null, salt);
-            });
-        },
-        function(salt,callback) {
+        callback(null, salt);
+      });
+    },
+    function(salt,callback) {
 
-            if(random_password)
-                insertObj.password = rndm(10);
+      if(random_password)
+        insertObj.password = rndm(10);
 
-            insertObj.email = insertObj.password;
+      insertObj.email = insertObj.password;
 
-            bcrypt.hash(insertObj.password, salt, function (err, hash) {
-                if (err) return callback('hash error');
+      bcrypt.hash(insertObj.password, salt, function (err, hash) {
+        if (err) return callback('hash error');
 
-                callback(null, hash);
-            });
-        },
-        function(hash,callback) {
-            insertObj.password = hash;
-            var sql = Query.insert(insertObj).into('users');
-            DB.execute(sql.toString(), callback);
-        },
-        function (urow ,callback) {
-            var sql = Query.insert({ cid: cid, uid: urow.insertId }).into('contest_participants');
-            DB.execute(sql.toString(), callback);
-        }
-    ], cb);
+        callback(null, hash);
+      });
+    },
+    function(hash,callback) {
+      insertObj.password = hash;
+      var sql = Query.insert(insertObj).into('users');
+      DB.execute(sql.toString(), callback);
+    },
+    function (urow ,callback) {
+      var sql = Query.insert({ cid: cid, uid: urow.insertId }).into('contest_participants');
+      DB.execute(sql.toString(), callback);
+    }
+  ], cb);
 };
 
 
@@ -148,56 +148,56 @@ exports.insertUser = function (cid, random_password, insertObj, cb) {
  */
 exports.editUser = function (cid, uid, insertObj, cb) {
 
-    async.waterfall([
-        function (callback) {
-            findById(cid,function (err,rows) {
-                if(err)
-                    return callback(err);
+  async.waterfall([
+    function (callback) {
+      findById(cid,function (err,rows) {
+        if(err)
+          return callback(err);
 
-                if(!rows || rows.length === 0)
-                    return callback('404','404');
+        if(!rows || rows.length === 0)
+          return callback('404','404');
 
-                callback();
-            });
-        },
-        function (callback) {
-            User.available(insertObj.username, null,function(err,rows){
-                if(err)
-                    return callback(err);
+        callback();
+      });
+    },
+    function (callback) {
+      User.available(insertObj.username, null,function(err,rows){
+        if(err)
+          return callback(err);
 
-                if( rows.length )
-                    return callback('username not available' , 'username already taken');
+        if( rows.length )
+          return callback('username not available' , 'username already taken');
 
-                callback();
-            });
-        },
-        function(callback) {
-            bcrypt.genSalt(10, function (err, salt) {
-                if (err)
-                    return callback('salt error');
+        callback();
+      });
+    },
+    function(callback) {
+      bcrypt.genSalt(10, function (err, salt) {
+        if (err)
+          return callback('salt error');
 
-                callback(null, salt);
-            });
-        },
-        function(salt,callback) {
+        callback(null, salt);
+      });
+    },
+    function(salt,callback) {
 
-            insertObj.email = insertObj.password;
-            bcrypt.hash(insertObj.password, salt, function (err, hash) {
-                if (err)
-                    return callback('hash error');
+      insertObj.email = insertObj.password;
+      bcrypt.hash(insertObj.password, salt, function (err, hash) {
+        if (err)
+          return callback('hash error');
 
-                callback(null, hash);
-            });
-        },
-        function(hash,callback) {
-            insertObj.password = hash;
+        callback(null, hash);
+      });
+    },
+    function(hash,callback) {
+      insertObj.password = hash;
 
-            var sql = Query('users')
+      var sql = Query('users')
                 .update(insertObj)
                 .where({ 'id': uid });
-            DB.execute(sql.toString(), callback);
-        }
-    ], cb);
+      DB.execute(sql.toString(), callback);
+    }
+  ], cb);
 };
 
 
@@ -208,13 +208,13 @@ exports.editUser = function (cid, uid, insertObj, cb) {
  * @param cb
  */
 function findById(cid,cb){
-    var sql = Query
+  var sql = Query
                 .select(['id'])
                 .from('contest')
                 .where({ 'id': cid })
                 .limit(1);
 
-    DB.execute( sql.toString(), cb);
+  DB.execute( sql.toString(), cb);
 }
 exports.findById = findById;
 
@@ -226,10 +226,10 @@ exports.findById = findById;
  * @param cb
  */
 exports.create = function(inserts,cb){
-    var sql = Query
+  var sql = Query
                 .insert(inserts)
                 .into('contest');
-    DB.execute( sql.toString(), cb);
+  DB.execute( sql.toString(), cb);
 };
 
 
@@ -238,17 +238,17 @@ exports.create = function(inserts,cb){
  * @param cb
  */
 exports.getPublic = function(cb){
-    async.waterfall([
-        function(callback) {
-            getRunning(callback);
-        },
-        function(running,callback){
-            getFuture(running,callback);
-        },
-        function(running,future,callback){
-            getEnded(running,future,callback);
-        }
-    ], cb);
+  async.waterfall([
+    function(callback) {
+      getRunning(callback);
+    },
+    function(running,callback){
+      getFuture(running,callback);
+    },
+    function(running,future,callback){
+      getEnded(running,future,callback);
+    }
+  ], cb);
 };
 
 
@@ -260,7 +260,7 @@ exports.getPublic = function(cb){
  */
 exports.getPastContests = function (cur_page,URL,cb) {
 
-    var sql = Query.select(['cnts.*'])
+  var sql = Query.select(['cnts.*'])
         .count('usr.id as users')
         .from('contest as cnts')
         .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
@@ -270,19 +270,19 @@ exports.getPastContests = function (cur_page,URL,cb) {
         .groupBy('cnts.id')
         .orderBy('cnts.begin','desc');
 
-    var sqlCount = Query.count('* as count')
+  var sqlCount = Query.count('* as count')
         .from('contest')
         .where(
             Query.raw('`status` = 2 AND `end` <= NOW()')
         );
 
-    Paginate.paginate({
-        cur_page: cur_page,
-        sql: sql,
-        limit: 20,
-        sqlCount: sqlCount,
-        url: URL
-    }, cb);
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    limit: 20,
+    sqlCount: sqlCount,
+    url: URL
+  }, cb);
 };
 
 
@@ -296,26 +296,26 @@ exports.getPastContests = function (cur_page,URL,cb) {
  */
 exports.getParticipants = function (cid,cur_page,URL,LIMIT,cb) {
 
-    var sql = Query.select(['cp.*','usr.username','usr.email as password','usr.name','usr.institute'])
+  var sql = Query.select(['cp.*','usr.username','usr.email as password','usr.name','usr.institute'])
         .from('contest_participants as cp')
         .leftJoin('users as usr', 'cp.uid', 'usr.id')
         .where('cp.cid', cid)
         .orderBy('usr.username','desc');
 
-    var sqlCount = Query.count('* as count')
+  var sqlCount = Query.count('* as count')
         .from('contest_participants')
         .where('cid', cid);
 
-    if( LIMIT < 50 || LIMIT > 200 )
-        LIMIT = 100;
+  if( LIMIT < 50 || LIMIT > 200 )
+    LIMIT = 100;
 
-    Paginate.paginate({
-        cur_page: cur_page,
-        sql: sql,
-        limit: LIMIT,
-        sqlCount: sqlCount,
-        url: URL
-    }, cb);
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    limit: LIMIT,
+    sqlCount: sqlCount,
+    url: URL
+  }, cb);
 };
 
 
@@ -326,13 +326,13 @@ exports.getParticipants = function (cid,cur_page,URL,LIMIT,cb) {
  */
 exports.downloadParticipants = function (cid,cb) {
 
-    var sql = Query.select(['usr.username','usr.email as password'])
+  var sql = Query.select(['usr.username','usr.email as password'])
         .from('contest_participants as cp')
         .leftJoin('users as usr', 'cp.uid', 'usr.id')
         .where('cp.cid', cid)
         .orderBy('usr.username','desc');
 
-    DB.execute( sql.toString(), cb);
+  DB.execute( sql.toString(), cb);
 };
 
 
@@ -347,46 +347,46 @@ exports.downloadParticipants = function (cid,cb) {
  */
 exports.removeUser = function (cid, userid, cb) {
 
-    var isMulti = _.isArray(userid);
-    async.waterfall([
-        function (callback) {
-            findById(cid,function (err,rows) {
-                if(err) return callback(err);
+  var isMulti = _.isArray(userid);
+  async.waterfall([
+    function (callback) {
+      findById(cid,function (err,rows) {
+        if(err) return callback(err);
 
-                if(!rows || rows.length === 0) return callback('404');
+        if(!rows || rows.length === 0) return callback('404');
 
-                callback();
-            });
-        },
-        function(callback) {
+        callback();
+      });
+    },
+    function(callback) {
 
-            var sql;
+      var sql;
 
-            if( isMulti ){
-                sql = Query('contest_participants')
+      if( isMulti ){
+        sql = Query('contest_participants')
                     .whereIn('uid', userid)
                     .andWhere('cid',cid)
                     .del();
-            }else {
-                sql = Query('contest_participants').where(
+      }else {
+        sql = Query('contest_participants').where(
                     Query.raw('cid = ? AND uid = ?', [cid, userid.userid])
                 ).del();
-            }
+      }
 
-            DB.execute(sql.toString(), callback);
-        },
-        function (urow,callback) {
+      DB.execute(sql.toString(), callback);
+    },
+    function (urow,callback) {
 
-            var sql;
+      var sql;
 
-            if( isMulti )
-                sql = Query('users').whereIn('id',userid).del();
-            else
-                sql = Query('users').where('id',userid.userid).del();
+      if( isMulti )
+        sql = Query('users').whereIn('id',userid).del();
+      else
+        sql = Query('users').where('id',userid.userid).del();
 
-            DB.execute(sql.toString(), callback);
-        }
-    ], cb);
+      DB.execute(sql.toString(), callback);
+    }
+  ], cb);
 };
 
 
@@ -397,29 +397,29 @@ exports.removeUser = function (cid, userid, cb) {
  */
 exports.removealluser = function (cid, cb) {
 
-    async.waterfall([
-        function (callback) {
-            findById(cid,function (err,rows) {
-                if(err) return callback(err);
+  async.waterfall([
+    function (callback) {
+      findById(cid,function (err,rows) {
+        if(err) return callback(err);
 
-                if(!rows || rows.length === 0) return callback('404');
+        if(!rows || rows.length === 0) return callback('404');
 
-                callback();
-            });
-        },
-        function(callback) {
-            var sql = Query('users').where(
+        callback();
+      });
+    },
+    function(callback) {
+      var sql = Query('users').where(
                 Query.raw('`id` IN ( SELECT `uid` FROM `contest_participants` WHERE `cid` = ? )' , [cid])
             ).del();
-            DB.execute(sql.toString(), callback);
-        },
-        function (urow,callback) {
-            var sql = Query('contest_participants').where(
+      DB.execute(sql.toString(), callback);
+    },
+    function (urow,callback) {
+      var sql = Query('contest_participants').where(
                 Query.raw('cid = ?',[cid])
             ).del();
-            DB.execute(sql.toString(), callback);
-        }
-    ], cb);
+      DB.execute(sql.toString(), callback);
+    }
+  ], cb);
 };
 
 
@@ -429,7 +429,7 @@ exports.removealluser = function (cid, cb) {
  */
 var getRunning = function(cb){
 
-    var sql = Query.select(['cnts.*'])
+  var sql = Query.select(['cnts.*'])
          .count('usr.id as users')
          .from('contest as cnts')
          .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
@@ -439,7 +439,7 @@ var getRunning = function(cb){
             .groupBy('cnts.id')
             .orderBy('cnts.begin','desc');
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -450,7 +450,7 @@ var getRunning = function(cb){
  */
 var getFuture = function(running,cb){
 
-    var sql = Query.select(['cnts.*'])
+  var sql = Query.select(['cnts.*'])
         .count('usr.id as users')
         .from('contest as cnts')
         .leftJoin('contest_participants as usr', 'cnts.id', 'usr.cid')
@@ -461,12 +461,12 @@ var getFuture = function(running,cb){
         .groupBy('cnts.id')
         .orderBy('cnts.begin');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            if(err){ return cb(err); }
+          if(err){ return cb(err); }
 
-            cb(null,running,rows);
+          cb(null,running,rows);
         });
 };
 
@@ -479,7 +479,7 @@ var getFuture = function(running,cb){
  */
 var getEnded = function(running,future,cb){
 
-    var sql = Query.select(['cnts.*'])
+  var sql = Query.select(['cnts.*'])
         .count('usr.id as users')
         .from('contest as cnts')
         .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
@@ -490,12 +490,12 @@ var getEnded = function(running,future,cb){
         .orderBy('cnts.begin','desc')
         .limit(10);
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            if(err){ return cb(err); }
+          if(err){ return cb(err); }
 
-            cb(null,running,future,rows);
+          cb(null,running,future,rows);
         });
 };
 
@@ -507,9 +507,9 @@ var getEnded = function(running,future,cb){
  */
 exports.getEditable = function(cb){
 
-    var sql = Query.select().from('contest').where(Query.raw('`end` > NOW()'));
+  var sql = Query.select().from('contest').where(Query.raw('`end` > NOW()'));
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -524,10 +524,10 @@ exports.getEditable = function(cb){
  */
 exports.update = function(inserts,cid,cb){
 
-    var sql = Query('contest').update(inserts)
+  var sql = Query('contest').update(inserts)
         .where({ 'id': cid });
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -538,12 +538,12 @@ exports.update = function(inserts,cid,cb){
  * @param cb
  */
 exports.updateProblem = function(inserts,pid,cb){
-    var sql = Query('problems').update(inserts)
+  var sql = Query('problems').update(inserts)
         .where({
-            'id': pid
+          'id': pid
         });
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -554,9 +554,9 @@ exports.updateProblem = function(inserts,pid,cb){
  */
 function getDetails(cid,cb){
 
-    var sql = Query.select().from('contest').where('id', cid).limit(1);
+  var sql = Query.select().from('contest').where('id', cid).limit(1);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 }
 exports.getDetails = getDetails; //for using in this file
 
@@ -569,13 +569,13 @@ exports.getDetails = getDetails; //for using in this file
  */
 exports.getDetailsIsReg = function (cid,uid,cb){
 
-    var sql;
+  var sql;
 
-    if(uid<1) {
-        sql = Query.select([
-            'c.*',
-            Query.raw('GROUP_CONCAT( \'"\' , `list`.`pid` , \'":{\' , \'"pid":\' , `list`.`pid` , \',"name":\' ,`list`.`pname` , \',"title":"\' , `list`.`title` , \'"}\' ORDER BY `list`.`pname` SEPARATOR \',\' ) as `problemList`')
-        ]).from('contest as c')
+  if(uid<1) {
+    sql = Query.select([
+      'c.*',
+      Query.raw('GROUP_CONCAT( \'"\' , `list`.`pid` , \'":{\' , \'"pid":\' , `list`.`pid` , \',"name":\' ,`list`.`pname` , \',"title":"\' , `list`.`title` , \'"}\' ORDER BY `list`.`pname` SEPARATOR \',\' ) as `problemList`')
+    ]).from('contest as c')
              .where('c.id', cid)
              .joinRaw('  LEFT JOIN('+
              'SELECT `cp`.`cid`,`cp`.`pid`,`cp`.`pname`,`p`.`title`'+
@@ -585,12 +585,12 @@ exports.getDetailsIsReg = function (cid,uid,cb){
              ') AS `list` ON `c`.`id` = `list`.`cid`'
          )
              .limit(1);
-    }else{
-        sql = Query.select([
-            'c.*',
-            Query.raw('ifnull(`cp`.`id`,-1) as `isReg`'),
-            Query.raw('GROUP_CONCAT( \'"\' , `list`.`pid` , \'":{\' , \'"pid":\' , `list`.`pid` , \',"name":\' ,`list`.`pname` , \',"title":"\' , `list`.`title` , \'"}\' ORDER BY `list`.`pname` SEPARATOR \',\' ) as `problemList`')
-        ])
+  }else{
+    sql = Query.select([
+      'c.*',
+      Query.raw('ifnull(`cp`.`id`,-1) as `isReg`'),
+      Query.raw('GROUP_CONCAT( \'"\' , `list`.`pid` , \'":{\' , \'"pid":\' , `list`.`pid` , \',"name":\' ,`list`.`pname` , \',"title":"\' , `list`.`title` , \'"}\' ORDER BY `list`.`pname` SEPARATOR \',\' ) as `problemList`')
+    ])
             .from('contest as c')
             .joinRaw('left join `contest_participants` as `cp` on `c`.`id`=`cp`.`cid` and `cp`.`uid`=?',[uid])
             .joinRaw('  LEFT JOIN('+
@@ -602,9 +602,9 @@ exports.getDetailsIsReg = function (cid,uid,cb){
         )
             .where('c.id', cid)
             .limit(1);
-    }
+  }
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -615,10 +615,10 @@ exports.getDetailsIsReg = function (cid,uid,cb){
  */
 exports.getDetailsAndProblemList = function(cid,cb){
 
-    var sql = Query.select([
-        'c.*',
-        Query.raw('GROUP_CONCAT( \'"\' , `list`.`pid` , \'":{\' , \'"pid":\' , `list`.`pid` , \',"name":\' ,`list`.`pname` , \',"title":"\' , `list`.`title` , \'"}\' ORDER BY `list`.`pname` SEPARATOR \',\' ) as `problemList`')
-    ])
+  var sql = Query.select([
+    'c.*',
+    Query.raw('GROUP_CONCAT( \'"\' , `list`.`pid` , \'":{\' , \'"pid":\' , `list`.`pid` , \',"name":\' ,`list`.`pname` , \',"title":"\' , `list`.`title` , \'"}\' ORDER BY `list`.`pname` SEPARATOR \',\' ) as `problemList`')
+  ])
         .from('contest as c')
         .joinRaw('  LEFT JOIN('+
                     'SELECT `cp`.`cid`,`cp`.`pid`,`cp`.`pname`,`p`.`title`'+
@@ -630,7 +630,7 @@ exports.getDetailsAndProblemList = function(cid,cb){
         .where('c.id', cid)
         .limit(1);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -641,13 +641,13 @@ exports.getDetailsAndProblemList = function(cid,cb){
  */
 exports.getProblems = function(cid,cb){
 
-    var sql = Query.select(['contest_problems.pid','contest_problems.pname','problems.title','problems.status'])
+  var sql = Query.select(['contest_problems.pid','contest_problems.pname','problems.title','problems.status'])
         .from('contest_problems')
         .leftJoin('problems', 'contest_problems.pid', 'problems.id')
         .where('contest_problems.cid', cid)
         .as('ignored_alias');
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -659,15 +659,15 @@ exports.getProblems = function(cid,cb){
  */
 exports.getDashboardProblems = function(cid,uid,cb){
 
-    var sql;
-    if(uid!==-1){ //if user logged in
+  var sql;
+  if(uid!==-1){ //if user logged in
 
-        sql = Query.select([
-            'cp.pid','cp.pname', 'prob.title',
-            Query.raw('COUNT(DISTINCT `solved`.`uacc`) as `accepted`'),
-            Query.raw('ifnull(`isac`.`isuac`,-1) as `yousolved`'),
-            Query.raw('ifnull(`iswa`.`isuwa`,-1) as `youtried`')
-        ])
+    sql = Query.select([
+      'cp.pid','cp.pname', 'prob.title',
+      Query.raw('COUNT(DISTINCT `solved`.`uacc`) as `accepted`'),
+      Query.raw('ifnull(`isac`.`isuac`,-1) as `yousolved`'),
+      Query.raw('ifnull(`iswa`.`isuwa`,-1) as `youtried`')
+    ])
             .from('contest_problems as cp')
             .leftJoin('problems as prob', 'cp.pid', 'prob.id')
             .joinRaw('left join (SELECT `cr`.`pid` as `ppid`,`cr`.`uid` as `uacc` FROM `contest_rank` as `cr` WHERE `cr`.`cid` = ? AND `cr`.`status`=0) as `solved` ON `cp`.`pid` = `solved`.`ppid`',[cid])
@@ -677,21 +677,21 @@ exports.getDashboardProblems = function(cid,uid,cb){
             .as('ignored_alias')
             .groupBy('cp.pid');
 
-    }else{
+  }else{
 
-        sql = Query.select([
-            'cp.pid', 'cp.pname', 'prob.title',
-            Query.raw('COUNT(DISTINCT `solved`.`uac`) as `accepted`')
-        ])
+    sql = Query.select([
+      'cp.pid', 'cp.pname', 'prob.title',
+      Query.raw('COUNT(DISTINCT `solved`.`uac`) as `accepted`')
+    ])
             .from('contest_problems as cp')
             .leftJoin('problems as prob', 'cp.pid', 'prob.id')
             .joinRaw('left join (SELECT `cr`.`pid` as `ppid`,`cr`.`uid` as `uac` FROM `contest_rank` as `cr` WHERE `cr`.`cid` =? AND `cr`.`status`=0) as `solved` ON `cp`.`pid` = `solved`.`ppid`',[cid])
             .where('cp.cid', cid)
             .as('ignored_alias')
             .groupBy('cp.pid');
-    }
+  }
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -703,16 +703,16 @@ exports.getDashboardProblems = function(cid,uid,cb){
  */
 exports.getDetailsandProblem = function(cid,pid,cb){
 
-    var sql = Query.select([
-        'cn.*','pb.id as pid','pb.title as probTitle','pb.statement','pb.input','pb.output','pb.score','pb.cpu','pb.memory'
-    ])
+  var sql = Query.select([
+    'cn.*','pb.id as pid','pb.title as probTitle','pb.statement','pb.input','pb.output','pb.score','pb.cpu','pb.memory'
+  ])
         .from('contest as cn')
         .joinRaw(' left join `contest_problems` as `cp` ON `cn`.`id` = `cp`.`cid` AND `cp`.`pid` = ?',[pid])
         .joinRaw(' left join `problems` as `pb` ON `pb`.`id` = ?',[pid])
         .where('cn.id', cid)
         .limit(1);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -725,18 +725,18 @@ exports.getDetailsandProblem = function(cid,pid,cb){
  */
 exports.getUserProblemSubmissions = function(cid,pid,uid,cb){
 
-    var sql = Query
+  var sql = Query
                 .select(['status','submittime','language'])
                 .from('contest_submissions')
                 .where({
-                    cid: cid,
-                    pid: pid,
-                    uid: uid
+                  cid: cid,
+                  pid: pid,
+                  uid: uid
                 })
                 .orderBy('submittime','desc')
                 .limit(4);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -749,34 +749,34 @@ exports.getUserProblemSubmissions = function(cid,pid,uid,cb){
  */
 exports.getSubmissions = function(cid,cur_page,URL,cb){
 
-    var sql = Query.select([
-        'submissions.id',
-        'submissions.status',
-        'submissions.language',
-        'submissions.submittime',
-        'submissions.cpu',
-        'submissions.memory',
-        'submissions.pid',
-        'users.username',
-        'problems.title'
-    ])
+  var sql = Query.select([
+    'submissions.id',
+    'submissions.status',
+    'submissions.language',
+    'submissions.submittime',
+    'submissions.cpu',
+    'submissions.memory',
+    'submissions.pid',
+    'users.username',
+    'problems.title'
+  ])
         .from('contest_submissions as submissions')
         .orderBy('submissions.submittime', 'desc')
         .leftJoin('users', 'submissions.uid', 'users.id')
         .leftJoin('problems', 'submissions.pid', 'problems.id')
         .where('submissions.cid',cid);
 
-    var sqlCount = Query.countDistinct('id as count')
+  var sqlCount = Query.countDistinct('id as count')
         .from('contest_submissions')
         .where('cid',cid);
 
-    Paginate.paginate({
-        cur_page: cur_page,
-        sql: sql,
-        limit: 25,
-        sqlCount: sqlCount,
-        url: URL
-    },
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    limit: 25,
+    sqlCount: sqlCount,
+    url: URL
+  },
         cb);
 };
 
@@ -788,41 +788,41 @@ exports.getSubmissions = function(cid,cur_page,URL,cb){
  */
 exports.delete = function (cid,cb) {
 
-    async.waterfall([
-        function (callback) {
+  async.waterfall([
+    function (callback) {
 
-            var sql = Query('problems')
+      var sql = Query('problems')
                 .whereIn('id', function() {
-                    this.select('pid').from('contest_problems').where('cid', cid);
+                  this.select('pid').from('contest_problems').where('cid', cid);
                 })
                 .del();
 
-            console.log('deleting problems......');
-            DB.execute(sql.toString(),callback);
-        },
-        function (ignorepls, callback) {
+      console.log('deleting problems......');
+      DB.execute(sql.toString(),callback);
+    },
+    function (ignorepls, callback) {
 
-            var sql = Query('users')
+      var sql = Query('users')
                 .whereIn('id', function() {
-                    this.select('uid').from('contest_participants').where('cid', cid);
+                  this.select('uid').from('contest_participants').where('cid', cid);
                 })
                 .del();
 
-            console.log('problems deleted!');
-            console.log('deleting users......');
-            DB.execute(sql.toString(),callback);
-        },
-        function (ignorepls, callback) {
+      console.log('problems deleted!');
+      console.log('deleting users......');
+      DB.execute(sql.toString(),callback);
+    },
+    function (ignorepls, callback) {
 
-            var sql = Query('contest')
+      var sql = Query('contest')
                 .where('id', cid)
                 .del();
 
-            console.log('users deleted!');
-            console.log('deleting contest......');
-            DB.execute(sql.toString(),callback);
-        }
-    ], cb);
+      console.log('users deleted!');
+      console.log('deleting contest......');
+      DB.execute(sql.toString(),callback);
+    }
+  ], cb);
 };
 
 
@@ -837,38 +837,38 @@ exports.delete = function (cid,cb) {
  */
 exports.getUserSubmissions = function(cid,username,cur_page,URL,cb){
 
-    var sql = Query.select([
-        'user.username',
-        'submissions.id',
-        'submissions.status',
-        'submissions.language',
-        'submissions.submittime',
-        'submissions.cpu',
-        'submissions.memory',
-        'submissions.pid',
-        'problems.title'
-    ])
+  var sql = Query.select([
+    'user.username',
+    'submissions.id',
+    'submissions.status',
+    'submissions.language',
+    'submissions.submittime',
+    'submissions.cpu',
+    'submissions.memory',
+    'submissions.pid',
+    'problems.title'
+  ])
         .from('users as user')
         .joinRaw('LEFT JOIN contest_submissions as submissions ON user.id = submissions.uid AND submissions.cid = ?',[cid])
         .leftJoin('problems', 'submissions.pid', 'problems.id')
         .where({
-            'user.username': username
+          'user.username': username
         }).orderBy('submissions.submittime', 'desc');
 
-    var sqlCount = Query.count('submissions.id as count')
+  var sqlCount = Query.count('submissions.id as count')
         .from('users as user')
         .joinRaw('LEFT JOIN contest_submissions as submissions ON user.id = submissions.uid AND submissions.cid = ?',[cid])
         .where({
-            'user.username': username
+          'user.username': username
         });
 
-    Paginate.paginate({
-        cur_page: cur_page,
-        sql: sql,
-        limit: 20,
-        sqlCount: sqlCount,
-        url: URL
-    }, cb);
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    limit: 20,
+    sqlCount: sqlCount,
+    url: URL
+  }, cb);
 };
 
 
@@ -881,21 +881,21 @@ exports.getUserSubmissions = function(cid,username,cur_page,URL,cb){
  */
 exports.getUserSubmissionByProblem = function(cid,pid,username,cb){
 
-    var sql = Query.select([
-        'submissions.*',
-        'problems.title'
-    ])
+  var sql = Query.select([
+    'submissions.*',
+    'problems.title'
+  ])
         .from('contest_submissions as submissions')
         .leftJoin('problems', 'submissions.pid', 'problems.id')
         .joinRaw('LEFT JOIN `users` ON `submissions`.`uid` = `users`.`id` AND `users`.`username` = ?',[username])
         .where({
-            'submissions.cid': cid,
-            'submissions.pid': pid,
-            'users.username': username
+          'submissions.cid': cid,
+          'submissions.pid': pid,
+          'users.username': username
         })
         .orderBy('submissions.submittime', 'desc');
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -907,12 +907,12 @@ exports.getUserSubmissionByProblem = function(cid,pid,username,cb){
  */
 exports.isRegistered = function(cid,uid,cb){
 
-    var sql = Query.select(['id']).from('contest_participants').where({
-        cid: cid,
-        uid: uid
-    }).limit(1);
+  var sql = Query.select(['id']).from('contest_participants').where({
+    cid: cid,
+    uid: uid
+  }).limit(1);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -924,16 +924,16 @@ exports.isRegistered = function(cid,uid,cb){
  */
 exports.findAndisRegistered = function(cid,uid,cb){
 
-    var sql = Query.select([
-        'contest.id',
-        Query.raw('(`contest_participants`.`uid` IS NOT NULL) AS `resistered`')
-    ])
+  var sql = Query.select([
+    'contest.id',
+    Query.raw('(`contest_participants`.`uid` IS NOT NULL) AS `resistered`')
+  ])
         .joinRaw('LEFT JOIN `contest_participants` ON `contest`.`id` = `contest_participants`.`cid` AND `contest_participants`.`uid` = ?',[uid])
         .from('contest')
         .where('contest.id',cid)
         .limit(1);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -948,12 +948,12 @@ exports.findAndisRegistered = function(cid,uid,cb){
  */
 exports.register = function(cid,uid,cb){
 
-    var sql = Query.insert({
-        cid: cid,
-        uid: uid
-    }).into('contest_participants');
+  var sql = Query.insert({
+    cid: cid,
+    uid: uid
+  }).into('contest_participants');
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -965,13 +965,13 @@ exports.register = function(cid,uid,cb){
  */
 exports.insertProblem = function(cid,pid,cb){
 
-    var sql = Query.insert({
-        'cid': cid,
-        'pid': pid
-    })
+  var sql = Query.insert({
+    'cid': cid,
+    'pid': pid
+  })
         .into('contest_problems');
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -981,13 +981,13 @@ exports.insertProblem = function(cid,pid,cb){
  * @param cb
  */
 exports.addTestCase = function(inserts,cb){
-    var sql = Query.insert(inserts)
+  var sql = Query.insert(inserts)
         .into('c_submission_case');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            cb(err);
+          cb(err);
         });
 };
 
@@ -1000,15 +1000,15 @@ exports.addTestCase = function(inserts,cb){
  */
 exports.InsertSubmission = function(inserts,cb){
 
-    var sql = Query.insert(inserts)
+  var sql = Query.insert(inserts)
         .into('contest_submissions');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            if( err ){ return cb(err); }
+          if( err ){ return cb(err); }
 
-            cb(null,rows.insertId);
+          cb(null,rows.insertId);
         });
 };
 
@@ -1019,13 +1019,13 @@ exports.InsertSubmission = function(inserts,cb){
  * @param cb
  */
 exports.insertCode = function(inserts,cb){
-    var sql = Query.insert(inserts)
+  var sql = Query.insert(inserts)
         .into('c_submission_code');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            cb(err);
+          cb(err);
         });
 };
 
@@ -1038,12 +1038,12 @@ exports.insertCode = function(inserts,cb){
  */
 exports.UpdateSubmission = function(sid,inserts,cb){
 
-    var sql = Query('contest_submissions').update(inserts).where('id',sid);
+  var sql = Query('contest_submissions').update(inserts).where('id',sid);
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            cb(err);
+          cb(err);
         });
 };
 
@@ -1059,55 +1059,55 @@ exports.UpdateSubmission = function(sid,inserts,cb){
  */
 exports.UpdateRank = function(cid,uid,pid,finalCode,cb){
 
-    var sql;
+  var sql;
 
-    async.waterfall([
-        function(callback) {
+  async.waterfall([
+    function(callback) {
 
-            sql = Query.select('status')
+      sql = Query.select('status')
                 .from('contest_rank')
                 .where(Query.raw('`cid`=? AND `uid`=? AND `pid`=? AND (`status`=? OR NOT EXISTS (SELECT `id` FROM `contest_rank` WHERE `cid`=? AND `uid`= ? AND `pid`=? AND `status`=? LIMIT 1))',[cid,uid,pid,0,cid,uid,pid,0]))
                 .limit(1);
 
-            DB.execute(
+      DB.execute(
                 sql.toString()
                 ,function(err,rows){
-                    if(err){ return callback(err); }
+                  if(err){ return callback(err); }
 
-                    if(!rows.length){ return callback(null,-2); }
+                  if(!rows.length){ return callback(null,-2); }
 
-                    callback(null,rows[0].status);
+                  callback(null,rows[0].status);
                 });
-        },
-        function(status,callback) {
+    },
+    function(status,callback) {
 
             //if first submisions
-            if(status===-2){
-                sql = Query.insert({
-                    cid: cid,
-                    uid: uid,
-                    pid: pid,
-                    status: finalCode,
-                    tried: 1
-                }).into('contest_rank');
-            }else if(status!==0){  //already not accpeted
-                sql = Query('contest_rank').update({
-                    status: finalCode,
-                    tried: Query.raw('`tried` + 1')
-                })
+      if(status===-2){
+        sql = Query.insert({
+          cid: cid,
+          uid: uid,
+          pid: pid,
+          status: finalCode,
+          tried: 1
+        }).into('contest_rank');
+      }else if(status!==0){  //already not accpeted
+        sql = Query('contest_rank').update({
+          status: finalCode,
+          tried: Query.raw('`tried` + 1')
+        })
                      .where({
-                         cid: cid,
-                         uid: uid,
-                         pid: pid
+                       cid: cid,
+                       uid: uid,
+                       pid: pid
                      });
-            }else{
-                console.log('IGNORE UPDATE! ALREADY ACCEPTED!!!!!!!!!!!!!!!!!!!!!!!');
-                return callback();
-            }
+      }else{
+        console.log('IGNORE UPDATE! ALREADY ACCEPTED!!!!!!!!!!!!!!!!!!!!!!!');
+        return callback();
+      }
 
-            DB.execute(sql.toString(), callback);
-        }
-    ],cb);
+      DB.execute(sql.toString(), callback);
+    }
+  ],cb);
 };
 
 
@@ -1119,16 +1119,16 @@ exports.UpdateRank = function(cid,uid,pid,finalCode,cb){
  */
 function getProblemStats(cid,withTried,cb){
 
-    var sql;
+  var sql;
 
     //with tried team count
-    if(withTried){
-        sql = Query.select([
-            'cp.pid',
-            'prob.title',
-            Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`'),
-            Query.raw('ifnull(`wa`.`tried`,0) as `triedBy`')
-        ])
+  if(withTried){
+    sql = Query.select([
+      'cp.pid',
+      'prob.title',
+      Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`'),
+      Query.raw('ifnull(`wa`.`tried`,0) as `triedBy`')
+    ])
             .leftJoin('problems as prob', 'cp.pid', 'prob.id')
             .joinRaw('  LEFT JOIN( ' +
                         'SELECT COUNT(DISTINCT `cs2`.`uid`) as `tried`,`cs2`.`pid` ' +
@@ -1136,16 +1136,16 @@ function getProblemStats(cid,withTried,cb){
                         'WHERE `cs2`.`cid`=? ' +
                         'GROUP BY `cs2`.`pid` ' +
                      ') as `wa` on `cp`.`pid` = `wa`.`pid`',[cid]);
-    }else{
-        sql = Query.select([
-            'cp.pid',
-            'prob.title',
-            Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`')
-        ])
+  }else{
+    sql = Query.select([
+      'cp.pid',
+      'prob.title',
+      Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`')
+    ])
             .leftJoin('problems as prob', 'cp.pid', 'prob.id');
-    }
+  }
 
-    sql = sql.from('contest_problems as cp')
+  sql = sql.from('contest_problems as cp')
         .joinRaw('  LEFT JOIN( ' +
                         'SELECT COUNT(DISTINCT `cs`.`uid`) as `solved`,`cs`.`pid` ' +
                         'FROM `contest_submissions` as `cs` ' +
@@ -1156,7 +1156,7 @@ function getProblemStats(cid,withTried,cb){
         .groupBy('cp.pid')
         .as('ignored_alias');
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 }
 
 
@@ -1169,44 +1169,44 @@ function getProblemStats(cid,withTried,cb){
  */
 exports.getRank = function(cid,cur_page,url,cb){
 
-    async.waterfall([
-        function(callback) {
-            getDetails(cid,function(err,rows){
-                if(err) return callback(err);
+  async.waterfall([
+    function(callback) {
+      getDetails(cid,function(err,rows){
+        if(err) return callback(err);
 
-                if(!rows.length) return callback('404');
+        if(!rows.length) return callback('404');
 
-                callback(null,rows[0]);
-            });
-        },
-        function(contest,callback){
-            getProblemStats(cid,true,function(err,rows){
-                if(err) return callback(err);
+        callback(null,rows[0]);
+      });
+    },
+    function(contest,callback){
+      getProblemStats(cid,true,function(err,rows){
+        if(err) return callback(err);
 
-                callback(null,contest,rows);
-            });
-        },
-        function(contest,problemStats,callback){
+        callback(null,contest,rows);
+      });
+    },
+    function(contest,problemStats,callback){
 
-            var sqlInner = Query.select([
-                'rank.uid as ruid',
-                Query.raw('SUM(CASE WHEN `rank`.`status`=0 THEN ifnull(`rank`.`tried`,1)-1 ELSE 0 END) * 20 + ifnull(SUM(CASE WHEN `rank`.`status`=0 THEN TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ELSE 0 END),0) AS `penalty`',[contest.begin]),
-                Query.raw('COUNT(CASE WHEN `rank`.`status`=0 THEN `rank`.`status` ELSE NULL END) as `solved`'),
-                Query.raw('GROUP_CONCAT( \'"\' ,`rank`.`pid` , \'":{\' , \'"status":\' , `rank`.`status` , \',"tried":\' , `rank`.`tried` ,  \',"penalty_time":"\' , TIME_FORMAT(TIMEDIFF(`rank`.`penalty`,?), \'%H:%i:%s\')    ,   \'","penalty":\' , TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ,\'}\'  ORDER BY `rank`.`pid` SEPARATOR \',\') as `problems`',[contest.begin,contest.begin]),
-            ])
+      var sqlInner = Query.select([
+        'rank.uid as ruid',
+        Query.raw('SUM(CASE WHEN `rank`.`status`=0 THEN ifnull(`rank`.`tried`,1)-1 ELSE 0 END) * 20 + ifnull(SUM(CASE WHEN `rank`.`status`=0 THEN TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ELSE 0 END),0) AS `penalty`',[contest.begin]),
+        Query.raw('COUNT(CASE WHEN `rank`.`status`=0 THEN `rank`.`status` ELSE NULL END) as `solved`'),
+        Query.raw('GROUP_CONCAT( \'"\' ,`rank`.`pid` , \'":{\' , \'"status":\' , `rank`.`status` , \',"tried":\' , `rank`.`tried` ,  \',"penalty_time":"\' , TIME_FORMAT(TIMEDIFF(`rank`.`penalty`,?), \'%H:%i:%s\')    ,   \'","penalty":\' , TIMESTAMPDIFF(MINUTE, ?, `rank`.`penalty`) ,\'}\'  ORDER BY `rank`.`pid` SEPARATOR \',\') as `problems`',[contest.begin,contest.begin]),
+      ])
                 .from('contest_rank as rank')
                 .where('rank.cid',cid)
                 .groupBy('rank.uid')
                 .as('ignored_alias');
 
-            var sql = Query.select([
-                'cp.uid',
-                'csu.username',
-                'csu.name',
-                'r.penalty',
-                'r.problems',
-                'r.solved'
-            ])
+      var sql = Query.select([
+        'cp.uid',
+        'csu.username',
+        'csu.name',
+        'r.penalty',
+        'r.problems',
+        'r.solved'
+      ])
                     .from('contest_participants as cp')
                     .leftJoin('users as csu','cp.uid','csu.id')
                     .joinRaw('left join(' + sqlInner.toString() + ')AS `r` ON `cp`.`uid` = `r`.`ruid`')
@@ -1216,21 +1216,21 @@ exports.getRank = function(cid,cur_page,url,cb){
                     .as('ignored_alias');
 
 
-            var sqlCount = Query('contest_participants').countDistinct('uid as count')
+      var sqlCount = Query('contest_participants').countDistinct('uid as count')
                 .where('cid',cid);
 
-            Paginate.paginate({
-                cur_page: cur_page,
-                sql: sql,
-                sqlCount: sqlCount,
-                limit: 100,
-                url: url
-            },
+      Paginate.paginate({
+        cur_page: cur_page,
+        sql: sql,
+        sqlCount: sqlCount,
+        limit: 100,
+        url: url
+      },
                 function(err,rows,pagination) {
-                    callback(err,contest,problemStats,rows,pagination);
+                  callback(err,contest,problemStats,rows,pagination);
                 });
-        }
-    ], cb);
+    }
+  ], cb);
 };
 
 
@@ -1242,24 +1242,24 @@ exports.getRank = function(cid,cur_page,url,cb){
  */
 exports.getClarification = function(cid,clid,cb){
 
-    var sql = Query.select([
-        'cc.request',
-        'cc.response',
-        'cc.status',
-        'cu.username',
-        Query.raw('ifnull(`pp`.`title`,\'\') as `title`'),
-        Query.raw('ifnull(`cp`.`pname`,\'General\') as `pname`')
-    ])
+  var sql = Query.select([
+    'cc.request',
+    'cc.response',
+    'cc.status',
+    'cu.username',
+    Query.raw('ifnull(`pp`.`title`,\'\') as `title`'),
+    Query.raw('ifnull(`cp`.`pname`,\'General\') as `pname`')
+  ])
         .from('contest_clarifications as cc')
         .leftJoin('users as cu','cc.uid','cu.id')
         .leftJoin('problems as pp', 'cc.pid', 'pp.id')
         .leftJoin('contest_problems as cp', 'cc.pid', 'cp.pid')
         .where({
-            'cc.id': clid,
-            'cc.cid': cid
+          'cc.id': clid,
+          'cc.cid': cid
         }).limit(1);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -1272,14 +1272,14 @@ exports.getClarification = function(cid,clid,cb){
  */
 exports.updateClarification = function(cid, clid, updateObj, fn){
 
-    var sql = Query('contest_clarifications')
+  var sql = Query('contest_clarifications')
         .update(updateObj)
         .where({
-            'id': clid,
-            'cid': cid
+          'id': clid,
+          'cid': cid
         });
 
-    DB.execute(sql.toString(), fn);
+  DB.execute(sql.toString(), fn);
 };
 
 
@@ -1291,14 +1291,14 @@ exports.updateClarification = function(cid, clid, updateObj, fn){
  */
 exports.deleteClarification = function(cid, clid, fn){
 
-    var sql = Query('contest_clarifications')
+  var sql = Query('contest_clarifications')
         .where({
-            'id': clid,
-            'cid': cid
+          'id': clid,
+          'cid': cid
         })
         .del();
 
-    DB.execute(sql.toString(), fn);
+  DB.execute(sql.toString(), fn);
 };
 
 
@@ -1312,51 +1312,51 @@ exports.deleteClarification = function(cid, clid, fn){
  */
 exports.getClarifications = function(cid,uid,qid,cur_page,url,cb){
 
-    var sql = Query.select([
-        'cc.id',
-        'cc.request',
-        'cc.response',
-        'cc.status',
-        Query.raw('ifnull(`pp`.`title`,\'\') as `title`'),
-        Query.raw('ifnull(`cp`.`pname`,\'General\') as `pname`')
-    ])
+  var sql = Query.select([
+    'cc.id',
+    'cc.request',
+    'cc.response',
+    'cc.status',
+    Query.raw('ifnull(`pp`.`title`,\'\') as `title`'),
+    Query.raw('ifnull(`cp`.`pname`,\'General\') as `pname`')
+  ])
         .from('contest_clarifications as cc')
         .leftJoin('problems as pp', 'cc.pid', 'pp.id')
         .leftJoin('contest_problems as cp', 'cc.pid', 'cp.pid');
 
 
-    if( MyUtil.isNumeric(qid) ){
-        sql = sql.where({
-            'cc.cid': cid,
-            'cc.pid': qid
-        });
-    }else if( qid === 'general' ){
-        sql = sql.where({
-            'cc.cid':cid,
-            'cc.pid': 0
-        });
-    }
-    else if( qid === 'my' ){
-        sql = sql.where({
-            'cc.cid':cid,
-            'cc.uid': uid
-        });
-    }
-    else{
-        sql = sql.where('cc.cid',cid);
-    }
+  if( MyUtil.isNumeric(qid) ){
+    sql = sql.where({
+      'cc.cid': cid,
+      'cc.pid': qid
+    });
+  }else if( qid === 'general' ){
+    sql = sql.where({
+      'cc.cid':cid,
+      'cc.pid': 0
+    });
+  }
+  else if( qid === 'my' ){
+    sql = sql.where({
+      'cc.cid':cid,
+      'cc.uid': uid
+    });
+  }
+  else{
+    sql = sql.where('cc.cid',cid);
+  }
 
-    var sqlCount = Query.countDistinct('id as count')
+  var sqlCount = Query.countDistinct('id as count')
         .from('contest_clarifications')
         .where('cid',cid);
 
-    Paginate.paginate({
-        cur_page: cur_page,
-        sql: sql,
-        limit: 20,
-        sqlCount: sqlCount,
-        url: url
-    }, cb);
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    limit: 20,
+    sqlCount: sqlCount,
+    url: url
+  }, cb);
 };
 
 
@@ -1367,7 +1367,7 @@ exports.getClarifications = function(cid,uid,qid,cur_page,url,cb){
  */
 exports.insertClarification = function (inserts,cb){
 
-    var sql = Query.insert(inserts).into('contest_clarifications');
+  var sql = Query.insert(inserts).into('contest_clarifications');
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };

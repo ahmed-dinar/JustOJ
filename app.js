@@ -22,32 +22,31 @@ var chalk = require('chalk');
 
 var roles = require('./middlewares/userrole');
 
-
 /**
  * setup env, argv and file configuration
  * Also setup logger
  */
 module.exports.setupConfig = function () {
 
-    console.log( chalk.cyan('Loading and setup configs...') );
+  console.log( chalk.cyan('Loading and setup configs...') );
 
-    nconf
-        .argv()
-        .env('_');
-    global.env = nconf.get('NODE:ENV') || 'development';
+  nconf
+    .argv()
+    .env('_');
+  global.env = nconf.get('NODE:ENV') || 'development';
 
-    var configPath = path.join(__dirname, 'config/env/' + global.env + '.json');
+  var configPath = path.join(__dirname, 'config/env/' + global.env + '.json');
 
     //check if config file exists.Otherwise exit node process for security.
     //NOTE: really exit? or use default config somehow??
-    if( !fs.existsSync(configPath) ){
-        console.log( chalk.bold.red('"' + configPath + '" config file not found.Please check.') );
-        process.exit(1);
-    }else {
-        nconf.file({ file: configPath });
-    }
+  if( !fs.existsSync(configPath) ){
+    console.log( chalk.bold.red('"' + configPath + '" config file not found.Please check.') );
+    process.exit(1);
+  }else {
+    nconf.file({ file: configPath });
+  }
 
-    require('./config/logger'); //init our logger settings
+  require('./config/logger'); //init our logger settings
 };
 
 
@@ -57,8 +56,8 @@ module.exports.setupConfig = function () {
  * @param app
  */
 module.exports.loadViewEngine = function (app) {
-    app.set('views', path.join(__dirname, 'views'));
-    app.set('view engine', 'ejs');
+  app.set('views', path.join(__dirname, 'views'));
+  app.set('view engine', 'ejs');
 };
 
 
@@ -68,33 +67,33 @@ module.exports.loadViewEngine = function (app) {
  */
 module.exports.loadMiddleware = function (app) {
 
-    app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+  app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
     //stream morgan logger to winston logger
-    app.use( morgan('dev', { stream: {
-        write: function(message){
-            logger.info(message.slice(0, -1));
-        }
-    }}));
+  app.use( morgan('dev', { stream: {
+    write: function(message){
+      logger.info(message.slice(0, -1));
+    }
+  }}));
 
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(expressValidator());
-    app.use(cookieParser());
-    app.use(express.static(path.join(__dirname, 'public')));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(expressValidator());
+  app.use(cookieParser());
+  app.use(express.static(path.join(__dirname, 'public')));
 
-    app.use(expressSession({
-        secret: nconf.get('SESSION:SECRET') || 'secretisalwayssecret',
-        resave: false,
-        saveUninitialized: false
-    }));
+  app.use(expressSession({
+    secret: nconf.get('SESSION:SECRET') || 'secretisalwayssecret',
+    resave: false,
+    saveUninitialized: false
+  }));
 
-    app.use(passport.initialize());
-    app.use(passport.session());
-    app.use(roles.middleware());
-    app.use(flash());
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.use(roles.middleware());
+  app.use(flash());
 
-    require('./middlewares/passport')(passport);  //authenticate login data
+  require('./middlewares/passport')(passport);  //authenticate login data
 };
 
 
@@ -104,14 +103,14 @@ module.exports.loadMiddleware = function (app) {
  */
 module.exports.loadRoutes = function (app) {
 
-    var routeList = ['login','logout','resister','problems','submit','user','status','ranks','contests','ucheck','s3','sockettest','auth'];
+  var routeList = ['login','logout','resister','problems','submit','user','status','ranks','contests','ucheck','s3','sockettest','auth'];
 
     //home route
-    app.use('/', require('./routes/index') );
+  app.use('/', require('./routes/index') );
 
-    _.forEach(routeList, function(routeName) {
-        app.use('/' + routeName, require('./routes/' + routeName) );
-    });
+  _.forEach(routeList, function(routeName) {
+    app.use('/' + routeName, require('./routes/' + routeName) );
+  });
 };
 
 
@@ -122,45 +121,45 @@ module.exports.loadRoutes = function (app) {
 module.exports.loadErrorRoutes = function (app) {
 
     // catch 404 and forward to error handler
-    app.use(function(req, res, next) {
-        var err = new Error('Not Found');
-        err.status = 404;
-        next(err);
-    });
+  app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+  });
 
 
     // csurf error handlers
-    app.use(function (err, req, res, next) {
-        if (err.code !== 'EBADCSRFTOKEN') return next(err);
+  app.use(function (err, req, res, next) {
+    if (err.code !== 'EBADCSRFTOKEN') return next(err);
 
         // handle CSRF token errors here
-        res.status(403);
-        res.send('Session expired');
-    });
+    res.status(403);
+    res.send('Session expired');
+  });
 
 
     // development error handler
     // will print stacktrace
-    if (global.env === 'development') {
-        app.use(function(err, req, res, next) {
-            res.status(err.status || 500);
-            res.render('error', {
-                message: err.message,
-                error: err
-            });
-        });
-    }
+  if (global.env === 'development') {
+    app.use(function(err, req, res, next) {
+      res.status(err.status || 500);
+      res.render('error', {
+        message: err.message,
+        error: err
+      });
+    });
+  }
 
 
     // production error handler
     // no stacktraces leaked to user
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: {}
-        });
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: {}
     });
+  });
 };
 
 
@@ -170,19 +169,19 @@ module.exports.loadErrorRoutes = function (app) {
  * @returns {*}
  */
 module.exports.normalizePort = function (val) {
-    var port = parseInt(val, 10);
+  var port = parseInt(val, 10);
 
-    if (isNaN(port)) {
+  if (isNaN(port)) {
         // named pipe
-        return val;
-    }
+    return val;
+  }
 
-    if (port >= 0) {
+  if (port >= 0) {
         // port number
-        return port;
-    }
+    return port;
+  }
 
-    return false;
+  return false;
 };
 
 
@@ -193,7 +192,7 @@ module.exports.normalizePort = function (val) {
 module.exports.initServer = function (app) {
 
     //set port for express app server
-    app.set('port', this.normalizePort( nconf.get('PORT') || '3000') );
+  app.set('port', this.normalizePort( nconf.get('PORT') || '3000') );
 
     /*
     if ( nconf.get('ssl') ) {
@@ -213,8 +212,8 @@ module.exports.initServer = function (app) {
         require('https').createServer(sslCred, app);
 
     } else {*/
-        logger.warn('creating server in non-SSL mode...');
-        require('http').createServer(app);
+  logger.warn('creating server in non-SSL mode...');
+  require('http').createServer(app);
     //}
 };
 
@@ -225,30 +224,30 @@ module.exports.initServer = function (app) {
  */
 module.exports.init = function () {
 
-    var _this = this;
+  var _this = this;
 
     //setup env ,argv and file configuration , load logger
-    _this.setupConfig();
+  _this.setupConfig();
 
-    var app = express();
+  var app = express();
 
     //disable powered by to hide technology on websites from wappalyzer and similar app
-    app.disable('x-powered-by');
+  app.disable('x-powered-by');
 
     //load express view engine
-    _this.loadViewEngine(app);
+  _this.loadViewEngine(app);
 
     //load express Middlewares
-    _this.loadMiddleware(app);
+  _this.loadMiddleware(app);
 
     //load client default routes
-    _this.loadRoutes(app);
+  _this.loadRoutes(app);
 
     //load express error route
-    _this.loadErrorRoutes(app);
+  _this.loadErrorRoutes(app);
 
     //create express server
-    _this.initServer(app);
+  _this.initServer(app);
 
-    return app;
+  return app;
 };

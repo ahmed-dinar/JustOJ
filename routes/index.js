@@ -11,18 +11,18 @@ var gravatar = require('gravatar');
 
 router.get('/',function(req, res, next) {
 
-    logger.debug(req.user);
+  logger.debug(req.user);
 
-    if(req.isAuthenticated()){
-        var pro = gravatar.url(req.user.email, {s: '20'}, true);
-        console.log(pro);
-    }
+  if(req.isAuthenticated()){
+    var pro = gravatar.url(req.user.email, {s: '20'}, true);
+    console.log(pro);
+  }
 
-    res.render('index',{
-        active_nav: '',
-        isLoggedIn: req.isAuthenticated(),
-        user: req.user
-    });
+  res.render('index',{
+    active_nav: '',
+    isLoggedIn: req.isAuthenticated(),
+    user: req.user
+  });
 });
 
 

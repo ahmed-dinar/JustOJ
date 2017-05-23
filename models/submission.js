@@ -19,15 +19,15 @@ var Paginate = require('../lib/pagination/paginate');
  */
 exports.insert = function(inserts,cb){
 
-    var sql = Query.insert(inserts)
+  var sql = Query.insert(inserts)
         .into('submissions');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            if( err ) return cb(err);
+          if( err ) return cb(err);
 
-            cb(null,rows.insertId);
+          cb(null,rows.insertId);
         });
 };
 
@@ -40,12 +40,12 @@ exports.insert = function(inserts,cb){
  */
 exports.update = function(sid,inserts,cb){
 
-    var sql = Query('submissions').update(inserts).where('id',sid);
+  var sql = Query('submissions').update(inserts).where('id',sid);
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            cb(err);
+          cb(err);
         });
 };
 
@@ -56,13 +56,13 @@ exports.update = function(sid,inserts,cb){
  * @param cb
  */
 exports.addTestCase = function(inserts,cb){
-    var sql = Query.insert(inserts)
+  var sql = Query.insert(inserts)
         .into('submission_case');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            cb(err);
+          cb(err);
         });
 };
 
@@ -73,13 +73,13 @@ exports.addTestCase = function(inserts,cb){
  * @param cb
  */
 exports.insertCode = function(inserts,cb){
-    var sql = Query.insert(inserts)
+  var sql = Query.insert(inserts)
         .into('submission_code');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            cb(err);
+          cb(err);
         });
 };
 
@@ -93,7 +93,7 @@ exports.insertCode = function(inserts,cb){
  */
 exports.getTestCase = function(submissionId,problemId,userId,cb){
 
-    var sql = Query.select(['sub.*','prob.title','cas.cases'])
+  var sql = Query.select(['sub.*','prob.title','cas.cases'])
         .from('submissions as sub')
         .joinRaw('  LEFT JOIN('+
             'SELECT `p`.`title`,`p`.`id` as `ppid` '+
@@ -110,14 +110,14 @@ exports.getTestCase = function(submissionId,problemId,userId,cb){
             ,[submissionId]
         )
         .where({
-            'sub.id': submissionId,
-            'sub.pid': problemId,
-            'sub.uid': userId
+          'sub.id': submissionId,
+          'sub.pid': problemId,
+          'sub.uid': userId
         })
         .limit(1);
 
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,cb);
 };
@@ -130,12 +130,12 @@ exports.getTestCase = function(submissionId,problemId,userId,cb){
  */
 exports.getPublicTestCase = function(opts,cb){
 
-    var isContest = has(opts,'contestId');
-    var subTable = isContest ? 'contest_submissions as sub' : 'submissions as sub';
-    var caseTable = isContest ? 'c_submission_case' : 'submission_case';
-    var codeTable = isContest ? 'c_submission_code' : 'submission_code';
+  var isContest = has(opts,'contestId');
+  var subTable = isContest ? 'contest_submissions as sub' : 'submissions as sub';
+  var caseTable = isContest ? 'c_submission_case' : 'submission_case';
+  var codeTable = isContest ? 'c_submission_code' : 'submission_code';
 
-    var sql = Query.select(['sub.*','prob.title','cas.cases','usr.username','subcode.code'])
+  var sql = Query.select(['sub.*','prob.title','cas.cases','usr.username','subcode.code'])
         .from(subTable)
         .leftJoin('problems as prob','sub.pid','prob.id')
         .leftJoin('users as usr','sub.uid','usr.id')
@@ -148,23 +148,23 @@ exports.getPublicTestCase = function(opts,cb){
             ,[caseTable,opts.submissionId]
         );
 
-    if( isContest ){
-        sql = sql
+  if( isContest ){
+    sql = sql
             .where({
-                'sub.id': opts.submissionId,
-                'sub.cid': opts.contestId
+              'sub.id': opts.submissionId,
+              'sub.cid': opts.contestId
             })
             .limit(1);
-    }
-    else {
-        sql = sql
+  }
+  else {
+    sql = sql
             .where({
-                'sub.id': opts.submissionId
+              'sub.id': opts.submissionId
             })
             .limit(1);
-    }
+  }
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -176,38 +176,38 @@ exports.getPublicTestCase = function(opts,cb){
  */
 exports.getUserSubmissions = function (username, cur_page, URL, cb) {
 
-    var sql = Query.select([
-        'user.username',
-        'submissions.id',
-        'submissions.status',
-        'submissions.language',
-        'submissions.submittime',
-        'submissions.cpu',
-        'submissions.memory',
-        'submissions.pid',
-        'problems.title'
-    ])
+  var sql = Query.select([
+    'user.username',
+    'submissions.id',
+    'submissions.status',
+    'submissions.language',
+    'submissions.submittime',
+    'submissions.cpu',
+    'submissions.memory',
+    'submissions.pid',
+    'problems.title'
+  ])
         .from('users as user')
         .leftJoin('submissions', 'user.id', 'submissions.uid')
         .leftJoin('problems', 'submissions.pid', 'problems.id')
         .where({
-            'user.username': username
+          'user.username': username
         }).orderBy('submissions.submittime', 'desc');
 
-    var sqlCount = Query.count('submissions.id as count')
+  var sqlCount = Query.count('submissions.id as count')
         .from('users as user')
         .leftJoin('submissions', 'user.id', 'submissions.uid')
         .where({
-            'user.username': username
+          'user.username': username
         });
 
-    Paginate.paginate({
-        cur_page: cur_page,
-        sql: sql,
-        sqlCount: sqlCount,
-        limit: 30,
-        url: URL
-    }, cb);
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    sqlCount: sqlCount,
+    limit: 30,
+    url: URL
+  }, cb);
 };
 
 
@@ -221,36 +221,36 @@ exports.getUserSubmissions = function (username, cur_page, URL, cb) {
  */
 exports.getUserProblemSubmissions = function (username, problemId, cur_page, URL, cb) {
 
-    var sql = Query.select([
-        'user.username',
-        'submissions.id',
-        'submissions.status',
-        'submissions.language',
-        'submissions.submittime',
-        'submissions.cpu',
-        'submissions.memory',
-        'submissions.pid',
-        'problems.title'
-    ])
+  var sql = Query.select([
+    'user.username',
+    'submissions.id',
+    'submissions.status',
+    'submissions.language',
+    'submissions.submittime',
+    'submissions.cpu',
+    'submissions.memory',
+    'submissions.pid',
+    'problems.title'
+  ])
         .from('users as user')
         .joinRaw(' LEFT JOIN submissions ON user.id = submissions.uid AND submissions.pid = ? ',[problemId])
         .leftJoin('problems', 'submissions.pid', 'problems.id')
         .where({
-            'user.username': username
+          'user.username': username
         }).orderBy('submissions.submittime', 'desc');
 
-    var sqlCount = Query.count('submissions.id as count')
+  var sqlCount = Query.count('submissions.id as count')
         .from('users as user')
         .joinRaw(' LEFT JOIN submissions ON user.id = submissions.uid AND submissions.pid = ? ',[problemId])
         .where({
-            'user.username': username
+          'user.username': username
         });
 
-    Paginate.paginate({
-        cur_page: cur_page,
-        sql: sql,
-        sqlCount: sqlCount,
-        limit: 30,
-        url: URL
-    }, cb);
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    sqlCount: sqlCount,
+    limit: 30,
+    url: URL
+  }, cb);
 };

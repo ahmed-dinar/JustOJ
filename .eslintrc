@@ -8,7 +8,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "indent": [2, 4, {
+    "indent": [2, 2, {
       "SwitchCase": 1,
       "MemberExpression": 1
     }],

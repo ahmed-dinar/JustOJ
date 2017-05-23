@@ -52,7 +52,7 @@ router.get('/uva' , function(req, res, next) {
 /**
  *
  */
-router.post('/uva' , function(req, res, next) {
+router.post('/uva', function(req, res, next) {
 
     if( !req.isAuthenticated() ){
         res.json({ status: 'error', error: '403' });
@@ -148,7 +148,15 @@ router.get('/codeforces' , function(req, res, next) {
 });
 
 
-
+/**
+ * [description]
+ * @param  {[type]}  [description]
+ * @param  {[type]}  [description]
+ * @param  {[type]}  [description]
+ * @param  {[type]}  [description]
+ * @param  {[type]}  [description]
+ * @return {[type]}  [description]
+ */
 router.post('/codeforces' , function(req, res, next) {
 
     if( !req.isAuthenticated() ){
@@ -571,22 +579,6 @@ router.get('/github/callback', isLoggedIn(true), function (req, res) {
                 callback(null,access_token);
             });
         },
-        /*
-        function (access_token , callback) {
-
-            var profileUrl = 'https://api.github.com/user?access_token=' + access_token;
-            request
-                .get(profileUrl , function (err, response, body) {
-                    if(err)
-                        return callback(err);
-
-                    body = JSON.parse(body);
-                    debug(body);
-
-
-                    callback(null,linkedinId);
-                });
-        },*/
         function (access_token, callback) {
 
             User.updateProfile({
@@ -667,21 +659,6 @@ router.get('/stackexchange/callback', isLoggedIn(true), function (req, res) {
                 callback(null,access_token);
             });
         },
-        /*
-         function (access_token , callback) {
-
-         var profileUrl = 'https://api.stackexchange.com/2.2/me?site=stackoverflow&key=' + config.get('stackexchange.key + '&access_token=' + access_token;
-         request
-         .get(profileUrl , function (err, response, body) {
-         if(err)
-         return callback(err);
-
-         body = JSON.parse(body);
-         debug(body);
-
-         callback(null,linkedinId);
-         });
-         },*/
         function (access_token, callback) {
 
             User.updateProfile({
@@ -695,6 +672,7 @@ router.get('/stackexchange/callback', isLoggedIn(true), function (req, res) {
 
                 callback(null,access_token);
             });
+
         }
     ], function (err , access_token) {
 

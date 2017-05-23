@@ -7,9 +7,9 @@ var router = express.Router();
 
 router.get('/', function (req, res, next) {
 
-    res.render('sockettest', {
+  res.render('sockettest', {
 
-    });
+  });
 
 });
 

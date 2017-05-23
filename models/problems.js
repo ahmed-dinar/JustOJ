@@ -21,20 +21,20 @@ var Query = require('../config/database/knex/query');
  */
 exports.findById = function (pid,attr,callback) {
 
-    var sql = Query.select();
+  var sql = Query.select();
 
-    if( attr.length ){
-        sql = Query.select(attr);
-    }
+  if( attr.length ){
+    sql = Query.select(attr);
+  }
 
-    sql = sql.from('problems')
+  sql = sql.from('problems')
         .where({ 'id': pid })
         .limit(1);
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            callback(err,rows);
+          callback(err,rows);
         });
 };
 
@@ -47,22 +47,22 @@ exports.findById = function (pid,attr,callback) {
  */
 exports.findProblems = function (uid,cur_page,URL, cb) {
 
-    var sql;
-    if (uid < 0) {
-        sql = Query
+  var sql;
+  if (uid < 0) {
+    sql = Query
             .select(['pb.id', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
-                Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
-                Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy')
+              Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
+              Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy')
             ])
             .from('problems  as pb');
-    }
-    else{  //TODO: bad query? disable it
-        sql = Query
+  }
+  else{  //TODO: bad query? disable it
+    sql = Query
             .select(['pb.id', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
-                Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
-                Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy'),
-                Query.raw('(pbus.pid IS NOT NULL) as youSolved'),
-                Query.raw('(pbut.pid IS NOT NULL) as youTried')
+              Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
+              Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy'),
+              Query.raw('(pbus.pid IS NOT NULL) as youSolved'),
+              Query.raw('(pbut.pid IS NOT NULL) as youTried')
             ])
             .from('problems  as pb')
             .joinRaw(' LEFT JOIN( ' +
@@ -77,9 +77,9 @@ exports.findProblems = function (uid,cur_page,URL, cb) {
                 'WHERE sa.`status` != 0 AND sa.`uid` = ? ' +
                 'GROUP BY sa.pid ' +
                 ') as pbut ON pb.id = pbut.pid ', [uid]);
-    }
+  }
 
-    sql = sql
+  sql = sql
         .joinRaw(' LEFT JOIN( ' +
             'SELECT ssss.pid, COUNT(DISTINCT ssss.uid) AS triedBy ' +
             'FROM submissions as ssss ' +
@@ -94,13 +94,13 @@ exports.findProblems = function (uid,cur_page,URL, cb) {
         .where('pb.status', 'public');
 
 
-    Paginate.paginate({
-        cur_page: cur_page,
-        sql: sql,
-        sqlCount: Query.count('id as count').from('problems').where('status','public'),
-        limit: 5,
-        url: URL
-    }, cb);
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    sqlCount: Query.count('id as count').from('problems').where('status','public'),
+    limit: 5,
+    url: URL
+  }, cb);
 };
 
 
@@ -110,11 +110,11 @@ exports.findProblems = function (uid,cur_page,URL, cb) {
  * @param cb
  */
 exports.findRank = function(pid,cb){
-    var sql = Query.select(['submissions.uid','submissions.language','users.username'])
+  var sql = Query.select(['submissions.uid','submissions.language','users.username'])
         .from('submissions')
         .where({
-            'pid': pid,
-            'status': '0'
+          'pid': pid,
+          'status': '0'
         })
         .leftJoin('users', 'submissions.uid', 'users.id')
         .min('cpu as cpu')
@@ -122,7 +122,7 @@ exports.findRank = function(pid,cb){
         .orderBy('cpu')
         .limit(5);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -134,16 +134,16 @@ exports.findRank = function(pid,cb){
  */
 exports.findByIdandTags = function(pid,cb){
 
-    var sql = Query.select(
+  var sql = Query.select(
         Query.raw('p.*,(SELECT GROUP_CONCAT(`tag`) FROM `problem_tags` pt WHERE p.`id` =  pt.`pid`) AS `tags`')
     )
         .from('problems as p')
         .where({
-            'id': pid
+          'id': pid
         })
         .limit(1);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -156,16 +156,16 @@ exports.findByIdandTags = function(pid,cb){
  */
 exports.findUserSubmissions = function(pid,uid,cb){
 
-    var sql = Query.select(['status','submittime','language'])
+  var sql = Query.select(['status','submittime','language'])
         .from('submissions')
         .where({
-            'pid': pid,
-            'uid': uid
+          'pid': pid,
+          'uid': uid
         })
         .orderBy('submittime','desc')
         .limit(5);
 
-    DB.execute(sql.toString(),cb);
+  DB.execute(sql.toString(),cb);
 };
 
 
@@ -176,14 +176,14 @@ exports.findUserSubmissions = function(pid,uid,cb){
  * @param fn
  */
 exports.insert = function(req,fn){
-    async.waterfall([
-        function(callback) {
-            insertProblem(req,callback);
-        },
-        function(pid,callback){
-            insertTags(req,pid,callback);
-        }
-    ], fn);
+  async.waterfall([
+    function(callback) {
+      insertProblem(req,callback);
+    },
+    function(pid,callback){
+      insertTags(req,pid,callback);
+    }
+  ], fn);
 };
 
 
@@ -194,26 +194,26 @@ exports.insert = function(req,fn){
  */
 exports.insertContestProblem = function(req,fn){
 
-    var sql = Query.insert({
-        title: entities.encodeHTML(req.body.title),
-        status: 'incomplete',
-        isContest: 1,
-        input: entities.encodeHTML(req.body.input),
-        output: entities.encodeHTML(req.body.output),
-        author: entities.encodeHTML(req.body.author),
-        statement: entities.encodeHTML(req.body.statement),
-        score: entities.encodeHTML(req.body.score),
-        difficulty: ''
-    })
+  var sql = Query.insert({
+    title: entities.encodeHTML(req.body.title),
+    status: 'incomplete',
+    isContest: 1,
+    input: entities.encodeHTML(req.body.input),
+    output: entities.encodeHTML(req.body.output),
+    author: entities.encodeHTML(req.body.author),
+    statement: entities.encodeHTML(req.body.statement),
+    score: entities.encodeHTML(req.body.score),
+    difficulty: ''
+  })
         .into('problems');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            if( err )
-                return fn(err);
+          if( err )
+            return fn(err);
 
-            fn(null,rows.insertId);
+          fn(null,rows.insertId);
         });
 };
 
@@ -225,19 +225,19 @@ exports.insertContestProblem = function(req,fn){
  */
 exports.update = function(req,fn){
 
-    async.waterfall([
-        function(callback) {
-            updateProblem(req,callback);
-        },
-        function(callback){
-            deleteTags(req,callback);
-        },
-        function(callback){
-            insertTags(req,req.params.pid,callback);
-        }
-    ], function (error, pid) {
-        fn(error,pid);
-    });
+  async.waterfall([
+    function(callback) {
+      updateProblem(req,callback);
+    },
+    function(callback){
+      deleteTags(req,callback);
+    },
+    function(callback){
+      insertTags(req,req.params.pid,callback);
+    }
+  ], function (error, pid) {
+    fn(error,pid);
+  });
 };
 
 
@@ -248,10 +248,10 @@ exports.update = function(req,fn){
  */
 exports.updateLimits = function(pid,limits,fn){
 
-    var sql = Query('problems').update(limits)
+  var sql = Query('problems').update(limits)
         .where({ 'id': pid });
 
-    DB.execute(sql.toString(), fn);
+  DB.execute(sql.toString(), fn);
 };
 
 
@@ -262,9 +262,9 @@ exports.updateLimits = function(pid,limits,fn){
  */
 exports.updateSubmission = function(pid,col,fn){
 
-    var sql = Query('problems').increment(col,1).where('id',pid);
+  var sql = Query('problems').increment(col,1).where('id',pid);
 
-    DB.execute(sql.toString(), fn);
+  DB.execute(sql.toString(), fn);
 };
 
 
@@ -276,9 +276,9 @@ exports.updateSubmission = function(pid,col,fn){
  */
 exports.updateByColumn = function (pid, cols, fn) {
 
-    var sql = Query('problems').update(cols).where({ 'id': pid });
+  var sql = Query('problems').update(cols).where({ 'id': pid });
 
-    DB.execute(sql.toString(), fn);
+  DB.execute(sql.toString(), fn);
 };
 
 
@@ -288,17 +288,17 @@ exports.updateByColumn = function (pid, cols, fn) {
  * @returns {{}}
  */
 exports.decodeToHTML = function(data){
-    var obj = {};
+  var obj = {};
 
-    _.forOwn(data, function(value, key) {
-        if( value === null ){
-            obj[key] = '';
-        }else {
-            obj[key] = entities.decodeHTML(value);
-        }
-    });
+  _.forOwn(data, function(value, key) {
+    if( value === null ){
+      obj[key] = '';
+    }else {
+      obj[key] = entities.decodeHTML(value);
+    }
+  });
 
-    return obj;
+  return obj;
 };
 
 
@@ -308,7 +308,7 @@ exports.decodeToHTML = function(data){
  * @param fn
  */
 exports.updateContestProblem = function(req,fn){
-    return updateProblem(req,fn);
+  return updateProblem(req,fn);
 };
 
 
@@ -319,23 +319,23 @@ exports.updateContestProblem = function(req,fn){
  */
 var updateProblem = function(req,callback){
 
-    var sql = Query('problems').update({
-        title: entities.encodeHTML(req.body.title),
-        status: 'incomplete',
-        input: entities.encodeHTML(req.body.input),
-        output: entities.encodeHTML(req.body.output),
-        author: entities.encodeHTML(req.body.author),
-        score: entities.encodeHTML(req.body.score),
-        statement: entities.encodeHTML(req.body.statement)
-    })
+  var sql = Query('problems').update({
+    title: entities.encodeHTML(req.body.title),
+    status: 'incomplete',
+    input: entities.encodeHTML(req.body.input),
+    output: entities.encodeHTML(req.body.output),
+    author: entities.encodeHTML(req.body.author),
+    score: entities.encodeHTML(req.body.score),
+    statement: entities.encodeHTML(req.body.statement)
+  })
         .where({ 'id': req.params.pid });
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            if( err ){ return callback(err); }
+          if( err ){ return callback(err); }
 
-            callback();
+          callback();
         });
 };
 
@@ -347,14 +347,14 @@ var updateProblem = function(req,callback){
  */
 var deleteTags = function(req,callback){
 
-    var sql = Query('problem_tags').where({ 'pid': req.params.pid }).del();
+  var sql = Query('problem_tags').where({ 'pid': req.params.pid }).del();
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            if( err ){ return callback(err); }
+          if( err ){ return callback(err); }
 
-            callback();
+          callback();
         });
 };
 
@@ -366,25 +366,25 @@ var deleteTags = function(req,callback){
  */
 var insertProblem = function(req,callback){
 
-    var sql = Query.insert({
-        title: entities.encodeHTML(req.body.title),
-        status: 'incomplete',
-        input: entities.encodeHTML(req.body.input),
-        output: entities.encodeHTML(req.body.output),
-        author: entities.encodeHTML(req.body.author),
-        statement: entities.encodeHTML(req.body.statement),
-        score: entities.encodeHTML(req.body.score),
-        category: req.body.category,
-        difficulty: req.body.difficulty
-    })
+  var sql = Query.insert({
+    title: entities.encodeHTML(req.body.title),
+    status: 'incomplete',
+    input: entities.encodeHTML(req.body.input),
+    output: entities.encodeHTML(req.body.output),
+    author: entities.encodeHTML(req.body.author),
+    statement: entities.encodeHTML(req.body.statement),
+    score: entities.encodeHTML(req.body.score),
+    category: req.body.category,
+    difficulty: req.body.difficulty
+  })
         .into('problems');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            if( err ) { return callback(err); }
+          if( err ) { return callback(err); }
 
-            callback(null,rows.insertId);
+          callback(null,rows.insertId);
         });
 };
 
@@ -398,28 +398,28 @@ var insertProblem = function(req,callback){
  */
 var insertTags = function(req,pid,callback){
 
-    var inserts = [];
-    _.forEach(MyUtil.tagList(),function(tag){
-        if( req.body[tag] || !_.isUndefined(req.body[tag]) ){
-            var value = {
-                'pid': pid,
-                'tag': tag
-            };
-            inserts.push(value);
-        }
-    });
+  var inserts = [];
+  _.forEach(MyUtil.tagList(),function(tag){
+    if( req.body[tag] || !_.isUndefined(req.body[tag]) ){
+      var value = {
+        'pid': pid,
+        'tag': tag
+      };
+      inserts.push(value);
+    }
+  });
 
     //if no tag
-    if( !inserts.length ){ return callback(null,pid); }
+  if( !inserts.length ){ return callback(null,pid); }
 
-    var sql = Query.insert(inserts).into('problem_tags');
+  var sql = Query.insert(inserts).into('problem_tags');
 
-    DB.execute(
+  DB.execute(
         sql.toString()
         ,function(err,rows){
-            if( err ) { return callback(err); }
+          if( err ) { return callback(err); }
 
-            callback(null,pid);
+          callback(null,pid);
         });
 };
 

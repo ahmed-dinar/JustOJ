@@ -14,50 +14,50 @@ module.exports = function(passport) {
     /**
      * LOCAL LOGIN
      */
-    passport.use(
+  passport.use(
         'local-login',
         new passportLocal.Strategy({
-            passReqToCallback : true
+          passReqToCallback : true
         },
         function(req, username, password, done){
-            User.login(username,password,function(err,user){
+          User.login(username,password,function(err,user){
 
-                if (err)
-                    return done(null, false, req.flash('loginFailure', err) );
+            if (err)
+              return done(null, false, req.flash('loginFailure', err) );
 
-                done(null, user);
-            });
+            done(null, user);
+          });
         }
     ));
 
 
     // used to serialize the user for the session
-    passport.serializeUser(function(user, done) {
-        done(null, user.id);
-    });
+  passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
 
 
     // used to deserialize the user
-    passport.deserializeUser(function(id, done) {
+  passport.deserializeUser(function(id, done) {
 
-        var sql = Query.select()
+    var sql = Query.select()
             .from('users')
             .where({
-                'id': id
+              'id': id
             })
             .limit(1);
 
-        DB.execute(
+    DB.execute(
             sql.toString()
             ,function(err,rows){
 
-                if(err)
-                    return done(err);
+              if(err)
+                return done(err);
 
-                if( !rows.length )
-                    return done('404,no user');
+              if( !rows.length )
+                return done('404,no user');
 
-                done(err, rows[0]);
+              done(err, rows[0]);
             });
-    });
+  });
 };
