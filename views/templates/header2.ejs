@@ -26,30 +26,30 @@
 
             <div class="collapse navbar-collapse Navbar-main transparent">
 
-                <ul class="nav navbar-nav" style="margin-left: 15px;">
+                <ul class="nav navbar-nav navbar-menu">
                     <li class="<%= active_nav === "" ? 'active' : '' %>">
                         <a href="/">
-                            <!--<i class="fa fa-home" aria-hidden="true"></i> -->Home
+                            <i class="fa fa-home" aria-hidden="true"></i>Home
                         </a>
                     </li>
                     <li class="<%= active_nav === "problems" ? 'active' : '' %>" >
-                        <a href="/problems" style="padding-left: 3px;">
-                            <!--<i class="fa fa-puzzle-piece" aria-hidden="true"></i> -->Problems
+                        <a href="/problems">
+                            <i class="fa fa-puzzle-piece" aria-hidden="true"></i>Problems
                         </a>
                     </li>
                     <li class="<%= active_nav === "ranks" ? 'active' : '' %>">
                         <a href="/ranks">
-                            <!--<i class="fa fa-trophy" aria-hidden="true"></i> -->Ranks
+                            <i class="fa fa-trophy" aria-hidden="true"></i>Ranks
                         </a>
                     </li>
                     <li class="<%= active_nav === "status" ? 'active' : '' %>">
                         <a href="/status">
-                            <!--<i class="fa fa-dot-circle-o" aria-hidden="true"></i> -->Status
+                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i>Status
                         </a>
                     </li>
                     <li class="<%= active_nav === "contest" ? 'active' : '' %>">
                         <a href="/contests">
-                            <!--<i class="fa fa-hourglass" aria-hidden="true"></i> -->Contests
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>Contests
                         </a>
                     </li>
                 </ul>
@@ -85,7 +85,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="/user/<%= user.username %>"><i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
-                            <li><a href="/user/settings/profile"><i class="fa fa-cog" aria-hidden="true"></i> Edit</a></li>
+                            <li><a href="/user/settings/profile"><i class="fa fa-cog" aria-hidden="true"></i> Settings</a></li>
                             <li><a href="/status/u/<%= user.username %>"><i class="fa fa-paper-plane" aria-hidden="true"></i> My Submissions</a></li>
                             <li class="divider"></li>
                             <li><a href="/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Log Out</a></li>

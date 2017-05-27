@@ -1,39 +1,39 @@
 <div class="contest-wrapper">
     <div class="content container text-center" style="padding-top: 10px;">
-        <h4 class="no-margin-top  no-margin-bottom" style="font-family: 'Roboto', sans-serif;">
+        <h4 class="no-margin-top  no-margin-bottom contest-title">
             <%= contest.title %>
         </h4>
         <div id="countdown" class="no-margin-bottom" style="font-size: 18px; margin-top: 3px; letter-spacing: 0.8px;"></div>
     </div>
-    <div class="content container" style="padding-top: 5px;>
+    <div class="content container" style="padding-top: 10px;>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12" style="padding-left: 0">
                 <ul class="nav nav-tabs nav-con" role="tablist">
 
                     <li role="presentation" class="<%= active_contest_nav === "problems" ? 'active' : '' %>">
                         <a href="/contests/<%= contest.id %>" aria-controls="problems" role="tab">
-                            <!--<i class="fa fa-tachometer" aria-hidden="true"></i> -->Problems
+                            Problems
                         </a>
                     </li>
                     <li role="presentation" class="<%= active_contest_nav === "clarifications" ? 'active' : '' %>">
                         <a href="/contests/<%= contest.id %>/clarifications/all" aria-controls="clarifications" role="tab">
-                            <!--<i class="fa fa-question-circle" aria-hidden="true"></i> -->Clarifications
+                            Clarifications
                         </a>
                     </li>
                     <li role="presentation" class="<%= active_contest_nav === "standings" ? 'active' : '' %>">
                         <a href="/contests/<%= contest.id %>/standings" aria-controls="standings" role="tab">
-                            <!--<i class="fa fa-trophy" aria-hidden="true"></i> -->Standings
+                            Standings
                         </a>
                     </li>
                     <li role="presentation" class="<%= active_contest_nav === "submissions" ? 'active' : '' %>">
                         <a href="/contests/<%= contest.id %>/submissions" aria-controls="submissions" role="tab">
-                            <!--<i class="fa fa-paper-plane" aria-hidden="true"></i> -->Submissions
+                           Submissions
                         </a>
                     </li>
                     <% if(isLoggedIn){ %>
                         <li role="presentation" class="<%= active_contest_nav === "submissionsmy" ? 'active' : '' %>">
                             <a href="/contests/<%= contest.id %>/submissions/u/my" aria-controls="submissionsmy" role="tab">
-                                <!--<i class="fa fa-paper-plane-o" aria-hidden="true"></i> -->My Submissions
+                                My Submissions
                             </a>
                         </li>
                     <% } %>

@@ -10,20 +10,59 @@ var reCAPTCHA = require('recaptcha2');
 
 var Secrets = require('../files/secrets/Secrets');
 
+function firstMid(req, res, next){
+    console.log('I am first');
+    next();
+}
+
+function secondMid(req, res, next){
+    console.log('I am second');
+    next();
+}
 
 
-/* GET resister page. */
+router.route('/')
+  .get(secondMid, firstMid, function(req, res, next){
+    console.log(req.body);
+    console.log(req.params);
+    console.log(req.query);
+    res.render('s3', {
+       // SITE_KEY: Secrets.recaptcha2.SITE_KEY
+    });
+  })
+  .post(function(req, res, next){
+    console.log(req.body);
+    console.log(req.params);
+    console.log(req.query);
+    res.end('nope');
+  });
+
+
+router.route('/test')
+  .get(function(req, res, next){
+    console.log('test');
+    res.render('s3', {
+       // SITE_KEY: Secrets.recaptcha2.SITE_KEY
+    });
+  });
+
+/* GET resister page. 
 router.get('/' , function(req, res, next) {
 
-    console.log(Secrets.recaptcha2.SITE_KEY);
+    //console.log(Secrets.recaptcha2.SITE_KEY);
 
     res.render('s3', {
-        SITE_KEY: Secrets.recaptcha2.SITE_KEY
+       // SITE_KEY: Secrets.recaptcha2.SITE_KEY
     });
 });
 
+
 router.post('/' , function(req, res, next) {
 
+
+
+
+/*
     var recaptcha = new reCAPTCHA({
         siteKey: Secrets.recaptcha2.SITE_KEY,
         secretKey: Secrets.recaptcha2.SECRET_KEY
@@ -38,7 +77,7 @@ router.post('/' , function(req, res, next) {
                JSON.stringify(  recaptcha.translateErrors(errorCodes))
             );
         });
-});
+});*/
 
 router.post('/:pid/', function(req, res, next) {
 

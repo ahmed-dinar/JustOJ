@@ -21,7 +21,9 @@
         <div class="col-md-9">
 
             <div class="panel panel-default">
-                <div class="panel-heading"><i class="fa fa-hourglass-half" aria-hidden="true"></i> Running Contests</div>
+                <div class="panel-heading">
+                    <h5><i class="fa fa-clock-o"></i> Running Contests</h5>
+                </div>
 
                 <% if(running.length){ %>
 
@@ -62,7 +64,7 @@
 
 
             <div class="panel panel-default">
-                <div class="panel-heading"><i class="fa fa-hourglass-o" aria-hidden="true"></i> Future Contests</div>
+                <div class="panel-heading"><h5><i class="fa fa-clock-o"></i> Future Contests</h5></div>
             <% if(future.length){ %>
 
             <table class="table table-responsive table-contest-list">
@@ -101,10 +103,9 @@
 
 
 
-
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-hourglass-end" aria-hidden="true"></i> Past Contests
+                    <h5><i class="fa fa-clock-o"></i> Past Contests</h5>
                     <span class="pull-right">
                         <a class="btn btn-xs btn-default" href="/contests/past">View All</a>
                     </span>

@@ -191,8 +191,10 @@ module.exports.normalizePort = function (val) {
  */
 module.exports.initServer = function (app) {
 
+  global.PORT = nconf.get('PORT') || '3000';
+
     //set port for express app server
-  app.set('port', this.normalizePort( nconf.get('PORT') || '3000') );
+  app.set('port', this.normalizePort(global.PORT) );
 
     /*
     if ( nconf.get('ssl') ) {

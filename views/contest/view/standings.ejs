@@ -17,7 +17,6 @@
 
 <%
 var probNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
 %>
 
 
@@ -36,9 +35,6 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                     <th class="text-center fixed-cell ellips" title="<%- problemStats[i].title %> [ <%= problemStats[i].solvedBy %>/<%= problemStats[i].triedBy %> ]">
                         <a href="/contests/<%= contest.id %>/problem/<%= problemStats[i].pid %>"><%= probNames.charAt(i) %></a>
                     </th>
-                    <% }
-                    for(var i=problemStats.length; i<colspan; i++){ %>
-                    <!--<th class="fixed-cell"></th>-->
                     <% } %>
 
                 </tr>
@@ -51,8 +47,12 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                 <% if( ranks[i].penalty === null || isUndefined(ranks[i].penalty) ){ %>
 
                 <tr>
-                    <td  class="text-center vertical-middle"><%= pagination.offset() + i + 1 %></td>
-                    <td  class="vertical-middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
+                    <td  class="text-center vertical-middle">
+                        <%= pagination.offset() + i + 1 %>
+                    </td>
+                    <td  class="vertical-middle who">
+                        <a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a>
+                    </td>
                     <td class="text-center vertical-middle">0</td>
                     <td class="text-center vertical-middle" >0</td>
                     <% for(var j=0; j<problemStats.length; j++){ %>
@@ -72,7 +72,9 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
 
                 <tr>
                     <td class="text-center vertical-middle"><%= pagination.offset() + i + 1 %></td>
-                    <td class="vertical-middle"><a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a></td>
+                    <td class="vertical-middle who">
+                        <a href="/user/<%= ranks[i].username %>"><%= ranks[i].username %></a>
+                    </td>
                     <td class="text-center solved-count vertical-middle"><%= ranks[i].solved %></td>
                     <td class="text-center standings-cell vertical-middle">
                         <a href="/contests/<%= contest.id %>/submissions/u/<%= ranks[i].username %>" class="label label-info">
@@ -188,13 +190,15 @@ var colspan = problemStats.length < 5 ? 5 : problemStats.length; //
                 url: URL,
                 dataType: "json",
                 success: function(data) {
-                    if( typeof data === 'string' )
-                        document.getElementById('run-info').innerHTML = '<h3 style="color:#f56b3d">error while retrieving information</h3>';
-                    else {
-                        document.getElementById('run-info-header').innerHTML = '<b>' + dataUser + '</b>\'s submissions for problem ' + problemNo + ' , <a href="/contests/<%= contest.id %>/submission?username='+ dataUser +'&problem='+ problemId +'">#</a>';
-                        document.getElementById('run-info').innerHTML = submissionHTML(data);
-                    }
 
+                    console.log(data);
+
+                    if( data.status !== 'success' ){
+                        document.getElementById('run-info').innerHTML = '<h3 style="color:#f56b3d">error while retrieving information</h3>';
+                        return;
+                    }
+                    document.getElementById('run-info-header').innerHTML = '<b>' + dataUser + '</b>\'s submissions for problem ' + problemNo + ' , <a href="/contests/<%= contest.id %>/submission?username='+ dataUser +'&problem='+ problemId +'">#</a>';
+                    document.getElementById('run-info').innerHTML = submissionHTML(data.data);
 
                     $('#myModal').modal('show');
                 },

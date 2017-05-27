@@ -8,7 +8,6 @@ var router = express.Router();
 
 var json2csv = require('json2csv');
 var has = require('has');
-var entities = require('entities');
 var isUndefined = require('lodash/isUndefined');
 var range = require('lodash/range');
 var forEach = require('lodash/forEach');
@@ -22,7 +21,6 @@ var rimraf = require('rimraf');
 var url = require('url');
 var mkdirp = require('mkdirp');
 var logger = require('winston');
-var nconf = require('nconf');
 
 var MyUtil = require('../lib/myutil');
 var Submission = require('../models/submission');
@@ -67,7 +65,7 @@ router.get('/past' , function(req, res, next) {
   if( isUndefined(cur_page) || parseInt(cur_page) < 1 )
     cur_page = 1;
   else
-        cur_page = parseInt(cur_page);
+    cur_page = parseInt(cur_page);
 
   var URL = url.parse(req.originalUrl).pathname;
   Contest.getPastContests(cur_page,URL, function (err,rows,pagination) {
@@ -99,28 +97,75 @@ router.get('/host' , function(req, res, next) {
 });
 
 
+
 /**
  *  Create a contest
  */
-router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
+router.route('/create')
+  .get( isLoggedIn(true), roles.is('admin'), function(req, res, next) {
 
-  if( !req.isAuthenticated() )
-    return res.end('unauthorized');
+    logger.debug('you were right!');
 
-  res.render('contest/create',{
-    active_nav: 'contest',
-    isLoggedIn: req.isAuthenticated(),
-    user: req.user,
-    errors: req.flash('err')
+    res.render('contest/create',{
+      active_nav: 'contest',
+      isLoggedIn: req.isAuthenticated(),
+      user: req.user,
+      errors: req.flash('err')
+    });
+  })
+  .post( isLoggedIn(true), roles.is('admin'), function(req, res, next) {
+
+    logger.debug('no, i am not!!');
+
+    if( !req.body ) 
+      return next(new Error('No request body not found!'));
+
+    var type = req.body.type;
+    var title = req.body.title;
+    var beginDate = req.body.beginDate;
+    var beginTime = req.body.beginTime;
+    var lenDay = req.body.lenDay;
+    var lenTime = req.body.lenTime;
+
+    if( isUndefined(type) || isUndefined(title) || isUndefined(beginDate) || isUndefined(beginTime) ||
+          isUndefined(lenDay) || isUndefined(lenTime) || !type.length || !title.length || !beginDate.length ||
+          !beginTime.length || !lenDay.length || !lenTime.length){
+
+      req.flash('err','invalid or empty data, please check again');
+      res.redirect('/contests/create');
+      return;
+    }
+
+    var len = moment(lenTime, 'HH:mm:ss');
+    var begin = moment(beginDate + ' ' + beginTime).format('YYYY-MM-DD HH:mm:ss');
+    var end = moment(beginDate + ' ' + beginTime).add({
+      days: parseInt(lenDay),
+      hours: parseInt(len.get('hour')),
+      minutes: parseInt(len.get('minute')),
+      seconds: parseInt(len.get('second'))
+    })
+          .format('YYYY-MM-DD HH:mm:ss');
+
+
+    Contest.create({
+      title: title,
+      begin: begin,
+      end: end,
+      status: 0,
+      privacy: type === 'public' ? 1 : 0
+    }, function(err,rows){
+      if(err) return next(new Error(err));
+
+      res.redirect('/contests/edit/' + rows.insertId);
+    });
   });
-});
 
 
 
 /**
  * Delete a contest
  */
-router.post('/delete', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
+router.post('/delete', isLoggedIn(true), roles.is('admin'), function(req, res, next) {
 
   var cid = req.body.cid;
 
@@ -137,16 +182,12 @@ router.post('/delete', isLoggedIn(true) , roles.is('admin'), function(req, res, 
 });
 
 
-
 /**
  *
  */
-router.get('/edit', /*isLoggedIn(true) , roles.is('admin'),*/ function(req, res, next) {
+router.get('/edit', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-    /*
-    if( !req.isAuthenticated() )
-        return res.end('unauthorized');
-*/
+
   Contest.getEditable(function(err,rows){
 
     if(err)
@@ -1849,53 +1890,6 @@ router.post('/edit/detail/:cid', isLoggedIn(true) , roles.is('admin'), function(
   });
 });
 
-
-/**
- *  TODO: check it again
- */
-router.post('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-
-  if( !req.body ) return next(new Error('No request body not found!'));
-
-  var type = req.body.type;
-  var title = req.body.title;
-  var beginDate = req.body.beginDate;
-  var beginTime = req.body.beginTime;
-  var lenDay = req.body.lenDay;
-  var lenTime = req.body.lenTime;
-
-  if( isUndefined(type) || isUndefined(title) || isUndefined(beginDate) || isUndefined(beginTime) ||
-        isUndefined(lenDay) || isUndefined(lenTime) || !type.length || !title.length || !beginDate.length ||
-        !beginTime.length || !lenDay.length || !lenTime.length){
-
-    req.flash('err','invalid or empty data, please check again');
-    res.redirect('/contests/create');
-    return;
-  }
-
-  var len = moment(lenTime, 'HH:mm:ss');
-  var begin = moment(beginDate + ' ' + beginTime).format('YYYY-MM-DD HH:mm:ss');
-  var end = moment(beginDate + ' ' + beginTime).add({
-    days: parseInt(lenDay),
-    hours: parseInt(len.get('hour')),
-    minutes: parseInt(len.get('minute')),
-    seconds: parseInt(len.get('second'))
-  })
-        .format('YYYY-MM-DD HH:mm:ss');
-
-
-  Contest.create({
-    title: title,
-    begin: begin,
-    end: end,
-    status: 0,
-    privacy: type === 'public' ? 1 : 0
-  }, function(err,rows){
-    if(err) return next(new Error(err));
-
-    res.redirect('/contests/edit/' + rows.insertId);
-  });
-});
 
 
 /**

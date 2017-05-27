@@ -31,6 +31,11 @@ var csrfToken;
  *
  */
 router.get('/' , function(req, res, next) {
+    logger.debug(global.PORT);
+    logger.debug(req.baseUrl);
+    logger.debug(req.originalUrl);
+    logger.debug(req.hostname);
+    logger.debug(req.protocol);
     res.status(404);
 });
 
@@ -244,7 +249,7 @@ router.get('/google', isLoggedIn(true), function(req, res, next) {
         tokenUrl: 'https://www.googleapis.com/oauth2/v4/token'
     } , {
         client_id: config.get('google:client_id'),
-        redirect_uri: 'http://localhost:8888/auth/google/callback',
+        redirect_uri: 'http://localhost:'+ global.PORT +'/auth/google/callback',
         response_type: 'code',
         scope: 'profile'
     } , req, res, next);
@@ -271,7 +276,7 @@ router.get('/google/callback', isLoggedIn(true), function (req, res) {
         function (callback) {
 
             OAuth2.getOAuthAccessToken(code, {
-                redirect_uri: 'http://localhost:8888/auth/google/callback',
+                redirect_uri: 'http://localhost:'+global.PORT+'/auth/google/callback',
                 grant_type: 'authorization_code'
             }, function (err, access_token, refresh_token, results) {
                 
@@ -351,7 +356,7 @@ router.get('/facebook' , isLoggedIn(true), function(req, res, next) {
         tokenUrl: "https://graph.facebook.com/v2.9/oauth/access_token"
     }, {
         client_id: config.get('facebook:app_id'),
-        redirect_uri: 'http://localhost:8888/auth/facebook/callback',
+        redirect_uri: 'http://localhost:'+global.PORT+'/auth/facebook/callback',
         response_type: 'code',
         scope: 'public_profile'
     }, req, res, next);
@@ -375,7 +380,7 @@ router.get('/facebook/callback', isLoggedIn(true), function (req, res) {
         function (callback) {
 
             OAuth2.getOAuthAccessToken(code, {
-                redirect_uri: 'http://localhost:8888/auth/facebook/callback'
+                redirect_uri: 'http://localhost:'+global.PORT+'/auth/facebook/callback'
             }, function (err, access_token, refresh_token, results) {
                 if (err)
                     return callback(err);
@@ -448,7 +453,7 @@ router.get('/linkedin' , isLoggedIn(true), function(req, res, next) {
     }, {
         response_type: 'code',
         client_id: config.get('linkedin:client_id'),
-        redirect_uri: 'http://localhost:8888/auth/linkedin/callback',
+        redirect_uri: 'http://localhost:'+global.PORT+'/auth/linkedin/callback',
         scope: "r_basicprofile"
     }, req, res, next);
 });
@@ -472,7 +477,7 @@ router.get('/linkedin/callback', isLoggedIn(true), function (req, res) {
 
             OAuth2.getOAuthAccessToken(code, {
                 grant_type: 'authorization_code',
-                redirect_uri: 'http://localhost:8888/auth/linkedin/callback'
+                redirect_uri: 'http://localhost:'+global.PORT+'/auth/linkedin/callback'
             }, function (err, access_token, refresh_token, results) {
                 if (err)
                     return callback(err);
@@ -546,7 +551,7 @@ router.get('/github' , isLoggedIn(true), function(req, res, next) {
         authUrl: 'login/oauth/authorize',
         tokenUrl: 'login/oauth/access_token'
     }, {
-        redirect_uri: 'http://localhost:8888/auth/github/callback',
+        redirect_uri: 'http://localhost:'+global.PORT+'/auth/github/callback',
         scope: 'user'
     }, req, res, next);
 });
@@ -623,7 +628,7 @@ router.get('/stackexchange' , isLoggedIn(true), function(req, res, next) {
         authUrl: 'oauth',
         tokenUrl: 'oauth/access_token'
     }, {
-        redirect_uri: 'http://localhost:8888/auth/stackexchange/callback',
+        redirect_uri: 'http://localhost:'+global.PORT+'/auth/stackexchange/callback',
         scope: "read_inbox,no_expiry",
         client_id: config.get('stackexchange:client_id')
     }, req, res, next);
@@ -647,7 +652,7 @@ router.get('/stackexchange/callback', isLoggedIn(true), function (req, res) {
         function (callback) {
 
             OAuth2.getOAuthAccessToken(code , {
-                redirect_uri: 'http://localhost:8888/auth/stackexchange/callback'
+                redirect_uri: 'http://localhost:'+global.PORT+'/auth/stackexchange/callback'
             }, function (err, access_token, refresh_token, results) {
                 if (err)
                     return callback(err);
