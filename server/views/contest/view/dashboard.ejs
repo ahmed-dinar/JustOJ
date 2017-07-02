@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <% include ../../templates/head.ejs %>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+
+</head>
+<body>
+
+<!-- header and menu -->
+<% include ../../templates/header2.ejs %>
+
+<% include ../../templates/contest_header2.ejs %>
+
+
+<div class="container content c-h">
+    <div class="col-md-10 nopadding" >
+        <div class="panel panel-default" >
+
+
+<% if(problemDownloadLink){ %>
+            <div class="panel-heading panel-btn-heading clearfix" >
+                <h5 class="panel-title pull-left">
+                    <i class="fa fa-puzzle-piece" aria-hidden="true"></i> Problems
+                </h5>
+                <div class="pull-right">
+                    <a href="<%= problemDownloadLink %>" class="btn btn-sm btn-default">
+                        <i class="fa fa-download" aria-hidden="true"></i> Download PDF
+                    </a>
+                </div>
+            </div>
+<% }else{ %>
+            <div class="panel-heading">
+                <h5 class="panel-title">
+                    <i class="fa fa-puzzle-piece" aria-hidden="true"></i> Problems
+                </h5>
+            </div>
+<% } %>
+
+
+
+            <% var ch = "abcdefghijklmnopqrstuvwxyz"; %>
+            <% var problem_label = ""; %>
+
+            <table class="table contest-problem-table table-responsive">
+                <tbody>
+                <% for(var i= 0; i<problems.length; i++){ %>
+
+                <tr>
+                    <td style="width: 3%; padding-left: 18px;">
+                        <h4><%= ch.charAt(i).toUpperCase() %></h4>
+                    </td>
+
+                    <td style="width: 89%">
+                        <a href="/contests/<%= contest.id %>/problem/<%= problems[i].pid %>">
+                            <div class="contest-problem-title"><%- problems[i].title %></div>
+                        </a>
+                    </td>
+
+                    <%
+                        problem_label = "";
+                        if(isLoggedIn && registered){
+                            if(  problems[i].yousolved !== -1){
+                            //   problem_label = 'color: #2db300;';
+                               problem_label = 'badge-success';
+                            }else if(problems[i].youtried !== -1){
+                              //  problem_label = 'color: #e62e00;';
+                                problem_label = 'badge-warning';
+                            }
+                        }
+                    %>
+
+                    <td style=" width: 8%; " class="ellips">
+
+                        <div class="badge <%= problem_label %>">
+
+                        <i class="fa fa-user" aria-hidden="true"></i> x <%= problems[i].accepted %></div>
+                    </td>
+                </tr>
+
+                <% } %>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript" src="/javascripts/pageFunctions/Countdown.js"></script>
+<script type="text/javascript">
+    $( document ).ready(function() {
+        CountDownTimer('<%= contest.end %>',document.getElementById("countdown"));
+    });
+</script>
+
+<!-- footer -->
+<% include ../../templates/footer.ejs %>
+
+</body>
+</html>

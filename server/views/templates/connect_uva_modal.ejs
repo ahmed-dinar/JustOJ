@@ -1,0 +1,216 @@
+
+
+<!-- Modal -->
+<div class="modal fade" id="uvaModal" tabindex="-1" role="dialog" aria-labelledby="uvaModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="text-bold modal-title" id="uvaModalLabel">Verify your identity</h4>
+            </div>
+            <div class="modal-body">
+                <h4>We need to verify that the account belongs to you. Please follow these steps.</h4>
+                <div class="row nopadding">
+                    <p>1. Change your username on UVA online judge to:</p>
+                    <h3 class="text-bold" id="uvaUsename" style="letter-spacing: 0.2px;"><%= profile.randomUvaName %></h3>
+                    <div class="help-block">* You can change your username after verification</div>
+                </div>
+                <div class="row nopadding">
+                    <p>2. Enter your UVA online Judge ID:</p>
+                    <input type="text" name="uvaId" class="form-control notify"  id="uvaId" placeholder="UVA Online Judge Id"  >
+                    <div class="help-block">
+                        <p>* You can find your online judge id in My Account section.</p>
+                        <p>* Or, Go to the following link to find you online judge id. ( replace {username} with your uva username ) </p>
+                        <p>http://uhunt.felix-halim.net/api/uname2uid/{username}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="verifyUvaId">Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="cfModal" tabindex="-1" role="dialog" aria-labelledby="cfModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="text-bold modal-title" id="cfModalLabel">Verify your identity</h4>
+            </div>
+            <div class="modal-body">
+                <h4>We need to verify that the account belongs to you. Please follow these steps.</h4>
+                <div class="row nopadding">
+                    <p>1. Change your email on Codeforces with the following and make it public <span class="cftooltip fa fa-question-circle" aria-hidden="true"></span>:</p>
+                    <h4 class="text-bold" id="cfEmail" style="letter-spacing: 0 .2px;"><%= profile.randomCfEmail %>@example.com</h4>
+                    <div class="help-block">* You can change your email after verification</div>
+                </div>
+                <div class="row nopadding">
+                    <p>2. Enter your Codeforces username:</p>
+                    <input type="text" name="cfUsername" class="form-control notify"  id="cfUsername" placeholder="Codeforces username"  >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="verifyCfId">Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tooltip_templates">
+    <span id="cftooltip_content">
+        <img src="/images/cf_help.png" />
+    </span>
+</div>
+
+<script>
+
+
+    $(document).ready(function() {
+        $('.cftooltip').tooltipster({
+            content: $('#cftooltip_content'),
+            contentCloning: false,
+            side: 'right',
+            theme: 'tooltipster-shadow'
+        });
+    });
+
+
+    $("#verifyUvaId").click(function (e) {
+
+        if( $('#uvaId').val() === '' ){
+            $('#uvaId').notify('Please enter uva id', 'error');
+            return;
+        }
+
+        $.ajax({
+            url: "/auth/uva",
+            type: "POST",
+            dataType: "json",
+            cache: false,
+            data: {
+                uvaUsename: $("#uvaUsename").html(),
+                uvaID: $("#uvaId").val()
+            },
+            beforeSend: function (xhr) {
+                swal('Please wait');
+                swal.showLoading();
+            }
+        })
+            .done(function (data) {
+
+                if( data.error ){
+                    swal(
+                        'Error!',
+                        'Error while verifying',
+                        'error'
+                    );
+                    return;
+                }
+
+                if( data.verified ){
+                    swal({
+                        title: 'Verified!',
+                        text: "You can change your username now!",
+                        type: 'success'
+                    }).then(function () {
+                        window.location.replace("/user/settings/profile");
+                    });
+                    return;
+                }
+
+               /* if( data.status == 404 ){
+                    swal(
+                        'Sorry!',
+                        'No account found',
+                        'error'
+                    );
+                    return;
+                }*/
+
+                swal(
+                    'Sorry!',
+                    'No account found',
+                    'error'
+                );
+            })
+            .fail(function () {
+                swal(
+                    'Failed!',
+                    'Error while verifying',
+                    'error'
+                );
+            })
+            .always(function () {
+
+            });
+    });
+
+
+    $("#verifyCfId").click(function (e) {
+
+        if( $('#cfUsername').val() === '' ){
+            $('#cfUsername').notify('Please enter your Codeforces username', 'error');
+            return;
+        }
+
+
+        $.ajax({
+            url: "/auth/codeforces",
+            type: "POST",
+            dataType: "json",
+            cache: false,
+            data: {
+                cfUsername: $("#cfUsername").val(),
+                cfEmail: $("#cfEmail").html()
+            },
+            beforeSend: function (xhr) {
+                swal('Please wait');
+                swal.showLoading();
+            }
+        })
+            .done(function (data) {
+
+                if( data.error ){
+                    swal(
+                        'Error!',
+                        'Error while verifying',
+                        'error'
+                    );
+                    return;
+                }
+
+                if( data.verified ){
+                    swal({
+                        title: 'Verified!',
+                        text: "You can change your email now!",
+                        type: 'success'
+                    }).then(function () {
+                        window.location.replace("/user/settings/profile");
+                    });
+                    return;
+                }
+
+                swal(
+                    'Sorry!',
+                    'No account found',
+                    'error'
+                );
+            })
+            .fail(function () {
+                swal(
+                    'Failed!',
+                    'Error while verifying',
+                    'error'
+                );
+            })
+            .always(function () {
+
+            });
+    });
+
+</script>

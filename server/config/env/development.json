@@ -1,0 +1,67 @@
+{
+  "DB": {
+    "HOST": "127.0.0.1",
+    "USER": "root",
+    "PASS": "",
+    "NAME": "justoj_test",
+    "LIMIT": "20"
+  },
+  "ssl": {
+      "key": "/etc/apache2/ssl/nodeapache.key",
+      "cert": "/etc/apache2/ssl/nodeapache.cert"
+  },
+  "mail": "justoj.com@gmail.com",
+  "mailto": "berthogamer@gmail.com",
+  "gmail": {
+    "oauth": {
+      "clientId": "980593203667-peq79dfednii06choc54obnme8bh3jdu.apps.googleusercontent.com",
+      "clientSecret": "cs6msCAk5WN0Zkm4TFm6aneA",
+      "refreshToken": "1/QIw8HwqSG4hNabZtK7KY2DEFcGwdY9gq8vPcWQjUdATCIdmc5NV3z_MWB--AWFTw"
+    },
+    "username": "justoj.com@gmail.com",
+    "password": "just112358",
+    "accessToken": "592786015540-tn65a1ucc7kbei70bpjgsqlf3l1f64vb.apps.googleusercontent.com",
+    "clientId": "592786015540-tn65a1ucc7kbei70bpjgsqlf3l1f64vb.apps.googleusercontent.com",
+    "clientSecret": "LWugdbTZrRZ7wF9frmQnQFeM"
+  },
+  "recaptcha": {
+    "SITE_KEY": "6Ldp3AoUAAAAADHSwEKkA6MwELVfmWWQ9CRP589W",
+    "SECRET_KEY": "6Ldp3AoUAAAAAGw91TUeaKhDVJ9HVdt4O8Qh6fy6"
+  },
+  "recaptcha2": {
+    "SITE_KEY": "6LfL7SAUAAAAAJW--J3re8gqgAGRITlYZ497Ynvt",
+    "SECRET_KEY": "6LfL7SAUAAAAACs4N6LdGV-VaDTMCz_j5vh6vTWz"
+  },
+  "gmailOAuth2":{
+    "client_id": "980593203667-peq79dfednii06choc54obnme8bh3jdu.apps.googleusercontent.com",
+    "client_secret": "cs6msCAk5WN0Zkm4TFm6aneA",
+    "refresh_token": "1/QIw8HwqSG4hNabZtK7KY2DEFcGwdY9gq8vPcWQjUdATCIdmc5NV3z_MWB--AWFTw"
+  },
+  "google": {
+    "client_id": "592786015540-tn65a1ucc7kbei70bpjgsqlf3l1f64vb.apps.googleusercontent.com",
+    "client_secret": "LWugdbTZrRZ7wF9frmQnQFeM"
+  },
+  "github": {
+    "client_id": "c231072820fd4957b295",
+    "client_secret": "79be3633f4e921c3bf161ced9874545a7fa17480"
+  },
+  "stackexchange": {
+    "client_id": "9708",
+    "client_secret": "ZZVOU)gFXBz3usVNvm5tDg((",
+    "key": "hb)F9J*qyGPxs*9s*7F2xg((",
+    "redirect_uri": "https://stackexchange.com/oauth/login_success"
+  },
+  "linkedin": {
+    "client_id": "81f9ka61u1it7a",
+    "client_secret": "wM1hRAFUGWtS2PS6"
+  },
+  "facebook": {
+    "app_id": "1775225749399684",
+    "app_secret": "367ff087feaf098685abbcca329834bd",
+    "api_version": "v2.7"
+  },
+  "codeforces": {
+    "key": "3902e6cb19325a808a61f0d51b52e86d98e2d8a2",
+    "secret": "1f627f82269e263010e28628f5015f1be2dfdf87"
+  }
+}
