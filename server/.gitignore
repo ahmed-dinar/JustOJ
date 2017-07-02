@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+coverage
+.nyc_output
+files
+build
+logs
+config/env
+public/static
