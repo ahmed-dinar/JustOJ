@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <% include ../templates/head.ejs %>
+
+</head>
+<body>
+
+
+<!-- header and menu -->
+<% include ../templates/header2.ejs %>
+
+
+
+<!-- Main Content -->
+<div class="content container c-h">
+
+    <!-- errors -->
+    <% if (formError && formError.length) { %>
+        <div class="col-md-6 col-md-offset-3">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <%= formError %>
+            </div>
+        </div>
+    <% } %>
+
+    <div class="row">
+
+        <div class="col-md-9" style="padding-right: 0">
+            <div class="panel panel-default paragraph">
+
+
+
+                <div class="panel-body ">
+
+      <h3 id="h3"><%- decodeToHTML(problem.title) %></h3>
+                    <p style="font-size: 90%; line-height: 1.1px;">Limits: <b><%= (problem.cpu/1000.0) %>s</b> &nbsp;&&nbsp; <b><%= problem.memory %>MB</b></p><br>
+
+                    <p>
+                        <%- decodeToHTML(problem.statement) %>
+                    </p>
+                    <h3 id="h3">Sample</h3>
+                    <table class="table" style="padding: 0px; margin: 0px">
+                        <thead>
+                            <tr style="border-bottom: 1px solid;">
+                                <th style="border: none">Input</th>
+                                <th style="border: none">Output</th>
+                            </tr>
+                        </thead>
+                        <tbody style="padding: 0px; margin: 0px">
+                            <tr>
+                                <td class="col-md-1 codePre"><%- decodeToHTML(problem.input) %></td>
+                                <td class="col-md-1 codePre"><%- decodeToHTML(problem.output) %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <table class="table" style="background: #f3f3f3">
+                    <tbody>
+                    <tr>
+                        <th class="col-sm-1">Author</th>
+                        <td><%= problem.author %></td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">Added</th>
+                        <td><%= moment(problem.added).format("MM-DD-YYYY") %></td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">Category</th>
+                        <td><%= problem.category %></td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">Source limit</th>
+                        <td>50000 bytes</td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">Difficulty</th>
+                        <td><%= problem.difficulty %></td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">Submissions</th>
+                        <td><%= problem.submissions %></td>
+                    </tr>
+                    <tr>
+                        <th class="col-sm-1">Solved</th>
+                        <td><%= problem.solved %></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+
+        </div>
+        </div>
+
+
+
+
+        <div class="col-md-3">
+
+
+            <div class="panel-body">
+                <h5><i class="fa fa-tags" ></i> Tags</h5>
+                    <% if(tags.length){ %>
+                        <% for(var i=0; i<tags.length; i++){ %>
+                        <span class="label label-primary"><%= tagName[tags[i]] %></span>
+                        <% } %>
+                    <% }else{ %>
+                        <span class="label label-default">No Tag Added</span>
+                    <% } %>
+            </div>
+
+
+        <% if(isLoggedIn){ %>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
+
+                    <form method="post" action="/submit/<%= problem.id %>" name="usc" id="usc" enctype="multipart/form-data" >
+
+                        <div class="form-group">
+                            <select class="form-control" id="language"  >
+                                <option value="c">C</option>
+                                <option value="cpp">C++</option>
+                                <option value="java">JAVA</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="file" name="source" >
+                        </div>
+
+                        <input type='submit' class="btn btn-primary" style="padding: 6px 10px;" value="Submit" >
+
+                    </form>
+                </div>
+            </div>
+
+
+
+            <div class="panel panel-default">
+                    <div class="panel-body">
+                            <h5><i class="fa fa-clock-o" aria-hidden="true"></i> My Last Submissions</h5>
+
+
+                    <% if(userSubmissions.length){ %>
+                    </div>
+                            <table class="table table-striped" style="font-size: 12px;">
+                                <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Language</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <% for(var i=0; i<userSubmissions.length; i++){ %>
+                                    <tr>
+                                        <td title="<%= userSubmissions[i].submittime %>"><%= moment(userSubmissions[i].submittime).from() %></td>
+                                        <td><%= userSubmissions[i].language %></td>
+                                        <td>
+
+                                            <% var st = parseInt(userSubmissions[i].status); %>
+                                            <% if(st === 0){ %>
+                                            <span class="label label-success">
+                                                <% }else if(st === 5){ %>
+                                                <span class="label label-default">
+                                                    <% }else if(st === 6){ %>
+                                                    <span class="label label-info">
+                                                        <% }else if(st === 8){ %>
+                                                        <span class="label label-warning">
+                                                            <% }else{ %>
+                                                            <span class="label label-danger ">
+                                                                <% } %>
+                                                                <%= runStatus[st] %>
+                                                </span>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                                </tbody>
+                            </table>
+                    <div class="panel-body">
+                            <span class="pull-right">
+                                <a class="btn btn-xs btn-default" href="/status/u/<%= user.username %>/p/<%= problem.id %>">View All</a>
+                            </span>
+                        </div>
+                    <% }else{ %>
+                        <span class="label label-default">No Submission Found!</span>
+                        </div>
+                    <% } %>
+
+                </div>
+
+
+
+        <% }else{ %>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5><i class="fa fa-external-link" aria-hidden="true"></i> Submit</h5>
+                    <a class="btn btn-primary" href="/login/?redirect=/problems/JOP0<%= problem.id %>" >Login</a>
+                </div>
+            </div>
+
+         <% } %>
+
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5><i class="fa fa-trophy" ></i> Rank</h5>
+
+
+                    <% if(rank.length){ %>
+                </div>
+                        <table class="table"  style="font-size: 12px;">
+                            <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Language</th>
+                                <th>CPU</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <%
+                                var langName = {
+                                    cpp: 'C++',
+                                    c: 'C',
+                                    java: 'JAVA'
+                                };
+                            %>
+                            <% for(var i=0; i<rank.length; i++){ %>
+                            <tr>
+                                <td class="ellips"><a href="#"><%= rank[i].username %></a></td>
+                                <td><%= langName[rank[i].language] %></td>
+                                <td><%= parseFloat(rank[i].cpu/1000.0).toFixed(2) %>s</td>
+                            </tr>
+                            <% } %>
+                            </tbody>
+                        </table>
+                <div class="panel-body">
+                        <span class="pull-right">
+                            <a class="btn btn-xs btn-default" href="/ranks/p/<%= problem.id %>">View All</a>
+                        </span>
+                    </div>
+
+
+                    <% }else{ %>
+
+                    <span class="label label-default">Nobody solved it yet!</span>
+                    </div>
+                    <% } %>
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- footer -->
+<% include ../templates/footer.ejs %>
+
+
+
+<script type="text/javascript" src="/bootstrap/js/bootstrap-filestyle.min.js"></script>
+<script>
+
+    $(document).ready(function(e) {
+
+
+        $('#usc').on('submit', function (ev) {
+
+            $('<input />').attr('type', 'hidden')
+                    .attr('name', "language")
+                    .attr('value', document.getElementById("language").value)
+                    .appendTo('#usc');
+
+            return true;
+        });
+
+
+            $(":file").filestyle({
+            icon: false,
+            buttonText: "SOURCE..",
+            buttonName: "btn-dark",
+            buttonBefore: true,
+            placeholder: "No File Selected..",
+            size: "sm"
+        });
+    });
+
+
+</script>
+
+
+</body>
+</html>

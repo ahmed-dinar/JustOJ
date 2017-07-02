@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <% include templates/head.ejs %>
+
+    <script src="/javascripts/notify.min.js"></script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/themes/tooltipster-shadow.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/css/tooltipster.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/tooltipster/3.3.0/js/jquery.tooltipster.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pretty-checkbox/2.2.1/pretty.min.css" />
+     <link rel="stylesheet" href="/stylesheets/bootstrap-social.css">
+
+</head>
+<body class="form-center-body">
+
+
+<!-- Main Content -->
+<div class="content container">
+
+
+    <div class="form-center">
+        <div>
+            <div class="panel-body text-center form-header">
+                <a href="/" class="link-no-effect">
+                    <h3 class="web-title">Just Online Judge</h3>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="panel panel-default">
+
+            <div class="panel-body">
+
+
+                <div class="text-center" style="margin-bottom: 30px;">
+                   <h3 class="no-margin-top">Log In</h3>
+                </div>
+
+                <!-- success message -->
+                <% if (success.length) { %>
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="text-center"><%= success %></div>
+                    </div>
+                <% } %>
+
+
+                <!-- errors -->
+                <% if (errors.length) { %>
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <div class="text-center">
+                            <% if(typeof errors === 'string'){ %>
+                            <%= errors %>
+                            <% }else if(errors.length){ %>
+                            <%= errors[0].msg %>
+                            <% } %>
+                        </div>
+                    </div>
+                <% } %>
+
+
+                <!-- Login Form -->
+                <form method="post" action="<%= postUrl %>" id="logform">
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <input id="iUsername" type="username" name="username" placeholder="Username" class="form-control valpop" required>
+                    </div>
+
+                    <div class="form-group input-icon">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        <input id="iPassword" type="password" name="password" placeholder="Password" class="form-control valpop" required>
+                    </div>
+
+                    <div class="form-group pretty primary">
+                        <input type="checkbox" id="remCheckbox" value="remember-me" />
+                        <label for="remCheckbox">
+                            <i class="fa fa-check"></i> Remember me
+                        </label>
+                    </div>
+
+                    <a href="#" class="forgot-password btn-link pull-right" data-toggle="modal" data-target=".forgot-modal">Forgot Password?</a>
+
+
+                    <div class="form-group text-center" style="margin-top: 10px;">
+                        <button type="submit" data-loading-text="Logging in.." class="btn btn-primary btn-block btn-md">Login</button>
+                    </div>
+
+                </form>
+
+
+                <div class="text-center help-block form-title">
+                    <span>Or Connect with</span>
+                </div>
+
+                <div>
+                    <a class="btn btn-social btn-md btn-facebook" href="#">
+                        <span class="fa fa-facebook"></span> Facebook
+                    </a>
+                    <a class="btn btn-social btn-md btn-google" href="#">
+                        <span class="fa fa-google"></span> Google
+                    </a>
+                    <a class="btn btn-social btn-md btn-dark" href="#">
+                        <span class="fa fa-github"></span> Github
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body" style="padding: 10px;">
+                 <div class="text-center">
+                            <a href="/resister" class="btn-link">Create an account</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<!--
+    <div class="text-center help-block">
+        &copy; CSE , JUST
+    </div>-->
+
+</div>
+
+
+<div class="modal fade forgot-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div class="modal-title">
+                    <div class="help-block"><i class="fa fa-refresh" aria-hidden="true"></i> Reset Password</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div style="width: 420px; margin: 0px auto;">
+                    <form method="post" action="/user/reset" id="reset-form" >
+                        <div class="form-group input-icon">
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                            <input type="email" name="email" id="reset-email" placeholder="Enter your email" class="form-control notify">
+                        </div>
+                        <div class="form-group" style="margin-top: 15px;">
+                            <button type="submit" data-loading-text="Sending.." class="btn btn-dark btn-md" id="reset-btn" >Send Password Reset Link</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        $('#reset-btn').click(function (event) {
+            event.preventDefault();
+            if ($('#reset-email').val() === '') {
+                $('#reset-email').notify('Please enter your email', { position: 'top left' , className: 'error' });
+                return;
+            }
+            $('#reset-form').submit();
+        });
+
+
+            $(".alert").fadeTo(3500, 500).slideUp(500, function(){
+            $(".alert").slideUp(500);
+        });
+
+        $('.valpop').tooltipster({
+            trigger: 'custom', // default is 'hover' which is no good here
+            onlyOne: false,    // allow multiple tips to be open at a time
+            position: 'right',  // display the tips to the right of the element
+            theme: 'tooltipster-shadow'
+        });
+
+        var validator = $("#logform").validate({
+            highlight: function(element) {
+                $(element).addClass('val-error');
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('val-error');
+            },
+            errorPlacement: function (error, element) {
+                $(element).tooltipster('update', $(error).text());
+                $(element).tooltipster('show');
+            },
+            success: function (label, element) {
+                $(element).tooltipster('hide');
+            }
+        });
+    });
+
+</script>
+
+
+</body>
+</html>

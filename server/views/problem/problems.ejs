@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JUST Online Judge</title>
+
+    <% include ../templates/head.ejs %>
+
+</head>
+<body>
+
+<!-- header and menu -->
+<% include ../templates/header2.ejs %>
+
+
+
+<!-- Main Content -->
+<div class="content container c-h">
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                <h5 class="panel-title"><i class="fa fa-tasks" aria-hidden="true"></i> Problems</div></h5>
+
+
+                <!-- problem list -->
+                <table class="table problem-list table-striped">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th title="">Tried</th>
+                        <th title="">Solved</th>
+                        <th title="">Solved %</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <% for(var i=0; i<problems.length; i++){ %>
+                    <tr >
+
+
+                        <% if(isLoggedIn){ %>
+                        <% if( problems[i].youSolved ){ %>
+                        <td class="color-success" title="solved by you"><i class="fa fa-check" aria-hidden="true"></i>
+                            <% }else if( problems[i].youTried ){ %>
+                        <td class="color-failed" title="tried by you"><i class="fa fa-times" aria-hidden="true"></i>
+                            <% }else{ %>
+                        <td>
+                            <% } %>
+                            <% }else{ %>
+                        <td>
+                            <% } %>
+                        </td>
+
+                        <td>JOP0<%= problems[i].id %></td>
+                        <td class="ellips  pl-title">
+                            <a href="problems/JOP0<%= problems[i].id %>" >
+                                <%- problems[i].title %>
+                            </a>
+                        </td>
+
+                        <!--
+                        <td>
+                                            <span class="label label-default">
+                                                <%= problems[i].difficulty %>
+                                            </span>
+                        </td> -->
+
+                        <td class="ellips">
+                            <i class="fa fa-user-o" aria-hidden="true"></i> x<%= problems[i].triedBy %>
+                        </td>
+
+                        <td class="ellips">
+                            <a href="/ranks/p/<%= problems[i].id %>" >
+                                <i class="fa fa-user" aria-hidden="true"></i> x<%= problems[i].solvedBy %>
+                            </a>
+                        </td>
+
+                        <td>
+                            <div class="progress">
+                                <% var parcent = parseInt(problems[i].triedBy) === 0 ? 0 : (parseInt(problems[i].solvedBy) * 100) /  parseInt(problems[i].triedBy); %>
+                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="<%= parcent %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= parcent %>%">
+                                    <%= parcent %>%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+
+                    </tbody>
+
+                </table>
+
+
+            </div>
+            <% include ../templates/pagination.ejs %>
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Contribute Problem</h3>
+                    <p>Want to contribute problems?</p>
+                    <a href="#" class="btn btn-sm btn-primary">Click Here!</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</div>
+
+<!-- footer -->
+<% include ../templates/footer.ejs %>
+
+</body>
+</html>
