@@ -876,7 +876,7 @@ nav.nopadding, div.nopadding {
   transition: all 200ms ease;
 }
 
-.navbar-menu{
+/* .navbar-menu{
   margin-left: 25px;
 }
 
@@ -895,7 +895,7 @@ nav.nopadding, div.nopadding {
   line-height: 15px;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 13px;
-}
+} */
 
 
 .label-danger{

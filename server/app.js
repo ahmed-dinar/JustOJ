@@ -13,7 +13,11 @@ var bodyParser = require('body-parser');
 var expressSession = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
-var io = require('socket.io')();
+var helmet = require('helmet');
+var cors = require('cors');
+var compression = require('compression');
+var methodOverride = require('method-override');
+var serveStatic = require('serve-static');
 var _ = require('lodash');
 var expressValidator = require('express-validator');
 var logger = require('winston');
@@ -78,9 +82,10 @@ module.exports.loadMiddleware = function (app) {
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(methodOverride());
   app.use(expressValidator());
   app.use(cookieParser());
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(serveStatic(path.join(__dirname, 'public')));
 
   app.use(expressSession({
     secret: nconf.get('SESSION:SECRET') || 'secretisalwayssecret',
@@ -213,7 +218,7 @@ module.exports.initServer = function (app) {
         logger.info('creating server in SSL mode....');
         require('https').createServer(sslCred, app);
 
-    } else {*/
+      } else {*/
   logger.warn('creating server in non-SSL mode...');
   require('http').createServer(app);
     //}
@@ -233,8 +238,10 @@ module.exports.init = function () {
 
   var app = express();
 
-    //disable powered by to hide technology on websites from wappalyzer and similar app
-  app.disable('x-powered-by');
+  app.use(compression());
+  app.use(helmet());
+  app.use(cors());
+  app.use(helmet.hidePoweredBy());
 
     //load express view engine
   _this.loadViewEngine(app);

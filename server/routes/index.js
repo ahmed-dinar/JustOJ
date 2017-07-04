@@ -11,6 +11,8 @@ var gravatar = require('gravatar');
 
 router.get('/',function(req, res, next) {
 
+  console.log('what??');
+
   logger.debug(req.user);
 
   if(req.isAuthenticated()){
