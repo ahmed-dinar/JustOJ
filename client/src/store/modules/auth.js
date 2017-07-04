@@ -14,6 +14,12 @@ const getters ={
   isLoggedIn: state => {
     return state.authenticated;
   },
+  getUser: state => {
+   // return state.data;
+    return {
+      username: 'dinar'
+    };
+  },
   getToken: state => {
     return has(state.data,'access_token') ? 'Bearer ' + state.data.access_token : null;
   }

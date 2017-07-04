@@ -117,7 +117,7 @@ router.route('/create')
 
     logger.debug('no, i am not!!');
 
-    if( !req.body ) 
+    if( !req.body )
       return next(new Error('No request body not found!'));
 
     var type = req.body.type;
