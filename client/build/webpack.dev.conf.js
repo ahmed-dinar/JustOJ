@@ -26,7 +26,8 @@ module.exports = merge(baseWebpackConfig, {
 
     new GoogleFontsPlugin({
       fonts: [
-        { family: "Source Sans Pro", variants: [ "400", "600", "700" ] }
+        { family: "Source Sans Pro", variants: [ "400", "600", "700" ] },
+        { family: "Niconne", variants: [ "400" ] }
       ],
       local: false
     }),
