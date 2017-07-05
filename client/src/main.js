@@ -9,12 +9,14 @@ import axios from 'axios';
 import App from './App';
 import router from './router';
 import store from './store';
+import VuexFlash from './components/vuex-flash';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'font-awesome/css/font-awesome.css';
 import 'nprogress/nprogress.css';
 import 'bootstrap-social/bootstrap-social.css';
+import 'animate.css/animate.min.css';
 import './assets/style.css';
 import './assets/fonts/fonts.css';
 
@@ -30,6 +32,9 @@ Vue.use(VeeValidate, {
   fieldsBagName: 'formFields'
 });
 
+Vue.use(VuexFlash, {
+  key: '__vuexFlash'
+});
 
 /* eslint-disable no-new */
 new Vue({

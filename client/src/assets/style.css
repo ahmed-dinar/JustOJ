@@ -18,15 +18,15 @@ a{
 }
 
 .navbar-brand{
-  font-family: 'Sofia', cursive;
-  font-size: 15px;
+  font-family: 'Niconne', cursive;
+  font-size: 28px;
 
-  line-height: 1.1em;
+  line-height: 0;
 
   -webkit-perspective:1000;
   perspective:1000;
 
-  padding-top: 5px;
+  padding-top: 0;
   /* padding-left: 40px; */
 }
 
@@ -44,7 +44,7 @@ a{
 }
 
 .navbar-inverse {
-  background-color: #35495E;
+  background-color: #111116;
   background-image: none;
   border-color: transparent;
 }

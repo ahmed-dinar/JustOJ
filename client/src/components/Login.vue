@@ -1,5 +1,7 @@
 <template>
-<div class="form-center signin-form">
+  <div class="form-center signin-form">
+
+    <flash-message></flash-message>
 
     <b-alert variant="danger" class="text-center" dismissible :show="!!loginError" @dismissed="loginError=''" >
       {{ loginError }}
@@ -78,6 +80,10 @@
     </div>
   </b-card>
 
+  <button class="btn btn-primary btn-block"  @click="storeMe">
+   store
+ </button>
+
 
 </div>
 
@@ -86,7 +92,6 @@
 
 <script>
 
-  import { Validator } from 'vee-validate';
   import NProgress from 'nprogress';
   import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
@@ -101,64 +106,73 @@
     data() {
 
       return{
-       loading: false,
-       creds: {
-         username: '',
-         password: ''
-       },
-       loginError: null
-     };
-   },
+        loading: false,
+        creds: {
+          username: '',
+          password: ''
+        },
+        loginError: null
+      };
+    },
 
-   computed: {
+    computed: {
 
-   },
+    },
 
-   methods: {
+    methods: {
 
-    submit(scope){
+      submit(scope){
 
-     this.loading = true;
-     this.loginError = '';
-     NProgress.start();
+        this.loading = true;
+        this.loginError = '';
+        NProgress.start();
 
-     let credentials = {
-      username: this.creds.username,
-      password: this.creds.password
-    };
+        let credentials = {
+          username: this.creds.username,
+          password: this.creds.password
+        };
 
-    console.log(credentials);
+        console.log(credentials);
 
-    this.$validator.validateAll(scope)
-    .then(result => {
+        this.$validator.validateAll(scope)
+          .then(result => {
 
-      if(!result)
-        return this.formDone();
+            if(!result)
+              return this.formDone();
 
-      this.$store.dispatch('login', credentials)
-      .then(() => {
-        this.formDone();
-      })
-      .catch(err => {
-        this.formDone();
-        this.loginError = err;
-      });
+            this.$store.dispatch('login', credentials)
+              .then(() => {
+                this.formDone();
+              })
+              .catch(err => {
+                this.formDone();
+                this.loginError = err;
+              });
 
-    });
+          });
 
-  },
+      },
 
-  formDone(){
-    this.loading = false;
-    NProgress.done();
-    NProgress.remove();
-  }
+      formDone(){
+        this.loading = false;
+        NProgress.done();
+        NProgress.remove();
+      },
 
-},
+      storeMe(){
+        this.$store.dispatch('flash',{ msg: 'i am login!', variant: 'danger' }).then(()=>{
+          setTimeout(()=>{
+            console.log( this.$store.getters.getFlash );
+            console.log( this.$store.getters.getFlash );
+          }, 3000);
+        });
+      }
 
-mounted(){
+    },
 
-}
+    mounted(){
+
+    }
 
 };
 </script>
