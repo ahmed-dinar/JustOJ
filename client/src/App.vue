@@ -7,7 +7,8 @@
         <b-nav-toggle target="nav_collapse"></b-nav-toggle>
 
         <b-link class="navbar-brand" :to="{ path: '/' }">
-          <img src="img/brand-logo.png"  width="35" height="32" />
+          <!-- <img src="img/brand-logo.png"  width="35" height="32" /> -->
+          Just Oj
         </b-link>
 
         <b-collapse is-nav id="nav_collapse">
@@ -113,5 +114,6 @@
   .nav-login-btn{
     border-right: 1px solid rgba(255, 255, 255, 0.1);
   }
+
 
 </style>
