@@ -160,7 +160,11 @@
       },
 
       storeMe(){
+<<<<<<< HEAD
         this.$store.dispatch('flash',{ message: 'i am login!', variant: 'danger' }).then(()=>{
+=======
+        this.$store.dispatch('flash',{ msg: 'i am login!', variant: 'danger' }).then(()=>{
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
           setTimeout(()=>{
             console.log( this.$store.getters.getFlash );
             console.log( this.$store.getters.getFlash );

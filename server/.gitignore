@@ -5,5 +5,9 @@ coverage
 files
 build
 logs
+<<<<<<< HEAD
 config/env/
+=======
+config/env
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
 public/static
