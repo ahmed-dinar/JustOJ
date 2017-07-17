@@ -32,9 +32,7 @@ Vue.use(VeeValidate, {
   fieldsBagName: 'formFields'
 });
 
-Vue.use(VuexFlash, {
-  key: '__vuexFlash'
-});
+Vue.use(VuexFlash);
 
 /* eslint-disable no-new */
 new Vue({

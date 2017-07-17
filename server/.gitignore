@@ -5,5 +5,5 @@ coverage
 files
 build
 logs
-config/env
+config/env/
 public/static

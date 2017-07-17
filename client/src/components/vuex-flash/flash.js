@@ -4,16 +4,40 @@
  */
 
 import extend from 'extend';
-import template from './template';
 
-export default function(options = {}){
+const defaultTemplate = `
 
-  //only allow these options as root config and allow others as props
-  let { cleaner, getter, key, delay } = options;
+  <transition
+    :name="transitionName"
+    :enter-active-class="transitionIn"
+    :leave-active-class="transitionOut"
+  >
+    <b-alert :variant="variant || defaultVariant" :class="{ 'text-center': center }" :dismissible="!important" :show="show" >
+      {{ message }}
+    </b-alert>
+  </transition>
+
+`;
+
+export default function flash(
+  {
+    cleaner = 'CLEAR_FLASH',
+    getter = 'getFlash',
+    key = '__vuexFlash',
+    delay = 3000,
+    template = defaultTemplate,
+    storage = null,
+    save = true
+  } = {}
+) {
+
+  if( save && !storage ){
+    storage = window && window.sessionStorage;
+  }
 
   return {
 
-    template: template(),
+    template,
 
     props: {
       variant: {
@@ -31,42 +55,48 @@ export default function(options = {}){
       center: {
         type: Boolean,
         default: true
+      },
+      transitionName:{
+        type: String,
+        default: 'custom-classes-transition'
+      },
+      transitionIn:{
+        type: String,
+        default: 'animated slideInDown'
+      },
+      transitionOut:{
+        type: String,
+        default: 'animated slideOutUp'
       }
     },
 
     data(){
 
       return extend({
-        key: '__vuexFlash',
-        cleaner: 'CLEAR_FLASH',
-        getter: 'getFlash',
-        msg: null,
-        delay: 3,
-        defaultVariant: null
-      }, { cleaner, getter, key, delay });
+        message: null,
+        defaultVariant: null,
+        timer: null
+      }, { cleaner, getter, key, delay, storage, save });
     },
 
-    created() {
+    mounted() {
 
       let flashes = this.getFlash;
 
-      if( flashes.msg ){
-        this.clear();
+      if( flashes.message ){
         this.defaultVariant = flashes.variant || 'success';
-        this.msg = flashes.msg;
+        this.message = flashes.message;
+        this.clear();
+        if( this.autoHide ){
+          this.hide();
+        }
       }
     },
 
     computed: {
 
       show(){
-
-        if( !this.msg )
-          return false;
-
-        //in bootstrap-vue if `show` is set as number(in second) alert will auto hide
-        //https://bootstrap-vue.js.org/docs/components/alert
-        return this.autoHide ? this.delay : true;
+        return !! this.message;
       },
 
       getFlash(){
@@ -77,8 +107,21 @@ export default function(options = {}){
     methods: {
 
       clear(){
-        window.sessionStorage.removeItem(this.key);
         this.$store.commit(this.cleaner);
+        if( this.save ){
+          this.storage.removeItem(this.key);
+        }
+      },
+
+      hide(){
+
+        this.timer = setTimeout(() => {
+          this.message = null;
+          if( this.timer ){
+            clearTimeout(this.timer);
+          }
+        }, this.delay);
+
       }
     }
   };

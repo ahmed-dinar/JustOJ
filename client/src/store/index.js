@@ -25,7 +25,7 @@ export default new Vuex.Store({
       }
     }),
 
-    //for flash message in session
+   // for flash message in session
     createPersistedState({
       paths: ['flashMsg'],
       key: '__vuexFlash',

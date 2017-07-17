@@ -2,7 +2,7 @@
   <div class="hello text-center">
 
 
-    <flash-message autoHide></flash-message>
+    <flash-message></flash-message>
 
 
     <img src="logo.png">
