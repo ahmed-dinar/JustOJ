@@ -2,7 +2,11 @@
   <div class="hello text-center">
 
 
+<<<<<<< HEAD
     <flash-message></flash-message>
+=======
+    <flash-message autoHide></flash-message>
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
 
 
     <img src="logo.png">

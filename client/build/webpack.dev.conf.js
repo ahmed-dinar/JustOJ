@@ -12,9 +12,12 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
   baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name]);
 });
 
+<<<<<<< HEAD
 console.log(baseWebpackConfig);
 console.log(baseWebpackConfig.entry);
 
+=======
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
 module.exports = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })

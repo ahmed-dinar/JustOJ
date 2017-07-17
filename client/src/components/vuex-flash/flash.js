@@ -4,6 +4,7 @@
  */
 
 import extend from 'extend';
+<<<<<<< HEAD
 
 const defaultTemplate = `
 
@@ -38,6 +39,18 @@ export default function flash(
   return {
 
     template,
+=======
+import template from './template';
+
+export default function(options = {}){
+
+  //only allow these options as root config and allow others as props
+  let { cleaner, getter, key, delay } = options;
+
+  return {
+
+    template: template(),
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
 
     props: {
       variant: {
@@ -55,6 +68,7 @@ export default function flash(
       center: {
         type: Boolean,
         default: true
+<<<<<<< HEAD
       },
       transitionName:{
         type: String,
@@ -67,12 +81,15 @@ export default function flash(
       transitionOut:{
         type: String,
         default: 'animated slideOutUp'
+=======
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
       }
     },
 
     data(){
 
       return extend({
+<<<<<<< HEAD
         message: null,
         defaultVariant: null,
         timer: null
@@ -90,13 +107,42 @@ export default function flash(
         if( this.autoHide ){
           this.hide();
         }
+=======
+        key: '__vuexFlash',
+        cleaner: 'CLEAR_FLASH',
+        getter: 'getFlash',
+        msg: null,
+        delay: 3,
+        defaultVariant: null
+      }, { cleaner, getter, key, delay });
+    },
+
+    created() {
+
+      let flashes = this.getFlash;
+
+      if( flashes.msg ){
+        this.clear();
+        this.defaultVariant = flashes.variant || 'success';
+        this.msg = flashes.msg;
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
       }
     },
 
     computed: {
 
       show(){
+<<<<<<< HEAD
         return !! this.message;
+=======
+
+        if( !this.msg )
+          return false;
+
+        //in bootstrap-vue if `show` is set as number(in second) alert will auto hide
+        //https://bootstrap-vue.js.org/docs/components/alert
+        return this.autoHide ? this.delay : true;
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
       },
 
       getFlash(){
@@ -107,6 +153,7 @@ export default function flash(
     methods: {
 
       clear(){
+<<<<<<< HEAD
         this.$store.commit(this.cleaner);
         if( this.save ){
           this.storage.removeItem(this.key);
@@ -122,6 +169,10 @@ export default function flash(
           }
         }, this.delay);
 
+=======
+        window.sessionStorage.removeItem(this.key);
+        this.$store.commit(this.cleaner);
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
       }
     }
   };

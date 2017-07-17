@@ -10,9 +10,12 @@
       "key": "/etc/apache2/ssl/nodeapache.key",
       "cert": "/etc/apache2/ssl/nodeapache.cert"
   },
+<<<<<<< HEAD
   "jwt": {
     "secret": "hey!areyousurewhatyouaredoing?pleaseleavebeforedie"
   },
+=======
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
   "mail": "justoj.com@gmail.com",
   "mailto": "berthogamer@gmail.com",
   "gmail": {

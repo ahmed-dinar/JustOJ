@@ -25,7 +25,10 @@
     "lodash": "^4.17.4",
     "nprogress": "^0.2.0",
     "vee-validate": "^2.0.0-rc.6",
+<<<<<<< HEAD
     "vodal": "^2.1.0",
+=======
+>>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
     "vue": "^2.3.3",
     "vue-router": "^2.3.1",
     "vue-spinner": "^1.0.2",
