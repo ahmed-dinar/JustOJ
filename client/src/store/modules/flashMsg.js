@@ -6,14 +6,14 @@
 import { SET_FLASH, CLEAR_FLASH } from '../mutation-types';
 
 const state = {
-  msg: null,
+  message: null,
   variant: null
 };
 
 const getters ={
   getFlash: state => {
     return {
-      msg: state.msg,
+      message: state.message,
       variant: state.variant
     };
   }
@@ -21,20 +21,21 @@ const getters ={
 
 const mutations = {
   [SET_FLASH] (state, flash) {
-    state.msg = flash.msg;
+    state.message = flash.message;
     state.variant = flash.variant;
   },
   [CLEAR_FLASH] (state) {
-    state.msg = null;
+    state.message = null;
     state.variant = null;
   }
 };
 
 const actions = {
 
-  flash({ commit }, msg = null){
-    if(msg)
-      commit(SET_FLASH, msg);
+  flash({ commit }, message = null){
+    if(message){
+      commit(SET_FLASH, message);
+    }
   }
 
 };
