@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view></router-view>
+    <h1>{{ msg }}</h1>
   </div>
 </template>
 
@@ -8,6 +8,7 @@
   export default {
     data () {
       return {
+        msg: 'Welcome forgot'
       };
     },
 
@@ -17,3 +18,5 @@
 
   };
 </script>
+
+

@@ -52,7 +52,7 @@ const actions = {
 
     return new Promise((resolve, reject) => {
 
-      axios.post('/api/login', creds)
+      axios.post('/api/signin', creds)
         .then( res => {
 
           console.log(res.data);
@@ -60,7 +60,6 @@ const actions = {
 
           commit(muts.LOGIN, res.data);
           Vue.prototype.$http.defaults.headers.common.Authorization = `Bearer ${res.data.access_token}`;
-          router.replace('/protected');
           resolve();
         })
         .catch( err => {

@@ -8,23 +8,27 @@ var path = require('path');
 var fs = require('fs');
 var favicon = require('serve-favicon');
 var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var expressSession = require('express-session');
-var passport = require('passport');
-var flash = require('connect-flash');
+//var expressSession = require('express-session');
+//var passport = require('passport');
+//var flash = require('connect-flash');
 var helmet = require('helmet');
 var cors = require('cors');
 var compression = require('compression');
 var methodOverride = require('method-override');
 var serveStatic = require('serve-static');
-var _ = require('lodash');
+var forEach = require('lodash/forEach');
 var expressValidator = require('express-validator');
 var logger = require('winston');
 var nconf = require('nconf');
 var chalk = require('chalk');
 
-var roles = require('./middlewares/userrole');
+global.appRequire = function(name) {
+  return require(__dirname + '/' + name);
+};
+
+//var roles = appRequire('middlewares/userrole');
 
 /**
  * setup env, argv and file configuration
@@ -83,22 +87,22 @@ module.exports.loadMiddleware = function (app) {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(methodOverride());
-  app.use(expressValidator());
-  app.use(cookieParser());
+  app.use(expressValidator({ customValidators: appRequire('config/custom-validator') }));
+  //app.use(cookieParser());
   app.use(serveStatic(path.join(__dirname, 'public')));
 
-  app.use(expressSession({
-    secret: nconf.get('SESSION:SECRET') || 'secretisalwayssecret',
-    resave: false,
-    saveUninitialized: false
-  }));
+  // app.use(expressSession({
+  //   secret: nconf.get('SESSION:SECRET') || 'secretisalwayssecret',
+  //   resave: false,
+  //   saveUninitialized: false
+  // }));
 
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(roles.middleware());
-  app.use(flash());
+  //app.use(passport.initialize());
+  //app.use(passport.session());
+  //app.use(roles.middleware());
+  //app.use(flash());
 
-  require('./middlewares/passport')(passport);  //authenticate login data
+  //require('./middlewares/passport')(passport);  //authenticate login data
 };
 
 
@@ -108,14 +112,20 @@ module.exports.loadMiddleware = function (app) {
  */
 module.exports.loadRoutes = function (app) {
 
-  var routeList = ['login','logout','resister','problems','submit','user','status','ranks','contests','ucheck','s3','sockettest','auth'];
+  var apiEndpoints = ['signin','signup','problems','submit','contests'];
 
-    //home route
-  app.use('/', require('./routes/index') );
-
-  _.forEach(routeList, function(routeName) {
-    app.use('/' + routeName, require('./routes/' + routeName) );
+  forEach(apiEndpoints, function(routeName) {
+    app.use('/api/' + routeName, require('./controllers/api/' + routeName) );
   });
+
+  // var routeList = ['login','logout','resister','problems','submit','user','status','ranks','contests','ucheck','s3','sockettest','auth'];
+
+  //   //home route
+  // app.use('/', require('./routes/index') );
+
+  // _.forEach(routeList, function(routeName) {
+  //   app.use('/' + routeName, require('./routes/' + routeName) );
+  // });
 };
 
 

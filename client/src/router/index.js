@@ -10,8 +10,10 @@ import Ranks from '@/components/Ranks';
 import Login from '@/components/Login';
 import Contests from '@/components/Contests';
 import User from '@/components/User';
+import Account from '@/components/Account';
+import ForgotPassword from '@/components/ForgotPassword';
 import Page404 from '@/components/Page404';
-//import store from '@/store';
+import store from '@/store';
 
 Vue.use(Router);
 
@@ -22,37 +24,56 @@ const router = new Router({
     {
       path: '/',
       name: 'Home',
-      component: Hello
+      component: Hello,
+      meta: { title: 'Home' }
     },
     {
       path: '/login',
-      name: 'Login',
-      component: Login
+      name: 'login',
+      component: Login,
+      meta: { title: 'Login' }
     },
     {
       path: '/signup',
       name: 'SignUp',
-      component: SignUp
+      component: SignUp,
+      meta: { title: 'Sign Up' }
     },
     {
       path: '/problems',
       name: 'Problems',
-      component: Problems
+      component: Problems,
+      meta: { title: 'Problems' }
     },
     {
-      path: '/user',
-      name: 'User',
-      component: User
+      path: '/account',
+      component: User,
+      children: [
+        {
+          path: '',
+          name: 'user-account',
+          component: Account,
+          meta: { title: 'Account' }
+        },
+        {
+          path: 'password/reset',
+          name: 'user-forgot-password',
+          component: ForgotPassword,
+          meta: { title: 'Reset Password' }
+        }
+      ]
     },
     {
       path: '/status',
       name: 'Status',
-      component: Status
+      component: Status,
+      meta: { title: 'Status' }
     },
     {
       path: '/ranks',
       name: 'Ranks',
-      component: Ranks
+      component: Ranks,
+      meta: { title: 'Ranks' }
     },
     {
       path: '/contests',
@@ -61,7 +82,8 @@ const router = new Router({
     },
     {
       path: '*',
-      component: Page404
+      component: Page404,
+      meta: { title: '404' }
     }
   ]
 });
@@ -69,10 +91,11 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
 
+  document.title = to.meta.title;
   NProgress.start();
 
-  // if( (to.name === 'SingIn' || to.name === 'SingUp') && store.getters.isLoggedIn )
-  //   router.replace({ path: '/' });
+  if( (to.name === 'login' || to.name === 'SingUp') && store.getters.isLoggedIn )
+    router.replace({ path: '/' });
 
   // if( to.matched.some(record => record.meta.auth) && !store.getters.isLoggedIn )
   //   router.replace({ path: '/login' });

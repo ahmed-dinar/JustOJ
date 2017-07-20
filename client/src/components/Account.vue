@@ -1,13 +1,15 @@
 <template>
   <div>
-    <router-view></router-view>
+    <h1>{{ msg }}</h1>
   </div>
 </template>
 
 <script>
   export default {
+
     data () {
       return {
+        msg: 'Yay!'
       };
     },
 

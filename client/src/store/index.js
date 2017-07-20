@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import auth from './modules/auth';
-import flashMsg from './modules/flashMsg';
 import createPersistedState from 'vuex-persistedstate';
 import * as types from './mutation-types';
 
@@ -11,8 +10,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 
   modules: {
-    auth,
-    flashMsg
+    auth
   },
 
   plugins: [
@@ -25,11 +23,7 @@ export default new Vuex.Store({
       }
     }),
 
-<<<<<<< HEAD
-   // for flash message in session
-=======
-    //for flash message in session
->>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
+
     createPersistedState({
       paths: ['flashMsg'],
       key: '__vuexFlash',

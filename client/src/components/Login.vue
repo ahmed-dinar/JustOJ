@@ -1,7 +1,7 @@
 <template>
   <div class="form-center signin-form">
 
-    <flash-message></flash-message>
+    <!-- <flash-message></flash-message> -->
 
     <b-alert variant="danger" class="text-center" dismissible :show="!!loginError" @dismissed="loginError=''" >
       {{ loginError }}
@@ -9,30 +9,31 @@
 
     <div class="card-block text-center form-header">
       <router-link :to="{ path: '/' }" exact>
-        <h3 class="web-title">Just Online Judge</h3>
+        <h3 class="web-title">Just<br>Online Judge</h3>
       </router-link>
     </div>
 
-    <b-card class="mb-2" >
-
+    <b-card class="mb-2 card-no-border">
       <div class="text-center" style="margin-bottom: 25px;">
-       <h3>Log In</h3>
+       <h4 style="font-weight: bold; color: #737373;">Login</h4>
      </div>
 
      <!-- Login Form -->
      <form @submit.prevent="submit('log-form')" name="login-form" data-vv-scope="log-form">
 
-      <div :class="{ 'form-group': true, 'has-danger': formError.has('log-form.username')} ">
+      <div :class="{ 'form-group': true, 'input-icon': true, 'has-danger': formError.has('log-form.username')} ">
+        <i class="material-icons md-20">person</i>
         <b-form-input
-        name="username" type="text" placeholder="username"
+        name="username" type="text" placeholder="Username"
         v-model="creds.username"
         v-validate="'required'"></b-form-input>
         <span v-show="formError.has('log-form.username')" class="help form-control-feedback">{{ formError.first('log-form.username') }}</span>
       </div>
 
-      <div :class="{ 'form-group': true, 'has-danger': formError.has('log-form.password')} ">
+      <div :class="{ 'form-group': true, 'input-icon': true, 'has-danger': formError.has('log-form.password')} ">
+        <i class="material-icons md-20">lock</i>
         <b-form-input
-        name="password" type="password" placeholder="password"
+        name="password" type="password" placeholder="Password"
         v-model="creds.password"
         v-validate="'required'"></b-form-input>
         <span v-show="formError.has('log-form.password')" class="help form-control-feedback">{{ formError.first('log-form.password') }}</span>
@@ -43,23 +44,25 @@
       </div>
 
       <div class="form-group">
-        <button class="btn btn-primary btn-block" :disabled="loading"  type="submit">
-          <pulse-loader class="loaderComp" :loading="loading" color="#ffffff" size="10px"></pulse-loader>
-          <span v-show="!loading">Submit</span>
+
+        <button v-show="loading" class="btn btn-outline-primary btn-block" type="button">
+          <pulse-loader class="loaderComp" :loading="loading" color="#737373" size="10px"></pulse-loader>
         </button>
+
+        <button v-show="!loading" class="btn btn-outline-primary btn-block" type="submit">
+          Submit
+        </button>
+
       </div>
 
     </form>
 
 
     <div class="text-center help-block form-title">
-      <span>Or Connect with</span>
+      <span>Or</span>
     </div>
 
-    <div>
-      <a class="btn btn-social btn-md btn-facebook" href="#">
-        <span class="fa fa-facebook"></span> Facebook
-      </a>
+    <div class="text-center">
       <a class="btn btn-social btn-md btn-google" href="#">
         <span class="fa fa-google"></span> Google
       </a>
@@ -68,21 +71,15 @@
       </a>
     </div>
 
+    <hr>
 
-
-  </b-card>
-
-  <b-card class="mb-2" >
-    <div class=" text-center">
-      <router-link :to="{ path: '/signup' }" exact>
-        Create an account
-      </router-link>
+    <div class="text-center">
+    <a class="btn btn-outline-primary" href="#">
+      Create an account
+    </a>
     </div>
-  </b-card>
 
-  <button class="btn btn-primary btn-block"  @click="storeMe">
-   store
- </button>
+  </b-card>
 
 
 </div>
@@ -111,7 +108,8 @@
           username: '',
           password: ''
         },
-        loginError: null
+        loginError: null,
+        title: 'Login'
       };
     },
 
@@ -143,6 +141,7 @@
             this.$store.dispatch('login', credentials)
               .then(() => {
                 this.formDone();
+                this.$router.replace('/');
               })
               .catch(err => {
                 this.formDone();
@@ -154,22 +153,11 @@
       },
 
       formDone(){
+        this.creds.username = '';
+        this.creds.password = '';
         this.loading = false;
         NProgress.done();
         NProgress.remove();
-      },
-
-      storeMe(){
-<<<<<<< HEAD
-        this.$store.dispatch('flash',{ message: 'i am login!', variant: 'danger' }).then(()=>{
-=======
-        this.$store.dispatch('flash',{ msg: 'i am login!', variant: 'danger' }).then(()=>{
->>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
-          setTimeout(()=>{
-            console.log( this.$store.getters.getFlash );
-            console.log( this.$store.getters.getFlash );
-          }, 3000);
-        });
       }
 
     },

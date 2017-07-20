@@ -5,19 +5,13 @@ var merge = require('webpack-merge');
 var baseWebpackConfig = require('./webpack.base.conf');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
-var GoogleFontsPlugin = require("google-fonts-webpack-plugin");
+var GoogleFontsPlugin = require('google-fonts-webpack-plugin');
 
 // add hot-reload related code to entry chunks
 Object.keys(baseWebpackConfig.entry).forEach(function (name) {
   baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name]);
 });
 
-<<<<<<< HEAD
-console.log(baseWebpackConfig);
-console.log(baseWebpackConfig.entry);
-
-=======
->>>>>>> a527a4d8c003a094a205c2d66b629e7a26cd9aa5
 module.exports = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
@@ -32,8 +26,9 @@ module.exports = merge(baseWebpackConfig, {
 
     new GoogleFontsPlugin({
       fonts: [
-        { family: "Source Sans Pro", variants: [ "400", "600", "700" ] },
-        { family: "Niconne", variants: [ "400" ] }
+        { family: 'Source Sans Pro', variants: [ '400', '600', '700' ] },
+        { family: 'Niconne', variants: [ '400' ] },
+        { family: 'Roboto', variants: [ '400','500','700','900' ] }
       ],
       local: false
     }),
@@ -48,5 +43,5 @@ module.exports = merge(baseWebpackConfig, {
       inject: true
     }),
     new FriendlyErrorsPlugin()
-    ]
-  });
+  ]
+});

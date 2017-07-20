@@ -107,6 +107,7 @@ CREATE TABLE `users` (
   `cf_username` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `uva_userid` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `role` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `verified` TINYINT(1) NOT NULL DEFAULT 0,
   `reset_token` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `token_expires` DATETIME NOT NULL
 ) ENGINE=InnoDB;

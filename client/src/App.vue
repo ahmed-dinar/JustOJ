@@ -41,6 +41,7 @@
             </template>
 
             <template v-else>
+              <b-nav-item class="nav-login-btn" :to="{ path: '/mails' }" exact><i class="material-icons">notifications</i></b-nav-item>
               <b-nav-item class="nav-login-btn" :to="{ path: '/login' }" exact>Login</b-nav-item>
               <b-nav-item :to="{ path: '/signup' }" exact>Register</b-nav-item>
             </template>
@@ -64,16 +65,16 @@
       </div>
 
     </div>
-    <template v-else>
+    <div class="no-nav-body" v-else>
       <router-view></router-view>
-    </template>
+    </div>
 
   </div>
 </template>
 
 <script>
 
-  import { mapGetters } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
 
   export default {
 
@@ -88,7 +89,7 @@
 
       showNavBar(){
         let page = this.$store.state.route.name;
-        return (page !== 'Login' && page !== 'SignUp');
+        return (page !== 'login' && page !== 'SignUp');
       },
 
       userLinks(){
@@ -104,6 +105,12 @@
         'getUser'
       ])
 
+    },
+
+    methods: {
+      ...mapActions([
+        'logOut'
+      ])
     }
 
   };

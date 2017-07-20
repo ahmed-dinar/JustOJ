@@ -1,6 +1,5 @@
 var gulp            = require('gulp');
 var rename          = require('gulp-rename');
-var browserify      = require('browserify');
 var livereload      = require('gulp-livereload');
 var source          = require('vinyl-source-stream');
 var glob            = require('glob');
@@ -11,19 +10,6 @@ var notify          = require('gulp-notify');
 var args = require('yargs').argv;
 var nodeInspector = require('gulp-node-inspector');
 
-
-gulp.task('test', function() {
-
-    var testFiles = glob.sync('./test/**/*.js');
-
-    return browserify({
-        entries: testFiles
-    })
-        .bundle()
-        .pipe(source('test-build.js'))
-        .pipe(gulp.dest('build'));
-
-});
 
 gulp.task('test-view', ['test'], function() {
     return gulp.src('test/index.html')
