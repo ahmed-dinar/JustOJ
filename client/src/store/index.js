@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 import auth from './modules/auth';
 import createPersistedState from 'vuex-persistedstate';
+import { createFlashStore } from 'vuex-flash';
 import * as types from './mutation-types';
 
 Vue.use(Vuex);
@@ -15,6 +16,8 @@ export default new Vuex.Store({
 
   plugins: [
 
+    createFlashStore(),
+
     createPersistedState({
       paths: ['auth'],
       filter: mutation =>{
@@ -25,25 +28,28 @@ export default new Vuex.Store({
 
 
     createPersistedState({
-      paths: ['flashMsg'],
+      paths: ['FLASH'],
       key: '__vuexFlash',
-      getState: (key) => {
+      storage: window.sessionStorage,
+      // getState: (key) => {
 
-        const value = window.sessionStorage.getItem(key);
-        window.sessionStorage.removeItem(key);
+      //   const value = window.sessionStorage.getItem(key);
+      //   window.sessionStorage.removeItem(key);
 
-        try {
-          return value && value !== 'undefined' ? JSON.parse(value) : undefined;
-        } catch (err) {
-          return undefined;
-        }
-      },
-      setState: (key, state) => {
-        console.log('setState');
-        console.log(state);
-        window.sessionStorage.setItem(key, JSON.stringify(state));
-      },
-      filter: mutation => mutation.type === types.SET_FLASH
+      //   try {
+      //     return value && value !== 'undefined' ? JSON.parse(value) : undefined;
+      //   } catch (err) {
+      //     return undefined;
+      //   }
+      // },
+      // setState: (key, state) => {
+      //   console.log('setState');
+      //   console.log(state);
+      //   window.sessionStorage.setItem(key, JSON.stringify(state));
+      // },
+      filter: mutation => {
+        return mutation.type === 'FLASH/SET_FLASH' || mutation.type === 'FLASH/CLEAR_FLASH';
+      }
     })
   ]
 

@@ -4,12 +4,14 @@ import Vue from 'vue';
 import { sync } from 'vuex-router-sync';
 import BootstrapVue from 'bootstrap-vue';
 import VeeValidate from 'vee-validate';
+import VuexFlash from 'vuex-flash';
 import axios from 'axios';
 
 import App from './App';
 import router from './router';
 import store from './store';
 
+import 'particles.js';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -19,6 +21,7 @@ import 'bootstrap-social/bootstrap-social.css';
 import 'animate.css/animate.min.css';
 import './assets/style.css';
 import './assets/fonts/fonts.css';
+import config from './config';
 
 sync(store, router);
 
@@ -30,6 +33,11 @@ Vue.use(BootstrapVue);
 Vue.use(VeeValidate, {
   errorBagName: 'formError',
   fieldsBagName: 'formFields'
+});
+Vue.use(VuexFlash, {
+  mixin: true,
+  keep: false,
+  template: config.flashTemplate
 });
 
 

@@ -12,6 +12,7 @@ import Contests from '@/components/Contests';
 import User from '@/components/User';
 import Account from '@/components/Account';
 import ForgotPassword from '@/components/ForgotPassword';
+import VerifyAccount from '@/components/VerifyAccount';
 import Page404 from '@/components/Page404';
 import store from '@/store';
 
@@ -60,6 +61,12 @@ const router = new Router({
           name: 'user-forgot-password',
           component: ForgotPassword,
           meta: { title: 'Reset Password' }
+        },
+        {
+          path: 'verify',
+          name: 'VerifyAccount',
+          component: VerifyAccount,
+          meta: { title: 'Verify Account' }
         }
       ]
     },

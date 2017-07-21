@@ -259,9 +259,46 @@ User.changePassword = function(credentials,fn){
 
       DB.execute(sql.toString(), callback);
     }
-    ], fn);
+  ], fn);
 };
 
+
+User.verify = function(token, cb){
+
+  async.waterfall([
+    function(callback) {
+      var sql = Query.select(['id'])
+        .from('users')
+        .where('reset_token', token)
+        .limit(1);
+
+      DB.execute(sql.toString(),function(err,rows){
+        if( err )
+          return callback(err);
+
+        if( !rows || !rows.length )
+          return callback(null, false);
+
+        return callback(null, rows[0].id);
+      });
+    },
+    function (userId, callback) {
+      if(userId === false)
+        return callback(null, false);
+
+      var sql = Query('users')
+      .update({ verified: 1, reset_token: '' })
+      .where('id', userId);
+
+      DB.execute(sql.toString(), function(err, rows){
+        if(err)
+          return callback(err);
+
+        return callback(null, true);
+      });
+    }
+  ], cb);
+};
 
 User.getProfile = function (username , fn) {
 

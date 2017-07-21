@@ -112,7 +112,7 @@ module.exports.loadMiddleware = function (app) {
  */
 module.exports.loadRoutes = function (app) {
 
-  var apiEndpoints = ['signin','signup','problems','submit','contests'];
+  var apiEndpoints = ['signin','signup','problems','submit','contests','user'];
 
   forEach(apiEndpoints, function(routeName) {
     app.use('/api/' + routeName, require('./controllers/api/' + routeName) );

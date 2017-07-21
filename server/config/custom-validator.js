@@ -16,7 +16,8 @@ function userExists(username){
         throw err;
       }
       if(rows && rows.length){
-        return reject();
+        reject(new Error(username + ' already taken'));
+        return;
       }
       resolve();
     });
@@ -36,7 +37,8 @@ function emailExists(email){
         throw err;
       }
       if(rows && rows.length){
-        return reject();
+        reject(new Error(email + ' already taken'));
+        return;
       }
       resolve();
     });

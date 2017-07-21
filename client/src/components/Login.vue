@@ -1,11 +1,14 @@
 <template>
   <div class="form-center signin-form">
 
-    <!-- <flash-message></flash-message> -->
+     <div id="particles-js"></div>
+
+    <flash-message variant="success"></flash-message>
 
     <b-alert variant="danger" class="text-center" dismissible :show="!!loginError" @dismissed="loginError=''" >
       {{ loginError }}
     </b-alert>
+
 
     <div class="card-block text-center form-header">
       <router-link :to="{ path: '/' }" exact>
@@ -26,7 +29,8 @@
         <b-form-input
         name="username" type="text" placeholder="Username"
         v-model="creds.username"
-        v-validate="'required'"></b-form-input>
+        v-validate="'required'"
+        ></b-form-input>
         <span v-show="formError.has('log-form.username')" class="help form-control-feedback">{{ formError.first('log-form.username') }}</span>
       </div>
 
@@ -40,7 +44,7 @@
       </div>
 
       <div class="form-group">
-        <a href="#" class="forgot-password pull-right">Forgot Password?</a>
+        <router-link class="forgot-password pull-right" :to="{ path: '/account/password/reset' }" exact>Forgot Password?</router-link>
       </div>
 
       <div class="form-group">
@@ -74,10 +78,11 @@
     <hr>
 
     <div class="text-center">
-    <a class="btn btn-outline-primary" href="#">
-      Create an account
-    </a>
+      <router-link class="btn btn-outline-primary" to="/signup">
+        Create an account
+      </router-link>
     </div>
+
 
   </b-card>
 
@@ -91,10 +96,9 @@
 
   import NProgress from 'nprogress';
   import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
+  import particlesOptions from '../config/particlesOptions';
 
   export default {
-
-    name: 'app',
 
     components: {
       PulseLoader
@@ -108,15 +112,9 @@
           username: '',
           password: ''
         },
-        loginError: null,
-        title: 'Login'
+        loginError: null
       };
     },
-
-    computed: {
-
-    },
-
     methods: {
 
       submit(scope){
@@ -145,28 +143,40 @@
               })
               .catch(err => {
                 this.formDone();
+                this.resetForm();
                 this.loginError = err;
               });
 
           });
-
       },
 
       formDone(){
-        this.creds.username = '';
-        this.creds.password = '';
         this.loading = false;
         NProgress.done();
         NProgress.remove();
+      },
+
+      resetForm(){
+        this.creds.username = '';
+        this.creds.password = '';
+        this.$nextTick(() => {
+          this.formError.clear('log-form');
+        });
+      },
+
+      initParticleJS(){
+        particlesJS('particles-js', particlesOptions());
       }
 
     },
 
     mounted(){
-
+      this.$nextTick(() => {
+        this.initParticleJS();
+      });
     }
 
-};
+  };
 </script>
 
 

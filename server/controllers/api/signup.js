@@ -5,6 +5,7 @@ var express = require('express');
 var router = express.Router();
 var async = require('async');
 var Nodemailer = require('nodemailer');
+var reCAPTCHA = require('recaptcha2');
 var logger = require('winston');
 var config = require('nconf');
 
@@ -23,14 +24,35 @@ router.post('/', function(req, res, next) {
       req.checkBody('email','already taken').emailExists();
       req.assert('confirmPassword', 'does not match').equals(req.body.password);
 
-      req.getValidationResult().then(function(result) {
-        if (!result.isEmpty()){
-          var e = result.array()[0];
-          return callback(new AppError(e.param + ' ' + e.msg,'input'));
-        }
+      logger.debug('validatin inputs..');
 
-        return callback();
+      req.getValidationResult()
+        .then(function(result) {
+          if (!result.isEmpty()){
+            var e = result.array()[0];
+            logger.debug(e);
+            return callback(new AppError(e.param + ' ' + e.msg,'input'));
+          }
+
+          return callback();
+        });
+    },
+    function(callback) {
+      var recaptcha = new reCAPTCHA({
+        siteKey: config.get('recaptcha2:SITE_KEY'),
+        secretKey: config.get('recaptcha2:SECRET_KEY')
       });
+
+      logger.debug('validatin captcha..');
+
+      recaptcha.validateRequest(req)
+        .then(function(){
+          return callback();
+        })
+        .catch(function(errorCodes){
+          logger.debug(recaptcha.translateErrors(errorCodes));
+          return callback(new AppError('Captcha does not match','input'));
+        });
     },
     async.apply(User.save, req.body),
     async.apply(sendVarificationToken, req)
@@ -65,7 +87,7 @@ function sendVarificationToken(req, token, cb) {
     }
   });
 
-  var link = 'http://' + req.get('host') + '/user/verify?verification=' + token;
+  var link = 'http://' + req.get('host') + '/account/verify?verification=' + token;
   var html = 'Hello,' + req.body.username + '<br><br>Please Follow the link to verify your email.<br><br>'
   + '<a href="' + link + '">' + link + '</a><br><br>Thank you,<br>JUSTOJ';
 

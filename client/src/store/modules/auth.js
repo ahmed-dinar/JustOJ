@@ -15,10 +15,7 @@ const getters ={
     return state.authenticated;
   },
   getUser: state => {
-   // return state.data;
-    return {
-      username: 'dinar'
-    };
+    return state.data;
   },
   getToken: state => {
     return has(state.data,'access_token') ? 'Bearer ' + state.data.access_token : null;

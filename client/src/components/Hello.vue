@@ -1,6 +1,9 @@
 <template>
   <div class="hello text-center">
 
+    <div style="margin-top: 15px;">
+       <flash-message variant="success"></flash-message>
+    </div>
 
     <img src="logo.png">
     <h1>{{ msg }}</h1>

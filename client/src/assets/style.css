@@ -124,7 +124,7 @@ footer{
 
 .form-control {
   height: 35px;
-  border-radius: 1px;
+  border-radius: 3px;
   box-shadow: none;
   border: 1px solid #d9d9d9;
 }
@@ -134,11 +134,17 @@ footer{
   box-shadow: none;
 }
 
+.signin-form{
+  width: 300px;
+}
+
+.signup-form-wrapper{
+  width: 342px;
+}
 
 .form-center{
   margin: 0px auto;
   margin-top: 30px;
-  width: 300px;
 }
 
 .form-center .web-title{
@@ -156,6 +162,10 @@ footer{
 .form-center .form-header{
   background-color: #263238;
   color: #fff;
+}
+
+.has-danger .form-control{
+  border-color: #f79483;
 }
 
 .card-no-border{
@@ -242,6 +252,11 @@ https://stackoverflow.com/questions/2610497/change-an-html5-inputs-placeholder-c
   color: inherit;
 }
 
+.alert{
+  font-size: 14px;
+  font-weight: bold;
+}
+
 .alert-danger, .alert-success, .alert-warning, .alert-info{
   border-color: transparent;
 }
@@ -282,7 +297,7 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
   padding: 8px 5px 5px 5px;
   width: 30px;
   pointer-events: none;
-   /* border-right: 1px solid #d6d6d6;  */
+  /* border-right: 1px solid #d6d6d6;  */
   color: #b3b3b3;
 }
 
@@ -296,3 +311,53 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
 .material-icons.md-24 { font-size: 24px; }
 .material-icons.md-36 { font-size: 36px; }
 .material-icons.md-48 { font-size: 48px; }
+
+.material-icons{
+  vertical-align: middle;
+}
+
+#particles-js canvas {
+  display: block;
+  vertical-align: bottom;
+  opacity: 1;
+}
+
+#particles-js {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -10;
+  top: 0;
+  left: 0;
+  background-color: #374046;
+}
+
+
+.dropdown-menu{
+  border-color: transparent;
+}
+
+.navbar-inverse .dropdown-divider{
+  background-color: #34434c;
+}
+
+.navbar-inverse .dropdown-item{
+  color: #fff;
+  padding-left: 15px;
+  font-size: 14px;
+}
+
+.navbar-inverse .dropdown-item:hover,
+.navbar-inverse .dropdown-item:focus{
+  background-color: #34434c;
+}
+
+.navbar-inverse .dropdown-item > .material-icons{
+  margin-right: 5px;
+  font-size: 13px;
+}
+
+.navbar-inverse .dropdown-menu{
+  background-color: #263238;
+  margin-top: 0px;
+}

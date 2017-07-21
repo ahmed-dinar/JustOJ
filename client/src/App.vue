@@ -32,11 +32,19 @@
                   <span style="font-weight: bold;">{{ getUser.username  }}</span>
                 </template>
 
-                <b-dropdown-item :to="{ path: userLinks.profile }"><i class="fa fa-user" aria-hidden="true"></i> Profile</b-dropdown-item>
-                <b-dropdown-item :to="{ path: userLinks.settings }"><i class="fa fa-cog" aria-hidden="true"></i> Settings</b-dropdown-item>
-                <b-dropdown-item :to="{ path: userLinks.submissions }"><i class="fa fa-paper-plane" aria-hidden="true"></i> My Submissions</b-dropdown-item>
+                <b-dropdown-item :to="{ path: userLinks.profile }">
+                  <i class="material-icons">person</i> Profile
+                </b-dropdown-item>
+                <b-dropdown-item :to="{ path: userLinks.settings }">
+                  <i class="material-icons">settings</i> Settings
+                </b-dropdown-item>
+                <b-dropdown-item :to="{ path: userLinks.submissions }">
+                  <i class="material-icons">near_me</i> My Submissions
+                </b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item @click="logOut"><i class="fa fa-sign-out" aria-hidden="true"></i> Signout</b-dropdown-item>
+                <b-dropdown-item @click="logOut">
+                  <i class="material-icons">person_outline</i> Signout
+                </b-dropdown-item>
               </b-nav-item-dropdown>
             </template>
 
