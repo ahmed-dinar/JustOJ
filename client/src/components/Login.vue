@@ -96,7 +96,7 @@
 
   import NProgress from 'nprogress';
   import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-  import particlesOptions from '../config/particlesOptions';
+  import particlesOptions from '@/config/particlesOptions';
 
   export default {
 

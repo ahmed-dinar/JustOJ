@@ -29,7 +29,7 @@
 
                 <!-- Using text slot -->
                 <template slot="text">
-                  <span style="font-weight: bold;">{{ getUser.username  }}</span>
+                  <span>{{ getUser.username  }}</span>
                 </template>
 
                 <b-dropdown-item :to="{ path: userLinks.profile }">

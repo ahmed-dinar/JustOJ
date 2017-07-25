@@ -7,6 +7,8 @@ import VeeValidate from 'vee-validate';
 import VuexFlash from 'vuex-flash';
 import axios from 'axios';
 
+import table from './components/custom/table';
+
 import App from './App';
 import router from './router';
 import store from './store';
@@ -26,7 +28,6 @@ import config from './config';
 sync(store, router);
 
 Vue.prototype.$http = axios;
-Vue.prototype.$http.defaults.headers.common.Authorization = store.getters.getToken;
 Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
@@ -39,6 +40,10 @@ Vue.use(VuexFlash, {
   keep: false,
   template: config.flashTemplate
 });
+
+
+Vue.component('m-table', table);
+
 
 
 /* eslint-disable no-new */

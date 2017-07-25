@@ -6,14 +6,12 @@
 
 <script>
   export default {
+    name: 'Problems',
+
     data () {
       return {
       };
-    },
-
-    mounted(){
-
     }
-
   };
 </script>
+

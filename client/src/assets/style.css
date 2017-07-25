@@ -7,14 +7,14 @@ body {
 
   margin: 0;
 
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Roboto','Source Sans Pro', sans-serif;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   font-size: 14px;
   color: #333;
-  background: #ECF0F5; /* f7f7f7 F1F1EB eef2f5*/
+  background: #f5f5f5; /* f7f7f7 F1F1EB eef2f5 ECF0F5*/
 }
 
 a{
@@ -42,14 +42,18 @@ a{
 }
 
 .navbar{
+  font-family: 'Source Sans Pro', sans-serif;
   padding: 0;
   margin-bottom: 0;
-  box-shadow: 0 1px 1px rgba(0,0,0,.14);
+  /* box-shadow: 0 1px 1px rgba(0,0,0,.14); */
+
+      -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
 }
 
 .navbar-inverse {
   /* box-shadow: 0 3px 4px 0 rgba(0,0,0,.14),0 3px 3px -2px rgba(0,0,0,.2),0 1px 8px 0 rgba(0,0,0,.12); */
-  background-color: #263238; /* 111116 263238  242c33*/
+  background-color: #34364c; /* 111116 263238   242c33*/
   background-image: none;
   border-color: transparent;
 }
@@ -93,6 +97,10 @@ a{
   transition: all 200ms ease;
 }
 
+.main-wraper{
+  margin-top: 20px;
+}
+
 .main-wraper > .container{
   background: transparent;
   box-shadow: none;
@@ -103,7 +111,7 @@ a{
 }
 
 .main-footer{
-  background: #37474F;
+  background: #242635;
 }
 
 .main-footer .pull-right{
@@ -117,7 +125,7 @@ a{
 
 
 footer{
-  background-color: #37474F;
+  background-color: #242635;
   color: #DDD;
   padding: 20px 0px;
 }
@@ -333,9 +341,9 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
 }
 
 
-.dropdown-menu{
+/* .dropdown-menu{
   border-color: transparent;
-}
+} */
 
 .navbar-inverse .dropdown-divider{
   background-color: #34434c;
@@ -345,11 +353,19 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
   color: #fff;
   padding-left: 15px;
   font-size: 14px;
+  border-color: transparent;
 }
 
 .navbar-inverse .dropdown-item:hover,
 .navbar-inverse .dropdown-item:focus{
   background-color: #34434c;
+  border-color: transparent;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: #34434c;
+  border-color: transparent;
 }
 
 .navbar-inverse .dropdown-item > .material-icons{
@@ -359,5 +375,33 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
 
 .navbar-inverse .dropdown-menu{
   background-color: #263238;
-  margin-top: 0px;
+  margin-top: 0;
+  border-color: transparent;
+  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
+
+.card{
+  border: none;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.14);
+}
+
+.card-title{
+  color: #363636;
+  font-weight: normal;
+}
+
+.card-block-title{
+  color: #363636;
+  font-weight: normal;
+  padding: 20px;
+  padding-bottom: 0;
+}
+
+.table-no-margin{
+  margin-bottom: 0;
+}
+
+.table thead th{
+  border-bottom: none;
+}
+

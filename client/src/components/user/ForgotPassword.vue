@@ -6,6 +6,8 @@
 
 <script>
   export default {
+    name: 'ForgotPassword',
+
     data () {
       return {
         msg: 'Welcome forgot'

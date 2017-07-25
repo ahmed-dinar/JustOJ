@@ -74,9 +74,7 @@ function generateToken(user, cb){
     if(err)
       return cb(err);
 
-    payLoad.access_token = token;
-
-    return cb(null, payLoad);
+    return cb(null, payLoad, token);
   });
 }
 
@@ -160,6 +158,48 @@ User.getResetToken = function (token, callback) {
   DB.execute(sql.toString(), callback);
 };
 
+
+/**
+ * Login process
+ * @param username
+ * @param password
+ * @param fn
+ */
+User.login = function(username, password, fn) {
+
+  async.waterfall([
+        //find user by username
+    function (callback) {
+      var sql = Query.select()
+                .from('users')
+                .where({
+                  'username': username
+                })
+                .limit(1);
+
+      DB.execute(
+                sql.toString()
+                ,function(err,rows){
+                  if (err) { return callback(err,null); }
+
+                  if (rows.length) { return callback(null, rows[0]); }
+
+                  callback('invalid username or password');
+                });
+    },
+        //comapare password with hash
+    function (rows, callback) {
+      bcrypt.compare(password, rows.password, function(err, res) {
+
+        if(err) return callback('Error compare password');
+
+        if(res) return callback(null,rows);
+
+        callback('invalid username or password');
+      });
+    }
+  ], fn);
+};
 
 //
 // reset user password

@@ -1,6 +1,6 @@
 
 var path = require('path');
-var GoogleFontsPlugin = require("google-fonts-webpack-plugin");
+var GoogleFontsPlugin = require('google-fonts-webpack-plugin');
 
 module.exports = {
 
@@ -13,14 +13,14 @@ module.exports = {
 
     new GoogleFontsPlugin({
       fonts: [
-      {
-        family: "Source Sans Pro",
-        variants: [ "400", "600", "700" ],
-        subsets: ["latin", "greek"]
-      }
+        {
+          family: 'Source Sans Pro',
+          variants: [ '400', '600', '700' ],
+          subsets: ['latin', 'greek']
+        }
       ],
-      path: "font/",
-      formats: ["woff","woff2"],
+      path: 'font/',
+      formats: ['woff','woff2'],
       filename: 'fonts.css'
     }),
   ]

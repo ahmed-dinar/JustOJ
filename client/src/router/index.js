@@ -5,14 +5,18 @@ import NProgress from 'nprogress';
 import Hello from '@/components/Hello';
 import SignUp from '@/components/SignUp';
 import Status from '@/components/Status';
-import Problems from '@/components/Problems';
 import Ranks from '@/components/Ranks';
 import Login from '@/components/Login';
 import Contests from '@/components/Contests';
-import User from '@/components/User';
-import Account from '@/components/Account';
-import ForgotPassword from '@/components/ForgotPassword';
-import VerifyAccount from '@/components/VerifyAccount';
+
+import User from '@/components/user/User';
+import Account from '@/components/user/Account';
+import ForgotPassword from '@/components/user/ForgotPassword';
+import VerifyAccount from '@/components/user/VerifyAccount';
+
+import Problems from '@/components/problem/Problems';
+import ProblemList from '@/components/problem/ProblemList';
+
 import Page404 from '@/components/Page404';
 import store from '@/store';
 
@@ -42,9 +46,15 @@ const router = new Router({
     },
     {
       path: '/problems',
-      name: 'Problems',
       component: Problems,
-      meta: { title: 'Problems' }
+      children: [
+        {
+          path: '',
+          name: 'ProblemList',
+          component: ProblemList,
+          meta: { title: 'Problem List' }
+        }
+      ]
     },
     {
       path: '/account',

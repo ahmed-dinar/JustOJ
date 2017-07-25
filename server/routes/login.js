@@ -5,7 +5,6 @@
  */
 var express = require('express');
 var passport = require('passport');
-var isLoggedIn = require('../middlewares/isLoggedIn');
 var router = express.Router();
 
 

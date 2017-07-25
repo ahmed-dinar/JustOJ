@@ -8,13 +8,13 @@ var path = require('path');
 var fs = require('fs');
 var favicon = require('serve-favicon');
 var morgan = require('morgan');
-//var cookieParser = require('cookie-parser');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //var expressSession = require('express-session');
-//var passport = require('passport');
-//var flash = require('connect-flash');
+// var passport = require('passport');
+// var flash = require('connect-flash');
 var helmet = require('helmet');
-var cors = require('cors');
+//var cors = require('cors');
 var compression = require('compression');
 var methodOverride = require('method-override');
 var serveStatic = require('serve-static');
@@ -64,8 +64,8 @@ module.exports.setupConfig = function () {
  * @param app
  */
 module.exports.loadViewEngine = function (app) {
-  app.set('views', path.join(__dirname, 'views'));
-  app.set('view engine', 'ejs');
+  // app.set('views', path.join(__dirname, 'views'));
+  // app.set('view engine', 'ejs');
 };
 
 
@@ -88,8 +88,8 @@ module.exports.loadMiddleware = function (app) {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(methodOverride());
   app.use(expressValidator({ customValidators: appRequire('config/custom-validator') }));
-  //app.use(cookieParser());
-  app.use(serveStatic(path.join(__dirname, 'public')));
+  app.use(cookieParser());
+  app.use(serveStatic(path.join(__dirname, 'public/static')));
 
   // app.use(expressSession({
   //   secret: nconf.get('SESSION:SECRET') || 'secretisalwayssecret',
@@ -97,10 +97,10 @@ module.exports.loadMiddleware = function (app) {
   //   saveUninitialized: false
   // }));
 
-  //app.use(passport.initialize());
-  //app.use(passport.session());
-  //app.use(roles.middleware());
-  //app.use(flash());
+  // app.use(passport.initialize());
+  // app.use(passport.session());
+  // app.use(roles.middleware());
+  // app.use(flash());
 
   //require('./middlewares/passport')(passport);  //authenticate login data
 };
@@ -112,20 +112,16 @@ module.exports.loadMiddleware = function (app) {
  */
 module.exports.loadRoutes = function (app) {
 
-  var apiEndpoints = ['signin','signup','problems','submit','contests','user'];
+  var apiEndpoints = ['signin','signup','problem','submit','contests','user'];
 
   forEach(apiEndpoints, function(routeName) {
     app.use('/api/' + routeName, require('./controllers/api/' + routeName) );
   });
 
-  // var routeList = ['login','logout','resister','problems','submit','user','status','ranks','contests','ucheck','s3','sockettest','auth'];
+  app.get('*', function(req, res) {
+    res.sendFile(__dirname + '/public/index.html');
+  });
 
-  //   //home route
-  // app.use('/', require('./routes/index') );
-
-  // _.forEach(routeList, function(routeName) {
-  //   app.use('/' + routeName, require('./routes/' + routeName) );
-  // });
 };
 
 
@@ -143,38 +139,38 @@ module.exports.loadErrorRoutes = function (app) {
   });
 
 
-    // csurf error handlers
-  app.use(function (err, req, res, next) {
-    if (err.code !== 'EBADCSRFTOKEN') return next(err);
+  // csurf error handlers
+  // app.use(function (err, req, res, next) {
+  //   if (err.code !== 'EBADCSRFTOKEN') return next(err);
 
-        // handle CSRF token errors here
-    res.status(403);
-    res.send('Session expired');
-  });
+  //       // handle CSRF token errors here
+  //   res.status(403);
+  //   res.send('Session expired');
+  // });
 
 
     // development error handler
     // will print stacktrace
-  if (global.env === 'development') {
-    app.use(function(err, req, res, next) {
-      res.status(err.status || 500);
-      res.render('error', {
-        message: err.message,
-        error: err
-      });
-    });
-  }
+  // if (global.env === 'development') {
+  //   app.use(function(err, req, res, next) {
+  //     res.status(err.status || 500);
+  //     res.render('error', {
+  //       message: err.message,
+  //       error: err
+  //     });
+  //   });
+  // }
 
 
-    // production error handler
-    // no stacktraces leaked to user
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: {}
-    });
-  });
+  //   // production error handler
+  //   // no stacktraces leaked to user
+  // app.use(function(err, req, res, next) {
+  //   res.status(err.status || 500);
+  //   res.render('error', {
+  //     message: err.message,
+  //     error: {}
+  //   });
+  // });
 };
 
 
@@ -206,32 +202,31 @@ module.exports.normalizePort = function (val) {
  */
 module.exports.initServer = function (app) {
 
-  global.PORT = nconf.get('PORT') || '3000';
+  global.PORT = this.normalizePort(nconf.get('PORT') || '3000');
 
-    //set port for express app server
-  app.set('port', this.normalizePort(global.PORT) );
+  //set port for express app server
+  app.set('port', global.PORT);
 
-    /*
-    if ( nconf.get('ssl') ) {
 
-        if( !fs.existsSync(nconf.get('ssl:key')) || !fs.existsSync(nconf.get('ssl:cert')) ){
-            logger.error('SSL cert file or key file is missing, creating server in non-SSL mode...');
-            require('http').createServer(app);
-            return;
-        }
+  if ( nconf.get('isssl') ) {
 
-        var sslCred = {
-            key: fs.readFileSync( nconf.get('ssl:key') ),
-            cert: fs.readFileSync( nconf.get('ssl:cert') )
-        };
+    if( !fs.existsSync(nconf.get('ssl:key')) || !fs.existsSync(nconf.get('ssl:cert')) ){
+      logger.error('SSL cert file or key file is missing, creating server in non-SSL mode...');
+      return require('http').createServer(app);
+    }
 
-        logger.info('creating server in SSL mode....');
-        require('https').createServer(sslCred, app);
+    var sslCred = {
+      key: fs.readFileSync( nconf.get('ssl:key') ),
+      cert: fs.readFileSync( nconf.get('ssl:cert') )
+    };
 
-      } else {*/
-  logger.warn('creating server in non-SSL mode...');
-  require('http').createServer(app);
-    //}
+    logger.info('creating server in SSL mode....');
+    return require('https').createServer(sslCred, app);
+
+  } else {
+    logger.warn('creating server in non-SSL mode...');
+    return require('http').createServer(app);
+  }
 };
 
 
@@ -250,8 +245,8 @@ module.exports.init = function () {
 
   app.use(compression());
   app.use(helmet());
-  app.use(cors());
   app.use(helmet.hidePoweredBy());
+  //app.use(cors());
 
     //load express view engine
   _this.loadViewEngine(app);
@@ -266,7 +261,5 @@ module.exports.init = function () {
   _this.loadErrorRoutes(app);
 
     //create express server
-  _this.initServer(app);
-
-  return app;
+  return _this.initServer(app);
 };

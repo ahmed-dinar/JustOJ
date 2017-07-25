@@ -6,13 +6,13 @@
 var app = require('./app').init();
 var logger = require('winston');
 
-
 logger.info('start listening process...');
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-var server = app.listen(app.get('port'));
+//var server = app.listen(app.get('port'));
+var server = app.listen(global.PORT);
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -56,3 +56,4 @@ function onError(error) {
       throw error;
   }
 }
+

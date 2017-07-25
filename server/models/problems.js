@@ -6,11 +6,12 @@
 var _ = require('lodash');
 var entities = require('entities');
 var async = require('async');
+var logger = require('winston');
 
-var MyUtil = require('../lib/myutil');
-var Paginate = require('../lib/pagination/paginate');
-var DB = require('../config/database/knex/DB');
-var Query = require('../config/database/knex/query');
+var MyUtil = appRequire('lib/myutil');
+var Paginate = appRequire('lib/pagination/paginate');
+var DB = appRequire('config/database/knex/DB');
+var Query = appRequire('config/database/knex/query');
 
 
 /**
@@ -45,10 +46,12 @@ exports.findById = function (pid,attr,callback) {
  * @param URL
  * @param cb
  */
-exports.findProblems = function (uid,cur_page,URL, cb) {
+exports.findProblems = function (uid, cur_page, URL, cb) {
+
+  logger.debug('yep');
 
   var sql;
-  if (uid < 0) {
+  if (!uid || uid < 0) {
     sql = Query
             .select(['pb.id', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
               Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
@@ -61,8 +64,8 @@ exports.findProblems = function (uid,cur_page,URL, cb) {
             .select(['pb.id', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
               Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
               Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy'),
-              Query.raw('(pbus.pid IS NOT NULL) as youSolved'),
-              Query.raw('(pbut.pid IS NOT NULL) as youTried')
+              Query.raw('(pbus.pid IS NOT NULL) as youSolved'), //pbus = problem user solved
+              Query.raw('(pbut.pid IS NOT NULL) as youTried')   //pbut = problem user tried
             ])
             .from('problems  as pb')
             .joinRaw(' LEFT JOIN( ' +
@@ -97,7 +100,10 @@ exports.findProblems = function (uid,cur_page,URL, cb) {
   Paginate.paginate({
     cur_page: cur_page,
     sql: sql,
-    sqlCount: Query.count('id as count').from('problems').where('status','public'),
+    sqlCount: Query
+      .count('id as count')
+      .from('problems')
+      .where('status','public'),
     limit: 5,
     url: URL
   }, cb);

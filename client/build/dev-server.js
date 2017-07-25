@@ -5,6 +5,7 @@ if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV);
 }
 
+var fs = require('fs');
 var opn = require('opn');
 var path = require('path');
 var express = require('express');
@@ -45,9 +46,12 @@ compiler.plugin('compilation', function (compilation) {
 // proxy api requests
 Object.keys(proxyTable).forEach(function (context) {
   var options = proxyTable[context];
+
   if (typeof options === 'string') {
     options = { target: options };
   }
+
+  options.secure = false;
   app.use(proxyMiddleware(options.filter || context, options));
 });
 
@@ -66,7 +70,7 @@ app.use(hotMiddleware);
 //app.use(staticPath, express.static('../static'));
 app.use(express.static(path.join(__dirname, '../static')));
 
-var uri = 'http://localhost:' + port;
+var uri = 'https://localhost:' + port;
 
 var _resolve;
 var readyPromise = new Promise(resolve => {
@@ -83,7 +87,16 @@ devMiddleware.waitUntilValid(() => {
   _resolve();
 });
 
-var server = app.listen(port);
+
+console.log('creating dev-server in SSL mode....');
+
+var servers = require('https').createServer({
+  key: fs.readFileSync('/opt/lampp/etc/ssl.key/justoj.key'),
+  cert: fs.readFileSync('/opt/lampp/etc/ssl.crt/justoj.crt')
+}, app);
+
+var server = servers.listen(port);
+//var server = app.listen(port);
 
 module.exports = {
   ready: readyPromise,

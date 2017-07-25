@@ -1,5 +1,6 @@
 
 export default {
+
   flashTemplate:`
       <transition
       :name="transitionName"
