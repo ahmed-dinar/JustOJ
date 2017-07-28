@@ -48,8 +48,6 @@ exports.findById = function (pid,attr,callback) {
  */
 exports.findProblems = function (uid, cur_page, URL, cb) {
 
-  logger.debug('yep');
-
   var sql;
   if (!uid || uid < 0) {
     sql = Query

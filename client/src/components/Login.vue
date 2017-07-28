@@ -94,6 +94,7 @@
 
 <script>
 
+  import has from 'has';
   import NProgress from 'nprogress';
   import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
   import particlesOptions from '@/config/particlesOptions';
@@ -138,8 +139,14 @@
 
             this.$store.dispatch('login', credentials)
               .then(() => {
+
                 this.formDone();
-                this.$router.replace('/');
+
+                let go = has(this.$route.query,'next')
+                  ? this.$route.query.next
+                  : '/';
+
+                this.$router.replace(go);
               })
               .catch(err => {
                 this.formDone();

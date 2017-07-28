@@ -8,6 +8,7 @@ var router = express.Router();
 var logger = require('winston');
 var config = require('nconf');
 var has = require('has');
+var moment = require('moment');
 
 var User = appRequire('models/user');
 
@@ -19,20 +20,28 @@ router.post('/',function(req, res, next) {
 
   User.auth(username, password, function (err, payLoad, token){
     if(err){
-      if( err.name === '404' || err.name === '401' )
+      if( err.name === '404' || err.name === '401' ){
         return res.status(401).json({ error: 'username or password is invalid' });
+      }
 
       logger.error(err);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
 
     //hours * 3600000 = milliseconds
-    var expiresIn = new Date(Date.now() + (1 * 3600000));
+    // 1 minutes = 60000 milliseconds
+    var sessionTimeout = config.get('SESSION:TIMEOUT') || 1;
+    var jwtExpiresIn = new Date(Date.now() + (sessionTimeout * 3600000));
+    var sessionExpiresIn = moment.utc()
+      .add(sessionTimeout,'hours')
+      .format();
+
+    payLoad.expires = sessionExpiresIn;
 
     res
       .cookie('access_token', token, {
         domain: config.get('domain') || 'localhost',
-        expires: expiresIn,
+        expires: jwtExpiresIn,
         HttpOnly: true,
         secure: true
       })
@@ -46,8 +55,9 @@ router.post('/signout',function(req, res, next) {
 
   logger.debug(req.cookies);
 
-  if( !has(req.cookies,'access_token') )
+  if( !has(req.cookies,'access_token') ){
     return res.status(200).json();
+  }
 
   res
     .clearCookie('access_token', {

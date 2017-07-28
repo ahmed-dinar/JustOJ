@@ -132,11 +132,25 @@ module.exports.loadRoutes = function (app) {
 module.exports.loadErrorRoutes = function (app) {
 
     // catch 404 and forward to error handler
-  app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+  // app.use(function(req, res, next) {
+  //   var err = new Error('Not Found');
+  //   err.status = 404;
+  //   next(err);
+  // });
+
+
+  app.use(function (err, req, res, next) {
+    //express-jwt authentication
+    if (err.name === 'UnauthorizedError'){
+      logger.debug(err);
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    logger.error(err);
+
+    res.status(500).json({ error: 'Internal Server Error' });
   });
+
 
 
   // csurf error handlers

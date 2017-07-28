@@ -6,6 +6,7 @@ import BootstrapVue from 'bootstrap-vue';
 import VeeValidate from 'vee-validate';
 import VuexFlash from 'vuex-flash';
 import axios from 'axios';
+import VueQuillEditor from 'vue-quill-editor';
 
 import table from './components/custom/table';
 
@@ -15,7 +16,7 @@ import store from './store';
 
 import 'particles.js';
 
-import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'font-awesome/css/font-awesome.css';
 import 'nprogress/nprogress.css';
@@ -29,6 +30,12 @@ sync(store, router);
 
 Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
+
+
+Vue.use(VueQuillEditor);
+//settings of quill
+import './config/initQuill';
+
 
 Vue.use(BootstrapVue);
 Vue.use(VeeValidate, {

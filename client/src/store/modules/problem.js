@@ -18,15 +18,17 @@ const mutations = {
 
 
 const actions = {
+
   fetchProblems({ commit }, page = 1) {
-    axios
+
+    return axios
       .get(`/api/problem/list?page=${page}`)
       .then(response => {
+        console.log(response.data);
         commit(types.SET_PROBLEMS, response.data);
+        return Promise.resolve();
       })
-      .catch(error => {
-        console.log(`${error.response.status} ${error.response.statusText}`);
-      });
+      .catch(error => Promise.reject(`${error.response.status} ${error.response.statusText}`));
   },
 
   updateProblems({ commit }, data){

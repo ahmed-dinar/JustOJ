@@ -63,7 +63,9 @@ function validatePassword(password, user, cb){
 //generate jwt token with user payload
 //
 function generateToken(user, cb){
+
   var payLoad = {
+    id: user.id,
     name: user.name,
     username: user.username,
     email: user.email,
@@ -74,6 +76,8 @@ function generateToken(user, cb){
     if(err)
       return cb(err);
 
+    delete payLoad.email;
+    delete payLoad.id;
     return cb(null, payLoad, token);
   });
 }

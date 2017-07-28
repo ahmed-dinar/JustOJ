@@ -28,7 +28,8 @@ module.exports = merge(baseWebpackConfig, {
       fonts: [
         { family: 'Source Sans Pro', variants: [ '400', '600', '700' ] },
         { family: 'Niconne', variants: [ '400' ] },
-        { family: 'Roboto', variants: [ '400','500','700','900' ] }
+        { family: 'Roboto', variants: [ '400','500','700','900' ] },
+        { family: 'Montserrat', variants: [ '700' ] }
       ],
       local: false
     }),

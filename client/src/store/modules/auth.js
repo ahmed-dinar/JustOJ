@@ -1,8 +1,8 @@
 
 import axios from 'axios';
 import * as types from '@/store/mutation-types';
-import router from '@/router';
 import has from 'has';
+import moment from 'moment';
 
 const state = {
   authenticated: false,
@@ -10,8 +10,17 @@ const state = {
 };
 
 const getters ={
-  isLoggedIn: state => state.authenticated,
-  getUser: state => state.data
+  isLoggedIn: states => {
+
+    if( has(states.data,'expires') ){
+      let expires = states.data.expires;
+      let now = moment.utc().format();
+      return now < expires;
+    }
+
+    return states.authenticated;
+  },
+  getUser: states => states.data
 };
 
 const mutations = {
@@ -57,7 +66,6 @@ const actions = {
     axios.post('/api/signin/signout', {})
       .then( response => {
         commit(types.LOG_OUT);
-        router.replace('/login');
       })
       .catch( err => {
         console.log(`${err.response.status} ${err.response.statusText}`);

@@ -8,7 +8,7 @@
 
         <b-link class="navbar-brand" :to="{ path: '/' }">
           <!-- <img src="img/brand-logo.png"  width="35" height="32" /> -->
-          Just Oj
+          J
         </b-link>
 
         <b-collapse is-nav id="nav_collapse">
@@ -43,7 +43,7 @@
                 </b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
                 <b-dropdown-item @click="logOut">
-                  <i class="material-icons">person_outline</i> Signout
+                  <i class="material-icons">settings_power</i> Signout
                 </b-dropdown-item>
               </b-nav-item-dropdown>
             </template>
@@ -61,7 +61,13 @@
 
     <div class="main-wraper" v-if="showNavBar">
       <div class="content container main-height" >
-        <router-view></router-view>
+        <transition
+          name="custom-classes-transition"
+          enter-active-class="animated fadeIn"
+          leave-class="animated fadeOut"
+        >
+          <router-view></router-view>
+        </transition>
       </div>
       <div class="main-footer">
         <footer class="container" >
@@ -71,7 +77,6 @@
           </div>
         </footer>
       </div>
-
     </div>
     <div class="no-nav-body" v-else>
       <router-view></router-view>
@@ -87,6 +92,14 @@
   export default {
 
     name: 'app',
+
+    created(){
+
+      if( !this.isLoggedIn ){
+        this.logOut();
+      }
+
+    },
 
     mounted(){
       // console.log(this.$store.state.route.path);

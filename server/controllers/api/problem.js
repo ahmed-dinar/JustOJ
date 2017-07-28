@@ -23,11 +23,16 @@ var Problems = appRequire('models/problems');
 // var roles = appRequire('middlewares/userrole');
 //var EditProblem = appRequire('edit_problem/editProblem');
 
+var OK = appRequire('middlewares/OK');
+var authJwt = appRequire('middlewares/authJwt');
+var roles = appRequire('middlewares/roles');
+var authUser = appRequire('middlewares/authUser');
+
 
 /**
  *
  */
-router.get('/list', function(req, res, next) {
+router.get('/list', authUser, function(req, res, next) {
 
   var cur_page;
   if( !has(req.query,'page') || parseInt(req.query.page) < 1 )
@@ -36,10 +41,12 @@ router.get('/list', function(req, res, next) {
     cur_page = parseInt(req.query.page);
 
   var URL = url.parse(req.originalUrl).pathname;
+  var uid = req.user ? req.user.id : null;
+
 
   //TODO:
   //TODO: AGAIN TODO!!:  please please check the query with user id in model, is it horrible when submission table is too huge??
-  Problems.findProblems(null, cur_page, URL, function(error, problems, pagination) {
+  Problems.findProblems(uid, cur_page, URL, function(error, problems, pagination) {
     if( error ) {
       logger.error('what');
       logger.error(error);
@@ -48,31 +55,24 @@ router.get('/list', function(req, res, next) {
 
     logger.debug(problems);
     logger.debug(pagination);
+    logger.debug('isLoggedIn = ', !!uid);
+    setTimeout(function(){
+      res
+        .status(200)
+        .json({
+          problems: problems,
+          pagination: pagination
+        });
+    }, 3000);
 
-    res
-      .status(200)
-      .json({
-        problems: problems,
-        pagination: pagination
-      });
   });
 });
 
 
-// /**
-//  *
-//  */
-// router.get('/create', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-
-//   res.render('problem/create/new', {
-//     active_nav: 'problems',
-//     title: 'editproblem | JUST Online Judge',
-//     locals: req.app.locals,
-//     isLoggedIn: req.isAuthenticated(),
-//     user: req.user
-//   });
-// });
-
+//
+// create a new problem
+//
+router.get('/create', authJwt(), roles('admin'), OK);
 
 
 // /**

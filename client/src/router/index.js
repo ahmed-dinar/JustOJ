@@ -16,6 +16,7 @@ import VerifyAccount from '@/components/user/VerifyAccount';
 
 import Problems from '@/components/problem/Problems';
 import ProblemList from '@/components/problem/ProblemList';
+import CreateProblem from '@/components/problem/Create';
 
 import Page404 from '@/components/Page404';
 import store from '@/store';
@@ -53,6 +54,12 @@ const router = new Router({
           name: 'ProblemList',
           component: ProblemList,
           meta: { title: 'Problem List' }
+        },
+        {
+          path: 'create',
+          name: 'CreateProblem',
+          component: CreateProblem,
+          meta: { title: 'Create Problem' }
         }
       ]
     },
@@ -111,8 +118,9 @@ router.beforeEach((to, from, next) => {
   document.title = to.meta.title;
   NProgress.start();
 
-  if( (to.name === 'login' || to.name === 'SingUp') && store.getters.isLoggedIn )
+  if( (to.name === 'login' || to.name === 'SingUp') && store.getters.isLoggedIn ){
     router.replace({ path: '/' });
+  }
 
   // if( to.matched.some(record => record.meta.auth) && !store.getters.isLoggedIn )
   //   router.replace({ path: '/login' });
