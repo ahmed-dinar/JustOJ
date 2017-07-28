@@ -24,7 +24,7 @@
           <b-nav is-nav-bar class="ml-auto">
 
             <template v-if="isLoggedIn">
-              <b-nav-item exact><i class="fa fa-envelope-o"></i></b-nav-item>
+              <b-nav-item exact><i class="material-icons">email</i></b-nav-item>
               <b-nav-item-dropdown right>
 
                 <!-- Using text slot -->

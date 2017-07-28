@@ -35,14 +35,14 @@ var webpackConfig = merge(baseWebpackConfig, {
     }),
 
     //remove this ans use build-fonts.js
-    new GoogleFontsPlugin({
-      fonts: [
-        { family: 'Source Sans Pro', variants: [ '400', '600', '700' ] },
-        { family: 'Niconne', variants: [ '400' ] },
-        { family: 'Roboto', variants: [ '400','500','700','900' ] }
-      ],
-      local: false
-    }),
+    // new GoogleFontsPlugin({
+    //   fonts: [
+    //     { family: 'Source Sans Pro', variants: [ '400', '600', '700' ] },
+    //     { family: 'Niconne', variants: [ '400' ] },
+    //     { family: 'Roboto', variants: [ '400','500','700','900' ] }
+    //   ],
+    //   local: false
+    // }),
 
     new webpack.optimize.UglifyJsPlugin({
       compress: {

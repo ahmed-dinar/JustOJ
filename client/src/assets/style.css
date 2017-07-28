@@ -463,6 +463,7 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
   box-shadow: 0 3px 1px -2px rgba(0,0,0,.14), 0 2px 2px 0 rgba(0,0,0,.098), 0 1px 5px 0 rgba(0,0,0,.084);
   border: none;
   background: #fff;
+  width: 100%;
 }
 
 .quill-editor .material-icons{
@@ -498,4 +499,55 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
 
 .ql-active .material-icons{
   color: #0066cc;
+}
+
+.multiselect__tag{
+  border-radius: 2px;
+  background: #34364C;
+}
+
+.multiselect__tag-icon:after {
+  color: #fff;
+  font-size: 12px;
+}
+
+.multiselect__tag-icon:focus,
+.multiselect__tag-icon:hover {
+  background: #535679;
+}
+
+.multiselect__tag-icon{
+  color: #fff;
+  border-radius: 0;
+}
+
+.multiselect,
+.multiselect__input,
+.multiselect__single{
+  font-size: 12px;
+}
+
+.multiselect__input, .multiselect__single{
+  border-radius: 2px;
+}
+
+.custom-select{
+  font-size: 14px;
+}
+
+.form-control{
+  height: 38px;
+  border-color: #e8e8e8;
+}
+
+.form-bundle{
+  width: 100%;
+}
+
+.form-bundle label{
+  font-weight: 600;
+  margin-bottom: 3px;
+  font-size: 13px;
+  color: rgba(0,0,0,0.6);
+  padding-left: 2px;
 }
