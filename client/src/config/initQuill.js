@@ -1,6 +1,7 @@
 
 if( window.Quill ){
   var icons = Quill.import('ui/icons');
+  icons['formula'] = '<i class="material-icons">functions</i>';
   icons['bold'] = '<i class="material-icons">format_bold</i>';
   icons['image'] = '<i class="material-icons">image</i>';
   icons['code'] = '<i class="material-icons">code</i>';

@@ -8,22 +8,29 @@ import VuexFlash from 'vuex-flash';
 import axios from 'axios';
 import VueQuillEditor from 'vue-quill-editor';
 import katex from 'katex';
+import ToggleButton from 'vue-js-toggle-button';
+import screenfull from 'screenfull';
+import VueHighlightJS from 'vue-highlightjs';
+import NProgress from 'nprogress';
+import has from 'has';
 
 import table from './components/custom/table';
 import config from './config';
+import Mixins from './mixins/Mixins';
 
 import App from './App';
 import router from './router';
 import store from './store';
 
+
 import 'particles.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-// import 'font-awesome/css/font-awesome.css';
 import 'nprogress/nprogress.css';
 import 'bootstrap-social/bootstrap-social.css';
 import 'animate.css/animate.min.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
+import 'highlight.js/styles/github-gist.css';
 import 'katex/dist/katex.min.css';
 import './assets/style.css';
 import './assets/fonts.css';
@@ -38,6 +45,17 @@ if(!window.katex){
   window.katex = katex;
 }
 
+if(!window.screenfull){
+  window.screenfull = screenfull;
+}
+
+if(!window.progressbar){
+  window.progressbar = NProgress;
+}
+
+
+Vue.use(VueHighlightJS);
+Vue.use(ToggleButton);
 Vue.use(VueQuillEditor);
 //settings of quill
 import './config/initQuill';
@@ -45,6 +63,39 @@ import './config/initQuill';
 
 Vue.use(BootstrapVue);
 Vue.component('m-table', table);
+
+VeeValidate.Validator.extend('verify_exists', {
+  getMessage: field => `This ${field} is not available.`,
+  validate: value => new Promise(resolve => {
+    if( !value ){
+      resolve({ valid: true });
+      return;
+    }
+
+    axios
+      .post('/api/user/available', { data: value })
+      .then(response => {
+        resolve({ valid: has(response.data,'available') && response.data.available === true });
+      });
+  })
+});
+
+
+VeeValidate.Validator.extend('fileRequired', {
+  getMessage: field => `This ${field} is not lalal.`,
+  validate: value => new Promise(resolve => {
+    console.log('hey man............');
+    console.log(value);
+    if( !value ){
+      resolve({ valid: false });
+      return;
+    }
+
+    resolve({ valid: true });
+  })
+});
+
+
 Vue.use(VeeValidate, {
   errorBagName: 'formError',
   fieldsBagName: 'formFields'
@@ -55,6 +106,7 @@ Vue.use(VuexFlash, {
   template: config.flashTemplate
 });
 
+Vue.use(Mixins);
 
 
 /* eslint-disable no-new */

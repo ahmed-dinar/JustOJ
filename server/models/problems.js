@@ -3,12 +3,14 @@
 /**
  * Module dependencies.
  */
-var _ = require('lodash');
+var forEach = require('lodash/forEach');
+var some = require('lodash/some');
 var entities = require('entities');
 var async = require('async');
 var logger = require('winston');
+var Hashids = require('hashids');
 
-var MyUtil = appRequire('lib/myutil');
+var myutil = appRequire('lib/myutil');
 var Paginate = appRequire('lib/pagination/paginate');
 var DB = appRequire('config/database/knex/DB');
 var Query = appRequire('config/database/knex/query');
@@ -37,6 +39,27 @@ exports.findById = function (pid,attr,callback) {
         ,function(err,rows){
           callback(err,rows);
         });
+};
+
+
+//
+//
+//
+exports.findByHash = function (hashId, attr, callback) {
+
+  var sql = Query.select();
+
+  if( attr && attr.length ){
+    sql = Query.select(attr);
+  }
+
+  sql = sql
+    .from('problems')
+    .where({ 'hash_id': hashId })
+    .limit(1)
+    .toString();
+
+  DB.execute(sql, callback);
 };
 
 
@@ -190,6 +213,108 @@ exports.insert = function(req,fn){
   ], fn);
 };
 
+//
+// save a new problem in database
+//
+exports.save = function(data, fn){
+
+  logger.debug(data);
+
+  async.waterfall([
+    function saveProblem(callback) {
+      var sql = Query.insert({
+        title: data.title,
+        slug: data.slug,
+        status: 'incomplete',
+        input: data.input,
+        output: data.output,
+        author: data.author,
+        statement: data.statement,
+        score: data.score,
+        category: data.category,
+        difficulty: data.difficulty
+      })
+      .into('problems')
+      .toString();
+
+      DB.execute(sql, function(err,rows){
+        if(err){
+          return callback(err);
+        }
+        return callback(null, rows.insertId);
+      });
+    },
+    function saveHash(pid, callback){
+      var hashids = new Hashids('problem titles are awesome', 11);
+      var hashId = hashids.encode(pid);
+
+      logger.debug('hashid = ',hashId);
+
+      var sql = Query('problems')
+        .update({ 'hash_id': hashId })
+        .where({ 'id': pid })
+        .toString();
+
+      DB.execute(sql, function(err,rows){
+        if(err){
+          return callback(err);
+        }
+        return callback(null, hashId, pid);
+      });
+    },
+    function saveTags(hashId, pid, callback){
+      //no tags provided
+      if(!data.tags){
+        return callback(null, hashId);
+      }
+
+      //validate tags
+      var tagWhitelist = validTags(data.tags, pid);
+
+      if( !tagWhitelist.length ){
+        return callback(null, hashId);
+      }
+
+      var sql = Query
+        .insert(tagWhitelist)
+        .into('problem_tags')
+        .toString();
+
+      DB.execute(sql, function(err, rows){
+        if(err){
+          return callback(err);
+        }
+        return callback(null, hashId);
+      });
+    }
+  ], fn);
+};
+
+
+//
+// returns valid tags
+//
+function validTags(tags, pid){
+
+  var tagWhitelist = [];
+
+  forEach(myutil.tagList(), function(tag){
+    var validTag = some(tags, function(tg){
+      return tg === tag;
+    });
+
+    if(validTag){
+      tagWhitelist.push({
+        'pid': pid,
+        'tag': tag
+      });
+    }
+  });
+
+  return tagWhitelist;
+}
+
+
 
 /**
  *
@@ -283,6 +408,19 @@ exports.updateByColumn = function (pid, cols, fn) {
   var sql = Query('problems').update(cols).where({ 'id': pid });
 
   DB.execute(sql.toString(), fn);
+};
+
+
+//
+// same as updateByColumn, for API
+//
+exports.updateByColumnName = function (hashId, cols, fn) {
+  var sql = Query('problems')
+    .update(cols)
+    .where({ 'hash_id': hashId })
+    .toString();
+
+  DB.execute(sql, fn);
 };
 
 

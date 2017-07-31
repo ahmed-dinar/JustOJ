@@ -14,6 +14,7 @@ var bodyParser = require('body-parser');
 // var passport = require('passport');
 // var flash = require('connect-flash');
 var helmet = require('helmet');
+var entities = require('entities');
 //var cors = require('cors');
 var compression = require('compression');
 var methodOverride = require('method-override');
@@ -87,7 +88,12 @@ module.exports.loadMiddleware = function (app) {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(methodOverride());
-  app.use(expressValidator({ customValidators: appRequire('config/custom-validator') }));
+  app.use(expressValidator({
+    customValidators: appRequire('config/custom-validator'),
+    customSanitizers: {
+      escapeInput: entities.encodeHTML
+    }
+  }));
   app.use(cookieParser());
   app.use(serveStatic(path.join(__dirname, 'public/static')));
 

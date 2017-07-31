@@ -6,28 +6,35 @@
 var express = require('express');
 var router = express.Router();
 
-//var split = require('lodash/split');
-//var isString = require('lodash/isString');
-//var async = require('async');
+var _ = require('lodash');
+var mkdirp = require('mkdirp');
+var rimraf = require('rimraf');
+var async = require('async');
+var entities = require('entities');
 //var moment = require('moment');
-//var entities = require('entities');
-//
+var path = require('path');
+var fs = require('fs');
+var Busboy = require('busboy');
+var slug = require('slug');
 var url = require('url');
 var has = require('has');
-//var isUndefined = require('lodash/isUndefined');
+var crypto = require('crypto');
 var logger = require('winston');
 
 //var MyUtil = appRequire('lib/myutil');
 var Problems = appRequire('models/problems');
-// var isLoggedIn = appRequire('middlewares/isLoggedIn');
-// var roles = appRequire('middlewares/userrole');
+var removeTestCase = require('./problem/removeTestCase');
+
 //var EditProblem = appRequire('edit_problem/editProblem');
 
+var AppError = appRequire('lib/custom-error');
+var Schema = appRequire('config/validator-schema');
 var OK = appRequire('middlewares/OK');
 var authJwt = appRequire('middlewares/authJwt');
 var roles = appRequire('middlewares/roles');
 var authUser = appRequire('middlewares/authUser');
 
+slug.defaults.mode ='pretty';
 
 /**
  *
@@ -72,7 +79,272 @@ router.get('/list', authUser, function(req, res, next) {
 //
 // create a new problem
 //
-router.get('/create', authJwt(), roles('admin'), OK);
+router
+  .route('/create')
+  //checking logged in and admin privilege
+  .all(authJwt(), roles('admin'), OK())
+  //return ok to load front end
+  .get(OK('ok'))
+  .post(function(req, res, next) {
+
+    if( !req.body )
+      return res.status(400).json({ error: 'Request body not found' });
+
+    var titleSlug = slug(req.body.title.replace(/[^a-zA-Z0-9 ]/g, ' '));
+
+    async.waterfall([
+      function validateInput(callback){
+        req.sanitize('statement').escapeInput();
+        req.sanitize('title').escapeInput();
+        req.sanitize('author').escapeInput();
+        req.sanitize('input').escapeInput();
+        req.sanitize('output').escapeInput();
+        req.checkBody(Schema.problem);
+
+        logger.debug('validatin inputs..');
+
+        req
+          .getValidationResult()
+          .then(function(result) {
+            if (!result.isEmpty()){
+              var e = result.array()[0];
+              logger.debug(result.array());
+              return callback(new AppError(e.param + ' ' + e.msg,'input'));
+            }
+            req.body.slug = entities.encodeHTML(titleSlug);
+            return callback();
+          });
+      },
+      async.apply(Problems.save, req.body)
+    ],
+    function(err, hashId){
+      if(err){
+        if(err.name === 'input')
+          return res.status(400).json({ error: err.message });
+
+        logger.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      logger.debug(hashId);
+
+      res.status(200).json({ id: hashId, slug: titleSlug });
+    });
+  });
+
+
+
+router
+  .get('/edit/:pid', authJwt(), roles('admin'), function(req, res, next){
+    var pid = req.params.pid;
+    var isData = true;
+    if( has(req.query,'type') && req.query.type === 'auth' ){
+      isData = false;
+    }
+    logger.debug(req.query);
+    logger.debug(isData);
+
+    var columns = isData ? null : ['id'];
+
+    Problems.findByHash(pid, columns, function(err, data){
+      if(err){
+        logger.error(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      if( !data.length ){
+        return res.status(404).json({ error: 'No Problem Found' });
+      }
+
+      res.status(200).json(data[0]);
+    });
+  });
+
+
+router
+  .route('/edit/testcase/:hashId')
+  .all(authJwt(), roles('admin'), OK())
+  .get(function(req, res, next){
+
+    var hashId = req.params.hashId;
+    async.waterfall([
+      function(callback) {
+        Problems.findByHash(hashId, ['id'], function(err,rows){
+          if( err ){
+            return callback(err);
+          }
+
+          if( !rows || !rows.length ){
+            return callback(new AppError('No Problem Found','input'));
+          }
+
+          callback();
+        });
+      },
+      function(callback){
+        var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + hashId);
+        fs.readdir(rootDir, function(err, files) {
+
+          if( err ){
+            //no test cases added yet!
+            if( err.code === 'ENOENT' ){
+              return callback(null,[]);
+            }
+
+            return callback(err);
+          }
+
+          if(files){
+            return callback(null, files);
+          }
+
+          callback(null,[]);
+        });
+      }
+    ],
+    function (error, cases) {
+      if( error ) {
+        if(error.name === 'input'){
+          return res.status(404).json({ error: error.message });
+        }
+
+        logger.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      logger.debug(cases);
+
+      var cas = _.map(_.times(cases.length), function(c){
+        return { id: c, hash: cases[c] };
+      });
+
+      logger.debug(cas);
+
+      res.status(200).json(cas);
+    });
+  })
+  .post(function(req, res, next){
+
+    var hashId = req.params.hashId;
+    var action = req.query.action;
+
+    logger.debug(req.body);
+    logger.debug(req.headers);
+    logger.debug('hashId = ', hashId);
+    logger.debug('action = ', action);
+    logger.debug('files = ', req.files); //req.files.yourFieldName.meta.path
+
+    //remove the test case
+    if( action === 'remove' ){
+      if( !req.body.case ){
+        return res.status(400).json({ error: 'Test Case Id required' });
+      }
+      return removeTestCase(hashId, req.body.case, res);
+    }
+
+
+    async.waterfall([
+      //validate problem
+      function(callback) {
+        Problems.findByHash(hashId, ['id'], function(err,rows){
+          if( err ){
+            return callback(err);
+          }
+
+          if( !rows || !rows.length ){
+            return callback(new AppError('No Problem Found','404'));
+          }
+
+          callback();
+        });
+      },
+      //create unique random id
+      function (callback){
+        crypto.randomBytes(20, function(err, buf) {
+          if(err){
+            return callback(err);
+          }
+
+          var testCaseId = buf.toString('hex');
+          callback(null, testCaseId);
+        });
+      },
+      //create directory of the test case
+      function (testCaseId, callback){
+        var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + hashId + '/' + testCaseId);
+
+        mkdirp(saveTo, function (err) {
+          if (err){
+            return callback(err);
+          }
+
+          logger.info(saveTo + ' test case dir created, for problem hashId: ' + testCaseId);
+
+          callback(null, saveTo, testCaseId);
+        });
+      },
+      //save test case
+      function (saveTo, testCaseId, callback){
+        //init file upload handler
+        var busboy = new Busboy({ headers: req.headers });
+        //[0] = input file path, [1] = output file path
+        var namemap = [saveTo + '/i.txt', saveTo + '/o.txt'];
+        //
+        var noFile = 0;
+        //index of namemap
+        var fname = 0;
+
+        busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+          //I have no idea why i was doing this!
+          if( noFile || !filename ){
+            noFile = 1;
+            file.resume();
+            return;
+          }
+
+          file.pipe(fs.createWriteStream(namemap[fname++]));
+        });
+
+        busboy.on('finish', function() {
+          //at lest 2 files should uploaded
+          if( noFile || fname!==2 ){
+            return clearUpload(saveTo, callback);
+          }
+
+          return callback(null, testCaseId);
+        });
+
+        req.pipe(busboy);
+      }
+    ],
+    function(err, testCaseId){
+      if(err){
+        if(err.name === '404'){
+          return res.status(404).json({ error: err.message });
+        }
+
+        if(err.name === 'input'){
+          return res.status(400).json({ error: err.message });
+        }
+
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+      res.sendStatus(200);
+    });
+  });
+
+
+function clearUpload(remDir, callback){
+  rimraf(remDir, function(error){
+    if( error )
+      logger.error(error);
+    else
+      logger.debug('Cleaned uploaded TC');
+
+    callback(new AppError('File required','input'));
+  });
+};
 
 
 // /**
@@ -125,25 +397,7 @@ router.get('/create', authJwt(), roles('admin'), OK);
 // });
 
 
-// /**
-//  *
-//  */
-// router.post('/create/', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
 
-//   if( !req.body )
-//     return next(new Error('REQUEST BODY NOT FOUND'));
-
-//   Problems.insert(req, function(err,pid){
-
-//     if( err ){
-//       logger.error(err);
-//       return next(new Error(err));
-//     }
-
-//     logger.info('problem created by userId=' + req.user.id + ', problemId=' + pid);
-//     res.redirect('/problems/edit/' + pid + '/2');
-//   });
-// });
 
 
 // /**

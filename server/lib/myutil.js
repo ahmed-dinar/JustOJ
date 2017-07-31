@@ -44,37 +44,56 @@ var myUtils = {
     return status;
   },
 
+  difficultyList: function(){
+    return ['easy','medium','hard'];
+  },
+
+  categoryList: function(){
+    return ['beginner','math','matrix','ds','dac','fom','game','graph','string','searching','geometry'];
+  },
+
+  categoryAlias: function(){
+    return[
+      'Beginner',
+      'Math',
+      'Matrix',
+      'Data Structures',
+      'Divide and Conquer',
+      'Flow/Matching',
+      'Game Theory',
+      'Graph Theory',
+      'String',
+      'Searching',
+      'Geometry'
+    ];
+  },
 
   tagList: function(){
-
-    var tags = [];
-
-    tags.push('beginner');
-    tags.push('addhoc');
-    tags.push('dp');
-    tags.push('ds');
-    tags.push('dac');
-    tags.push('fom');
-    tags.push('geometry');
-    tags.push('graph');
-    tags.push('number');
-    tags.push('string');
-    tags.push('searching');
-    tags.push('game');
-    tags.push('matrix');
-    tags.push('probabilities');
-    tags.push('bitmasks');
-    tags.push('trees');
-    tags.push('comb');
-    tags.push('dfsbfs');
-    tags.push('bf');
-    tags.push('greedy');
-
-    return tags;
+    return [
+      'beginner',
+      'addhoc',
+      'dp',
+      'ds',
+      'dac',
+      'fom',
+      'geometry',
+      'graph',
+      'number',
+      'string',
+      'searching',
+      'game',
+      'matrix',
+      'probabilities',
+      'bitmasks',
+      'trees',
+      'comb',
+      'dfsbfs',
+      'bf',
+      'greedy'
+    ];
   },
 
   tagNames: function(){
-
     var tags = {
       beginner: 'Begginer',
       addhoc: 'Add-hoc',
@@ -97,8 +116,6 @@ var myUtils = {
       bf: 'Brute Force',
       greedy: 'Greedy'
     };
-
-
     return tags;
   },
 

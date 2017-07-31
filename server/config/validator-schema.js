@@ -1,5 +1,7 @@
 'use strict';
 
+var myutil = appRequire('lib/myutil');
+
 module.exports = {
   'email': {
     'email': {
@@ -106,6 +108,57 @@ module.exports = {
         },
         errorMessage: 'Invalid location'
       }
+    }
+  },
+  problem: {
+    'title': {
+      isLength: {
+        options: [{ min: 6, max: 1000 }],
+        errorMessage: 'Must be between 6 and 1000 chars long'
+      },
+      errorMessage: 'Invalid title'
+    },
+    'author': {
+      isLength: {
+        options: [{ min: 3, max: 50 }],
+        errorMessage: 'Must be between 3 and 50 chars long'
+      },
+      errorMessage: 'Invalid title'
+    },
+    'score': {
+      isInt: {
+        options: [{ gt: 0, lt: 11, allow_leading_zeroes: false }],
+        errorMessage: 'Must be between 0 and 10'
+      },
+      errorMessage: 'Invalid score'
+    },
+    'statement':{
+      notEmpty: true,
+      errorMessage: 'Invalid statement'
+    },
+    'category':{
+      notEmpty: true,
+      isIn: {
+        options: [myutil.categoryList()],
+        errorMessage: 'invalid'
+      },
+      errorMessage: 'required'
+    },
+    'difficulty':{
+      notEmpty: true,
+      isIn: {
+        options: [myutil.difficultyList()],
+        errorMessage: 'invalid'
+      },
+      errorMessage: 'required'
+    },
+    'input':{
+      notEmpty: true,
+      errorMessage: 'required'
+    },
+    'output':{
+      notEmpty: true,
+      errorMessage: 'required'
     }
   }
 };

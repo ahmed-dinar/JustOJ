@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import NProgress from 'nprogress';
 
 import Hello from '@/components/Hello';
 import SignUp from '@/components/SignUp';
@@ -17,6 +16,7 @@ import VerifyAccount from '@/components/user/VerifyAccount';
 import Problems from '@/components/problem/Problems';
 import ProblemList from '@/components/problem/ProblemList';
 import CreateProblem from '@/components/problem/Create';
+import EditProblemCases from '@/components/problem/Edit/TestCase';
 
 import Page404 from '@/components/Page404';
 import store from '@/store';
@@ -60,6 +60,12 @@ const router = new Router({
           name: 'CreateProblem',
           component: CreateProblem,
           meta: { title: 'Create Problem' }
+        },
+        {
+          path: 'edit/testcase/:pid/:slug',
+          name: 'EditProblemCases',
+          component: EditProblemCases,
+          meta: { title: 'Edit Problem | Test Cases' }
         }
       ]
     },
@@ -116,7 +122,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
 
   document.title = to.meta.title;
-  NProgress.start();
+  progressbar.start();
 
   if( (to.name === 'login' || to.name === 'SingUp') && store.getters.isLoggedIn ){
     router.replace({ path: '/' });
@@ -130,8 +136,8 @@ router.beforeEach((to, from, next) => {
 
 
 router.afterEach((to,from) => {
-  NProgress.done();
-  NProgress.remove();
+  progressbar.done();
+  progressbar.remove();
 });
 
 

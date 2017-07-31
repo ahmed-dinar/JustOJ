@@ -45,15 +45,14 @@
 </tr>
 </tfoot>
 
-<tbody
+<transition-group
 name="custom-classes-transition"
 enter-active-class="animated lightSpeedIn"
-leave-active-class="animated lightSpeedOut"
-is="transition-group"
+leave-to-class="animated lightSpeedOut"
+tag="tbody"
 >
-
   <tr v-for="(item,index) in _items"
-  :key="index"
+  :key="item[keyIdentifier]"
   :class="rowClass(item)"
   @click="rowClicked($event,item,index)"
   @hover="rowHovered($event,item,index)"
@@ -79,7 +78,7 @@ is="transition-group"
 </tr>
 
 
-</tbody>
+</transition-group>
 </table>
 </template>
 
@@ -138,6 +137,10 @@ is="transition-group"
       };
     },
     props: {
+      keyIdentifier:{
+        type: String,
+        default: 'id'
+      },
       id: {
         type: String,
         default: ''

@@ -95,7 +95,6 @@
 <script>
 
   import has from 'has';
-  import NProgress from 'nprogress';
   import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
   import particlesOptions from '@/config/particlesOptions';
 
@@ -122,7 +121,7 @@
 
         this.loading = true;
         this.loginError = '';
-        NProgress.start();
+        progressbar.start();
 
         let credentials = {
           username: this.creds.username,
@@ -131,7 +130,8 @@
 
         console.log(credentials);
 
-        this.$validator.validateAll(scope)
+        this.$validator
+          .validateAll(scope)
           .then(result => {
 
             if(!result)
@@ -159,8 +159,8 @@
 
       formDone(){
         this.loading = false;
-        NProgress.done();
-        NProgress.remove();
+        progressbar.done();
+        progressbar.remove();
       },
 
       resetForm(){

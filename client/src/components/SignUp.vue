@@ -101,10 +101,7 @@
 
 <script>
 
-  import axios from 'axios';
-  import { Validator } from 'vee-validate';
   import has from 'has';
-  import NProgress from 'nprogress';
   import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
   import particlesOptions from '@/config/particlesOptions';
 
@@ -137,7 +134,7 @@
 
         this.loading = true;
         this.signupError = '';
-        NProgress.start();
+        progressbar.start();
 
         let captchaResponse = this.$el.querySelector('.g-recaptcha-response');
 
@@ -185,8 +182,8 @@
 
       formDone(){
         this.loading = false;
-        NProgress.done();
-        NProgress.remove();
+        progressbar.done();
+        progressbar.remove();
         //reset recaptcha
         if (window.grecaptcha ){
           grecaptcha.reset();
@@ -221,25 +218,6 @@
         }
       }
 
-    },
-
-    created() {
-
-      Validator.extend('verify_exists', {
-        getMessage: field => `This ${field} is not available.`,
-        validate: value => new Promise(resolve => {
-          if( !value ){
-            resolve({ valid: true });
-            return;
-          }
-
-          axios
-            .post('/api/user/available', { data: value })
-            .then(response => {
-              resolve({ valid: has(response.data,'available') && response.data.available === true });
-            });
-        })
-      });
     },
 
     mounted(){
