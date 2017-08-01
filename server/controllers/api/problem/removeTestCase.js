@@ -9,14 +9,13 @@ var fs = require('fs');
 var logger = require('winston');
 var async = require('async');
 
-var AppError = appRequire('lib/custom-error');
+//var AppError = appRequire('lib/custom-error');
 var Problems = appRequire('models/problems');
 
-module.exports = function(hashId, caseId, res) {
+module.exports = function(pid, caseId, res) {
 
   async.waterfall([
-    async.apply(findProblem, hashId),
-    async.apply(deleteTestCase, hashId, caseId),
+    async.apply(deleteTestCase, pid, caseId),
     readTestCaseDir,
     updateProblem
   ],
@@ -37,33 +36,15 @@ module.exports = function(hashId, caseId, res) {
 //
 //
 //
-function findProblem(hashId, callback) {
-  Problems.findByHash(hashId, ['id'], function(err,rows){
-    if( err ){
-      return callback(err);
-    }
-
-    if( !rows || !rows.length ){
-      return callback(new AppError('No Problem Found','input'));
-    }
-
-    callback();
-  });
-}
-
-
-//
-//
-//
-function deleteTestCase(hashId, caseId, callback) {
-  var TCDir = path.normalize(process.cwd() + '/files/tc/p/' + hashId + '/' + caseId);
+function deleteTestCase(pid, caseId, callback) {
+  var TCDir = path.normalize(process.cwd() + '/files/tc/p/' + pid + '/' + caseId);
   logger.debug('tc to remove ' + TCDir);
   rimraf(TCDir, function (err) {
     if(err){
       return callback(err);
     }
 
-    callback(null, hashId);
+    callback(null, pid);
   });
 }
 
@@ -71,9 +52,9 @@ function deleteTestCase(hashId, caseId, callback) {
 //
 //
 //
-function readTestCaseDir(hashId, callback) {
+function readTestCaseDir(pid, callback) {
 
-  var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + hashId);
+  var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + pid);
   fs.readdir(rootDir, function(err, files) {
     var skipUpdate = true;
 
@@ -90,7 +71,7 @@ function readTestCaseDir(hashId, callback) {
       skipUpdate = false;
     }
 
-    callback(null, hashId, skipUpdate);
+    callback(null, pid, skipUpdate);
   });
 }
 
@@ -98,7 +79,7 @@ function readTestCaseDir(hashId, callback) {
 //
 //
 //
-function updateProblem(hashId, skipUpdate, callback) {
+function updateProblem(pid, skipUpdate, callback) {
   //still have some test cases, leave it
   if(skipUpdate){
     return callback();
@@ -108,7 +89,7 @@ function updateProblem(hashId, skipUpdate, callback) {
 
   //there is no test case for this problem, set problem status to incomplete
   Problems
-    .updateByColumn(hashId, {
+    .updateByColumn(pid, {
       status: 'incomplete'
     }, callback);
 }

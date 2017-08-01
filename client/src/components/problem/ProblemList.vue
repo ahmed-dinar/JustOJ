@@ -1,6 +1,13 @@
 <template>
   <div class="row">
-      <div class="col-md-12">
+
+      <div v-if="!!error" class="col-md-12">
+        <smooth-alert variant="danger" :show="!!error">
+          {{ error }}
+        </smooth-alert>
+      </div>
+
+      <div v-else class="col-md-12">
 
         <b-card class="mb-2" no-block title="Problems">
 
@@ -8,72 +15,65 @@
            <h5>Problems</h5>
           </div>
 
-          <transition-group
-            name="custom-classes-transition"
-            enter-active-class="animated fadeIn"
-            leave-class="animated fadeOut"
-          >
+            <loading-data :loading="loading">
 
-            <div v-if="loading" class="text-center big-loading" key="loadme">
-             <clip-loader :loading="loading" size="30px" color="#34364c"></clip-loader>
-            </div>
+              <div v-if="problemList && problemList.problems.length">
+                <div class="table-responsive">
 
-            <div key="thedata" v-else>
-              <div v-if="!loading && problemList && problemList.problems.length" class="table-responsive">
-                <m-table show-empty
-                :items="problemList.problems"
-                :fields="fields"
-                class="problem-table"
-                >
-                  <template slot="index" scope="problem">
-                    {{problem.index + 1}}
-                  </template>
-                  <template slot="title" scope="problem">
-                    <router-link class="link" to="/problems/">{{problem.value}}</router-link>
-                  </template>
-                  <template slot="status" scope="problem">
+                  <m-table show-empty
+                  :items="problemList.problems"
+                  :fields="fields"
+                  class="problem-table"
+                  >
+                    <template slot="index" scope="problem">
+                      {{problem.index + 1}}
+                    </template>
+                    <template slot="title" scope="problem">
+                      <router-link class="link" to="/problems/">{{problem.value}}</router-link>
+                    </template>
+                    <template slot="status" scope="problem">
 
-                    <div v-if="hasStatus(problem.item)" v-html="userStatus(problem.item)"></div>
+                      <div v-if="hasStatus(problem.item)" v-html="userStatus(problem.item)"></div>
 
-                    <!-- <i class="material-icons text-success" v-if="userStatus(problem.item)">check_circle</i> -->
+                      <!-- <i class="material-icons text-success" v-if="userStatus(problem.item)">check_circle</i> -->
 
-                    <!-- <i class="material-icons text-success">check_circle</i> -->
-                    <!-- <i class="material-icons text-danger">highlight_off</i> -->
-                    <!-- <i class="material-icons text-warning">error_outline</i> -->
-                  </template>
-                  <template slot="difficulty" scope="problem">
-                    {{problem.value}}
-                  </template>
-                  <template slot="users" scope="problem">
-                    <router-link to="/">{{ problem.item.solvedBy }}</router-link>
-                  </template>
-                  <template slot="percentage" scope="problem">
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar"
-                      :aria-valuenow="solvePercent(problem.item.submissions,problem.item.solved)"
-                      :aria-valuemin="0"
-                      :aria-valuemax="100"
-                      >
-                      {{ solvePercent(problem.item.submissions,problem.item.solved) }}%
+                      <!-- <i class="material-icons text-success">check_circle</i> -->
+                      <!-- <i class="material-icons text-danger">highlight_off</i> -->
+                      <!-- <i class="material-icons text-warning">error_outline</i> -->
+                    </template>
+                    <template slot="difficulty" scope="problem">
+                      {{problem.value}}
+                    </template>
+                    <template slot="users" scope="problem">
+                      <router-link to="/">{{ problem.item.solvedBy }}</router-link>
+                    </template>
+                    <template slot="percentage" scope="problem">
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar"
+                        :aria-valuenow="solvePercent(problem.item.submissions,problem.item.solved)"
+                        :aria-valuemin="0"
+                        :aria-valuemax="100"
+                        >
+                        {{ solvePercent(problem.item.submissions,problem.item.solved) }}%
+                        </div>
                       </div>
-                    </div>
-                  </template>
-                </m-table>
-              </div>
+                    </template>
+                  </m-table>
+                </div>
 
-              <div>
-                <p class="text-muted text-center pull-left">Showing </p>
-                <b-pagination
-                size="sm"
-                :total-rows="problemList.pagination.total"
-                v-model="problemList.pagination.cur_page"
-                :per-page="problemList.pagination.page_limit"
-                class="pull-right"
-                ></b-pagination>
+                <div>
+                  <p class="text-muted text-center pull-left">Showing </p>
+                  <b-pagination
+                  size="sm"
+                  :total-rows="problemList.pagination.total"
+                  v-model="problemList.pagination.cur_page"
+                  :per-page="problemList.pagination.page_limit"
+                  class="pull-right"
+                  ></b-pagination>
+                </div>
               </div>
+          </loading-data>
 
-            </div>
-          </transition-group>
 
       </b-card>
     </div>
@@ -82,16 +82,11 @@
 
 <script>
 
-  import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
   import has from 'has';
   import { mapGetters, mapActions } from 'vuex';
 
   export default {
     name: 'ProblemList',
-
-    components: {
-      ClipLoader
-    },
 
     data () {
       return {
@@ -147,7 +142,7 @@
         .catch(err => {
           this.loading = false;
           this.error = err;
-          console.log(err);
+          console.log('error = ',err);
         });
     },
 

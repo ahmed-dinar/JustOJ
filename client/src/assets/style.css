@@ -17,7 +17,7 @@ body {
   font-size: 14px;
   color: #333;
   /* background: #f5f5f5;  f7f7f7 F1F1EB eef2f5 ECF0F5 */
-  background: #E9EBEE;
+  background: #ffffff ;
   height:100%;
 }
 
@@ -209,6 +209,11 @@ button{
   cursor: pointer;
 }
 
+.btn-primary, .btn-info, .btn-danger, .btn-success{
+  border-color: transparent;
+  box-shadow: none;
+}
+
 .btn-dark {
   background-color: #34495E;
   color: #fff;
@@ -388,8 +393,11 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
 }
 
 .card{
-  border: none;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+/*   border: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15); */
+  box-shadow: none;
+  border-color: rgb(230, 233, 237);
+  border-radius: 1px;
 }
 
 .card-title{
@@ -546,6 +554,7 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
 .form-control{
   height: 38px;
   border-color: #e8e8e8;
+  /* border-color: rgb(217, 217, 217); */
 }
 
 .form-bundle{
@@ -636,23 +645,70 @@ code, kbd, pre, samp{
   font-size: 15px;
 }
 
-.edit-testcase .custom-file-input,
-.edit-testcase .custom-file-control{
-  height: 35px;
-  padding:  6px 10px;
+.custom-file-input,
+.custom-file-control{
+  height: 30px;
+  padding:  4px 10px;
 }
-.edit-testcase .custom-file{
+
+.custom-file{
   font-size: 13px;
-  height: 35px;
+  height: 30px;
   border: none;
 }
 
 .custom-file-control::before{
   background-color: #34364C;
   color: #fff;
-  padding:  6px 10px;
+  padding:  4px 10px;
 }
 
 form{
   width: 100%;
+}
+
+.btn-iconic{
+  display: flex;
+  align-items: center;
+  padding:5px 8px;
+}
+
+.btn-iconic-right{
+  padding-right: 0px;
+}
+
+.btn-iconic-left{
+  padding-left: 0px;
+}
+
+
+.btn-sm.btn-loading{
+  padding-top: 8px;
+}
+
+.btn-md.btn-loading{
+  padding-top: 12px;
+}
+
+.btn-lg.btn-loading{
+  padding-top: 14px;
+}
+
+.btn-xs.btn-loading{
+  padding-top: 6px;
+}
+
+.btn:focus{
+  border-color: transparent;
+  box-shadow: none;
+}
+
+
+h6 .material-icons {
+  font-size: 19px;
+}
+
+
+.runs-table-sm{
+  font-size: 13px;
 }

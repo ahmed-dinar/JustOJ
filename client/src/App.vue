@@ -50,7 +50,7 @@
 
             <template v-else>
               <b-nav-item class="nav-login-btn" :to="{ path: '/mails' }" exact><i class="material-icons">notifications</i></b-nav-item>
-              <b-nav-item class="nav-login-btn" :to="{ path: '/login' }" exact>Login</b-nav-item>
+              <b-nav-item class="nav-login-btn" @click="goToLogin">Login</b-nav-item>
               <b-nav-item :to="{ path: '/signup' }" exact>Register</b-nav-item>
             </template>
 
@@ -88,6 +88,7 @@
 <script>
 
   import { mapGetters, mapActions } from 'vuex';
+  import pageLayout from '@/config/pageLayout';
 
   export default {
 
@@ -110,7 +111,7 @@
 
       showNavBar(){
         let page = this.$store.state.route.name;
-        return (page !== 'login' && page !== 'SignUp');
+        return pageLayout.noNavBar().indexOf(page) < 0;
       },
 
       userLinks(){
@@ -129,6 +130,9 @@
     },
 
     methods: {
+      goToLogin(){
+        window.location.href = `/login?next=${this.$store.state.route.path}`;
+      },
       ...mapActions([
         'logOut'
       ])

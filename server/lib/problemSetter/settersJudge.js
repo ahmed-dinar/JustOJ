@@ -14,7 +14,8 @@ var rimraf = require('rimraf');
 var logger = require('winston');
 var chalk = require('chalk');
 
-var Compiler = require('../compiler/sandbox/compiler');
+var AppError = appRequire('lib/custom-error');
+var Compiler = appRequire('lib/compiler/sandbox/compiler');
 
 
 /**
@@ -48,25 +49,29 @@ exports.run = function(opts,cb){
 
     rimraf(opts.runDir, function (err) {
 
-      if( err )
+      if( err ){
         logger.error(err);
+      }
 
       logger.debug( chalk.green('success clean submit!') );
 
       if( error ){
         logger.error(error);
 
-        if( runs.compiler )
-          return cb(error,runs);
+        if(error.name === 'compiler'){
+          return cb(error, runs);
+        }
 
-        if( !runs || _.isUndefined(runs[0]) )
-          return cb(error,{});
+        //no idea when and why use undefined!!
+        if( !runs || !runs.length || runs[0] === undefined ){
+          return cb(error, {});
+        }
 
         logger.debug('Error but runs exists');
         logger.debug(runs);
       }
 
-      getFinalResult(runs,opts,cb);
+      return getFinalResult(runs, opts, cb);
     });
   });
 };
@@ -80,9 +85,12 @@ exports.run = function(opts,cb){
 var compileCode = function (opts,cb) {
   Compiler.compile(opts, function (err,stderr, stdout) {
 
-    if(err) return cb(err,{compiler: 'Compiler Error'});
-
-    if(stderr) return cb(stderr,{ compiler: 'Compiler Error'});
+    //is it OK?
+    if(err || stderr){
+      logger.debug(err);
+      logger.debug(stderr);
+      return cb(new AppError('Compilation Error', 'compiler'));
+    }
 
     logger.debug( chalk.green('Compiled Successfully') );
     cb();
@@ -97,16 +105,20 @@ var compileCode = function (opts,cb) {
  */
 var getTestCases = function (tcDir,cb) {
   fs.readdir(tcDir, function(err, files) {
+    //why!
     if( err ){
       logger.error(err);
-      return cb(err,{});
+      return cb(err, {});
     }
+
+    //should be system error?
     if( files.length === 0 ){
       logger.debug( chalk.red('No Test Case Found in ' + tcDir) );
-      return cb('No Test Case Found',{});
+      return cb('No Test Case Found', {});
     }
+
     logger.debug(files);
-    cb(null,files);
+    cb(null, files);
   });
 };
 
@@ -119,17 +131,20 @@ var getTestCases = function (tcDir,cb) {
  */
 var createAdditionalFiles = function(saveTo,testCases,cb){
   var files = ['output.txt','error.txt','result.txt'];
+
   async.eachSeries(files, function(file, callback) {
     fs.open(saveTo + '/' + file ,'w',function(err, fd){
       if( err ){
         logger.debug( chalk.red(saveTo + '/' + file + ' creation error') );
         return callback(err);
       }
+
       logger.debug( chalk.green(saveTo + '/' + file + ' created') );
       callback();
     });
-  }, function(err){
-    cb(err,testCases);
+  },
+  function(err){
+    cb(err, testCases);
   });
 };
 
@@ -142,6 +157,7 @@ var createAdditionalFiles = function(saveTo,testCases,cb){
  */
 var runTestCase = function(opts,testCase,cb){
   testCase = opts.tcDir + '/' + testCase;
+
   async.waterfall([
     function(callback) {
       runCode(opts,testCase,callback);
@@ -150,12 +166,16 @@ var runTestCase = function(opts,testCase,cb){
       checkResult(opts,callback);
     },
     function(resultObj,callback){
-      if( resultObj.result !== 'OK' ) return callback(null,resultObj);
+      //one test case failed, ignore others
+      if( resultObj.result !== 'OK' ){
+        return callback(null, resultObj);
+      }
 
-      compareResult(opts,testCase,resultObj,callback);
+      return compareResult(opts,testCase,resultObj,callback);
     }
-  ], function (error, result) {
-    clearRun(opts,error, result,cb);
+  ],
+  function (error, result) {
+    return clearRun(opts, error, result, cb);
   });
 };
 
@@ -168,11 +188,13 @@ var runTestCase = function(opts,testCase,cb){
  */
 var runCode = function (opts,testCase,cb) {
   Compiler.run(opts, testCase, function (err,stdout, stderr) {
-    if(err) return cb(err);
+    if(err){
+      return cb(err);
+    }
 
     if(stderr) {
       logger.debug('stderr occured!', stderr);
-      return checkResult(opts,cb);
+      return checkResult(opts, cb);
     }
     cb();
   });
@@ -184,13 +206,15 @@ var runCode = function (opts,testCase,cb) {
  * @param opts
  * @param cb
  */
-var checkResult = function (opts,cb) {
+var checkResult = function (opts, cb) {
 
   var resDir = opts.runDir +'/result.txt';
   logger.debug( chalk.yellow('Checking ' + resDir + ' for run result'));
 
   fs.readFile(resDir, 'utf8', function (error,data) {
-    if (error ) return cb(error);
+    if (error ){
+      return cb(error);
+    }
 
     if( data.length === 0 ) {
       logger.debug( chalk.red('Why result file empty?'));
@@ -223,11 +247,12 @@ var checkResult = function (opts,cb) {
 
     logger.debug( chalk.magenta(data), resultObj);
 
-        //not accepted
-    if( resultObj.code !== '0' )
+    //not accepted
+    if( resultObj.code !== '0' ){
       return cb(resultObj.result, resultObj);
+    }
 
-    cb(null,resultObj);
+    return cb(null, resultObj);
   });
 };
 
@@ -288,16 +313,19 @@ var clearRun = function(opts, error, result,cb){
   var files = ['output.txt','error.txt','result.txt'];
   async.each(files, function(file, callback) {
     fs.truncate(opts.runDir + '/' + file, 0, function(err){
-      if(err) return callback(err);
+      if(err){
+        return callback(err);
+      }
 
       logger.debug( chalk.green(opts.runDir + '/' + file + ' truncated'));
       callback();
     });
   }, function(err){
-    if( err )
+    if( err ){
       logger.error( chalk.red('clearRun Error') );
+    }
 
-    cb(error,result);
+    return cb(error,result);
   });
 };
 

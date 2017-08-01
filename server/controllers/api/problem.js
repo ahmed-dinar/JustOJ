@@ -33,6 +33,7 @@ var OK = appRequire('middlewares/OK');
 var authJwt = appRequire('middlewares/authJwt');
 var roles = appRequire('middlewares/roles');
 var authUser = appRequire('middlewares/authUser');
+var decodeHash = appRequire('middlewares/decodeHash');
 
 slug.defaults.mode ='pretty';
 
@@ -87,8 +88,9 @@ router
   .get(OK('ok'))
   .post(function(req, res, next) {
 
-    if( !req.body )
+    if( !req.body ){
       return res.status(400).json({ error: 'Request body not found' });
+    }
 
     var titleSlug = slug(req.body.title.replace(/[^a-zA-Z0-9 ]/g, ' '));
 
@@ -134,55 +136,95 @@ router
 
 
 
+// router
+//   .get('/edit/:pid', authJwt(), roles('admin'), decodeHash(true), function(req, res, next){
+//     var pid = req.params.problemId;
+//     var isData = true;
+
+//     //request for problem data or just to validate problem
+//     if( has(req.query,'type') && req.query.type === 'auth' ){
+//       isData = false;
+//     }
+
+//     logger.debug(req.query);
+//     logger.debug(isData);
+
+//     // var columns = isData ? null : ['id'];
+
+//     // Problems.findByHash(pid, columns, function(err, data){
+//     //   if(err){
+//     //     logger.error(err);
+//     //     return res.status(500).json({ error: 'Internal Server Error' });
+//     //   }
+
+//     //   if( !data.length ){
+//     //     return res.status(404).json({ error: 'No Problem Found' });
+//     //   }
+
+//     //   res.status(200).json(data[0]);
+//     // });
+//   });
+
+
+//
+//
+//
 router
-  .get('/edit/:pid', authJwt(), roles('admin'), function(req, res, next){
-    var pid = req.params.pid;
-    var isData = true;
-    if( has(req.query,'type') && req.query.type === 'auth' ){
-      isData = false;
+  .get('/testcase/:pid/:caseId', authJwt(), roles('admin'), decodeHash(true,['id']), function(req, res, next){
+
+    var caseType = req.query.type;
+    if( !caseType ){
+      return res.status(404).json({ error: 'Invalid Test Case Type' });
     }
-    logger.debug(req.query);
-    logger.debug(isData);
 
-    var columns = isData ? null : ['id'];
+    //var problemSlug = req.params.slug;
+    var pid = req.body.problem.id;
+    var caseId = req.params.caseId;
 
-    Problems.findByHash(pid, columns, function(err, data){
+    logger.debug(caseType);
+
+    var caseName = caseType === 'input' ? 'i.txt' : 'o.txt';
+    var caseDir = path.normalize(process.cwd() + '/files/tc/p/' + pid + '/' + caseId + '/' + caseName);
+
+    fs.stat(caseDir, function(err,stats){
       if(err){
+        if( err.code === 'ENOENT' ){
+          return res.status(404).json({ error: 'No Test Case Found' });
+        }
+
         logger.error(err);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.sendStatus(500);
       }
 
-      if( !data.length ){
-        return res.status(404).json({ error: 'No Problem Found' });
+      if( stats.isFile() ){
+        res.writeHead(200, {
+          'Content-Type': 'text/plain',
+          'Content-Length': stats.size
+        });
+        var readStream = fs.createReadStream(caseDir);
+        readStream.pipe(res);
+        return;
       }
 
-      res.status(200).json(data[0]);
+      res.status(404).json({ error: 'No Test Case Found' });
     });
+
   });
 
 
+//
+//
+//
 router
-  .route('/edit/testcase/:hashId')
-  .all(authJwt(), roles('admin'), OK())
+  .route('/edit/testcase/:pid')
+  .all(authJwt(), roles('admin'), decodeHash(true, ['id']), OK())
   .get(function(req, res, next){
 
-    var hashId = req.params.hashId;
+    var problemId = req.body.problem.id;
+
     async.waterfall([
-      function(callback) {
-        Problems.findByHash(hashId, ['id'], function(err,rows){
-          if( err ){
-            return callback(err);
-          }
-
-          if( !rows || !rows.length ){
-            return callback(new AppError('No Problem Found','input'));
-          }
-
-          callback();
-        });
-      },
       function(callback){
-        var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + hashId);
+        var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + problemId);
         fs.readdir(rootDir, function(err, files) {
 
           if( err ){
@@ -225,39 +267,19 @@ router
   })
   .post(function(req, res, next){
 
-    var hashId = req.params.hashId;
+    var pid = req.body.problem.id;
     var action = req.query.action;
-
-    logger.debug(req.body);
-    logger.debug(req.headers);
-    logger.debug('hashId = ', hashId);
-    logger.debug('action = ', action);
-    logger.debug('files = ', req.files); //req.files.yourFieldName.meta.path
 
     //remove the test case
     if( action === 'remove' ){
       if( !req.body.case ){
         return res.status(400).json({ error: 'Test Case Id required' });
       }
-      return removeTestCase(hashId, req.body.case, res);
+      return removeTestCase(pid, req.body.case, res);
     }
 
 
     async.waterfall([
-      //validate problem
-      function(callback) {
-        Problems.findByHash(hashId, ['id'], function(err,rows){
-          if( err ){
-            return callback(err);
-          }
-
-          if( !rows || !rows.length ){
-            return callback(new AppError('No Problem Found','404'));
-          }
-
-          callback();
-        });
-      },
       //create unique random id
       function (callback){
         crypto.randomBytes(20, function(err, buf) {
@@ -271,14 +293,14 @@ router
       },
       //create directory of the test case
       function (testCaseId, callback){
-        var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + hashId + '/' + testCaseId);
+        var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + pid + '/' + testCaseId);
 
         mkdirp(saveTo, function (err) {
           if (err){
             return callback(err);
           }
 
-          logger.info(saveTo + ' test case dir created, for problem hashId: ' + testCaseId);
+          logger.info(saveTo + ' test case dir created, for problem pid: ' + testCaseId);
 
           callback(null, saveTo, testCaseId);
         });
@@ -295,6 +317,7 @@ router
         var fname = 0;
 
         busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+
           //I have no idea why i was doing this!
           if( noFile || !filename ){
             noFile = 1;
@@ -333,6 +356,13 @@ router
       res.sendStatus(200);
     });
   });
+
+
+router
+  .route('/edit/limits/:pid')
+  .all(authJwt(), roles('admin'), decodeHash(true, ['id']), OK())
+  .get(OK('ok'))
+  .post(require('./problem/judgeSolution'));
 
 
 function clearUpload(remDir, callback){

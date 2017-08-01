@@ -243,13 +243,7 @@
           </div>
 
           <div class="row mb-3">
-            <button v-show="loading" class="btn btn-outline-primary btn-lg" type="button">
-              <pulse-loader class="loaderComp" :loading="loading" color="#737373" size="10px"></pulse-loader>
-            </button>
-
-            <button v-show="!loading" class="btn btn-outline-primary btn-lg" type="submit">
-              Submit
-            </button>
+            <submit-button :submitting="loading" css="btn btn-lg btn-outline-primary"></submit-button>
           </div>
 
         </form>
@@ -363,8 +357,8 @@
               .then(response => {
                 this.formDone();
                 let pid = response.data.id;
-                let slug = response.data.slug;
-                this.$router.replace(`/problems/edit/testcase/${pid}/${slug}`);
+                //let slug = response.data.slug;
+                this.$router.replace(`/problems/${pid}/edit/testcase`);
               })
               .catch(err => {
                 this.formDone();

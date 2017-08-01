@@ -27,7 +27,7 @@
                   <p>{{ testCases.length }} added</p>
               </div>
 
-              <div v-if="!loading && testCases && testCases.length" class="table-responsive">
+              <div v-if="!loading && !emptyCases" class="table-responsive">
                 <m-table show-empty
                 :items="testCases"
                 :fields="fields"
@@ -40,14 +40,22 @@
                     {{cases.index + 1}}
                   </template>
                   <template slot="input" scope="cases">
-                    <button class="btn btn-xs btn-info" @click="removeCase(cases.item)">
-                      <i class="material-icons">remove_red_eye</i> View Input
-                    </button>
+                    <a
+                      class="btn btn-xs btn-info"
+                      :href="showCase(cases.item,'input')"
+                      target="_blank"
+                    >
+                        <i class="material-icons">remove_red_eye</i> View Input
+                    </a>
                   </template>
                   <template slot="output" scope="cases">
-                    <button class="btn btn-xs btn-info" @click="removeCase(cases.item)">
-                      <i class="material-icons">remove_red_eye</i> View Output
-                    </button>
+                    <a
+                      class="btn btn-xs btn-info"
+                      :href="showCase(cases.item,'output')"
+                      target="_blank"
+                    >
+                        <i class="material-icons">remove_red_eye</i> View Output
+                    </a>
                   </template>
                   <template slot="delete" scope="cases">
                     <button class="btn btn-xs btn-danger" @click="removeCase(cases.item)">
@@ -100,8 +108,19 @@
             </div>
           </form>
         </b-card>
+
       </div>
 
+      <div class="col-md-12 mt-2">
+        <div class="d-flex justify-content-between">
+          <router-link class="btn btn-outline-primary btn-xs" :to="previousStep">
+            <i class="material-icons">navigate_before</i>
+          </router-link>
+          <router-link :class="['btn', 'btn-outline-primary', 'btn-xs', 'pull-right', emptyCases ? 'disabled' : '' ]" :to="nextStep">
+            <i class="material-icons">navigate_next</i>
+          </router-link>
+        </div>
+      </div>
     </div>
 
 
@@ -112,20 +131,10 @@
 <script>
 
   import { LOG_OUT } from '@/store/mutation-types';
-  import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
-  import LoadingData from '@/components/common/LoadingData';
-  import SubmitButton from '@/components/common/SubmitButton';
-  import SmoothAlert from '@/components/common/SmoothAlert';
+  import swal from 'sweetalert2';
 
   export default {
     name: 'ProblemsEditCases',
-
-    components: {
-      LoadingData,
-      PulseLoader,
-      SubmitButton,
-      SmoothAlert
-    },
 
     data () {
       return {
@@ -168,6 +177,18 @@
       };
     },
 
+    computed: {
+      emptyCases(){
+        return !this.testCases || !this.testCases.length;
+      },
+      nextStep(){
+        return `/problems/${this.$store.state.route.params.pid}/edit/limits`;
+      },
+      previousStep(){
+        return `/problems/${this.$store.state.route.params.pid}/edit/statement`;
+      }
+    },
+
     created(){
       this.loading = true;
       this.fetchTestCases();
@@ -204,7 +225,7 @@
         this.$http
           .post(`/api/problem/edit/testcase/${this.$store.state.route.params.pid}`, caseData, {
             headers: {
-              'Content-Type': 'multipart/form-data'
+              'Content-Type': 'multipart/form-data; charset=UTF-8'
             },
             onUploadProgress: function(progressEvent) {
               var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
@@ -244,34 +265,62 @@
       },
       removeCase(caseId){
 
-        caseId = caseId.hash;
-        console.log(caseId);
+        swal({
+          title: 'Are you sure?',
+          text: 'You won\'t be able to revert this.',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Remove',
+          animation: false,
+          customClass: 'animated fadeIn'
+        }).then(() => {
 
-        this.success = null;
-        this.submitting = true;
-        this.submitError = null;
-        progressbar.start();
+          caseId = caseId.hash;
+          console.log(caseId);
 
-        this.$http
-          .post(`/api/problem/edit/testcase/${this.$store.state.route.params.pid}?action=remove`, {
-            case: caseId
-          })
-          .then(response => {
-            this.success = 'Test Case Removed';
-            // this.formDone();
+          this.success = null;
+          //this.submitting = true;
+          this.submitError = null;
+          progressbar.start();
 
-            // var indx = this.testCases.findIndex(i => i.hash === caseId);
-            // if (indx > -1) {
-            //   this.testCases.splice(indx, 1);
-            // }
+          swal('Please Wait');
+          swal.showLoading();
 
-            // console.log(this.testCases);
-            this.fetchTestCases(true);
-          })
-          .catch(err => {
-            this.formDone();
-            this.handleError(err);
-          });
+          this.$http
+            .post(`/api/problem/edit/testcase/${this.$store.state.route.params.pid}?action=remove`, {
+              case: caseId
+            })
+            .then(response => {
+              //this.success = 'Test Case Removed';
+
+              swal({
+                title: 'Deleted',
+                text: 'Test Case has been deleted.',
+                type: 'success'
+              }).then(() => {
+                this.fetchTestCases(true);
+              });
+
+
+            })
+            .catch(err => {
+              this.formDone();
+              this.handleError(err);
+              swal(
+                'Error!',
+                this.submitError || this.error,
+                'error'
+              );
+            });
+
+        });
+        return;
+
+
+      },
+      showCase(caseId, caseType){
+        let caseURL = `/problems/testcase/${this.$store.state.route.params.pid}/${caseId.hash}?type=${caseType}`;
+        return caseURL;
       },
       fetchTestCases(isForm = false){
         let pid = this.$store.state.route.params.pid;
@@ -281,7 +330,7 @@
           .then(response => {
             this.testCases = response.data;
             if(isForm){
-              this.formDone();
+              this.formDone(false);
             }else{
               this.loading = false;
             }

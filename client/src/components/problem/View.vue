@@ -1,12 +1,12 @@
 <template>
   <div>
-    <router-view></router-view>
+    <h1>View? Kidding?</h1>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'Problems',
+    name: 'ViewProblem',
 
     data () {
       return {

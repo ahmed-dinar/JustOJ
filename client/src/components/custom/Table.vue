@@ -45,10 +45,12 @@
 </tr>
 </tfoot>
 
+
+
 <transition-group
 name="custom-classes-transition"
-enter-active-class="animated lightSpeedIn"
-leave-to-class="animated lightSpeedOut"
+:enter-active-class="enterAnimation"
+:leave-to-class="leaveAnimation"
 tag="tbody"
 >
   <tr v-for="(item,index) in _items"
@@ -62,7 +64,7 @@ tag="tbody"
   </td>
 </tr>
 
-<tr v-if="showEmpty && (!_items  || _items.length === 0)">
+<tr v-if="showEmpty && (!_items  || _items.length === 0)" key="iamEmptyDude">
   <td :colspan="keys(fields).length">
     <div v-if="filter" role="alert" aria-live="polite">
       <slot name="emptyfiltered">
@@ -128,6 +130,7 @@ tag="tbody"
   };
 
   export default {
+    name: 'm-table',
     mixins: [listenOnRootMixin],
     data() {
       return {
@@ -137,6 +140,14 @@ tag="tbody"
       };
     },
     props: {
+      enterAnimation:{
+        type: String,
+        default: 'animated lightSpeedIn'
+      },
+      leaveAnimation:{
+        type: String,
+        default: 'animated flipOutX'
+      },
       keyIdentifier:{
         type: String,
         default: 'id'

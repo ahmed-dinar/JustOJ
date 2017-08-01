@@ -14,9 +14,9 @@ import VueHighlightJS from 'vue-highlightjs';
 import NProgress from 'nprogress';
 import has from 'has';
 
-import table from './components/custom/table';
 import config from './config';
 import Mixins from './mixins/Mixins';
+import { GlobalComponents } from './components/common';
 
 import App from './App';
 import router from './router';
@@ -32,6 +32,7 @@ import 'animate.css/animate.min.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import 'highlight.js/styles/github-gist.css';
 import 'katex/dist/katex.min.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import './assets/style.css';
 import './assets/fonts.css';
 
@@ -54,16 +55,6 @@ if(!window.progressbar){
 }
 
 
-Vue.use(VueHighlightJS);
-Vue.use(ToggleButton);
-Vue.use(VueQuillEditor);
-//settings of quill
-import './config/initQuill';
-
-
-Vue.use(BootstrapVue);
-Vue.component('m-table', table);
-
 VeeValidate.Validator.extend('verify_exists', {
   getMessage: field => `This ${field} is not available.`,
   validate: value => new Promise(resolve => {
@@ -84,28 +75,38 @@ VeeValidate.Validator.extend('verify_exists', {
 VeeValidate.Validator.extend('fileRequired', {
   getMessage: field => `This ${field} is not lalal.`,
   validate: value => new Promise(resolve => {
-    console.log('hey man............');
-    console.log(value);
     if( !value ){
       resolve({ valid: false });
       return;
     }
-
     resolve({ valid: true });
   })
 });
 
 
+Vue.use(VueHighlightJS);
+Vue.use(ToggleButton);
+Vue.use(VueQuillEditor);
+//settings of quill, must be after VueQuillEditor
+import './config/initQuill';
+
+Vue.use(BootstrapVue);
+Vue.use(GlobalComponents);
+
+//form validator
 Vue.use(VeeValidate, {
   errorBagName: 'formError',
   fieldsBagName: 'formFields'
 });
+
+//flash message components
 Vue.use(VuexFlash, {
   mixin: true,
   keep: false,
   template: config.flashTemplate
 });
 
+//global mixins
 Vue.use(Mixins);
 
 

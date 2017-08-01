@@ -13,10 +13,14 @@ import Account from '@/components/user/Account';
 import ForgotPassword from '@/components/user/ForgotPassword';
 import VerifyAccount from '@/components/user/VerifyAccount';
 
-import Problems from '@/components/problem/Problems';
+import ProblemsRoute from '@/components/problem/ProblemsRoute';
+import ProblemContentRoute from '@/components/problem/ProblemContentRoute';
 import ProblemList from '@/components/problem/ProblemList';
 import CreateProblem from '@/components/problem/Create';
+import ViewProblem from '@/components/problem/View';
+import ViewTestCase from '@/components/problem/ViewTestCase';
 import EditProblemCases from '@/components/problem/Edit/TestCase';
+import EditProblemLimits from '@/components/problem/Edit/Limits';
 
 import Page404 from '@/components/Page404';
 import store from '@/store';
@@ -47,7 +51,7 @@ const router = new Router({
     },
     {
       path: '/problems',
-      component: Problems,
+      component: ProblemsRoute,
       children: [
         {
           path: '',
@@ -62,11 +66,41 @@ const router = new Router({
           meta: { title: 'Create Problem' }
         },
         {
-          path: 'edit/testcase/:pid/:slug',
-          name: 'EditProblemCases',
-          component: EditProblemCases,
-          meta: { title: 'Edit Problem | Test Cases' }
+          path: 'testcase/:pid/:caseId',
+          name: 'ViewTestCase',
+          component: ViewTestCase,
+          meta: { title: 'Test Case | View' }
+        },
+        {
+          path: ':pid',
+          component: ProblemContentRoute,
+          children: [
+            {
+              path: ':slug',
+              name: 'ViewProblem',
+              component: ViewProblem,
+              meta: { title: 'Problems | View' }
+            },
+            {
+              path: 'edit/testcase',
+              name: 'EditProblemCases',
+              component: EditProblemCases,
+              meta: { title: 'Edit Problem | Test Cases' }
+            },
+            {
+              path: 'edit/limits',
+              name: 'EditProblemLimits',
+              component: EditProblemLimits,
+              meta: { title: 'Edit Problem | Set Limits' }
+            }
+          ]
         }
+        // {
+        //   path: 'edit/testcase/:pid/:slug',
+        //   name: 'EditProblemCases',
+        //   component: EditProblemCases,
+        //   meta: { title: 'Edit Problem | Test Cases' }
+        // }
       ]
     },
     {
@@ -111,9 +145,16 @@ const router = new Router({
       component: Contests
     },
     {
-      path: '*',
+      path: '/404',
+      name: '404',
       component: Page404,
-      meta: { title: '404' }
+      meta: { title: '404 | Not Found' }
+    },
+    {
+      path: '*',
+      name: 'Not Found',
+      component: Page404,
+      meta: { title: '404 | Not Found' }
     }
   ]
 });

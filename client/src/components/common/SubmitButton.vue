@@ -1,10 +1,10 @@
 
 <template>
   <div>
-    <button v-if="submitting" class="btn btn-outline-primary btn-md" type="button">
+    <button v-if="submitting" :class="spinButtonClass" type="button">
       <pulse-loader :loading="submitting" :color="color" :size="size"></pulse-loader>
     </button>
-    <button v-else class="btn btn-md btn-outline-primary" type="submit">
+    <button v-else :class="css" :type="type">
       Submit
     </button>
   </div>
@@ -26,6 +26,10 @@
         type: Boolean,
         required: true
       },
+      type: {
+        type: String,
+        default: 'submit'
+      },
       color: {
         type: String,
         default: '#737373'
@@ -33,6 +37,16 @@
       size: {
         type: String,
         default: '10px'
+      },
+      css: {
+        type: String,
+        default: 'btn btn-md btn-outline-primary'
+      }
+    },
+
+    computed: {
+      spinButtonClass(){
+        return `btn-loading ${this.css}`;
       }
     }
   };

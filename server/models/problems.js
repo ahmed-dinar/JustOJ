@@ -9,6 +9,7 @@ var entities = require('entities');
 var async = require('async');
 var logger = require('winston');
 var Hashids = require('hashids');
+var config = require('nconf');
 
 var myutil = appRequire('lib/myutil');
 var Paginate = appRequire('lib/pagination/paginate');
@@ -22,23 +23,18 @@ var Query = appRequire('config/database/knex/query');
  * @param attr
  * @param callback
  */
-exports.findById = function (pid,attr,callback) {
+exports.findById = function (pid, columns,callback) {
 
-  var sql = Query.select();
-
-  if( attr.length ){
-    sql = Query.select(attr);
-  }
+  var sql = !columns || columns === undefined
+    ? Query.select()
+    : Query.select(columns);
 
   sql = sql.from('problems')
         .where({ 'id': pid })
-        .limit(1);
+        .limit(1)
+        .toString();
 
-  DB.execute(
-        sql.toString()
-        ,function(err,rows){
-          callback(err,rows);
-        });
+  DB.execute(sql, callback);
 };
 
 
@@ -245,7 +241,7 @@ exports.save = function(data, fn){
       });
     },
     function saveHash(pid, callback){
-      var hashids = new Hashids('problem titles are awesome', 11);
+      var hashids = new Hashids(config.get('HASHID:PROBLEM'), 11);
       var hashId = hashids.encode(pid);
 
       logger.debug('hashid = ',hashId);
@@ -405,9 +401,12 @@ exports.updateSubmission = function(pid,col,fn){
  */
 exports.updateByColumn = function (pid, cols, fn) {
 
-  var sql = Query('problems').update(cols).where({ 'id': pid });
+  var sql = Query('problems')
+    .update(cols)
+    .where({ 'id': pid })
+    .toString();
 
-  DB.execute(sql.toString(), fn);
+  DB.execute(sql, fn);
 };
 
 
