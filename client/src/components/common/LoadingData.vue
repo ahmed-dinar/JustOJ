@@ -7,7 +7,7 @@
       leave-class="animated fadeOut"
     >
       <div v-if="loading" class="text-center big-loading" key="loadme">
-        <clip-loader :loading="loading" size="30px" color="#34364c"></clip-loader>
+        <clip-loader :loading="loading" :size="size" :color="color"></clip-loader>
       </div>
       <div key="theData" v-else>
         <slot></slot>
@@ -31,6 +31,14 @@
       loading: {
         type: Boolean,
         default: true
+      },
+      size: {
+        type: String,
+        default: '30px'
+      },
+      color: {
+        type: String,
+        default: '#34364c'
       }
     }
   };

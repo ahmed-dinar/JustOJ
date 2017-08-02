@@ -228,7 +228,7 @@ module.exports.initServer = function (app) {
   app.set('port', global.PORT);
 
 
-  if ( nconf.get('isssl') ) {
+  // if ( nconf.get('isssl') ) {
 
     if( !fs.existsSync(nconf.get('ssl:key')) || !fs.existsSync(nconf.get('ssl:cert')) ){
       logger.error('SSL cert file or key file is missing, creating server in non-SSL mode...');
@@ -243,10 +243,10 @@ module.exports.initServer = function (app) {
     logger.info('creating server in SSL mode....');
     return require('https').createServer(sslCred, app);
 
-  } else {
-    logger.warn('creating server in non-SSL mode...');
-    return require('http').createServer(app);
-  }
+  // } else {
+  //   logger.warn('creating server in non-SSL mode...');
+  //   return require('http').createServer(app);
+  // }
 };
 
 

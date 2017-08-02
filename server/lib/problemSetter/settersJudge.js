@@ -43,6 +43,11 @@ exports.run = function(opts,cb){
     },
     function(testCases,callback){
       logger.debug( chalk.green('Total Test Cases: ' + testCases.length) );
+
+      testCases = _.map(testCases, function(caseItem, itemIndex){
+        return { id: itemIndex + 1, case: caseItem };
+      });
+
       async.mapSeries(testCases, runTestCase.bind(null,opts), callback);
     }
   ], function (error, runs) {
@@ -156,14 +161,16 @@ var createAdditionalFiles = function(saveTo,testCases,cb){
  * @param cb
  */
 var runTestCase = function(opts,testCase,cb){
-  testCase = opts.tcDir + '/' + testCase;
+
+  var caseId = testCase.id;
+  testCase = opts.tcDir + '/' + testCase.case;
 
   async.waterfall([
     function(callback) {
-      runCode(opts,testCase,callback);
+      runCode(opts,testCase, caseId, callback);
     },
     function(callback){
-      checkResult(opts,callback);
+      checkResult(opts, caseId, callback);
     },
     function(resultObj,callback){
       //one test case failed, ignore others
@@ -186,7 +193,7 @@ var runTestCase = function(opts,testCase,cb){
  * @param testCase
  * @param cb
  */
-var runCode = function (opts,testCase,cb) {
+var runCode = function (opts,testCase, caseId, cb) {
   Compiler.run(opts, testCase, function (err,stdout, stderr) {
     if(err){
       return cb(err);
@@ -194,7 +201,7 @@ var runCode = function (opts,testCase,cb) {
 
     if(stderr) {
       logger.debug('stderr occured!', stderr);
-      return checkResult(opts, cb);
+      return checkResult(opts, caseId, cb);
     }
     cb();
   });
@@ -206,7 +213,7 @@ var runCode = function (opts,testCase,cb) {
  * @param opts
  * @param cb
  */
-var checkResult = function (opts, cb) {
+var checkResult = function (opts, caseId, cb) {
 
   var resDir = opts.runDir +'/result.txt';
   logger.debug( chalk.yellow('Checking ' + resDir + ' for run result'));
@@ -221,24 +228,29 @@ var checkResult = function (opts, cb) {
       return cb('no result in file');
     }
 
+
     var resultObj = _.zipObject(['code', 'msg','cpu','memory','whyError'], _.split(data,'$',5));
-    switch(resultObj.code) {
-      case '0':
+    //serial index
+    resultObj.id = caseId;
+
+    var runCode = parseInt(resultObj.code);
+    switch(runCode) {
+      case 0:
         resultObj['result'] = 'OK';
         break;
-      case '1':
+      case 1:
         resultObj['result'] = 'Runtime Error';
         break;
-      case '2':
+      case 2:
         resultObj['result'] = 'Time Limit Exceeded';
         break;
-      case '3':
+      case 3:
         resultObj['result'] = 'Memory Limit Exceeded';
         break;
-      case '4':
+      case 4:
         resultObj['result'] = 'Output Limit Exceeded';
         break;
-      case '8':
+      case 5:
         resultObj['result'] = 'System Error';
         break;
       default:
@@ -247,8 +259,7 @@ var checkResult = function (opts, cb) {
 
     logger.debug( chalk.magenta(data), resultObj);
 
-    //not accepted
-    if( resultObj.code !== '0' ){
+    if( runCode !== 0 ){
       return cb(resultObj.result, resultObj);
     }
 
@@ -360,6 +371,7 @@ var getFinalResult = function(runs,opts,cb){
 
   fres['runs'] = fparts;
   fres['final'] = {
+    code: finalCode,
     cpu: cpu,
     memory: memory,
     result: result,

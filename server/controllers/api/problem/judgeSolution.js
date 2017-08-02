@@ -61,9 +61,11 @@ module.exports = function(req, res, next) {
         }
 
         if(error.name === 'compiler'){
-          return res.status(200).json([
-            { id: 1, cpu: 0, memory: 0, status: 'Compilation Error' }
-          ]);
+          var resJ = { id: 1, cpu: 0, memory: 0, status: 'Compilation Error', code: 7 };
+          return res.status(200).json({
+            final: resJ,
+            runs: null
+          });
         }
 
         logger.error(error);

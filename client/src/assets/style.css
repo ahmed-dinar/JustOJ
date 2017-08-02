@@ -712,3 +712,13 @@ h6 .material-icons {
 .runs-table-sm{
   font-size: 13px;
 }
+
+.runs-table-sm .badge,
+runs-table-md .badge{
+  padding: 5px 6px;
+  border-radius: 2px;
+}
+
+.badge-dark{
+  background-color: #5bc0de;
+}
