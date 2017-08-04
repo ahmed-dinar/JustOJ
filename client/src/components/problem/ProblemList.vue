@@ -9,9 +9,7 @@
 
       <div v-else class="col-md-12">
 
-        <b-card class="mb-2" no-block title="Problems">
-
-          <div class="card-block-title card-title">
+          <div class="card-block-title card-title pl-0 mb-4">
            <h5>Problems</h5>
           </div>
 
@@ -29,7 +27,7 @@
                       {{problem.index + 1}}
                     </template>
                     <template slot="title" scope="problem">
-                      <router-link class="link" to="/problems/">{{problem.value}}</router-link>
+                      <router-link class="link" :to="problemLink(problem.item, problem.item)">{{problem.value}}</router-link>
                     </template>
                     <template slot="status" scope="problem">
 
@@ -74,8 +72,6 @@
               </div>
           </loading-data>
 
-
-      </b-card>
     </div>
   </div>
 </template>
@@ -130,14 +126,10 @@
     },
 
     mounted(){
-
       this
         .fetchProblems()
         .then(() => {
           this.loading = false;
-          setTimeout(() => {
-            this.updateProblems(this.problemList);
-          }, 2000);
         })
         .catch(err => {
           this.loading = false;
@@ -166,6 +158,10 @@
           return '<i class="material-icons text-warning">error_outline</i>';
 
         return '';
+      },
+
+      problemLink(prob){
+        return `/problems/${prob.hash_id}/${prob.slug}`;
       },
 
       ...mapActions('problem', [

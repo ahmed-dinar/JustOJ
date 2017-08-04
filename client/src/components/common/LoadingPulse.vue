@@ -7,7 +7,7 @@
       leave-class="animated fadeOut"
     >
       <div v-if="loading" :class="classObj" key="loadme">
-        <clip-loader :loading="loading" :size="size" :color="color"></clip-loader>
+        <pulse-loader :loading="loading" :size="size" :color="color"></pulse-loader>
       </div>
       <div key="theData" v-else>
         <slot></slot>
@@ -18,13 +18,13 @@
 
 <script>
 
-  import ClipLoader from 'vue-spinner/src/ClipLoader.vue';
+  import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
   export default {
     name: 'LoadingData',
 
     components: {
-      ClipLoader
+      PulseLoader
     },
 
     computed: {
@@ -44,11 +44,11 @@
       },
       size: {
         type: String,
-        default: '30px'
+        default: '12px'
       },
       color: {
         type: String,
-        default: '#34364c'
+        default: '#999999'
       }
     }
   };

@@ -20,7 +20,7 @@ export default {
             aria-label="alertClose"
             @click.stop.prevent="closeFlash"
             >&times;</button>
-          <div v-html="message"></div>
+          <div class="text-center" v-html="message"></div>
         </div>
       </transition>
     `

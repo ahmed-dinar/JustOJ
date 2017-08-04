@@ -10,6 +10,8 @@ var async = require('async');
 var logger = require('winston');
 var Hashids = require('hashids');
 var config = require('nconf');
+var fs = require('fs');
+var path = require('path');
 
 var myutil = appRequire('lib/myutil');
 var Paginate = appRequire('lib/pagination/paginate');
@@ -70,7 +72,7 @@ exports.findProblems = function (uid, cur_page, URL, cb) {
   var sql;
   if (!uid || uid < 0) {
     sql = Query
-            .select(['pb.id', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
+            .select(['pb.id', 'pb.hash_id', 'pb.slug', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
               Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
               Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy')
             ])
@@ -78,7 +80,7 @@ exports.findProblems = function (uid, cur_page, URL, cb) {
   }
   else{  //TODO: bad query? disable it
     sql = Query
-            .select(['pb.id', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
+            .select(['pb.id','pb.hash_id', 'pb.slug', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
               Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
               Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy'),
               Query.raw('(pbus.pid IS NOT NULL) as youSolved'), //pbus = problem user solved
@@ -127,46 +129,46 @@ exports.findProblems = function (uid, cur_page, URL, cb) {
 };
 
 
-/**
- * Find rank of a specific problem
- * @param pid
- * @param cb
- */
-exports.findRank = function(pid,cb){
-  var sql = Query.select(['submissions.uid','submissions.language','users.username'])
-        .from('submissions')
-        .where({
-          'pid': pid,
-          'status': '0'
-        })
-        .leftJoin('users', 'submissions.uid', 'users.id')
-        .min('cpu as cpu')
-        .groupBy('uid')
-        .orderBy('cpu')
-        .limit(5);
 
-  DB.execute(sql.toString(),cb);
+//
+// Find rank of a specific problem
+//
+exports.findRank = function(pid,fn){
+  var sql = Query
+    .select(['submissions.uid','submissions.language','users.username'])
+    .from('submissions')
+    .where({
+      'pid': pid,
+      'status': '0'
+    })
+    .leftJoin('users', 'submissions.uid', 'users.id')
+    .min('cpu as cpu')
+    .groupBy('uid')
+    .orderBy('cpu')
+    .limit(5)
+    .toString();
+
+  DB.execute(sql, fn);
 };
 
 
 
-/**
- * Find a problem by id also find its tags
- * @param pid
- * @param cb
- */
-exports.findByIdandTags = function(pid,cb){
+//
+// Find a problem by id also find its tags
+//
+exports.findByIdandTags = function(pid, cb){
 
   var sql = Query.select(
-        Query.raw('p.*,(SELECT GROUP_CONCAT(`tag`) FROM `problem_tags` pt WHERE p.`id` =  pt.`pid`) AS `tags`')
-    )
-        .from('problems as p')
-        .where({
-          'id': pid
-        })
-        .limit(1);
+    Query.raw('p.*,(SELECT GROUP_CONCAT(`tag`) FROM `problem_tags` pt WHERE p.`id` =  pt.`pid`) AS `tags`')
+  )
+  .from('problems as p')
+  .where({
+    'id': pid
+  })
+  .limit(1)
+  .toString();
 
-  DB.execute(sql.toString(),cb);
+  DB.execute(sql, cb);
 };
 
 
@@ -371,25 +373,27 @@ exports.update = function(req,fn){
  * @param inserts
  * @param fn
  */
-exports.updateLimits = function(pid,limits,fn){
+exports.updateLimits = function(pid, limits ,fn){
 
-  var sql = Query('problems').update(limits)
-        .where({ 'id': pid });
+  var sql = Query('problems')
+    .update(limits)
+    .where({ 'id': pid })
+    .toString();
 
-  DB.execute(sql.toString(), fn);
+  DB.execute(sql, fn);
 };
 
 
-/**
- *
- * @param inserts
- * @param fn
- */
+//
+//
+//
 exports.updateSubmission = function(pid,col,fn){
+  var sql = Query('problems')
+    .increment(col, 1)
+    .where('id', pid)
+    .toString();
 
-  var sql = Query('problems').increment(col,1).where('id',pid);
-
-  DB.execute(sql.toString(), fn);
+  DB.execute(sql, fn);
 };
 
 
@@ -409,18 +413,6 @@ exports.updateByColumn = function (pid, cols, fn) {
   DB.execute(sql, fn);
 };
 
-
-//
-// same as updateByColumn, for API
-//
-exports.updateByColumnName = function (hashId, cols, fn) {
-  var sql = Query('problems')
-    .update(cols)
-    .where({ 'hash_id': hashId })
-    .toString();
-
-  DB.execute(sql, fn);
-};
 
 
 /**
@@ -451,6 +443,32 @@ exports.decodeToHTML = function(data){
 exports.updateContestProblem = function(req,fn){
   return updateProblem(req,fn);
 };
+
+
+//
+// check if a problem at lest has one test case
+//
+exports.hasTestCase = function(pid, fn){
+  var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + pid);
+
+  fs.readdir(rootDir, function(err, files) {
+    if( err ){
+      if( err.code !== 'ENOENT' ){
+        return callback(err);
+      }
+      //ENOENT = no more test case remains
+      return fn(null, false);
+    }
+
+    //no more test case remains
+    if(!files || !files.length){
+      return fn(null, false);
+    }
+
+    return fn(null, true);
+  });
+};
+
 
 
 /**
@@ -498,6 +516,9 @@ var deleteTags = function(req,callback){
           callback();
         });
 };
+
+
+
 
 
 /**

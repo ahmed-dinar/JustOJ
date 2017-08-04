@@ -463,8 +463,6 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
   font-size: 16px;
 }
 
-
-
 .big-loading{
   min-height: 130px;
   padding-top: 40px;
@@ -671,6 +669,7 @@ form{
   display: flex;
   align-items: center;
   padding:5px 8px;
+  color: rgb(117, 117, 117);
 }
 
 .btn-iconic-right{
@@ -719,6 +718,15 @@ runs-table-md .badge{
   border-radius: 2px;
 }
 
-.badge-dark{
-  background-color: #5bc0de;
+.limit-text{
+  font-size: 13px;
+}
+
+.limit-text span{
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.tag-badge{
+  font-size: 12px;
+  padding: 4px 7px;
 }

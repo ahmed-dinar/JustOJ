@@ -5,12 +5,11 @@
 //
 var winston = require('winston');
 var path = require('path');
-var nconf = require('nconf');
 var chalk = require('chalk');
 
-console.log( chalk.cyan('Loading and setup logger...') );
+console.log( chalk.cyan('Loading and setup worker logger...') );
 
-var ENV = nconf.get('NODE:ENV') || 'development';
+var ENV = process.env.NODE_ENV || 'development';
 
 Date.prototype.monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 Date.prototype.getMonthName = function() {
@@ -47,7 +46,7 @@ winston.add(winston.transports.File, {
     var date = new Date();
     return '[' + date.getDate() + '/' + date.getMonthName() + '/' + date.getFullYear() + ':' + date.toLocaleTimeString() + ']';
   },
-  filename: path.resolve(__dirname, '../logs/logs.log'),
+  filename: path.resolve(__dirname, './logs/judge-logs.log'),
   handleExceptions: true,
   json: false,
   maxsize: nconf.get('logger:maxsize') || 4194304, //4MB
@@ -66,3 +65,5 @@ winston.add(winston.transports.Console, {
   prettyPrint: true,
   colorize: true
 });
+
+module.exports = winston;

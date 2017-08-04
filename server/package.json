@@ -5,7 +5,7 @@
   "private": true,
   "main": "app.js",
   "author": "Ahmed Dinar <madinar.cse@gmail.com>",
-  "license": "GPL",
+  "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/ahmed-dinar/JustOJ.git"

@@ -5,7 +5,7 @@
       <pulse-loader :loading="submitting" :color="color" :size="size"></pulse-loader>
     </button>
     <button v-else :class="css" :type="type">
-      Submit
+      <slot>Submit</slot>
     </button>
   </div>
 </template>

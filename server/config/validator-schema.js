@@ -110,6 +110,15 @@ module.exports = {
       }
     }
   },
+  problemLimit: {
+    'cpu': {
+      isFloat: {
+        options: [{ min: 0.01, max: 20.00, allow_leading_zeroes: false }],
+        errorMessage: 'Must be between 0.01 and 20.00'
+      },
+      errorMessage: 'Invalid score'
+    }
+  },
   problem: {
     'title': {
       isLength: {

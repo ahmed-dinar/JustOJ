@@ -7,9 +7,9 @@ var _ = require('lodash');
 var async = require('async');
 var has = require('has');
 
-var DB = require('../config/database/knex/DB');
-var Query = require('../config/database/knex/query');
-var Paginate = require('../lib/pagination/paginate');
+var DB = appRequire('config/database/knex/DB');
+var Query = appRequire('config/database/knex/query');
+var Paginate = appRequire('lib/pagination/paginate');
 
 
 /**

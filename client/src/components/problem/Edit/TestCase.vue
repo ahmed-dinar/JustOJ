@@ -1,6 +1,10 @@
 <template>
   <div class="edit-testcase">
 
+      <div class="col-md-12">
+        <flash-message variant="danger"></flash-message>
+      </div>
+
       <div class="col-md-12" v-if="!!error">
         <smooth-alert variant="danger" :show="!!error">
           {{ error }}

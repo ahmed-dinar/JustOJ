@@ -27,6 +27,7 @@ var removeTestCase = require('./problem/removeTestCase');
 
 //var EditProblem = appRequire('edit_problem/editProblem');
 
+var testJudgeSolution = require('./problem/judgeSolution');
 var AppError = appRequire('lib/custom-error');
 var Schema = appRequire('config/validator-schema');
 var OK = appRequire('middlewares/OK');
@@ -64,15 +65,13 @@ router.get('/list', authUser, function(req, res, next) {
     logger.debug(problems);
     logger.debug(pagination);
     logger.debug('isLoggedIn = ', !!uid);
-    setTimeout(function(){
-      res
-        .status(200)
-        .json({
-          problems: problems,
-          pagination: pagination
-        });
-    }, 3000);
 
+    res
+      .status(200)
+      .json({
+        problems: problems,
+        pagination: pagination
+      });
   });
 });
 
@@ -135,39 +134,8 @@ router
   });
 
 
-
-// router
-//   .get('/edit/:pid', authJwt(), roles('admin'), decodeHash(true), function(req, res, next){
-//     var pid = req.params.problemId;
-//     var isData = true;
-
-//     //request for problem data or just to validate problem
-//     if( has(req.query,'type') && req.query.type === 'auth' ){
-//       isData = false;
-//     }
-
-//     logger.debug(req.query);
-//     logger.debug(isData);
-
-//     // var columns = isData ? null : ['id'];
-
-//     // Problems.findByHash(pid, columns, function(err, data){
-//     //   if(err){
-//     //     logger.error(err);
-//     //     return res.status(500).json({ error: 'Internal Server Error' });
-//     //   }
-
-//     //   if( !data.length ){
-//     //     return res.status(404).json({ error: 'No Problem Found' });
-//     //   }
-
-//     //   res.status(200).json(data[0]);
-//     // });
-//   });
-
-
 //
-//
+// send raw test case file
 //
 router
   .get('/testcase/:pid/:caseId', authJwt(), roles('admin'), decodeHash(true,['id']), function(req, res, next){
@@ -213,7 +181,7 @@ router
 
 
 //
-//
+// edit testcases of a problem
 //
 router
   .route('/edit/testcase/:pid')
@@ -358,23 +326,177 @@ router
   });
 
 
+//
+// edit /add limits of a problem
+//
 router
   .route('/edit/limits/:pid')
   .all(authJwt(), roles('admin'), decodeHash(true, ['id']), OK())
   .get(OK('ok'))
-  .post(require('./problem/judgeSolution'));
+  .post(function(req, res, next){
 
+    if(
+      (!has(req.query,'action') || req.query.action !== 'save') &&
+      req.headers['content-type'].indexOf('multipart/form-data') > -1
+    ){
+      return testJudgeSolution(req, res, next);
+    }
 
-function clearUpload(remDir, callback){
-  rimraf(remDir, function(error){
-    if( error )
-      logger.error(error);
-    else
-      logger.debug('Cleaned uploaded TC');
+    var pid = req.body.problem.id;
 
-    callback(new AppError('File required','input'));
+    async.waterfall([
+      function(callback){
+        req.checkBody(Schema.problemLimit);
+        req
+          .getValidationResult()
+          .then(function(result) {
+            if (!result.isEmpty()){
+              var e = result.array()[0];
+              logger.debug(result.array());
+              return callback(new AppError(e.param + ' ' + e.msg,'input'));
+            }
+            return callback();
+          });
+      },
+      async.apply(Problems.hasTestCase, pid),
+      function(testCases, callback){
+        //no test case found
+        if( !testCases ){
+          return callback(new AppError('No Test Case Found','303'));
+        }
+
+        Problems.updateByColumn(pid, {
+          cpu: parseInt(parseFloat(req.body.cpu)*1000.0),
+          memory: 256,
+          status: 'public'
+        }, callback);
+      }
+    ],
+    function(err){
+      if(err){
+        switch(err.name){
+          case 'input':
+            return res.status(400).json({ error: err.message });
+          case '303':
+            return res.status(303).json({ error: 'Add Some Test Cases First' });
+          default:
+            logger.error(err);
+            return res.sendStatus(500);
+        }
+      }
+      res.sendStatus(200);
+    });
   });
-};
+
+
+
+//
+//
+//
+router.get('/rank/:pid', decodeHash(), function(req, res, next) {
+  var pid = req.body.problemId;
+
+  Problems.findRank(pid, function(err, rows){
+    if( err ){
+      logger.error(err);
+      return res.sendStatus(500);
+    }
+
+    if(!rows || !rows.length){
+      return res.status(200).json([]);
+    }
+
+    var ranks = rows[0];
+    logger.debug(ranks);
+
+
+    return res.status(200).json([]);
+  });
+});
+
+
+//
+//
+//
+router
+  .route('/:pid')
+  .get(decodeHash(), function(req, res, next) {
+
+    var pid = req.body.problemId;
+
+    Problems.findByIdandTags(pid,function(err, rows){
+      if( err ){
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+
+      if(!rows || !rows.length){
+        return res.status(404).json({ error: 'No Problem Found' });
+      }
+
+      var problem = rows[0];
+      logger.debug(problem);
+      if(problem.status !== 'public'){
+        return res.sendStatus(403);
+      }
+
+      problem.title = entities.decodeHTML(problem.title);
+      problem.statement = entities.decodeHTML(problem.statement);
+      problem.input = entities.decodeHTML(problem.input);
+      problem.output = entities.decodeHTML(problem.output);
+
+      return res.status(200).json(problem);
+    });
+  })
+  .post(authJwt(), decodeHash(), require('./problem/submit'));
+
+
+
+
+
+// /**
+//  *
+//  * @param pid
+//  * @param problem
+//  * @param cb
+//  */
+// var findRank = function(pid,problem,cb){
+//   Problems.findRank(pid,function(err,rows){
+
+//     if( err )
+//       return cb(err);
+
+//     if( isUndefined(rows) || rows.length === 0 )
+//       return cb(null,problem,{});
+
+//     return cb(null,problem,rows);
+//   });
+// };
+
+
+// *
+//  *
+//  * @param pid
+//  * @param uid
+//  * @param problem
+//  * @param rank
+//  * @param cb
+ 
+// var findUserSubmissions = function(pid,uid,problem,rank,cb){
+
+//   Problems.findUserSubmissions(pid,uid,function(err,rows){
+//     if( err )
+//       return cb(err);
+
+//     if( isUndefined(rows) || rows.length === 0 )
+//       return cb(null,problem,rank,{});
+
+//     return cb(null,problem,rank,rows);
+//   });
+// };
+
+
+
 
 
 // /**
@@ -401,73 +523,6 @@ function clearUpload(remDir, callback){
 //   res.end();
 // });
 
-
-// /**
-//  * First step of editing a problem
-//  */
-// router.get('/edit/:pid/1', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-//   EditProblem.step1Get(req,res,next);
-// });
-
-
-// /**
-//  * Second step of editing a problem
-//  */
-// router.get('/edit/:pid/2', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-//   EditProblem.step2Get(req, res, next);
-// });
-
-
-
-// /**
-//  * Third and final step of editing a problem
-//  */
-// router.get('/edit/:pid/3', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-//   EditProblem.step3Get(req,res,next);
-// });
-
-
-
-
-
-// /**
-//  * rtc = remove test case
-//  */
-// router.post('/rtc/', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-//   EditProblem.removeTestCase(req,res,next);
-// });
-
-
-// /**
-//  *
-//  */
-// router.post('/edit/:pid/1', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-//   EditProblem.step1Post(req, res, next);
-// });
-
-
-// /**
-//  *
-//  */
-// router.post('/edit/:pid/2', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-//   EditProblem.step2Post(req, res, next);
-// });
-
-
-// /**
-//  *
-//  */
-// router.post('/edit/:pid/3', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-//   EditProblem.step3Post(req, res, next);
-// });
-
-
-// /**
-//  * tjs = Test Judge Solution, as well as set limits
-//  */
-// router.post('/edit/:pid/tjs', isLoggedIn(true) , roles.is('admin'), function(req, res, next) {
-//   EditProblem.testJudgeSolution(req, res, next);
-// });
 
 
 // /**
@@ -504,135 +559,8 @@ function clearUpload(remDir, callback){
 // });
 
 
-// /**
-//  *
-//  */
-// router.get('/:pid', function(req, res, next) {
-//   var pid = getPID(req.params.pid);
-
-//   if( !pid )
-//     return next(new Error('Invalid problem?'));
-
-//   async.waterfall([
-//     function(callback) {
-//       findProblem(pid,callback);
-//     },
-//     function(problem,callback){    //TODO: use left join insted of separte query
-//       findRank(pid,problem,callback);
-//     },
-//     function(problem,rank,callback){  //TODO: may be left join??
-
-//       if( !req.isAuthenticated() )
-//         return callback(null,problem,rank,{});
-
-//       return findUserSubmissions(pid,req.user.id,problem,rank,callback);
-//     }
-//   ], function (error, problem, rank, userSubmissions) {
-
-//     if( error && !problem ){
-//       logger.error(error);
-//       return next(new Error(error));
-//     }
-
-//     logger.debug('problem: ', problem);
-//     logger.debug('rank: ', rank);
-//     logger.debug('userSubmissions: ', userSubmissions);
-
-//     if( problem.length === 0 ){
-//       res.status(404);
-//       return next(new Error('404 No problem found!'));
-//     }
-
-//     if( problem[0].status !== 'public' ){
-//       res.status(403);
-//       return next(new Error('403 problem not found!'));
-//     }
-
-//     var tags = split(problem[0].tags, ',', 20);
-//     tags = (tags[0]==='') ? [] : tags;
-
-//     logger.debug('tags: ', tags);
-
-//     res.render('problem/view' , {
-//       active_nav: 'problems',
-//       title: 'Problems | JUST Online Judge',
-//       locals: req.app.locals,
-//       isLoggedIn: req.isAuthenticated(),
-//       user: req.user,
-//       problem: problem[0],
-//       decodeToHTML: entities.decodeHTML,
-//       rank: rank,
-//       tags: tags,
-//       userSubmissions: userSubmissions,
-//       tagName: MyUtil.tagNames(),
-//       runStatus: MyUtil.runStatus(true),
-//       moment: moment,
-//       formError: req.flash('formError')
-//     });
-//   });
-// });
 
 
-
-// /**
-//  * Find a Problem with tags
-//  * @param pid
-//  * @param cb
-//  */
-// var findProblem = function(pid,cb){
-//   Problems.findByIdandTags(pid,function(err,rows){
-
-//     if( err )
-//       return cb(err);
-
-//     if( !rows || rows.length == 0 )
-//       return cb('problem row lenght 0!',[]);
-
-//     return cb(null,rows);
-//   });
-// };
-
-
-// /**
-//  *
-//  * @param pid
-//  * @param problem
-//  * @param cb
-//  */
-// var findRank = function(pid,problem,cb){
-//   Problems.findRank(pid,function(err,rows){
-
-//     if( err )
-//       return cb(err);
-
-//     if( isUndefined(rows) || rows.length === 0 )
-//       return cb(null,problem,{});
-
-//     return cb(null,problem,rows);
-//   });
-// };
-
-
-// /**
-//  *
-//  * @param pid
-//  * @param uid
-//  * @param problem
-//  * @param rank
-//  * @param cb
-//  */
-// var findUserSubmissions = function(pid,uid,problem,rank,cb){
-
-//   Problems.findUserSubmissions(pid,uid,function(err,rows){
-//     if( err )
-//       return cb(err);
-
-//     if( isUndefined(rows) || rows.length === 0 )
-//       return cb(null,problem,rank,{});
-
-//     return cb(null,problem,rank,rows);
-//   });
-// };
 
 
 
@@ -666,6 +594,20 @@ function clearUpload(remDir, callback){
 //   return null;
 // }
 
+
+//
+// clear temporary uploaded file
+//
+function clearUpload(remDir, callback){
+  rimraf(remDir, function(error){
+    if( error )
+      logger.error(error);
+    else
+      logger.debug('Cleaned uploaded TC');
+
+    callback(new AppError('File required','input'));
+  });
+};
 
 
 

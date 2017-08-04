@@ -11,7 +11,7 @@
           <smooth-alert variant="danger" :show="!!submitError" dismissible @dismissed="submitError=null">
             {{ submitError }}
           </smooth-alert>
-          <smooth-alert :show="!!success" dismissible autoHide>
+          <smooth-alert :show="!!success" dismissible>
             {{ success }}
           </smooth-alert>
         </div>
@@ -57,7 +57,6 @@
                       <b-form-file
                       ref="solutionFile"
                       name="solutionFile" choose-label="Choose Case Input File" id="solutionFile"
-                      v-validate="'required'"
                       ></b-form-file>
                     </div>
 
@@ -69,19 +68,36 @@
               </form>
 
               <!-- Test case passed with given cpu time -->
-               <form @submit.prevent="submit('limits-set-form')" name="limits-set-form" data-vv-scope="limits-set-form">
-              <div class="row pt-5">
-                <div class="col-md-8">
-                  <div class="form-bundle">
-                    <label for="inputLanguage">Language</label>
-                    <div :class="{ 'has-danger': formError.has('limits-form.language')} ">
-                      <b-form-select
-                      v-model="language" id="inputLanguage" :options="languages" class="mb-3"
-                      ></b-form-select>
+              <form @submit.prevent="saveLimit('limits-set-form')" name="limits-set-form" data-vv-scope="limits-set-form">
+                <div class="row pt-5">
+                  <div class="col-md-8">
+
+                    <h6 class="btn-iconic pl-0">
+                      <i class="material-icons pr-1">done_all</i> Test Limit Passed
+                    </h6>
+
+                    <div class="form-bundle">
+                      <label for="inputfinalLimit">Time Limit</label>
+                      <div :class="{ 'has-danger': formError.has('limits-set-form.finalLimit')} ">
+                        <input
+                        name="finalLimit"
+                        v-model="finalLimit" id="inputfinalLimit" placeholder="0.0" class="form-control"
+                        v-validate="'required|decimal|min_value:0|max_value:20'"
+                        />
+                        <span v-show="formError.has('limits-set-form.finalLimit')" class="help form-control-feedback">
+                          {{ formError.first('limits-set-form.finalLimit') }}
+                        </span>
+                      </div>
                     </div>
+
+                    <div class="form-bundle mt-3">
+                      <submit-button css="btn btn-md btn-primary" color="#fff" :submitting="submitting">
+                        Save & Finish
+                      </submit-button>
+                    </div>
+
                   </div>
                 </div>
-              </div>
               </form>
 
             </div>
@@ -148,7 +164,7 @@
             </div>
 
           </div>
-         
+
         </div>
 
         <hr/>
@@ -176,6 +192,7 @@
 
     data () {
       return {
+        finalLimit: null,
         loading: false,
         success: null,
         submitError: null,
@@ -221,80 +238,82 @@
 
 
     methods: {
-      submit(){
+
+      submit(scope){
 
         //already running
         if( this.loading || this.submitting ){
           return;
         }
 
-        this.finalResult = null;
-        this.success = null;
-        this.submitting = true;
-        this.submitError = null;
-        this.error = null;
-        this.loading = true;
-        progressbar.start();
-
-        let sourceFile = document.getElementById('solutionFile').files;
-
-        if( !sourceFile.length ){
-          swal({
-            title: 'Error',
-            text: 'Source Required',
-            type: 'error'
-          });
-          return this.formDone();
-        }
-
-        if( !this.timeLimit ){
-          swal({
-            title: 'Error',
-            text: 'TimeLimit required',
-            type: 'error'
-          });
-          return this.formDone();
-        }
-
-        var postData = new FormData();
-        postData.append('cpu', this.timeLimit);
-        postData.append('language', this.language);
-        postData.append('source', sourceFile[0]);
-
-        this.$http
-          .post(`/api/problem/edit/limits/${this.$store.state.route.params.pid}`, postData, {
-            headers: {
-              'Content-Type': 'multipart/form-data; charset=UTF-8'
-            },
-            onUploadProgress: function(progressEvent) {
-              var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
-              console.log(`completed: ${percentCompleted}`);
+        this.$validator
+          .validateAll(scope)
+          .then(result => {
+            if(!result){
+              return this.formDone(false);
             }
-          })
-          .then(response => {
-            console.log(response.data);
-            this.runs = response.data.runs;
-            this.finalResult = response.data.final;
-            this.formDone();
-          })
-          .catch(err => {
-            let errors = this.getApiError(err);
-            switch (err.response.status) {
-              case 401:
-                this.$store.commit(LOG_OUT);
-                this.$router.replace({ path: '/login' });
-                break;
-              case 400:
-              case 404:
-                this.submitError = errors;
-                break;
-              default:
-                this.error = errors;
-            }
-            this.formDone();
-          });
 
-        ///edit/limits/:pid
+            let sourceFile = document.getElementById('solutionFile').files;
+            if( !sourceFile.length ){
+              swal({
+                title: 'Error',
+                text: 'Source Required',
+                type: 'error'
+              });
+              return this.formDone(false);
+            }
+
+            var postData = new FormData();
+            postData.append('cpu', this.timeLimit);
+            postData.append('language', this.language);
+            postData.append('source', sourceFile[0]);
+
+            this.finalResult = null;
+            this.success = null;
+            this.submitting = true;
+            this.submitError = null;
+            this.error = null;
+            this.loading = true;
+            progressbar.start();
+
+            this.$http
+              .post(`/api/problem/edit/limits/${this.$store.state.route.params.pid}`, postData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data; charset=UTF-8'
+                },
+                onUploadProgress: function(progressEvent) {
+                  var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                  console.log(`completed: ${percentCompleted}`);
+                }
+              })
+              .then(response => {
+                console.log(response.data);
+                this.runs = response.data.runs;
+                this.finalResult = response.data.final;
+                this.formDone();
+              })
+              .catch(this.handleError);
+          });
+      },
+      saveLimit(scope){
+
+        this.$validator
+          .validateAll(scope)
+          .then(result => {
+            if(!result){
+              return this.formDone(false);
+            }
+
+            this.$http
+              .post(`/api/problem/edit/limits/${this.$store.state.route.params.pid}?action=save`, {
+                cpu: this.finalLimit
+              })
+              .then(response => {
+                this.success = 'Limit Saved';
+                this.formDone();
+              })
+              .catch(this.handleError);
+          });
 
       },
       getRunStatus(status){
@@ -315,18 +334,22 @@
             return 'danger';
         }
       },
-      formDone(){
+      formDone(reset = true){
         this.loading = false;
         this.submitting = false;
         progressbar.done();
         progressbar.remove();
-        this.resetForm();
+        if( reset ){
+          this.resetForm();
+        }
       },
       resetForm(){
+        this.finalLimit = null;
         this.timeLimit = null;
         this.$refs.solutionFile.reset();
         this.$nextTick(() => {
           this.formError.clear('limits-form');
+          this.formError.clear('limits-set-form');
         });
       },
       roundTo(num) {
@@ -344,6 +367,10 @@
             this.$store.commit(LOG_OUT);
             this.$router.replace({ path: '/login' });
             break;
+          case 303:
+            this.flash({ message: errors, variant: 'danger' });
+            this.$router.replace({ path: `/problems/${this.$store.state.route.params.pid}/edit/testcase` });
+            break;
           case 400:
           case 404:
             this.submitError = errors;
@@ -351,6 +378,7 @@
           default:
             this.error = errors;
         }
+        this.formDone();
       }
     },
 

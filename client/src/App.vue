@@ -69,7 +69,7 @@
           <router-view></router-view>
         </transition>
       </div>
-      <div class="main-footer">
+      <div class="main-footer mt-4">
         <footer class="container" >
           <div>
             &copy; 2016 CSE, JUST
