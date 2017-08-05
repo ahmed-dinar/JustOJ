@@ -152,7 +152,11 @@ module.exports.loadErrorRoutes = function (app) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
+    logger.error(err.name);
+    logger.error(err.code);
+    logger.error(err.message);
     logger.error(err);
+
 
     res.status(500).json({ error: 'Internal Server Error' });
   });

@@ -1,28 +1,27 @@
 'use strict';
 
 var fs = require('fs');
-var Busboy = require('busboy');
-var mkdirp = require('mkdirp');
 var async = require('async');
 var entities = require('entities');
 var logger = require('winston');
-var crypto = require('crypto');
 var chalk = require('chalk');
 var path = require('path');
+var has = require('has');
+
 
 var AppError = appRequire('lib/custom-error');
 var Problems = appRequire('models/problems');
 var Submission = appRequire('models/api/Submission');
+var upload = appRequire('middlewares/sourceUpload').single('source');
+var Judge = appRequire('worker/Judge');
+
 
 
 module.exports = function(req, res, next) {
 
-  logger.debug('submission body = ', req.body);
-
   var problemId = req.body.problemId;
   var userId = req.user.id;
-
-  var UPLOAD_DIR = path.join(process.cwd(), '..', 'judger', 'source');
+  var sourcePath = null;
 
   async.waterfall([
     function(callback){
@@ -46,30 +45,26 @@ module.exports = function(req, res, next) {
       });
     },
     function(submission, callback){
-      crypto.randomBytes(20, function(err, buffer) {
-        if(err){
+      upload(req, res, function (err) {
+        if (err) {
           return callback(err);
         }
-        //unique safe directory name
-        submission.token = buffer.toString('hex');
-        //absolute path of source code
-        submission.source = path.join(UPLOAD_DIR, submission.token);
+
+        if( !has(req,'file') || !req.file ){
+          return callback(new AppError('Source Required','input'));
+        }
+        sourcePath = req.file.path;
+
+        if( !has(req.body,'language') ){
+          return callback(new AppError('Language Required','input'));
+        }
+
+        submission.source = sourcePath;
+        submission.language = req.body.language;
+        submission.status = '5';
 
         return callback(null, submission);
       });
-    },
-    function(submission, callback){
-      mkdirp(submission.source, function (err) {
-        if (err) {
-          logger.debug(chalk.red(submission.source + ' creation failed! permission denied!!'));
-          return callback(err);
-        }
-        logger.debug(chalk.green(submission.source + ' Created'));
-        callback(null, submission);
-      });
-    },
-    function(submission, callback) {
-      getForm(req, submission, callback);
     },
     saveSubmission,
     incrementSubmission,
@@ -77,99 +72,66 @@ module.exports = function(req, res, next) {
   ],
   function (error, submissionId) {
     if( error ){
-      if(error.name === '404'){
-        return res.status(404).json({ error: error.message });
+      if( !sourcePath ){
+        return handleError(error, res);
       }
 
-      if(error.name === 'input'){
-        return res.status(400).json({ error: error.message });
-      }
-
-      logger.debug(error);
-      return res.sendStatus(500);
+      return fs.unlink(sourcePath, function(err){
+        if(err){
+          logger.error(err);
+        }
+        return handleError(error, res);
+      });
     }
     logger.debug(chalk.green('Successfully Submitted'));
 
-    res.status(200).json(submissionId);
-  });
-};
-
-
-
-
-
-//
-//Get and save multipart form from HTTP request
-//
-var getForm = function(req, submission, fn){
-
-  var error = 0;
-  var fstream = null;
-  var language = null;
-
-  var busboy = new Busboy({
-    headers: req.headers,
-    limits:{
-      files: 1,               //only user source file
-      fields: 1,              //only language
-      parts: 2,               //source and language
-      fileSize: 50000         // (in bytes)
-    }
-  });
-
-  busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
-    language = val;
-    logger.debug(chalk.yellow('[' + fieldname + '] = ' + val));
-  });
-
-
-  busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-    //no file uploaded
-    if( !filename.length ){
-      error = 1;
-      file.resume();
-      return;
-    }
-    logger.debug(chalk.yellow(filename +' receieved with mimetype: ' + mimetype));
-
-    fstream = fs.createWriteStream(path.join(submission.source,'code.txt'));
-
-    //source size limit
-    file.on('limit', function() {
-      error = 2;
-    });
-
-    file.pipe(fstream);
-  });
-
-
-  busboy.on('finish', function() {
-    if( error === 1 ){
-      logger.debug(chalk.red('Submit Source Required'));
-      return fn(new AppError('Source Required','input'));
-    }
-
-    if( error === 2 ){
-      logger.debug(chalk.red('Source Size Limit Exceeded'));
-      return fn(new AppError('Source Size Limit Exceeded','input'));
-    }
-
-    fstream.on('close', function () {
-      logger.debug('fstream closed');
-
-      if( !language ){
-        logger.debug(chalk.red('language Required'));
-        return fn(new AppError('language required','input'));
+    //push the submission into judge queue
+    Judge.push({ id: submissionId }, function(err){
+      if(err){
+        logger.error('judge push submission error', err);
+      }else{
+        logger.info('queued submission of id = ' + submissionId);
       }
 
-      submission.language = language;
-      submission.status = '5';
-      return fn(null, submission);
+      res.status(200).json(submissionId);
     });
   });
-
-  req.pipe(busboy);
 };
+
+
+//
+//
+//
+function handleError(error, res){
+
+  logger.debug(error);
+
+  if(error.name === '404'){
+    return res.status(404).json({ error: error.message });
+  }
+
+  if(error.name === 'input'){
+    return res.status(400).json({ error: error.message });
+  }
+
+
+  var uploadErrors = {
+    'LIMIT_PART_COUNT': 'Too many parts',
+    'LIMIT_FILE_SIZE': 'Source size limit exceeded',
+    'LIMIT_FILE_COUNT': 'Only one source allowed',
+    'LIMIT_FIELD_KEY': 'Field name too long',
+    'LIMIT_FIELD_VALUE': 'Language value too long',
+    'LIMIT_FIELD_COUNT': 'Only language allowed',
+    'LIMIT_UNEXPECTED_FILE': 'Unexpected input'
+  };
+
+  if( has(uploadErrors, error.code) ){
+    return res.status(404).json({ error: uploadErrors[error.code] });
+  }
+
+  logger.error(error);
+  return res.sendStatus(500);
+}
 
 
 //
@@ -197,7 +159,7 @@ function saveSubmission(submission, fn){
       });
     },
     function(callback){
-      fs.readFile(path.join(submission.source,'code.txt'), 'utf8', function(err, sourceCode) {
+      fs.readFile(submission.source, 'utf8', function(err, sourceCode) {
         if (err){
           logger.debug(chalk.red('error reading source file code'));
           return callback(err);
@@ -229,7 +191,7 @@ function saveSubmission(submission, fn){
 var incrementSubmission = function (submission, callback) {
   Problems.updateSubmission(submission.problemId, 'submissions', function(err){
     if( err ){
-      logger.debug(chalk.red('Updating submission errr'));
+      logger.debug(chalk.red('Updating submission error'));
       return callback(err);
     }
     callback(null, submission);
@@ -241,10 +203,11 @@ var incrementSubmission = function (submission, callback) {
 // rename source using languge extension
 //
 var renameSource = function(submission, fn) {
-  var oldPath = path.join(submission.source,'code.txt');
-  var newPath = path.join(submission.source, 'code.'+submission.language);
 
-  fs.rename(oldPath, newPath, function(err) {
+  //should be edited
+  var newName = path.join(process.cwd(), '..', 'judger', 'source', (submission.id+'.'+submission.language));
+
+  fs.rename(submission.source, newName, function(err) {
     if ( err ) {
       //set the submission status as system error
       return Submission.put(submission.id, { status: '8' }, function(error){

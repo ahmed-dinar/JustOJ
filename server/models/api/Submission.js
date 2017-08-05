@@ -11,7 +11,7 @@ var Query = appRequire('config/database/knex/query');
 
 
 //
-//
+// save a new submission
 //
 exports.save = function(inserts, fn){
   var sql = Query
@@ -30,7 +30,7 @@ exports.save = function(inserts, fn){
 
 
 //
-//
+// save source code of subbmission
 //
 exports.saveSource = function(inserts, fn){
   var sql = Query
@@ -43,7 +43,7 @@ exports.saveSource = function(inserts, fn){
 
 
 //
-//
+// update a submission
 //
 exports.put = function(id, cols, fn){
   var sql = Query('submissions')
@@ -53,3 +53,13 @@ exports.put = function(id, cols, fn){
 
   DB.execute(sql, fn);
 };
+
+
+
+//
+//
+//
+exports.byUser = function(uid, cb){
+
+};
+

@@ -16,17 +16,17 @@ var uuid = require('uuid');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 var has = require('has');
-var MyUtil = require('../../myutil');
-var Submission = require('../../../models/submission');
-var Problems = require('../../../models/problems');
-var Compiler = require('./compiler');
+//var MyUtil = require('../../myutil');
+//var Submission = require('../../../models/submission');
+///var Problems = require('../../../models/problems');
+//var Compiler = require('./compiler');
 
 
 /**
  * @param opts
  * @param cb
  */
-exports.run = function(opts,cb){
+function Judge(job, cb){
 
   opts['runName'] = opts.submissionId;
   opts['runDir'] = MyUtil.RUN_DIR + '/' + opts.runName;
@@ -463,3 +463,7 @@ var clearTempFiles = function (runDir,codeDir,callback) {
     }
   ], callback);
 };
+
+
+
+module.exports = Judge;

@@ -1,0 +1,10 @@
+ //generate file
+ //50000 bytes = 50 KB
+ https://linux.die.net/man/1/truncate
+
+create file:
+  truncate -s 50KB 50KB.c
+see fileSize:
+  stat -c '%s' 50KB.c
+
+

@@ -173,24 +173,40 @@ exports.findByIdandTags = function(pid, cb){
 
 
 
-/**
- * Find User Submissions for a specific problem
- * @param pid
- * @param uid
- * @param cb
- */
+//
+// Find User Submissions for a specific problem
+//
 exports.findUserSubmissions = function(pid,uid,cb){
 
   var sql = Query.select(['status','submittime','language'])
-        .from('submissions')
-        .where({
-          'pid': pid,
-          'uid': uid
-        })
-        .orderBy('submittime','desc')
-        .limit(5);
+  .from('submissions')
+  .where({
+    'pid': pid,
+    'uid': uid
+  })
+  .orderBy('submittime','desc')
+  .limit(5);
 
   DB.execute(sql.toString(),cb);
+};
+
+
+//
+// user submission history
+//
+exports.userSubmissions = function(pid, uid, fn){
+
+  var sql = Query.select(['status','submittime','language'])
+    .from('submissions')
+    .where({
+      'pid': pid,
+      'uid': uid
+    })
+    .orderBy('submittime','desc')
+    .limit(5)
+    .toString();
+
+  DB.execute(sql, fn);
 };
 
 

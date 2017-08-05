@@ -9,8 +9,7 @@ var Problems = appRequire('models/problems');
 var hashids = new Hashids(config.get('HASHID:PROBLEM'),11);
 
 module.exports = function(validate, columns){
-
-  return function(req, res, next){
+  return function hashidMiddleware(req, res, next){
 
     if( !has(req.params,'pid') ){
       return res.status(404).json({ error: 'No Problem Found' });

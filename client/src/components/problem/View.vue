@@ -117,7 +117,7 @@
                 <strong><i class="material-icons">people</i> Rank</strong>
               </p>
               <div class="p-1">
-                <loading-pulse :loading="loading" css="" size="7px">
+                <loading-pulse :loading="rankLoading" css="" size="7px">
                   <template v-if="ranks && ranks.length">
                     <!-- goes here -->
                   </template>
@@ -134,7 +134,7 @@
                 <strong><i class="material-icons">equalizer</i> My Submissions</strong>
               </p>
               <div class="p-1">
-                <loading-pulse :loading="loading" css="" size="7px">
+                <loading-pulse :loading="subsLoading" css="" size="7px">
                   <template v-if="submissions && submissions.length">
                     <!-- goes here -->
                   </template>
@@ -166,7 +166,9 @@
 
     data () {
       return {
-        loading: false,
+        rankLoading: true,
+        subsLoading: true,
+        loading: true,
         problem: null,
         error: null,
         submitError: null,
@@ -256,18 +258,27 @@
         this.$http
           .get(`/api/problem/rank/${this.params.pid}`)
           .then(response => {
-            this.formDone();
+            console.log(response.data);
+            this.fetchSubmissions();
           })
           .catch(this.handleError);
       },
 
       fetchSubmissions(){
-        this.formDone();
+        this.$http
+          .get(`/api/problem/submission/${this.params.pid}`)
+          .then(response => {
+            console.log(response.data);
+            this.formDone();
+          })
+          .catch(this.handleError);
       },
 
       formDone(){
         this.loading = false;
         this.submitting = false;
+        this.rankLoading = false;
+        this.subsLoading = false;
         progressbar.done();
         progressbar.remove();
       },

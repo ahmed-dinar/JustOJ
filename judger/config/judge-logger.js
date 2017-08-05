@@ -6,6 +6,7 @@
 var winston = require('winston');
 var path = require('path');
 var chalk = require('chalk');
+var config = require('nconf');
 
 console.log( chalk.cyan('Loading and setup worker logger...') );
 
@@ -46,11 +47,11 @@ winston.add(winston.transports.File, {
     var date = new Date();
     return '[' + date.getDate() + '/' + date.getMonthName() + '/' + date.getFullYear() + ':' + date.toLocaleTimeString() + ']';
   },
-  filename: path.resolve(__dirname, './logs/judge-logs.log'),
+  filename: path.resolve(__dirname, '../logs/judge-logs.log'),
   handleExceptions: true,
   json: false,
-  maxsize: nconf.get('logger:maxsize') || 4194304, //4MB
-  maxFiles: nconf.get('logger:maxFiles') || 5,
+  maxsize: config.get('logger:maxsize') || 4194304, //4MB
+  maxFiles: config.get('logger:maxFiles') || 5,
   colorize: false
 });
 

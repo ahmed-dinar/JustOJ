@@ -18,6 +18,7 @@ var Busboy = require('busboy');
 var slug = require('slug');
 var url = require('url');
 var has = require('has');
+var typeis = require('type-is');
 var crypto = require('crypto');
 var logger = require('winston');
 
@@ -82,7 +83,7 @@ router.get('/list', authUser, function(req, res, next) {
 router
   .route('/create')
   //checking logged in and admin privilege
-  .all(authJwt(), roles('admin'), OK())
+  .all(authJwt, roles('admin'), OK())
   //return ok to load front end
   .get(OK('ok'))
   .post(function(req, res, next) {
@@ -138,7 +139,7 @@ router
 // send raw test case file
 //
 router
-  .get('/testcase/:pid/:caseId', authJwt(), roles('admin'), decodeHash(true,['id']), function(req, res, next){
+  .get('/testcase/:pid/:caseId', authJwt, roles('admin'), decodeHash(true,['id']), function(req, res, next){
 
     var caseType = req.query.type;
     if( !caseType ){
@@ -185,7 +186,7 @@ router
 //
 router
   .route('/edit/testcase/:pid')
-  .all(authJwt(), roles('admin'), decodeHash(true, ['id']), OK())
+  .all(authJwt, roles('admin'), decodeHash(true, ['id']), OK())
   .get(function(req, res, next){
 
     var problemId = req.body.problem.id;
@@ -331,13 +332,13 @@ router
 //
 router
   .route('/edit/limits/:pid')
-  .all(authJwt(), roles('admin'), decodeHash(true, ['id']), OK())
+  .all(authJwt, roles('admin'), decodeHash(true, ['id']), OK())
   .get(OK('ok'))
   .post(function(req, res, next){
 
     if(
       (!has(req.query,'action') || req.query.action !== 'save') &&
-      req.headers['content-type'].indexOf('multipart/form-data') > -1
+      typeis(req, ['multipart'])
     ){
       return testJudgeSolution(req, res, next);
     }
@@ -396,23 +397,47 @@ router
 router.get('/rank/:pid', decodeHash(), function(req, res, next) {
   var pid = req.body.problemId;
 
-  Problems.findRank(pid, function(err, rows){
+  Problems.findRank(pid, function(err, ranks){
     if( err ){
       logger.error(err);
       return res.sendStatus(500);
     }
 
-    if(!rows || !rows.length){
+    if(!ranks || !ranks.length){
       return res.status(200).json([]);
     }
 
-    var ranks = rows[0];
-    logger.debug(ranks);
+    logger.debug('ranks: ',ranks);
 
-
-    return res.status(200).json([]);
+    return res.status(200).json(ranks);
   });
 });
+
+
+//
+//
+//
+router.get('/submission/:pid', authJwt, decodeHash(), function(req, res, next) {
+  var pid = req.body.problemId;
+  var userId = req.user.id;
+
+  Problems.userSubmissions(pid, userId, function(err, subs){
+    if( err ){
+      logger.error(err);
+      return res.sendStatus(500);
+    }
+
+    if(!subs || !subs.length){
+      return res.status(200).json([]);
+    }
+
+    logger.debug('user subs: ', subs);
+
+    return res.status(200).json(subs);
+  });
+});
+
+
 
 
 //
@@ -448,7 +473,7 @@ router
       return res.status(200).json(problem);
     });
   })
-  .post(authJwt(), decodeHash(), require('./problem/submit'));
+  .post(authJwt, decodeHash(), require('./problem/submit'));
 
 
 
