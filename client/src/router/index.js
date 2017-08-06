@@ -63,7 +63,7 @@ const router = new Router({
           path: 'create',
           name: 'CreateProblem',
           component: CreateProblem,
-          meta: { title: 'Create Problem' }
+          meta: { title: 'Create Problem', auth: true }
         },
         {
           path: 'testcase/:pid/:caseId',
@@ -167,12 +167,20 @@ router.beforeEach((to, from, next) => {
 
   if( (to.name === 'login' || to.name === 'SingUp') && store.getters.isLoggedIn ){
     router.replace({ path: '/' });
+    return next();
   }
 
-  // if( to.matched.some(record => record.meta.auth) && !store.getters.isLoggedIn )
-  //   router.replace({ path: '/login' });
+  if (to.matched.some(record => record.meta.auth) && !store.getters.isLoggedIn ) {
+    router.replace({
+      path: '/login',
+      query: {
+        next: to.fullPath
+      }
+    });
+    return next();
+  }
 
-  next();
+  return next();
 });
 
 

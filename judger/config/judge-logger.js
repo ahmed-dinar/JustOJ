@@ -8,9 +8,11 @@ var path = require('path');
 var chalk = require('chalk');
 var config = require('nconf');
 
+var ENV = process.env.NODE_ENV || 'development';
+var DEBUG = ENV !== 'production';
+
 console.log( chalk.cyan('Loading and setup worker logger...') );
 
-var ENV = process.env.NODE_ENV || 'development';
 
 Date.prototype.monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 Date.prototype.getMonthName = function() {
@@ -18,28 +20,22 @@ Date.prototype.getMonthName = function() {
 };
 
 
-//logger custom log levels
-var levels = {
-  levels: {
-    fatal: 0,
-    error: 1,
-    warn: 2,
-    info: 3,
-    debug: 4
-  },
-  colors: {
-    fatal: 'magenta',
-    error: 'red',
-    warning: 'yellow',
-    info: 'cyan',
-    debug: 'blue'
-  }
-};
-
-
 winston.emitErrs = true;
-winston.setLevels(levels.levels);
-winston.addColors(levels.colors);
+winston.setLevels({
+  fatal: 0,
+  error: 1,
+  warn: 2,
+  info: 3,
+  debug: 4
+});
+
+winston.addColors({
+  fatal: 'magenta',
+  error: 'red',
+  warning: 'yellow',
+  info: 'cyan',
+  debug: 'blue'
+});
 
 winston.add(winston.transports.File, {
   level: 'info',
@@ -55,9 +51,10 @@ winston.add(winston.transports.File, {
   colorize: false
 });
 
+
 winston.remove(winston.transports.Console);
 winston.add(winston.transports.Console, {
-  level: ENV === 'development' ? 'debug' : 'info',
+  level: DEBUG ? 'debug' : 'info',
   timestamp: function () {
     return '[' + new Date().toTimeString().substr(0, 8) + ']';
   },
@@ -66,5 +63,6 @@ winston.add(winston.transports.Console, {
   prettyPrint: true,
   colorize: true
 });
+
 
 module.exports = winston;

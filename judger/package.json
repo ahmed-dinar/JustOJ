@@ -6,7 +6,7 @@
   "main": "judger.js",
   "scripts": {
     "start": "sudo node judger.js",
-    "lint": "./node_modules/.bin/eslint -c .eslintrc judger.js",
+    "lint": "./node_modules/.bin/eslint -c .eslintrc judger.js"
   },
   "repository": {
     "type": "git",

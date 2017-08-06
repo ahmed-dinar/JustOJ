@@ -1,27 +1,79 @@
 'use strict';
 
-
+var assign = require('lodash/assign');
 var exec = require('child_process').exec;
 var logger = require('winston');
 var chalk = require('chalk');
+var JudgeError = require('./config/judge-error.js');
+
+//command = 'gcc -w -O2 -fomit-frame-pointer -lm -o ' + judge.runDir +'/code code.c';
 
 
-/**
- *
- * @param codeDir    -> name of the program folder created by uuid. example: 89e99d8b-4552-41f1-8a12-76668334328d
- * @param inputPath  -> judge data inputfile path
- * @param fn
- */
-exports.run = function run(opts,testCase,fn){
 
-  var command = './lib/compiler/sandbox/safejudge ';
-  command += opts.runName + '/code ';
+//
+// `sandbox` = the path of sandbox executable to run the code which written in C
+//
+function Compiler(options){
+  this.id = options.id;
+  this.language = options.language;
+  this.path = options.path;
+  this.source = options.source;
+  this.cpu = options.cpu;
+  this.memory = options.memory;
+  this.sandbox = './sandbox/safejudge ';
+}
+
+
+
+Compiler.prototype.compile = function(fn){
+
+  var command = null;
+  var _this = this;
+
+  switch(_this.language) {
+    case 'c':
+      command = 'gcc -Wall -Wno-unused-result -O2 -fomit-frame-pointer -lm -o ' + _this.path +'/code ' + _this.id + '.' + _this.language;
+      break;
+    case 'cpp':
+      command = 'g++ -w -O2 -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.id + '.' + _this.language;
+      break;
+    default:
+      return fn(new JudgeError('Unknown Language ' + _this.language, 'INVALID_LANGUAGE'));
+  }
+
+  logger.debug(chalk.red('[CODE-COMPILE]: ') + chalk.cyan(_this.source), chalk.yellow(command));
+
+  var options = {
+    env: process.env,
+    timeout: 0,
+    maxBuffer: 1000*1024,
+    cwd: _this.source
+  };
+
+  return exec(command, options, fn);
+};
+
+
+
+//
+//  `_this.id` = the submission id as well as the run directory name
+// (_this.id + '/code ') = it will normalize with prefix path inside chroot jail
+// `this.path` = absolute chroot jail run directory inside main OS i,e /var/SECURITY/JAIL/home/runs/{id}
+// `/home/runs/{id}` = run directory inside chroot jail
+// `testCase` = testCase directory
+//
+Compiler.prototype.execute = function run(testCase, fn){
+
+  var _this = this;
+
+  var command = _this.sandbox;
+  command += _this.id + '/code ';
   command += '-i ' + testCase + '/i.txt ';
-  command += '-o ' + '/home/runs/' + opts.runName + '/output.txt ';
-  command += '-e ' + '/home/runs/' + opts.runName + '/error.txt ';
-  command += '-r ' + opts.runDir + '/result.txt ';
-  command += '-t ' + String(opts.timeLimit) + ' ';
-  command += '-m ' + String(opts.memoryLimit);
+  command += '-o ' + '/home/runs/' + _this.id + '/output.txt ';
+  command += '-e ' + '/home/runs/' + _this.id + '/error.txt ';
+  command += '-r ' + _this.path + '/result.txt ';
+  command += '-t ' + String(_this.cpu) + ' ';
+  command += '-m ' + String(_this.memory);
 
   logger.debug( chalk.red('[CODE-RUN]: ') + chalk.cyan(command) );
 
@@ -29,52 +81,6 @@ exports.run = function run(opts,testCase,fn){
 };
 
 
-/**
- *
- * @param codePath -> example: /SECURITY/JAIL/home/run/89e99d8b-4552-41f1-8a12-76668334328d
- * @param fn
- * @returns {*}
- */
-exports.compile = function compile(opts,fn){
 
-  var command = null;
-  switch(opts.language) {
-    case 'c':
-            //command = 'gcc -w -O2 -fomit-frame-pointer -lm -o ' + opts.runDir +'/code code.c';
-      command = 'gcc -Wall -O2 -fomit-frame-pointer -lm -o ' + opts.runDir +'/code code.c';
-      break;
-    case 'cpp':
-      command = 'g++ -w -O2 -fomit-frame-pointer -lm -o ' + opts.runDir + '/code code.cpp';
-      break;
-    case 'java':
-      return fn('Java will be supported soon!','');
-      break;
-    default:
-      return fn('invalid language','');
-  }
 
-  logger.debug( chalk.red('[CODE-COMPILE]: ') + chalk.cyan(opts.codeDir), chalk.yellow(command) );
-
-  var cnfg = {
-    env: process.env,
-    timeout: 0,
-    maxBuffer: 1000*1024,
-    cwd: opts.codeDir
-  };
-
-  exec(command, cnfg, function(err, stdout, stderr) {
-
-    logger.debug(
-            'we are in compiler',
-            err,
-            'stderr:',
-            stderr,
-            'we are out of compiler'
-        );
-
-    if (err)
-      return fn(err,stderr);
-
-    fn(null,null, stdout);
-  });
-};
+module.exports = Compiler;

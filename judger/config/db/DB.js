@@ -4,8 +4,6 @@ var async = require('async');
 var dbPool = require('./pool');
 var logger = require('winston');
 
-
-
 exports.execute = function(sql,cb){
 
   //logger.debug('[SQL-QUERY]: ' + sql);

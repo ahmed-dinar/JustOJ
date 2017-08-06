@@ -153,8 +153,8 @@ router
     logger.debug(caseType);
 
     var caseName = caseType === 'input' ? 'i.txt' : 'o.txt';
-    var caseDir = path.normalize(process.cwd() + '/files/tc/p/' + pid + '/' + caseId + '/' + caseName);
-
+    var caseDir = getCasePath(pid,caseId,caseName); //path.normalize(process.cwd() + '/files/tc/p/' + pid + '/' + caseId + '/' + caseName);
+    logger.debug(caseDir);
     fs.stat(caseDir, function(err,stats){
       if(err){
         if( err.code === 'ENOENT' ){
@@ -193,7 +193,8 @@ router
 
     async.waterfall([
       function(callback){
-        var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + problemId);
+        var rootDir = getCasePath(problemId);  // path.normalize(process.cwd() + '/files/tc/p/' + problemId);
+        logger.debug(rootDir);
         fs.readdir(rootDir, function(err, files) {
 
           if( err ){
@@ -262,7 +263,10 @@ router
       },
       //create directory of the test case
       function (testCaseId, callback){
-        var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + pid + '/' + testCaseId);
+
+       // var saveTo = path.normalize(process.cwd() + '/files/tc/p/' + pid + '/' + testCaseId);
+        var saveTo = getCasePath(pid, testCaseId);
+        logger.debug(saveTo);
 
         mkdirp(saveTo, function (err) {
           if (err){
@@ -477,6 +481,18 @@ router
 
 
 
+//
+// get a test case full path
+//
+function getCasePath(pid, caseId, caseName){
+  if( !caseId || caseId === undefined ){
+    return path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString());
+  }
+  if( !caseName || caseName === undefined ){
+    return path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString(), caseId.toString());
+  }
+  return path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString(), caseId.toString(), caseName.toString());
+}
 
 
 // /**

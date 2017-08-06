@@ -3,11 +3,28 @@
 var kue = require('kue');
 var logger = require('winston');
 var nconf = require('nconf');
-var Judge = require('./judge');
+var fs = require('fs');
+var path = require('path');
+var chalk = require('chalk');
 
 nconf.argv().env('_');
+
+var ENV = nconf.get('NODE:ENV') || 'development';
+var configPath = path.join(__dirname, 'config/env/' + ENV + '.json');
+
+//check if config file exists.Otherwise exit node process.
+//NOTE: really exit? or use default config somehow??
+if( !fs.existsSync(configPath) ){
+  console.log( chalk.bold.red('"' + configPath + '" config file not found.Please check.') );
+  process.exit(1);
+}else {
+  nconf.file({ file: configPath });
+}
+
 require('./config/judge-logger');
 
+var Judge = require('./judge');
+var shuttingDowning = false;
 var queue = kue.createQueue();
 
 //2 seconds
@@ -50,7 +67,10 @@ queue
     logger.error('judge job failed', err);
   })
   .on('error', function(err) {
-    logger.error('error in submission judge queue', err);
+    if(!shuttingDowning){
+      logger.error('error in submission judge queue', err);
+      shutdown();
+    }
   });
 
 
@@ -63,11 +83,15 @@ queue.process('submission', Judge);
 // neccessary? or how to improved?
 //
 process.once( 'SIGTERM', function ( sig ) {
-  queue.shutdown(5000, function(err) {
-    logger.error('Kue shutdown: ', err);
-    process.exit( 0 );
-  });
+  logger.info('SIGTERM');
+  shutdown();
 });
+
+
+//
+// from on error event
+//
+process.once( 'uncaughtException', shutdown);
 
 
 
@@ -85,6 +109,20 @@ function popSubmission(error, job){
       logger.error('pop submission error', err);
       //throw err;
     }
-    logger.debug('removed completed submission %s from queue.', job.data.id);
+    logger.debug('removed completed submission %s from queue.\n', job.data.id);
   });
+}
+
+
+//
+// shutdown queue
+//
+function shutdown(err){
+  if(!shuttingDowning){
+    shuttingDowning = true;
+    queue.shutdown(5000, function(err2){
+      logger.info( 'Kue shutdown result: ', err2 || 'OK');
+      process.exit( 0 );
+    });
+  }
 }

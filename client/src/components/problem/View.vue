@@ -284,8 +284,8 @@
       },
 
       resetForm(){
-        this.language = 'c';
-        this.$refs.solutionFile.reset();
+        //this.language = 'c';
+        //this.$refs.solutionFile.reset();
       },
 
       handleError(err){

@@ -3,7 +3,7 @@
 //
 // Module dependencies.
 //
-var path = require('path');
+
 var fs = require('fs');
 var logger = require('winston');
 var chalk = require('chalk');
@@ -11,8 +11,6 @@ var exec = require('child_process').exec;
 
 var async = require('async');
 var _ = require('lodash');
-var jsdiff = require('diff');
-var uuid = require('uuid');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 var has = require('has');

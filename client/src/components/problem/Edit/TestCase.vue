@@ -6,9 +6,7 @@
       </div>
 
       <div class="col-md-12" v-if="!!error">
-        <smooth-alert variant="danger" :show="!!error">
-          {{ error }}
-        </smooth-alert>
+        <smooth-alert variant="danger" :show="!!error">{{ error }}</smooth-alert>
       </div>
 
       <div class="row" v-else>

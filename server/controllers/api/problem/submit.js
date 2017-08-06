@@ -126,7 +126,7 @@ function handleError(error, res){
   };
 
   if( has(uploadErrors, error.code) ){
-    return res.status(404).json({ error: uploadErrors[error.code] });
+    return res.status(400).json({ error: uploadErrors[error.code] });
   }
 
   logger.error(error);

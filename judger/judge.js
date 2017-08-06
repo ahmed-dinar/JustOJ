@@ -9,6 +9,7 @@ var logger = require('winston');
 var chalk = require('chalk');
 var exec = require('child_process').exec;
 
+var config = require('nconf');
 var async = require('async');
 var _ = require('lodash');
 var jsdiff = require('diff');
@@ -16,377 +17,372 @@ var uuid = require('uuid');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 var has = require('has');
-//var MyUtil = require('../../myutil');
-//var Submission = require('../../../models/submission');
-///var Problems = require('../../../models/problems');
-//var Compiler = require('./compiler');
+
+var Compiler = require('./compiler');
+var Submission = require('./models/Submission');
+var JudgeError = require('./config/judge-error');
+var judgeStatus = require('./config/judge-status');
+
+
+var judgeFiles;
 
 
 /**
  * @param opts
  * @param cb
  */
-function Judge(job, cb){
+function Judge(job, fn){
 
-  opts['runName'] = opts.submissionId;
-  opts['runDir'] = MyUtil.RUN_DIR + '/' + opts.runName;
-  opts['testCaseDir'] = MyUtil.TC_DIR + '/' + opts.problemId;
+  var subId = job.data.id.toString();
+  var judge = {
+    id: subId,
+    path: path.join('/var/SECURITY/JAIL/home/runs', subId), // path.join(config.get('PATH'), job.data.id)
+    comparer: './sandbox/comparer '
+  };
 
-  logger.debug(
-        chalk.green('............In judge!.............'),
-        opts,
-        'runDir: ' + opts.runDir,
-        'testCaseDir: ' + opts.testCaseDir
-    );
+  judgeFiles = ['output.txt','error.txt','result.txt'];
+
+  _.forEach(judgeFiles, function(file, indx) {
+    judgeFiles[indx] = path.join(judge.path, file);
+  });
+
+  var submission = new Submission(judge.id);
+
+  logger.debug(chalk.green('Starting judge submission id ' + judge.id));
+
+  // logger.debug(
+  //   chalk.green('............Starting judge.............'),
+  //   'path: ' + judge.path,
+  //   'judgeFiles: ' + judgeFiles
+  // );
 
   async.waterfall([
-    function(callback) {
-      Submission.update(opts.submissionId, { status: '6' }, callback);
-    },
-    function(callback) {
-      makeTempDir(opts.runDir,callback);
+    function(callback){
+      submission.find(['s.pid','s.status','s.language','p.cpu','p.memory'], function(err, rows){
+        if(err){
+          return callback(err);
+        }
+        if(!rows.length){
+          return callback(new JudgeError('No Submission Found','NOT_FOUND'));
+        }
+        judge = _.assign(judge, rows[0]);
+        judge.source = path.join(__dirname,'source');
+
+      //  logger.debug('submission: ', judge);
+
+        return callback();
+      });
     },
     function(callback){
-      compileCode(opts,callback);
-    },
-    function(callback) {
-      getTestCases(opts.testCaseDir,callback);
-    },
-    function(testCases,callback){
-      createAdditionalFiles(opts.runDir,testCases,callback);
-    },
-    function(testCases,callback){
-      logger.debug( chalk.green('Total Test Cases: ' + testCases.length) );
-      testCases = testCases.map(function (value, index) {
-        return {index: index+1, value: value};
+      judge.testcasePath = path.join(process.cwd(), 'testcase', judge.pid.toString());
+      //logger.debug('testcase path = ', judge.testcasePath);
+
+      fs.readdir(judge.testcasePath, function(err, files) {
+        if( err ){
+          return callback(err);
+        }
+
+        if( !files.length ){
+          return callback(new JudgeError('No Test Case Found','NO_TESTCASE'));
+        }
+       // logger.debug( chalk.green('Total Test Cases: ' + files.length) );
+
+        //make the file list object with full path
+        judge.testcases = _.map(files, function makeIndex(value, index){
+          return { index: index+1, value: path.join(judge.testcasePath, value.toString()) };
+        });
+
+        return callback();
       });
-      async.mapSeries(testCases, runTestCase.bind(null,opts), callback);
-    }
-  ], function (error, runs) {
+    },
+    function(callback){
+      submission.put({ status: '6' }, callback);
+    },
+    async.apply(mkdirp, judge.path),
+    async.apply(compile, judge),
+    makeFiles,
+    async.apply(execute, submission)
+  ],
+  function (error, runs) {
 
-
-        //remove temporary running directory from chroot directory
-    clearTempFiles(opts.runDir, opts.codeDir, function (err) {
-
-      if( err )
-        logger.error(err);
-      else
-        logger.debug( chalk.green('success clean submit!'));
+    rimraf(judge.path, function (err) {
+      if( err ){
+        logger.error('cleaning after judge error', err);
+      }
+      else{
+        logger.debug( chalk.green('successfully clean submit!'));
+      }
 
       if( error ){
-
-                //runs undefined means we have another issue
-        if( _.isUndefined(runs) )
-          return Submission.update(opts.submissionId, { status: '8' }, cb);
-
-                //compiler error
-        if( runs !== null && typeof runs === 'object' && has(runs,'compiler') )
-          return Submission.update(opts.submissionId, { status: '7' }, cb);
-
-                //no test case was executed, may be no test case found
-        if( _.isUndefined(runs[0]) )
-          return Submission.update(opts.submissionId, { status: '8' }, cb);
-
-
-        logger.debug('Error but runs exists', runs); //runtime errors!
+        switch(error.code.toString()){
+          case 'COMPILATION_ERROR':
+            //logger.debug('COMPILATION_ERROR');
+            return submission.put({ status: '7' }, fn);
+          case 'SOLUTION_FAILED':
+            //logger.debug('SOLUTION_FAILED');
+            return makeFinalStatus(runs, submission, judge.pid, fn);
+          default:
+            logger.error(error);
+            return submission.put({ status: '8' }, fn);
+        }
       }
 
-      getFinalResult(runs,opts,cb);
+      return makeFinalStatus(runs, submission, judge.pid, fn);
     });
   });
 };
 
 
-/**
- * Make a tempory directory to run the code, this directory is inside chroot jail environement directory
- * @param saveTo
- * @param cb
- */
-var makeTempDir = function(saveTo,cb){
-  mkdirp(saveTo, function (err) {
-    if (err) {
-      logger.debug(saveTo + ' creation failed! permission denied?');
-      return cb(err);
+
+
+//
+// compiler source code
+//
+function compile(judge, ignore, fn) {
+
+  var options = _.pick(judge, ['id','language','path','source','cpu','memory']);
+
+  // logger.debug(chalk.green('optons of compiler'), options);
+  // logger.debug('judge = ', judge);
+
+  var compiler = new Compiler(options);
+
+  compiler.compile(function (err, stdout, stderr) {
+    //TODO: isn't it system error!?
+    if(err){
+      logger.error(err);
+      return fn(new JudgeError('Compilation Error','COMPILATION_ERROR'));
     }
-    logger.debug( chalk.green(saveTo + ' Created') );
-    cb();
-  });
-};
 
-
-/**
- *
- * @param opts
- * @param cb
- */
-var compileCode = function (opts,cb) {
-  Compiler.compile(opts, function (err,stderr, stdout) {
-
-    if(err) return cb(err,{compiler: 'Compiler Error'});  //TODO: isn't it system error!?
-
+    //TODO: may be save for user why error?
     if(stderr) {
-      logger.debug('stderr', stderr, 'stdout', stdout);
-      return cb(stderr,{ compiler: 'Compiler Error'});
+     // logger.debug('stderr', stderr, 'stdout', stdout);
+      return fn(new JudgeError('Compilation Error','COMPILATION_ERROR'));
     }
 
-    logger.debug( chalk.green('Compiled Successfully'));
-    cb();
+    logger.debug(chalk.green('Source Successfully Compiled'));
+    return fn(null, judge, compiler);
   });
 };
 
 
-/**
- * Get all test cases for this problem
- * @param testCaseDir
- * @param cb
- */
-var getTestCases = function (testCaseDir,cb) {
-  fs.readdir(testCaseDir, function(err, files) {
+//
+//  Create additional files for saving the run status
+//
+function makeFiles(judge, compiler, fn){
 
-    if( err )
-      return cb(err);
-
-    if( files.length === 0 ){
-      logger.debug(chalk.red('No Test Case Found in ' + testCaseDir));
-      return cb('No Test Case Found');
-    }
-
-    logger.debug(files);
-
-    cb(null,files);
-  });
-};
-
-
-/**
- * Create additional files for saving the run status
- * @param saveTo
- * @param testCases
- * @param cb
- */
-var createAdditionalFiles = function(saveTo,testCases,cb){
-  var files = ['output.txt','error.txt','result.txt'];
-  async.eachSeries(files, function(file, callback) {
-    fs.open(saveTo + '/' + file ,'w',function(err, fd){
+  async.each(judgeFiles, function(file, callback) {
+    fs.open(file, 'w', function(err, fd){
       if( err ){
-        logger.debug( chalk.red(saveTo + '/' + file + ' creation error'));
+        logger.debug( chalk.red(file + ' creation error'));
+        logger.error(err);
         return callback(err);
       }
-      logger.debug( chalk.green(saveTo + '/' + file + ' created') );
-      callback();
+      //logger.debug( chalk.green(file + ' created') );
+      return callback();
     });
-  }, function(err){
-    cb(err,testCases);
+  },
+  function(err){
+    return fn(err, judge, compiler);
   });
-};
+}
 
 
-/**
- * Run the program under a specific test case
- * @param opts
- * @param testCase
- * @param cb
- */
-var runTestCase = function(opts,testCase,cb){
-  var testCasePath = opts.testCaseDir + '/' + testCase.value;
+//
+// Execute the compiled source with all test cases
+//
+function execute(submission, judge, compiler, fn){
+
+  judge.resultFile = path.join(judge.path, 'result.txt');
+  judge.outputFile = path.join(judge.path, 'output.txt');
+
+  //loop through every test cases
+  async.mapSeries(judge.testcases, function(testCase, cb){
+    //execute source with this test case
+    compiler.execute(testCase.value, function(err, stdout, stderr){
+      if(err){
+        return cb(err);
+      }
+
+      //TODO: TEST THIS
+      //may be SIGABRT type error for runtime error
+      //
+      //figured out errors:
+      //1. while not using sudo , getting 'chroot error:  Operation not permitted`
+      //
+      if(stderr) {
+        logger.debug('stderr while executing:: ', stderr);
+        return checkStatus(judge.resultFile, cb);
+      }
+
+      return getStatus(submission, judge, testCase, cb);
+    });
+  }, fn);
+}
+
+
+
+//
+//
+function getStatus(submission, judge, testCase, fn){
+
   async.waterfall([
-    function(callback) {
-      runCode(opts,testCasePath,callback);
-    },
     function(callback){
-      checkResult(opts,callback);
+      checkStatus(judge.resultFile, callback);
     },
-    function(resultObj,callback){
-      if( resultObj.result !== 'OK' ) return callback(null,resultObj);
-
-      compareResult(opts,testCasePath,resultObj,callback);
+    function(statusObj, callback){
+      compareResult(judge.comparer, judge.outputFile, testCase.value, statusObj, callback);
     }
-  ], function (error, result) {
+  ],
+  function (error, statusObj) {
+   // logger.debug('Case ' + testCase.index + ' status:', statusObj);
 
-    logger.debug('Case ' + testCase.index + ' results:', result);
-
-    if( result !== null && typeof result === 'object'){  //insert every run information into database
-      return Submission
-        .addTestCase({
-          sid:  opts.submissionId,
-          name: testCase.value,
-          status: result.code,
-          cpu:  String(parseInt(parseFloat(result.cpu) * 1000)),
-          memory: String(result.memory),
-          errortype: result.whyError
-        } , function (err) {
-          if(err)
-            logger.debug(err);
-
-          clearRun(opts,error, result,cb);
-        });
+    if(error && error.code !== 'SOLUTION_FAILED'){
+      return fn(error);
     }
 
-    clearRun(opts,error, result,cb);
+    var hasError = error && error.code === 'SOLUTION_FAILED';
+    if(hasError){
+      statusObj = error.message;
+    //  logger.debug('SOLUTION_FAILED but error.message = ', statusObj);
+    }
+
+    //
+    // TODO: testCase.value = fullpath, make it only name
+    //
+    submission.saveCase({
+      sid: judge.id,
+      name: 'adl;ad',
+      status: statusObj.code,
+      cpu: parseInt(parseFloat(statusObj.cpu) * 1000),
+      memory: statusObj.memory,
+      errortype: statusObj.error
+    }, function (err) {
+      if(err){
+        logger.error(err);
+      }
+
+      return hasError
+        ? fn(error, statusObj)
+        : clearRun(statusObj, fn);
+    });
   });
-};
+}
 
 
-/**
- * Run a specific test case under sandbox
- * @param opts
- * @param testCase
- * @param cb
- */
-var runCode = function (opts,testCase,cb) {
-  Compiler.run(opts, testCase, function (err,stdout, stderr) {
-    if(err) return cb(err);
 
-    if(stderr) {
-      logger.debug('stderr!', stderr);
-      return checkResult(opts,cb);  //may be SIGABRT type error
+//
+// Check a test case run result
+//
+function checkStatus(resultPath, fn) {
+  //logger.debug(chalk.yellow('Checking ' + resultPath + ' for run result'));
+
+  fs.readFile(resultPath, 'utf8', function (error, data) {
+    if (error){
+      return fn(error);
     }
 
-    cb();
-  });
-};
-
-
-/**
- * Check the final result of current run
- * @param opts
- * @param cb
- */
-var checkResult = function (opts,cb) {
-
-  var resDir = opts.runDir +'/result.txt';
-  logger.debug( chalk.yellow('Checking ' + resDir + ' for run result'));
-
-  fs.readFile(resDir, 'utf8', function (error,data) {
-
-    if (error ) return cb(error);
-
-    if( data.length === 0 ) return cb('no result in file');
-
-    var resultObj = _.zipObject(['code', 'msg','cpu','memory','whyError'], _.split(data,'$',5));
-    switch(resultObj.code) {
-      case '0':
-        resultObj['result'] = 'OK';
-        break;
-      case '1':
-        resultObj['result'] = 'Runtime Error';
-        break;
-      case '2':
-        resultObj['result'] = 'Time Limit Exceeded';
-        break;
-      case '3':
-        resultObj['result'] = 'Memory Limit Exceeded';
-        break;
-      case '4':
-        resultObj['result'] = 'Output Limit Exceeded';
-        break;
-      case '8':
-        resultObj['result'] = 'System Error';
-        break;
-      default:
-        resultObj['result'] = 'Unknown System Error';
+    if(!data.length){
+      return fn(new JudgeError('Run Result file not found', 'RUN_RESULT_ERROR'));
     }
 
-    logger.debug( chalk.magenta(data));
-      //  logger.debug(resultObj);
+   // logger.debug( chalk.magenta(data));
 
-        //not accepted
-    if( resultObj.code !== '0' )
-      return cb(resultObj.result, resultObj);
+    var statusObj = _.zipObject(['code', 'msg','cpu','memory','error'], _.split(data,'$',5));
+    var statusCode = parseInt(statusObj.code);
 
-    cb(null,resultObj);
+    var crashed = (statusCode < 0 || statusCode > 4);
+    if( crashed ){
+      logger.error('code:  ' + statusObj.code + ' || msg: ' + statusObj.msg + ' || error: ' + statusObj.error);
+      statusObj.status = statusCode === 8 ? judgeStatus[5] : judgeStatus[6];
+      statusObj.code = '8';
+    }
+    else{
+      statusObj.status = judgeStatus[statusCode];
+    }
+
+    if( statusCode !== 0 ){
+      return fn(new JudgeError(statusObj, 'SOLUTION_FAILED'));
+    }
+
+    return fn(null, statusObj);
   });
-};
+}
 
 
-/**
- * Compare output with judge data
- * @param opts
- * @param testCase
- * @param resultObj
- * @param cb
- */
-var compareResult = function (opts,testCase,resultObj,cb) {
 
-  resultObj['result'] = 'Accepted';
-  return cb(null,resultObj);
+//
+// Compare output with judge data
+//
+function compareResult(comparer, outputFile, testCase, statusObj, fn) {
 
-  var judgeOutput = testCase + '/o.txt';
-  var userOutput = opts.runDir +'/output.txt';
-  var command = './lib/compiler/sandbox/compare ' + judgeOutput + ' ' + userOutput;
+  return fn(null, statusObj);
+
+  var judgeOutput = path.join(testCase, 'o.txt');
+  var command = comparer + judgeOutput + ' ' + outputFile;
 
   exec(command, {
     env: process.env,
     timeout: 9000,
     maxBuffer: 1000*1024
-  }, function(err, stdout, stderr) {
+  },
+  function(err, stdout, stderr) {
 
-    logger.debug('stdout ' + stdout);
-
+   // logger.debug('comparer stdout ' + stdout);
 
     if (err) {
-      logger.debug( chalk.red('Compare Error') );
-      return cb(err);
+      logger.debug( chalk.red('Comparer Error') );
+      return fn(err);
     }
 
+    var statusCode = parseInt(stdout);
 
-    var resCode = parseInt(stdout);
-
-    if( resCode === 0 ){
+    if( statusCode === 0 ){
       logger.debug( chalk.green('Compare OK'));
-      resultObj['result'] = 'Accepted';
-      cb(null,resultObj);
+      statusObj.status = 'Accepted';
+      return fn(null, statusObj);
     }
 
-
-    if( resCode === 3 || resCode === 2 ){
-
+    if( statusCode === 3 || statusCode === 2 ){
       logger.debug('Wrong ans code ' + stdout);
 
-      resultObj.code = '9';
-      resultObj['result'] = 'Wrong Answer';
-      return cb(resultObj.result,resultObj);
+      statusObj.code = '9';
+      statusObj.status = 'Wrong Answer';
+      return fn(new JudgeError(statusObj,'SOLUTION_FAILED'));
     }
 
-
-    return cb(stderr);
-
+    return fn(stderr);
   });
+}
 
-};
 
+//
+// truncate files for next test case
+//
+function clearRun(statusObj, fn){
+  async.each(judgeFiles, function(file, callback) {
+    fs.truncate(file, 0, function(err){
+      if(err){
+        logger.error('truncate error', err);
+        return callback(err);
+      }
 
-/**
- * truncate files for next test case
- * @param opts
- * @param error
- * @param result
- * @param cb
- */
-var clearRun = function(opts,error,result,cb){
-  var files = ['output.txt','error.txt','result.txt'];
-  async.each(files, function(file, callback) {
-    fs.truncate(opts.runDir + '/' + file, 0, function(err){
-      if(err) return callback(err);
-
-      logger.debug( chalk.green(opts.runDir + '/' + file + ' truncated'));
-      callback();
+      logger.debug( chalk.green(file + ' truncated'));
+      return callback();
     });
   }, function(err){
-    cb(error,result);
+    fn(null, statusObj);
   });
-};
+}
 
 
-/**
- * Make our final result by checking all test case result
- * Also update database
- * @param runs
- * @param opts
- * @param cb
- */
-var getFinalResult = function(runs,opts,cb){
-  var finalCode = '8';
+
+//
+// Make final result by checking all test case result
+//
+function makeFinalStatus(runs, submission, pid, fn){
+
+  var status = '8';
   var cpu = 0.0;
   var memory = 0.0;
   var whyError = null;
@@ -394,75 +390,52 @@ var getFinalResult = function(runs,opts,cb){
   _.forEach(runs,function(value) {
     cpu = Math.max(cpu, parseFloat(value.cpu));
     memory = Math.max(memory, parseInt(value.memory));
-    finalCode = String(value.code);
-    if( value.whyError !== 'null' ){
-      whyError = value.whyError;
+    status = String(value.code);
+    if( value.error !== 'null' ){
+      whyError = value.error;
     }
   });
 
 
   logger.debug(
-        chalk.green('Final Result '),
-        chalk.green('Cpu ' + cpu),
-        chalk.green('memory ' + memory),
-        chalk.green('finalCode ' + finalCode)
-    );
+    chalk.green('Final Result '),
+    chalk.green('Cpu ' + cpu),
+    chalk.green('memory ' + memory),
+    chalk.green('status ' + status)
+  );
 
   async.series([
     function(callback){
-      Submission.update(opts.submissionId, {
-        status: finalCode,
-        cpu:  String(parseInt(parseFloat(cpu) * 1000)),
-        memory: String(memory)
-      }, callback);
+      submission.put({
+        status: status,
+        cpu:  parseInt(parseFloat(cpu) * 1000.0),
+        memory: memory
+      },
+      function(err){
+        if(err){
+          return callback(err);
+        }
+        return callback();
+      });
     },
-    function(callback){  //TODO: omg stop it! stop it right now!! check problems route
-      if(finalCode === '0')   //if accepted increment total solved
-        return Problems.updateSubmission(opts.problemId, 'solved', callback);
-
-      callback();
-    },
-    function(callback){     //TODO: update user status for this problem
-
-      if( finalCode !== '0'){ return callback(); }
-
-      callback();
+    function(callback){
+      //TODO: omg stop it! stop it right now!! check problems route, really still in 2017 :(
+      //if accepted increment total solved
+      if(status === '0'){
+        return submission.solved(pid, callback);
+      }
+      return callback();
     }
-  ], function(err, results){
-    if(err)
-      logger.error('error while getFinalResult updating of contest!', err);
+  ],
+  function(err){
+    if(err){
+      logger.error('error while makeFinalStatus', err);
+    }
 
-    cb(null,runs);
+    return fn();
   });
 };
 
-
-/**
- *
- * @param runDir
- * @param codeDir
- * @param callback
- */
-var clearTempFiles = function (runDir,codeDir,callback) {
-  async.series([
-    function (cb) {
-      rimraf(runDir, function (err) {
-        if(err)
-          logger.debug( chalk.red('error cleaning runDir ' + runDir));
-
-        cb();
-      });
-    },
-    function (cb) {
-      rimraf(codeDir, function (err) {
-        if(err)
-          logger.debug( chalk.red('error cleaning codedir ' + codeDir));
-
-        cb();
-      });
-    }
-  ], callback);
-};
 
 
 

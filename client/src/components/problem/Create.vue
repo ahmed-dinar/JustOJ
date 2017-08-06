@@ -1,12 +1,16 @@
 <template>
   <div class="mb-5">
-    <b-alert variant="danger" class="text-center" dismissible :show="!!createError" @dismissed="createError=''" >
-      {{ createError }}
-    </b-alert>
+    <div class="col-md-12" v-if="!!error">
+      <smooth-alert variant="danger" :show="!!error">{{ error }}</smooth-alert>
+    </div>
 
-    <div>
+    <div v-else>
 
-      <div class="col-md-12">
+      <b-alert variant="danger" class="text-center" dismissible :show="!!createError" @dismissed="createError=''" >
+        {{ createError }}
+      </b-alert>
+
+      <div class="col-md-12" v-show="!loading">
 
 
         <form @submit.prevent="submit('create-problem-form')" name="create-problem-form" data-vv-scope="create-problem-form">
@@ -272,6 +276,7 @@
 
     data () {
       return {
+        error: null,
         sampleInput: problem.create.options.sampleInput,
         sampleOutput: problem.create.options.sampleOutput,
         createError: null,
@@ -304,7 +309,7 @@
             }
           }
         },
-        loading: false
+        loading: true
       };
     },
 

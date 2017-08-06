@@ -17,6 +17,11 @@
 # add test cases in datatbase insted of file system (or may be not?)
 
 
+---- JUDGER ----
+# save stderr for user
+
+
+
 ---- FUTURE WORKS ----
 # integrate MOSS for Detecting Plagiarism
 # set different language for problems
