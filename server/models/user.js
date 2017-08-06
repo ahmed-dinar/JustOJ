@@ -7,7 +7,7 @@ var async = require('async');
 var bcrypt = require('bcryptjs');
 var moment = require('moment');
 var crypto = require('crypto');
-var assign = require('lodash.assign');
+var assign = require('lodash/assign');
 var jwt = require('jsonwebtoken');
 var config = require('nconf');
 

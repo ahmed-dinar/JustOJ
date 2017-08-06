@@ -62,10 +62,13 @@ const actions = {
     });
   },
 
-  logOut({ commit }) {
+  logOut({ commit }, reload = false) {
     axios.post('/api/signin/signout', {})
       .then( response => {
         commit(types.LOG_OUT);
+        if(reload){
+          window.location.reload();
+        }
       })
       .catch( err => {
         console.log(`${err.response.status} ${err.response.statusText}`);

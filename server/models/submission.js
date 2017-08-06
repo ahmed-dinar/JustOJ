@@ -1,10 +1,7 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
+
 var _ = require('lodash');
-var async = require('async');
 var has = require('has');
 
 var DB = appRequire('config/database/knex/DB');
@@ -12,11 +9,60 @@ var Query = appRequire('config/database/knex/query');
 var Paginate = appRequire('lib/pagination/paginate');
 
 
-/**
- *  Insert a submission
- * @param inserts
- * @param cb
- */
+
+
+//
+// find some submissions
+//
+exports.find = function(cur_page, where, pageLimit, fn){
+
+  var sql = Query
+    .select([
+      'submissions.status',
+      'submissions.language',
+      'submissions.submittime',
+      'submissions.cpu',
+      'submissions.memory',
+      'submissions.pid',
+      'submissions.id',
+      'users.username',
+      'problems.title',
+      'problems.slug'
+    ])
+    .from('submissions')
+    .orderBy('submissions.submittime', 'desc')
+    .leftJoin('users', 'submissions.uid', 'users.id')
+    .leftJoin('problems', 'submissions.pid', 'problems.id');
+
+  var sqlCount = Query
+    .count('submissions.id as count')
+    .from('submissions');
+
+  if( !_.isEmpty(where) ){
+    sql = sql.where(where);
+
+    if( has(where,'users.username') ){
+      sqlCount = sqlCount.leftJoin('users', 'submissions.uid', 'users.id');
+    }
+
+    sqlCount = sqlCount.where(where);
+  }
+
+
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    limit: pageLimit || 25,
+    sqlCount: sqlCount,
+    url: ''
+  }, fn);
+};
+
+
+
+//
+//
+//
 exports.insert = function(inserts,cb){
 
   var sql = Query.insert(inserts)
@@ -48,6 +94,8 @@ exports.update = function(sid,inserts,cb){
           cb(err);
         });
 };
+
+
 
 
 /**
@@ -136,32 +184,32 @@ exports.getPublicTestCase = function(opts,cb){
   var codeTable = isContest ? 'c_submission_code' : 'submission_code';
 
   var sql = Query.select(['sub.*','prob.title','cas.cases','usr.username','subcode.code'])
-        .from(subTable)
-        .leftJoin('problems as prob','sub.pid','prob.id')
-        .leftJoin('users as usr','sub.uid','usr.id')
-        .joinRaw(' LEFT JOIN ?? as subcode ON sub.id = subcode.sid ',[codeTable])
-        .joinRaw( '  LEFT JOIN( '+
-            'SELECT `sc`.`sid`, GROUP_CONCAT(\'{"status":"\',`sc`.`status`, \'","cpu":"\' ,`sc`.`cpu`, \'","memory":"\' ,`sc`.`memory`, \'","errortype":"\' ,`sc`.`errortype` , \'"}\' SEPARATOR \',\') as `cases` ' +
-            'FROM ?? as `sc` '+
-            'WHERE `sc`.`sid` = ? '+
-            'GROUP BY `sc`.`sid` ) AS `cas` ON `sub`.`id` = `cas`.`sid` '
-            ,[caseTable,opts.submissionId]
-        );
+    .from(subTable)
+    .leftJoin('problems as prob','sub.pid','prob.id')
+    .leftJoin('users as usr','sub.uid','usr.id')
+    .joinRaw(' LEFT JOIN ?? as subcode ON sub.id = subcode.sid ',[codeTable])
+    .joinRaw( '  LEFT JOIN( '+
+      'SELECT `sc`.`sid`, GROUP_CONCAT(\'{"status":"\',`sc`.`status`, \'","cpu":"\' ,`sc`.`cpu`, \'","memory":"\' ,`sc`.`memory`, \'","errortype":"\' ,`sc`.`errortype` , \'"}\' SEPARATOR \',\') as `cases` ' +
+      'FROM ?? as `sc` '+
+      'WHERE `sc`.`sid` = ? '+
+      'GROUP BY `sc`.`sid` ) AS `cas` ON `sub`.`id` = `cas`.`sid` '
+      ,[caseTable,opts.submissionId]
+      );
 
   if( isContest ){
     sql = sql
-            .where({
-              'sub.id': opts.submissionId,
-              'sub.cid': opts.contestId
-            })
-            .limit(1);
+      .where({
+        'sub.id': opts.submissionId,
+        'sub.cid': opts.contestId
+      })
+      .limit(1);
   }
   else {
     sql = sql
-            .where({
-              'sub.id': opts.submissionId
-            })
-            .limit(1);
+      .where({
+        'sub.id': opts.submissionId
+      })
+      .limit(1);
   }
 
   DB.execute(sql.toString(),cb);

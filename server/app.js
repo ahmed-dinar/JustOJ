@@ -118,15 +118,15 @@ module.exports.loadMiddleware = function (app) {
  */
 module.exports.loadRoutes = function (app) {
 
-  var apiEndpoints = ['signin','signup','problem','submit','contests','user'];
+  var apiEndpoints = ['signin','signup','problem','submit','contests','user','submission'];
 
   forEach(apiEndpoints, function(routeName) {
     app.use('/api/' + routeName, require('./controllers/api/' + routeName) );
   });
 
-  app.get('*', function(req, res) {
-    res.sendFile(__dirname + '/public/index.html');
-  });
+  // app.get('*', function(req, res) {
+  //   res.sendFile(__dirname + '/public/index.html');
+  // });
 
 };
 

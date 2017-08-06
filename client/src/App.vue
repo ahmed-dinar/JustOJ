@@ -17,7 +17,7 @@
             <b-nav-item :to="{ path: '/' }" exact>Home</b-nav-item>
             <b-nav-item :to="{ path: '/problems' }" exact>Problems</b-nav-item>
             <b-nav-item :to="{ path: '/ranks' }" exact>Ranks</b-nav-item>
-            <b-nav-item :to="{ path: '/status' }" exact>Status</b-nav-item>
+            <b-nav-item :to="{ path: '/submissions' }" exact>Submissions</b-nav-item>
             <b-nav-item :to="{ path: '/contests' }" exact>Contests</b-nav-item>
           </b-nav>
 
@@ -42,7 +42,7 @@
                   <i class="material-icons">near_me</i> My Submissions
                 </b-dropdown-item>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item @click="logOut">
+                <b-dropdown-item @click="logOut(true)">
                   <i class="material-icons">settings_power</i> Signout
                 </b-dropdown-item>
               </b-nav-item-dropdown>

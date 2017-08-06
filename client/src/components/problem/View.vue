@@ -45,7 +45,7 @@
 
             <!--Problem Tag List -->
             <div class="w-100 mb-5">
-              <p class="mb-1 btn-iconic pl-0">
+              <p class="mb-1 btn-iconic btn-iconic-sm pl-0">
                   <strong><i class="material-icons">local_offer</i> Tags</strong>
               </p>
               <div class="p-1">
@@ -106,37 +106,47 @@
                 <p class="mb-1 btn-iconic pl-0">
                   <strong><i class="material-icons">near_me</i> Submit</strong>
                 </p>
-                <router-link class="btn btn-sm btn-primary ml-1" to="/login">Login</router-link>
+                <button class="btn btn-sm btn-primary ml-1" @click="goToLogin">Login</button>
               </div>
 
             </div>
 
-            <!-- Problem Ranking -->
-            <div class="w-100 mb-5">
-              <p class="mb-1 btn-iconic pl-0">
-                <strong><i class="material-icons">people</i> Rank</strong>
-              </p>
-              <div class="p-1">
-                <loading-pulse :loading="rankLoading" css="" size="7px">
-                  <template v-if="ranks && ranks.length">
-                    <!-- goes here -->
-                  </template>
-                  <div class="text-center" v-else>
-                    <small class="text-muted">Nobody solved yet!</small>
-                  </div>
-                </loading-pulse>
-               </div>
-            </div>
-
             <!-- My Submissions -->
-            <div class="w-100 mb-4">
-              <p class="mb-1 btn-iconic pl-0">
+            <div class="w-100 mb-4" v-if="isLoggedIn">
+              <p class="mb-1 btn-iconic btn-iconic-sm pl-0 ">
                 <strong><i class="material-icons">equalizer</i> My Submissions</strong>
               </p>
               <div class="p-1">
                 <loading-pulse :loading="subsLoading" css="" size="7px">
                   <template v-if="submissions && submissions.length">
-                    <!-- goes here -->
+
+                    <m-table striped
+                    :items="submissions"
+                    :fields="subsFields"
+                    class="runs-table-sm"
+                    keyIdentifier="submittime"
+                    >
+                      <template slot="submittime" scope="sub">
+                        {{ fromWhen(sub.value) }}
+                      </template>
+                      <template slot="language" scope="sub">
+                        {{ getRunLang(sub.value) }}
+                      </template>
+                      <template slot="status" scope="sub">
+                          <b-badge :variant="statusVariant(sub.value)" :title="getRunStatus(sub.value)">
+                              {{  getRunStatus(sub.value) }}
+                          </b-badge>
+                      </template>
+                    </m-table>
+
+                    <div class="d-flex justify-content-between">
+                      <span></span>
+                      <router-link :to="`/submissions?problem=${params.pid}&user=${getUser.username}`"
+                      class="btn btn-secondary btn-xs pull-right"
+                      >view all</router-link>
+                    </div>
+
+
                   </template>
                   <div class="text-center" v-else>
                     <small class="text-muted">No submissions found</small>
@@ -145,7 +155,42 @@
                </div>
             </div>
 
+            <!-- Problem Ranking -->
+            <div class="w-100 mb-5">
+              <p class="mb-1 btn-iconic btn-iconic-sm pl-0">
+                <strong><i class="material-icons">people</i> Rank</strong>
+              </p>
+              <div class="p-1">
+                <loading-pulse :loading="rankLoading" css="" size="7px">
+                  <template v-if="ranks && ranks.length">
 
+                    <m-table striped
+                    :items="ranks"
+                    :fields="rankFields"
+                    class="runs-table-sm"
+                    keyIdentifier="username"
+                    >
+                      <template slot="index" scope="rank">
+                        {{ rank.index + 1 }}
+                      </template>
+                      <template slot="username" scope="rank">
+                        {{ rank.value }}
+                      </template>
+                      <template slot="language" scope="rank">
+                        {{ getRunLang(rank.value) }}
+                      </template>
+                      <template slot="cpu" scope="rank">
+                        {{  roundTo(rank.value) }}
+                      </template>
+                    </m-table>
+
+                  </template>
+                  <div class="text-center" v-else>
+                    <small class="text-muted">Nobody solved yet!</small>
+                  </div>
+                </loading-pulse>
+               </div>
+            </div>
 
           </div>
 
@@ -160,6 +205,9 @@
 <script>
 
   import { mapGetters } from 'vuex';
+  import runStatus from '@/lib/runStatus';
+  import runLanguage from '@/lib/runLanguage';
+  import moment from 'moment';
 
   export default {
     name: 'ViewProblem',
@@ -186,7 +234,35 @@
             text: 'C++',
             value: 'cpp'
           }
-        ]
+        ],
+        subsFields: {
+          submittime: {
+            label: 'when',
+            tdClass: ['ellipsis','view-sub-cell']
+          },
+          language: {
+            label: 'lang'
+          },
+          status: {
+            label: 'status',
+            tdClass: ['ellipsis','view-sub-cell']
+          }
+        },
+        rankFields: {
+          index: {
+            label: '#'
+          },
+          username: {
+            label: 'who',
+            tdClass: 'ellipsis'
+          },
+          language: {
+            label: 'lang'
+          },
+          cpu: {
+            label: 'cpu'
+          }
+        }
       };
     },
 
@@ -201,7 +277,8 @@
         return this.problem.tags.split(',');
       },
       ...mapGetters([
-        'isLoggedIn'
+        'isLoggedIn',
+        'getUser'
       ])
     },
 
@@ -237,6 +314,7 @@
             this.success = 'Submitted';
             this.formDone();
             this.resetForm();
+            this.fetchSubmissions();
           })
           .catch(this.handleError);
       },
@@ -249,9 +327,26 @@
           .get(`/api/problem/${this.params.pid}`)
           .then(response => {
             this.problem = response.data;
+            this.formDone();
+            if( this.isLoggedIn ){
+              this.fetchSubmissions();
+            }
             this.fetchRank();
           })
           .catch(this.handleError);
+      },
+
+      fetchSubmissions(){
+        this.$http
+          .get(`/api/problem/submission/u/${this.params.pid}`)
+          .then(response => {
+            console.log(response.data);
+            this.submissions = response.data;
+            this.subsLoading = false;
+          })
+          .catch(err => {
+            this.subsLoading = false;
+          });
       },
 
       fetchRank(){
@@ -259,26 +354,17 @@
           .get(`/api/problem/rank/${this.params.pid}`)
           .then(response => {
             console.log(response.data);
-            this.fetchSubmissions();
+            this.ranks = response.data;
+            this.rankLoading = false;;
           })
-          .catch(this.handleError);
-      },
-
-      fetchSubmissions(){
-        this.$http
-          .get(`/api/problem/submission/${this.params.pid}`)
-          .then(response => {
-            console.log(response.data);
-            this.formDone();
-          })
-          .catch(this.handleError);
+          .catch(err => {
+            this.rankLoading = false;
+          });
       },
 
       formDone(){
         this.loading = false;
         this.submitting = false;
-        this.rankLoading = false;
-        this.subsLoading = false;
         progressbar.done();
         progressbar.remove();
       },
@@ -313,10 +399,44 @@
 
       tagLink(tagName){
         return `/problems?tag=${tagName}`;
+      },
+
+      getRunStatus(status){
+        return runStatus[parseInt(status)];
+      },
+
+      getRunLang(lang){
+        return runLanguage[lang];
+      },
+
+      statusVariant(code){
+        code = parseInt(code);
+        switch(code){
+          case 0:
+            return 'success';
+          case 5:
+            return 'default';
+          case 6:
+            return 'info';
+          case 8:
+            return 'warning';
+          default:
+            return 'danger';
+        }
+      },
+
+      fromWhen(time){
+        return moment(time).from();
+      },
+
+      goToLogin(){
+        window.location.href = `/login?next=${this.$store.state.route.path}`;
       }
     },
 
     mounted(){
+
+
       this.fetchProblem();
     },
 

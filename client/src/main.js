@@ -24,6 +24,7 @@ import store from './store';
 
 
 import 'particles.js';
+//sylesheets
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'nprogress/nprogress.css';
@@ -34,7 +35,7 @@ import 'highlight.js/styles/github-gist.css';
 import 'katex/dist/katex.min.css';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import './assets/style.css';
-import './assets/fonts.css';
+
 
 
 sync(store, router);

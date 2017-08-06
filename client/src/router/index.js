@@ -19,6 +19,7 @@ import ProblemList from '@/components/problem/ProblemList';
 import CreateProblem from '@/components/problem/Create';
 import ViewProblem from '@/components/problem/View';
 import ViewTestCase from '@/components/problem/ViewTestCase';
+import Submissions from '@/components/Submissions';
 import EditProblemCases from '@/components/problem/Edit/TestCase';
 import EditProblemLimits from '@/components/problem/Edit/Limits';
 
@@ -50,6 +51,12 @@ const router = new Router({
       meta: { title: 'Sign Up' }
     },
     {
+      path: '/submissions',
+      name: 'Submissions',
+      component: Submissions,
+      meta: { title: 'Submissions' }
+    },
+    {
       path: '/problems',
       component: ProblemsRoute,
       children: [
@@ -76,12 +83,6 @@ const router = new Router({
           component: ProblemContentRoute,
           children: [
             {
-              path: ':slug',
-              name: 'ViewProblem',
-              component: ViewProblem,
-              meta: { title: 'Problems | View' }
-            },
-            {
               path: 'edit/testcase',
               name: 'EditProblemCases',
               component: EditProblemCases,
@@ -92,6 +93,12 @@ const router = new Router({
               name: 'EditProblemLimits',
               component: EditProblemLimits,
               meta: { title: 'Edit Problem | Set Limits' }
+            },
+            {
+              path: ':slug',
+              name: 'ViewProblem',
+              component: ViewProblem,
+              meta: { title: 'Problems | View' }
             }
           ]
         }

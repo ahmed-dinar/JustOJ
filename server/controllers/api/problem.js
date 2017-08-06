@@ -421,7 +421,7 @@ router.get('/rank/:pid', decodeHash(), function(req, res, next) {
 //
 //
 //
-router.get('/submission/:pid', authJwt, decodeHash(), function(req, res, next) {
+router.get('/submission/u/:pid', authJwt, decodeHash(), function(req, res, next) {
   var pid = req.body.problemId;
   var userId = req.user.id;
 
@@ -436,6 +436,10 @@ router.get('/submission/:pid', authJwt, decodeHash(), function(req, res, next) {
     }
 
     logger.debug('user subs: ', subs);
+
+    _.forEach(subs, function(val, indx){
+      subs[indx].id = indx + 1;
+    });
 
     return res.status(200).json(subs);
   });
@@ -481,60 +485,9 @@ router
 
 
 
-//
-// get a test case full path
-//
-function getCasePath(pid, caseId, caseName){
-  if( !caseId || caseId === undefined ){
-    return path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString());
-  }
-  if( !caseName || caseName === undefined ){
-    return path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString(), caseId.toString());
-  }
-  return path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString(), caseId.toString(), caseName.toString());
-}
 
 
-// /**
-//  *
-//  * @param pid
-//  * @param problem
-//  * @param cb
-//  */
-// var findRank = function(pid,problem,cb){
-//   Problems.findRank(pid,function(err,rows){
 
-//     if( err )
-//       return cb(err);
-
-//     if( isUndefined(rows) || rows.length === 0 )
-//       return cb(null,problem,{});
-
-//     return cb(null,problem,rows);
-//   });
-// };
-
-
-// *
-//  *
-//  * @param pid
-//  * @param uid
-//  * @param problem
-//  * @param rank
-//  * @param cb
- 
-// var findUserSubmissions = function(pid,uid,problem,rank,cb){
-
-//   Problems.findUserSubmissions(pid,uid,function(err,rows){
-//     if( err )
-//       return cb(err);
-
-//     if( isUndefined(rows) || rows.length === 0 )
-//       return cb(null,problem,rank,{});
-
-//     return cb(null,problem,rank,rows);
-//   });
-// };
 
 
 
@@ -566,74 +519,11 @@ function getCasePath(pid, caseId, caseName){
 
 
 
-// /**
-//  *
-//  */
-// router.get('/submit/:pid', isLoggedIn(true) , function(req, res, next) {
-
-//   var problemId = req.params.pid;
-
-//   Problems.findById(problemId,['id','title'], function (err,rows) {
-
-//     if(err) {
-//       logger.error(err);
-//       return nex(new Error(err));
-//     }
-
-//     if( !rows || rows.length === 0 )
-//       return next(new Error('404'));
-
-//     logger.debug(rows);
-
-//     res.render('problem/submit' , {
-//       active_nav: 'problems',
-//       title: 'Problems | JUST Online Judge',
-//       locals: req.app.locals,
-//       isLoggedIn: req.isAuthenticated(),
-//       user: req.user,
-//       problem: rows[0],
-//       moment: moment,
-//       formError: req.flash('formError'),
-//       error: req.flash('err')
-//     });
-//   });
-// });
 
 
 
 
 
-
-
-
-
-// /**
-//  * BAD! Very BAD! use string library!!
-//  * Decode the JOP0 formated problem code
-//  * @param pid
-//  * @returns {*}
-//  */
-// function getPID(pid){
-//   if( isString(pid) ){
-//     var h = '',i;
-//     for( i=0; i<pid.length; i++){
-//       var ch = pid.charAt(i);
-//       if( ch === '0' ){
-//         break;
-//       }
-//       h += ch;
-//     }
-
-//     if( h === 'JOP' ){
-//       h = '';
-//       for(i=i+1; i<pid.length; i++){
-//         h += pid.charAt(i);
-//       }
-//       return h;
-//     }
-//   }
-//   return null;
-// }
 
 
 //
@@ -650,6 +540,18 @@ function clearUpload(remDir, callback){
   });
 };
 
+//
+// get a test case full path
+//
+function getCasePath(pid, caseId, caseName){
+  if( !caseId || caseId === undefined ){
+    return path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString());
+  }
+  if( !caseName || caseName === undefined ){
+    return path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString(), caseId.toString());
+  }
+  return path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString(), caseId.toString(), caseName.toString());
+}
 
 
 module.exports = router;

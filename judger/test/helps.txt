@@ -6,5 +6,11 @@ create file:
   truncate -s 50KB 50KB.c
 see fileSize:
   stat -c '%s' 50KB.c
+memory monitor:
+  watch -n 5 free -m
+  htop
+Disk Usage:
+  df -h
+  lsblk
 
 

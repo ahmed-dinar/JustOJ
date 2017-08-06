@@ -24,14 +24,16 @@ module.exports = merge(baseWebpackConfig, {
       'process.env': config.dev.env
     }),
 
-    // new GoogleFontsPlugin({
-    //   fonts: [
-    //     { family: 'Source Sans Pro', variants: [ '400', '600', '700' ] },
-    //     { family: 'Niconne', variants: [ '400' ] },
-    //     { family: 'Roboto', variants: [ '400','500','700','900' ] }
-    //   ],
-    //   local: false
-    // }),
+    new GoogleFontsPlugin({
+      fonts: [
+        { family: 'Ubuntu', variants: [ '400', '500', '700' ] },
+        { family: 'Open Sans', variants: [ '400', '600', '700' ] },
+        { family: 'Source Sans Pro', variants: [ '400', '600', '700' ] },
+        { family: 'Niconne', variants: [ '400' ] },
+        { family: 'Roboto', variants: [ '400','500','700','900' ] }
+      ],
+      local: false
+    }),
 
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),
