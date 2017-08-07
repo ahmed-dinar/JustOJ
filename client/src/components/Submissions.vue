@@ -57,6 +57,17 @@
             </b-badge>
           </template>
         </m-table>
+
+        <template v-if="pagination && pagination.total !== null">
+          <b-pagination
+          size="sm"
+          :total-rows="pagination.total"
+          v-model="cur_page"
+          :per-page="pagination.page_limit"
+          ></b-pagination>
+        </template>
+
+
       </loading-data>
     </template>
 
@@ -79,6 +90,7 @@
         pagination: null,
         loading: true,
         error: null,
+        cur_page: null,
         fields: {
           id: {
             label: '#',
@@ -154,6 +166,9 @@
       },
 
       fetchSubmissions(){
+        this.loading = true;
+        progressbar.start();
+
         let url = '/api/submission';
         let m = '?';
 
@@ -176,18 +191,38 @@
           .then(response => {
             this.submissions = response.data.submissions;
             this.pagination = response.data.pagination;
-            this.loading = false;
-            console.log(this.submissions);
+            this.cur_page = this.pagination.cur_page;
+            this.doneFetching();
           })
           .catch(err => {
             this.loading = false;
             this.error = this.getApiError(err);
+            this.doneFetching();
           });
+      },
+
+      doneFetching(){
+        this.loading = false;
+        progressbar.done();
+        progressbar.remove();
       }
     },
 
     created(){
       this.fetchSubmissions();
+    },
+
+    watch: {
+      '$route': 'fetchSubmissions',
+      //watch page change in route
+      cur_page: function (page) {
+        let query = Object.assign({}, this.$store.state.route.query);
+        query.page = page;
+        this.$router.push({
+          path: this.$store.state.route.path,
+          query: query
+        });
+      }
     },
 
     mounted(){

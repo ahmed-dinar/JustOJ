@@ -34,6 +34,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 import 'highlight.js/styles/github-gist.css';
 import 'katex/dist/katex.min.css';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import 'flatpickr/dist/themes/dark.css';
 import './assets/style.css';
 
 
