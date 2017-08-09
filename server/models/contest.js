@@ -233,6 +233,20 @@ exports.create = function(inserts,cb){
 };
 
 
+
+//
+//
+//
+exports.save = function(columns, cb){
+  var sql = Query
+    .insert(columns)
+    .into('contest')
+    .toString();
+  DB.execute(sql, cb);
+};
+
+
+
 /**
  *
  * @param cb

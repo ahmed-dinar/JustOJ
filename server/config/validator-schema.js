@@ -169,5 +169,58 @@ module.exports = {
       notEmpty: true,
       errorMessage: 'required'
     }
+  },
+  contest: {
+    'title': {
+      notEmpty: true,
+      errorMessage: 'required',
+      isLength: {
+        options: [{ min: 2, max: 1000 }],
+        errorMessage: 'must be between 2 and 1000 chars long'
+      }
+    },
+    type: {
+      notEmpty: true,
+      errorMessage: 'required',
+      isBoolean: {
+        errorMessage: 'must be a boolean'
+      }
+    },
+    when: {
+      notEmpty: true,
+      errorMessage: 'required',
+      isDatetime: {
+        options: ['YYYY-MM-DD HH:mm:ss'],
+        errorMessage: 'must be in `YYYY-MM-DD HH:mm:ss` format'
+      },
+      isAfter: {
+        errorMessage: 'contest time can\'t be in past'
+      }
+    },
+    duration: {
+      notEmpty: true,
+      errorMessage: 'required',
+      isDuration: {
+        errorMessage: 'must be in `HH:MM:SS` format'
+      },
+      minDuration: {
+        options: [30],
+        errorMessage: 'cant be less than 30 minutes long'
+      }
+    },
+    days: {
+      notEmpty: true,
+      errorMessage: 'required',
+      isInt: {
+        options: [{ min: 0 }],
+        errorMessage: 'cant be negetive'
+      }
+    },
+    'description': {
+      isLength: {
+        options: [{ min: 0, max: 21000 }],
+        errorMessage: 'must be between 0 and 21000 chars long'
+      }
+    }
   }
 };

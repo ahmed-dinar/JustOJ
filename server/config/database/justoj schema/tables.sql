@@ -2,8 +2,10 @@ DROP TABLE IF EXISTS `problems`;
 
 CREATE TABLE `problems` (
   `id` INT(11) NOT NULL,
+  `hash_id` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `isContest` TINYINT(1) NOT NULL DEFAULT 0,
-  `title` TINYTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `title` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `slug` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `category` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `difficulty` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `status` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -117,11 +119,13 @@ CREATE TABLE `users` (
 DROP TABLE IF EXISTS `contest`;
 CREATE TABLE `contest` (
   `id` INT(11) NOT NULL,
-  `title` TINYTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `title` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `slug` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `begin` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `end` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` TINYINT(1) NOT NULL,
-  `privacy` TINYINT(1) NOT NULL
+  `privacy` TINYINT(1) NOT NULL,
+  `description` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
 
 

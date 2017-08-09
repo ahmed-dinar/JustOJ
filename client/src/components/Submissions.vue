@@ -8,67 +8,68 @@
     </div>
 
     <template v-else>
-
-      <h5 class="mb-3 btn-iconic pl-0">
+      <h6 class="p-0 mb-3 btn-iconic">
         <i class="material-icons mr-1">schedule</i> Submissions
-      </h5>
-
-      <loading-data :loading="loading">
-        <m-table
-          :items="submissions"
-          :fields="fields"
-          keyIdentifier="submittime"
-          class="submission-table"
-        >
-          <template slot="id" scope="sub">
-            <router-link :to="`/submissions/${sub.value}`" >
-              {{ sub.value }}
-            </router-link>
-          </template>
-          <template slot="submittime" scope="sub">
-            <b-popover placement="top" triggers="hover" :content="sub.value">
-              {{ fromWhen(sub.value) }}
-            </b-popover>
-          </template>
-          <template slot="username" scope="sub">
-            <router-link :to="`/user/${sub.value}`" >
-              {{ sub.value }}
-            </router-link>
-          </template>
-          <template slot="title" scope="sub">
-            <b-popover placement="top" triggers="hover" :content="sub.value">
-              <router-link :to="`/problems/${sub.item.pid}/${sub.item.slug}`" >
+      </h6>
+      <div class="card">
+        <loading-data :loading="loading">
+          <m-table
+            :items="submissions"
+            :fields="fields"
+            keyIdentifier="submittime"
+            class="submission-table"
+          >
+            <template slot="id" scope="sub">
+              <router-link :to="`/submissions/${sub.value}`" >
                 {{ sub.value }}
               </router-link>
-            </b-popover>
-          </template>
-          <template slot="language" scope="sub">
-            {{ getRunLang(sub.value) }}
-          </template>
-          <template slot="cpu" scope="sub">
-            {{ roundTo(sub.value) }}s
-          </template>
-          <template slot="memory" scope="sub">
-            {{ sub.value }} KB
-          </template>
-          <template slot="status" scope="sub">
-            <b-badge :variant="statusVariant(sub.value)">
-              {{  getRunStatus(sub.value) }}
-            </b-badge>
-          </template>
-        </m-table>
+            </template>
+            <template slot="submittime" scope="sub">
+              <b-popover placement="top" triggers="hover" :content="sub.value">
+                {{ fromWhen(sub.value) }}
+              </b-popover>
+            </template>
+            <template slot="username" scope="sub">
+              <router-link :to="`/user/${sub.value}`" >
+                {{ sub.value }}
+              </router-link>
+            </template>
+            <template slot="title" scope="sub">
+              <b-popover placement="top" triggers="hover" :content="sub.value">
+                <router-link :to="`/problems/${sub.item.pid}/${sub.item.slug}`" >
+                  {{ sub.value }}
+                </router-link>
+              </b-popover>
+            </template>
+            <template slot="language" scope="sub">
+              {{ getRunLang(sub.value) }}
+            </template>
+            <template slot="cpu" scope="sub">
+              {{ roundTo(sub.value) }}s
+            </template>
+            <template slot="memory" scope="sub">
+              {{ sub.value }} KB
+            </template>
+            <template slot="status" scope="sub">
+              <b-badge :variant="statusVariant(sub.value)">
+                {{  getRunStatus(sub.value) }}
+              </b-badge>
+            </template>
+          </m-table>
 
-        <template v-if="pagination && pagination.total !== null">
-          <b-pagination
-          size="sm"
-          :total-rows="pagination.total"
-          v-model="cur_page"
-          :per-page="pagination.page_limit"
-          ></b-pagination>
-        </template>
 
 
-      </loading-data>
+        </loading-data>
+      </div>
+      
+          <template v-if="pagination && pagination.total !== null">
+            <b-pagination
+            size="sm"
+            :total-rows="pagination.total"
+            v-model="cur_page"
+            :per-page="pagination.page_limit"
+            ></b-pagination>
+          </template>
     </template>
 
   </div>
