@@ -37,7 +37,7 @@ module.exports = function(pid, caseId, res) {
 //
 //
 function deleteTestCase(pid, caseId, callback) {
-  var TCDir = path.normalize(process.cwd() + '/files/tc/p/' + pid + '/' + caseId);
+  var TCDir = path.join(process.cwd(),'..', 'judger', 'testcase', pid.toString(), caseId.toString());
   logger.debug('tc to remove ' + TCDir);
   rimraf(TCDir, function (err) {
     if(err){
@@ -54,7 +54,7 @@ function deleteTestCase(pid, caseId, callback) {
 //
 function readTestCaseDir(pid, callback) {
 
-  var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + pid);
+  var rootDir = path.join(process.cwd(),'..', 'judger', 'testcase', pid.toString());
   fs.readdir(rootDir, function(err, files) {
     var skipUpdate = true;
 

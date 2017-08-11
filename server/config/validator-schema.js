@@ -202,10 +202,6 @@ module.exports = {
       errorMessage: 'required',
       isDuration: {
         errorMessage: 'must be in `HH:MM:SS` format'
-      },
-      minDuration: {
-        options: [30],
-        errorMessage: 'cant be less than 30 minutes long'
       }
     },
     days: {

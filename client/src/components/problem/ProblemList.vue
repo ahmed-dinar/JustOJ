@@ -34,7 +34,7 @@
                 <template v-if="hasStatus(problem.item)">
                   <b-popover placement="top" triggers="hover" :content="userStatusText(problem.item)">
                     <router-link
-                    :to="`/submissions?problem=${problem.item.hash_id}&user=${getUser.username}`"
+                    :to="`/submissions?problem=${problem.item.id}&user=${getUser.username}`"
                     >
                       <div  v-html="userStatus(problem.item)"></div>
                     </router-link>
@@ -183,7 +183,7 @@
       },
 
       problemLink(prob){
-        return `/problems/${prob.hash_id}/${prob.slug}`;
+        return `/problems/${prob.id}/${prob.slug}`;
       },
 
       ...mapActions('problem', [

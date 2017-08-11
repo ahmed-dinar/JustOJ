@@ -68,7 +68,7 @@
               </form>
 
               <!-- Test case passed with given cpu time -->
-              <form @submit.prevent="saveLimit('limits-set-form')" name="limits-set-form" data-vv-scope="limits-set-form">
+              <form @submit.prevent="saveLimit('limits-set-form')" name="limits-set-form" data-vv-scope="limits-set-form" v-if="testPassed">
                 <div class="row pt-5">
                   <div class="col-md-8">
 
@@ -233,6 +233,9 @@
     computed: {
       previousStep(){
         return `/problems/${this.$store.state.route.params.pid}/edit/testcase`;
+      },
+      testPassed(){
+        return this.finalResult && parseInt(this.finalResult.code) === 0;
       }
     },
 

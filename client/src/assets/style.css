@@ -200,9 +200,31 @@ button{
   cursor: pointer;
 }
 
-.btn-primary, .btn-info, .btn-danger, .btn-success{
+button, input, optgroup, select, textarea{
+  font-family: 'Roboto', sans-serif;
+}
+
+.btn{
+  border-radius: 2px;
+}
+
+.btn-sm{
+  font-size: 13px;
+}
+
+.btn-primary, .btn-info, .btn-danger, .btn-success, .btn-dark {
   border-color: transparent;
-  box-shadow: none;
+  box-shadow: 0 2px 2px 0 rgba(53,70,92,.14), 0 3px 1px -2px rgba(53,70,92,.2), 0 1px 5px 0 rgba(53,70,92,.12);
+}
+
+.btn-secondary{
+  background-color: #fff;
+}
+
+.btn-secondary.router-link-exact-active{
+  border-color: #35465c;
+  background-color: #35465c;
+  color: #fff;
 }
 
 .btn-dark {
@@ -703,7 +725,14 @@ form{
   display: flex;
   align-items: center;
   padding:5px 8px;
-  color: rgb(117, 117, 117);
+  color: #666666;
+}
+
+.btn-material{
+  display: flex;
+  align-items: center;
+  padding:5px 8px;
+  color: #4d4d4d;
 }
 
 .btn-iconic-right{
@@ -718,7 +747,8 @@ form{
   font-size: 13px;
 }
 
-.btn-iconic-sm .material-icons{
+.btn-iconic-sm .material-icons,
+.btn-sm .material-icons{
   font-size: 16px;
 }
 
@@ -906,4 +936,9 @@ h6 .material-icons {
 .swal2-modal .swal2-styled{
   font-size: 14px;
   padding: 5px 15px;
+}
+
+
+.bold{
+  font-weight: 600;
 }

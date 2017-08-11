@@ -185,8 +185,10 @@
         title: '',
         public: true,
         when: '',
-        duration: '3:00:00',
+        duration: '03:00:00',
         description: contest.create(),
+        error: null,
+        submitError: null,
         whenOptions: {
           minDate: 'today',
           enableTime: true,
@@ -215,6 +217,8 @@
     methods: {
       submit(scope){
 
+        this.error = null;
+
         this.$validator
           .validateAll(scope)
           .then(result => {
@@ -232,18 +236,18 @@
               days: this.days,
               description: this.description
             };
-            console.log(data);
 
             this.$http
               .post('/api/contest/create', data)
               .then(response => {
+                console.log(response.data);
                 progressbar.done();
                 progressbar.remove();
+                this.$router.replace({
+                  path: `/contests/${response.data}/edit`
+                });
               })
-              .catch(err => {
-                progressbar.done();
-                progressbar.remove();
-              });
+              .catch(this.handleError);
           });
       },
       onEditorReady(editor) {
@@ -256,6 +260,24 @@
       },
       fullScreenListener(){
         this.isFullscreen = screenfull.isFullscreen;
+      },
+      handleError(err){
+        progressbar.done();
+        progressbar.remove();
+
+        let errors = this.getApiError(err);
+        switch (err.response.status) {
+          case 401:
+            this.$store.commit(LOG_OUT);
+            this.$router.replace({ path: '/login' });
+            break;
+          case 400:
+          case 404:
+            this.submitError = errors;
+            break;
+          default:
+            this.error = errors;
+        };
       }
     },
 

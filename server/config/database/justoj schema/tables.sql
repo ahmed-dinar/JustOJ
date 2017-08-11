@@ -1,9 +1,8 @@
-DROP TABLE IF EXISTS `problems`;
 
+DROP TABLE IF EXISTS `problems`;
 CREATE TABLE `problems` (
   `id` INT(11) NOT NULL,
-  `hash_id` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `isContest` TINYINT(1) NOT NULL DEFAULT 0,
+  `cid` INT(11) DEFAULT NULL,
   `title` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `slug` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `category` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -22,22 +21,12 @@ CREATE TABLE `problems` (
 ) ENGINE=InnoDB;
 
 
-DROP TABLE IF EXISTS `problem_tags`;
-CREATE TABLE `problem_tags` (
+DROP TABLE IF EXISTS `tags`;
+CREATE TABLE `tags` (
   `id` INT(11) NOT NULL,
   `pid` INT(11) NOT NULL,
   `tag` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT ''
 ) ENGINE=InnoDB;
-
-
-DROP TABLE IF EXISTS `user_problem_status`;
-CREATE TABLE `user_problem_status` (
-  `id` INT(11) NOT NULL,
-  `uid` INT(11) NOT NULL,
-  `pid` INT(11) NOT NULL,
-  `status` tinyint(3) NOT NULL
-) ENGINE=InnoDB;
-
 
 
 DROP TABLE IF EXISTS `submissions`;
@@ -53,16 +42,16 @@ CREATE TABLE `submissions` (
 ) ENGINE=InnoDB;
 
 
-DROP TABLE IF EXISTS `submission_code`;
-CREATE TABLE `submission_code` (
+DROP TABLE IF EXISTS `source_code`;
+CREATE TABLE `source_code` (
   `id` INT(11) NOT NULL,
   `sid` INT(11) NOT NULL,
   `code` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
 
 
-DROP TABLE IF EXISTS `submission_case`;
-CREATE TABLE `submission_case` (
+DROP TABLE IF EXISTS `runs`;
+CREATE TABLE `runs` (
   `id` INT(11) NOT NULL,
   `sid` INT(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -71,21 +60,6 @@ CREATE TABLE `submission_case` (
   `memory` INT(11) NOT NULL,
   `errortype` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
-
-
-DROP TABLE IF EXISTS `temp_user`;
-CREATE TABLE `temp_user` (
-  `id` INT(11) NOT NULL,
-  `username` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `name` VARCHAR(300) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `password` VARCHAR(60) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `email` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `created` DATETIME NOT NULL,
-  `expire` DATETIME NOT NULL,
-  `token` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `role` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
-) ENGINE=InnoDB;
-
 
 
 DROP TABLE IF EXISTS `users`;
@@ -115,7 +89,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB;
 
 
-
 DROP TABLE IF EXISTS `contest`;
 CREATE TABLE `contest` (
   `id` INT(11) NOT NULL,
@@ -129,25 +102,16 @@ CREATE TABLE `contest` (
 ) ENGINE=InnoDB;
 
 
-DROP TABLE IF EXISTS `contest_participants`;
-CREATE TABLE `contest_participants` (
+DROP TABLE IF EXISTS `participants`;
+CREATE TABLE `participants` (
   `id` INT(11) NOT NULL,
   `cid` INT(11) NOT NULL,
   `uid` INT(11) NOT NULL
 ) ENGINE=InnoDB;
 
 
-DROP TABLE IF EXISTS `contest_problems`;
-CREATE TABLE `contest_problems`
-(
-  `cid` INT(11) NOT NULL,
-  `pname` INT(11) NOT NULL,
-  `pid` INT(11) NOT NULL
-) ENGINE=InnoDB;
-
-
-DROP TABLE IF EXISTS `contest_rank`;
-CREATE TABLE `contest_rank`
+DROP TABLE IF EXISTS `rank`;
+CREATE TABLE `rank`
 (
   `id` INT(11) NOT NULL,
   `cid` INT(11) NOT NULL,
@@ -173,8 +137,8 @@ CREATE TABLE `contest_submissions` (
 ) ENGINE=InnoDB;
 
 
-DROP TABLE IF EXISTS `c_submission_case`;
-CREATE TABLE `c_submission_case` (
+DROP TABLE IF EXISTS `contest_runs`;
+CREATE TABLE `contest_runs` (
   `id` INT(11) NOT NULL,
   `sid` INT(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -185,16 +149,16 @@ CREATE TABLE `c_submission_case` (
 ) ENGINE=InnoDB;
 
 
-DROP TABLE IF EXISTS `c_submission_code`;
-CREATE TABLE `c_submission_code` (
+DROP TABLE IF EXISTS `contest_source`;
+CREATE TABLE `contest_source` (
   `id` INT(11) NOT NULL,
   `sid` INT(11) NOT NULL,
   `code` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
 
 
-DROP TABLE IF EXISTS `contest_clarifications`;
-CREATE TABLE `contest_clarifications` (
+DROP TABLE IF EXISTS `clar`;
+CREATE TABLE `clar` (
   `id` INT(11) NOT NULL,
   `cid` INT(11) NOT NULL,
   `uid` INT(11) NOT NULL,

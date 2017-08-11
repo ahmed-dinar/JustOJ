@@ -65,59 +65,57 @@ exports.findByHash = function (hashId, attr, callback) {
 };
 
 
-/**
- *
- * @param cur_page
- * @param URL
- * @param cb
- */
+//
+//
+//
 exports.findProblems = function (uid, cur_page, URL, cb) {
 
   var sql;
   if (!uid || uid < 0) {
     sql = Query
-            .select(['pb.id', 'pb.hash_id', 'pb.slug', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
-              Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
-              Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy')
-            ])
-            .from('problems  as pb');
+      .select(['pb.id', 'pb.hash_id', 'pb.slug', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
+        Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
+        Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy')
+      ])
+      .from('problems  as pb');
   }
   else{  //TODO: bad query? disable it
+
     sql = Query
-            .select(['pb.id','pb.hash_id', 'pb.slug', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
-              Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
-              Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy'),
-              Query.raw('(pbus.pid IS NOT NULL) as youSolved'), //pbus = problem user solved
-              Query.raw('(pbut.pid IS NOT NULL) as youTried')   //pbut = problem user tried
-            ])
-            .from('problems  as pb')
-            .joinRaw(' LEFT JOIN( ' +
-                'SELECT sss.pid ' +
-                'FROM submissions as sss ' +
-                'WHERE sss.`status` = 0 AND sss.`uid` = ? ' +
-                'GROUP BY sss.pid ' +
-                ') as pbus ON pb.id = pbus.pid ', [uid])
-            .joinRaw(' LEFT JOIN( ' +
-                'SELECT sa.pid ' +
-                'FROM submissions as sa ' +
-                'WHERE sa.`status` != 0 AND sa.`uid` = ? ' +
-                'GROUP BY sa.pid ' +
-                ') as pbut ON pb.id = pbut.pid ', [uid]);
+      .select(['pb.id', 'pb.slug', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
+        Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
+        Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy'),
+        Query.raw('(pbus.pid IS NOT NULL) as youSolved'), //pbus = problem user solved
+        Query.raw('(pbut.pid IS NOT NULL) as youTried')   //pbut = problem user tried
+      ])
+      .from('problems  as pb')
+      .joinRaw(' LEFT JOIN( ' +
+        'SELECT sss.pid ' +
+        'FROM submissions as sss ' +
+        'WHERE sss.`status` = 0 AND sss.`uid` = ? ' +
+        'GROUP BY sss.pid ' +
+        ') as pbus ON pb.id = pbus.pid ', [uid])
+      .joinRaw(' LEFT JOIN( ' +
+        'SELECT sa.pid ' +
+        'FROM submissions as sa ' +
+        'WHERE sa.`status` != 0 AND sa.`uid` = ? ' +
+        'GROUP BY sa.pid ' +
+        ') as pbut ON pb.id = pbut.pid ', [uid]);
   }
 
   sql = sql
-        .joinRaw(' LEFT JOIN( ' +
-            'SELECT ssss.pid, COUNT(DISTINCT ssss.uid) AS triedBy ' +
-            'FROM submissions as ssss ' +
-            'GROUP BY ssss.pid ' +
-            ') as pbtry ON pb.id = pbtry.pid ')
-        .joinRaw(' LEFT JOIN( ' +
-            'SELECT ss.pid, COUNT(DISTINCT ss.uid) AS solvedBy ' +
-            'FROM submissions as ss ' +
-            'WHERE ss.`status` = 0 ' +
-            'GROUP BY ss.pid ' +
-            ') as pbs ON pb.id = pbs.pid ')
-        .where('pb.status', 'public');
+    .joinRaw(' LEFT JOIN( ' +
+      'SELECT ssss.pid, COUNT(DISTINCT ssss.uid) AS triedBy ' +
+      'FROM submissions as ssss ' +
+      'GROUP BY ssss.pid ' +
+      ') as pbtry ON pb.id = pbtry.pid ')
+    .joinRaw(' LEFT JOIN( ' +
+      'SELECT ss.pid, COUNT(DISTINCT ss.uid) AS solvedBy ' +
+      'FROM submissions as ss ' +
+      'WHERE ss.`status` = 0 ' +
+      'GROUP BY ss.pid ' +
+      ') as pbs ON pb.id = pbs.pid ')
+    .where('pb.status', 'public');
 
 
   Paginate.paginate({
@@ -163,7 +161,7 @@ exports.findRank = function(pid,fn){
 exports.findByIdandTags = function(pid, cb){
 
   var sql = Query.select(
-    Query.raw('p.*,(SELECT GROUP_CONCAT(`tag`) FROM `problem_tags` pt WHERE p.`id` =  pt.`pid`) AS `tags`')
+    Query.raw('p.*,(SELECT GROUP_CONCAT(`tag`) FROM `tags` pt WHERE p.`id` =  pt.`pid`) AS `tags`')
   )
   .from('problems as p')
   .where({
@@ -241,6 +239,7 @@ exports.save = function(data, fn){
   async.waterfall([
     function saveProblem(callback) {
       var sql = Query.insert({
+        cid: data.cid || null,
         title: data.title,
         slug: data.slug,
         status: 'incomplete',
@@ -262,47 +261,29 @@ exports.save = function(data, fn){
         return callback(null, rows.insertId);
       });
     },
-    function saveHash(pid, callback){
-      var hashids = new Hashids(config.get('HASHID:PROBLEM'), 11);
-      var hashId = hashids.encode(pid);
-
-      logger.debug('hashid = ',hashId);
-
-      var sql = Query('problems')
-        .update({ 'hash_id': hashId })
-        .where({ 'id': pid })
-        .toString();
-
-      DB.execute(sql, function(err,rows){
-        if(err){
-          return callback(err);
-        }
-        return callback(null, hashId, pid);
-      });
-    },
-    function saveTags(hashId, pid, callback){
+    function saveTags(pid, callback){
       //no tags provided
       if(!data.tags){
-        return callback(null, hashId);
+        return callback(null, pid);
       }
 
       //validate tags
       var tagWhitelist = validTags(data.tags, pid);
 
       if( !tagWhitelist.length ){
-        return callback(null, hashId);
+        return callback(null, pid);
       }
 
       var sql = Query
         .insert(tagWhitelist)
-        .into('problem_tags')
+        .into('tags')
         .toString();
 
       DB.execute(sql, function(err, rows){
         if(err){
           return callback(err);
         }
-        return callback(null, hashId);
+        return callback(null, pid);
       });
     }
   ], fn);
@@ -526,7 +507,7 @@ var updateProblem = function(req,callback){
  */
 var deleteTags = function(req,callback){
 
-  var sql = Query('problem_tags').where({ 'pid': req.params.pid }).del();
+  var sql = Query('tags').where({ 'pid': req.params.pid }).del();
 
   DB.execute(
         sql.toString()
@@ -594,7 +575,7 @@ var insertTags = function(req,pid,callback){
     //if no tag
   if( !inserts.length ){ return callback(null,pid); }
 
-  var sql = Query.insert(inserts).into('problem_tags');
+  var sql = Query.insert(inserts).into('tags');
 
   DB.execute(
         sql.toString()

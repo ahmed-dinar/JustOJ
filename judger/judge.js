@@ -66,7 +66,7 @@ function Judge(job, fn){
         judge = _.assign(judge, rows[0]);
         judge.source = path.join(__dirname,'source');
 
-      //  logger.debug('submission: ', judge);
+        logger.debug('submission: ', judge);
 
         return callback();
       });

@@ -78,6 +78,20 @@ exports.generateUser = function (cid,indx, cb) {
 };
 
 
+//
+//
+//
+exports.findProblems = function(cid, columns, fn){
+  var sql = Query
+    .select(columns)
+    .from('problems')
+    .where({ 'cid': cid })
+    .toString();
+
+  DB.execute(sql, fn);
+};
+
+
 /**
  *
  * @param cid
@@ -209,15 +223,27 @@ exports.editUser = function (cid, uid, insertObj, cb) {
  */
 function findById(cid,cb){
   var sql = Query
-                .select(['id'])
-                .from('contest')
-                .where({ 'id': cid })
-                .limit(1);
+    .select(['id'])
+    .from('contest')
+    .where({ 'id': cid })
+    .limit(1);
 
   DB.execute( sql.toString(), cb);
 }
 exports.findById = findById;
 
+
+
+exports.fetch = function (cid, columns, cb){
+  var sql = Query
+    .select(columns)
+    .from('contest')
+    .where({ 'id': cid })
+    .limit(1)
+    .toString();
+
+  DB.execute(sql, cb);
+};
 
 
 /**
@@ -227,8 +253,8 @@ exports.findById = findById;
  */
 exports.create = function(inserts,cb){
   var sql = Query
-                .insert(inserts)
-                .into('contest');
+    .insert(inserts)
+    .into('contest');
   DB.execute( sql.toString(), cb);
 };
 
@@ -536,13 +562,27 @@ exports.getEditable = function(cb){
  * @param cid
  * @param cb
  */
-exports.update = function(inserts,cid,cb){
+exports.update = function(inserts, cid, cb){
 
   var sql = Query('contest').update(inserts)
         .where({ 'id': cid });
 
   DB.execute(sql.toString(),cb);
 };
+
+
+//
+// Update a contest
+//
+exports.put = function(cid, columns, fn){
+  var sql = Query('contest')
+    .update(columns)
+    .where({ 'id': cid })
+    .toString();
+
+  DB.execute(sql, fn);
+};
+
 
 
 /**

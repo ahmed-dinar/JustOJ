@@ -21,6 +21,8 @@ var has = require('has');
 var typeis = require('type-is');
 var crypto = require('crypto');
 var logger = require('winston');
+var Hashids = require('hashids');
+var config = require('nconf');
 
 //var MyUtil = appRequire('lib/myutil');
 var Problems = appRequire('models/problems');
@@ -38,6 +40,10 @@ var authUser = appRequire('middlewares/authUser');
 var decodeHash = appRequire('middlewares/decodeHash');
 
 slug.defaults.mode ='pretty';
+
+var problemHash = new Hashids(config.get('HASHID:PROBLEM'), 11);
+var contestHash = new Hashids(config.get('HASHID:CONTEST'), 11);
+
 
 /**
  *
@@ -62,6 +68,11 @@ router.get('/list', authUser, function(req, res, next) {
       logger.error(error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
+
+
+    _.forEach(problems, function(val, indx){
+      problems[indx].id = problemHash.encode(problems[indx].id);
+    });
 
     logger.debug(problems);
     logger.debug(pagination);
@@ -92,6 +103,20 @@ router
       return res.status(400).json({ error: 'Request body not found' });
     }
 
+
+    //if contest problem, decode & validate contest id
+    if( has(req.body,'cid') ){
+      var cid = contestHash.decode(req.body.cid);
+      if(!cid || !cid.length){
+        return res.status(404).json({ error: 'no contest found' });
+      }
+      req.body.cid = cid[0];
+    }
+    else{
+      req.body.cid = null;
+    }
+
+
     var titleSlug = slug(req.body.title.replace(/[^a-zA-Z0-9 ]/g, ' '));
 
     async.waterfall([
@@ -119,7 +144,7 @@ router
       },
       async.apply(Problems.save, req.body)
     ],
-    function(err, hashId){
+    function(err, pid){
       if(err){
         if(err.name === 'input')
           return res.status(400).json({ error: err.message });
@@ -128,9 +153,14 @@ router
         return res.status(500).json({ error: 'Internal Server Error' });
       }
 
-      logger.debug(hashId);
+      logger.debug('success');
+      logger.debug(pid);
+      logger.debug(problemHash.encode(pid));
 
-      res.status(200).json({ id: hashId, slug: titleSlug });
+      res.status(200).json({
+        id: problemHash.encode(pid),
+        slug: titleSlug
+      });
     });
   });
 
@@ -539,6 +569,7 @@ function clearUpload(remDir, callback){
     callback(new AppError('File required','input'));
   });
 };
+
 
 //
 // get a test case full path

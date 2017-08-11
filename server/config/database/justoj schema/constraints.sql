@@ -1,28 +1,22 @@
 ALTER TABLE `problems`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `problem_tags`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `user_problem_status`
+ALTER TABLE `tags`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `submissions`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `submission_case`
+ALTER TABLE `runs`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `c_submission_case`
+ALTER TABLE `contest_runs`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `submission_code`
+ALTER TABLE `source_code`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `c_submission_code`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `temp_user`
+ALTER TABLE `contest_source`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `users`
@@ -31,69 +25,55 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `contest`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `contest_participants`
+ALTER TABLE `participants`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `contest_problems`
-MODIFY `pname` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `contest_rank`
+ALTER TABLE `rank`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-
 
 ALTER TABLE `contest_submissions`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `contest_clarifications`
+ALTER TABLE `clar`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 
-ALTER TABLE `user_problem_status`
-ADD CONSTRAINT `unique_user_problem_status`
-UNIQUE(`pid`);
-
-
-
-ALTER TABLE `problem_tags`
-ADD CONSTRAINT `fk_problem_tags` 
-FOREIGN KEY(`pid`) 
-REFERENCES `problems`(`id`) 
+ALTER TABLE `tags`
+ADD CONSTRAINT `fk_tags`
+FOREIGN KEY(`pid`)
+REFERENCES `problems`(`id`)
 ON DELETE CASCADE;
 
-ALTER TABLE `submission_case`
-ADD CONSTRAINT `fk_submission_case`
-FOREIGN KEY(`sid`)
-REFERENCES `submissions`(`id`)
-ON DELETE CASCADE;
-
-ALTER TABLE `submission_code`
-ADD CONSTRAINT `fk_submission_code`
+ALTER TABLE `runs`
+ADD CONSTRAINT `fk_runs`
 FOREIGN KEY(`sid`)
 REFERENCES `submissions`(`id`)
 ON DELETE CASCADE;
 
 
-ALTER TABLE `contest_clarifications`
-ADD CONSTRAINT `fk_contest_clarifications`
+ALTER TABLE `source_code`
+ADD CONSTRAINT `fk_source_code`
+FOREIGN KEY(`sid`)
+REFERENCES `submissions`(`id`)
+ON DELETE CASCADE;
+
+
+ALTER TABLE `clar`
+ADD CONSTRAINT `fk_clar`
 FOREIGN KEY(`cid`)
 REFERENCES `contest`(`id`)
 ON DELETE CASCADE;
 
-ALTER TABLE `contest_participants`
-ADD CONSTRAINT `fk_contest_participants`
+
+ALTER TABLE `participants`
+ADD CONSTRAINT `fk_participants`
 FOREIGN KEY(`cid`)
 REFERENCES `contest`(`id`)
 ON DELETE CASCADE;
 
-ALTER TABLE `contest_problems`
-ADD CONSTRAINT `fk_contest_problems`
-FOREIGN KEY(`cid`)
-REFERENCES `contest`(`id`)
-ON DELETE CASCADE;
 
-ALTER TABLE `contest_rank`
-ADD CONSTRAINT `fk_contest_rank`
+ALTER TABLE `rank`
+ADD CONSTRAINT `fk_rank`
 FOREIGN KEY(`cid`)
 REFERENCES `contest`(`id`)
 ON DELETE CASCADE;
@@ -104,14 +84,20 @@ FOREIGN KEY(`cid`)
 REFERENCES `contest`(`id`)
 ON DELETE CASCADE;
 
-ALTER TABLE `c_submission_case`
-ADD CONSTRAINT `fk_c_submission_case`
+ALTER TABLE `problems`
+ADD CONSTRAINT `fk_problems`
+FOREIGN KEY(`cid`)
+REFERENCES `contest`(`id`)
+ON DELETE CASCADE;
+
+ALTER TABLE `contest_runs`
+ADD CONSTRAINT `fk_contest_runs`
 FOREIGN KEY(`sid`)
 REFERENCES `contest_submissions`(`id`)
 ON DELETE CASCADE;
 
-ALTER TABLE `c_submission_code`
-ADD CONSTRAINT `fk_c_submission_code`
+ALTER TABLE `contest_source`
+ADD CONSTRAINT `fk_contest_source`
 FOREIGN KEY(`sid`)
 REFERENCES `contest_submissions`(`id`)
 ON DELETE CASCADE;

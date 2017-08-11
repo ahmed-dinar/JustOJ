@@ -53,7 +53,7 @@
                   <template v-if="tags && tags.length">
                     <template v-for="ptag in tags">
                       <router-link :to="tagLink(ptag)">
-                        <b-badge class="tag-badge">
+                        <b-badge class="tag-badge mr-1">
                           {{ ptag }}
                         </b-badge>
                       </router-link>

@@ -61,15 +61,16 @@
 
         </loading-data>
       </div>
-      
-          <template v-if="pagination && pagination.total !== null">
-            <b-pagination
-            size="sm"
-            :total-rows="pagination.total"
-            v-model="cur_page"
-            :per-page="pagination.page_limit"
-            ></b-pagination>
-          </template>
+
+      <template v-if="!loading && pagination && pagination.total !== null">
+        <b-pagination
+        size="sm"
+        :total-rows="pagination.total"
+        v-model="cur_page"
+        :per-page="pagination.page_limit"
+        ></b-pagination>
+      </template>
+
     </template>
 
   </div>

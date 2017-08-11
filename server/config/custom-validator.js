@@ -56,7 +56,6 @@ function emailExists(email){
 function isDuration(value){
   value = value.toString().trim();
   console.log('isDuration:  ' + value);
-
   return new RegExp(/^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]:[0-5][0-9]$/).test(value);
 }
 
@@ -75,7 +74,7 @@ function isDatetime(value, format){
 
 //
 // check if a duration is greter than or equal a given duration.
-// value =  must be a valid duration in format `HH:mm:ss`.
+// value =  must be a valid duration in format `HH:mm:ss`. or `days.HH:mm:ss`
 // unit =  is one of these: (default: 'M')
 //  'm' or 'millisecond'
 //  's' or 'second'

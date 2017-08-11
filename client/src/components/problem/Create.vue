@@ -357,6 +357,10 @@
               difficulty: this.difficulty
             };
 
+            if( has(this.$store.state.route.query,'contest') ){
+              prob.cid = this.$store.state.route.query.contest;
+            }
+
             this.$http
               .post('/api/problem/create', prob)
               .then(response => {

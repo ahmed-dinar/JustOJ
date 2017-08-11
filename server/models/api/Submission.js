@@ -35,7 +35,7 @@ exports.save = function(inserts, fn){
 exports.saveSource = function(inserts, fn){
   var sql = Query
     .insert(inserts)
-    .into('submission_code')
+    .into('source_code')
     .toString();
 
   DB.execute(sql,fn);

@@ -30,7 +30,7 @@ module.exports = {
     "no-redeclare": 2,
     "no-lonely-if": 2,
     "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
-    "newline-per-chained-call": [2, { "ignoreChainWithDepth": 2 }],
+    "newline-per-chained-call": [2, { "ignoreChainWithDepth": 3 }],
     "no-trailing-spaces": [2, { "skipBlankLines": true }],
     "no-unused-vars": [2, { "vars": "all", "args": "none" }],
 

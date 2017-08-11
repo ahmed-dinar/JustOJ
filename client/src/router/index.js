@@ -9,17 +9,17 @@ import Status from '@/components/Status';
 import Ranks from '@/components/Ranks';
 import Login from '@/components/Login';
 
-import User from '@/components/user/User';
 import Account from '@/components/user/Account';
 import ForgotPassword from '@/components/user/ForgotPassword';
 import VerifyAccount from '@/components/user/VerifyAccount';
 
-import ContestRoute from '@/components/contest/ContestRoute';
 import Contests from '@/components/contest/Contests';
+import EditCRoute from '@/components/contest/edit/Route';
 import CreateContest from '@/components/contest/edit/CreateContest';
+import EditContest from '@/components/contest/edit/EditContest';
+import EditContestant from '@/components/contest/edit/Contestants';
+import EditCProblem from '@/components/contest/edit/Problems';
 
-import ProblemsRoute from '@/components/problem/ProblemsRoute';
-import ProblemContentRoute from '@/components/problem/ProblemContentRoute';
 import ProblemList from '@/components/problem/ProblemList';
 import CreateProblem from '@/components/problem/Create';
 import ViewProblem from '@/components/problem/View';
@@ -33,6 +33,18 @@ import Page403 from '@/components/Page403';
 import store from '@/store';
 
 Vue.use(Router);
+
+function routeTemplate (name) {
+  return {
+    name: name,
+    template: `
+      <div>
+        <router-view></router-view>
+      </div>
+    `
+  };
+}
+
 
 const router = new Router({
 
@@ -64,7 +76,7 @@ const router = new Router({
     },
     {
       path: '/problems',
-      component: ProblemsRoute,
+      component: routeTemplate('ProblemRoute'),
       children: [
         {
           path: '',
@@ -86,7 +98,7 @@ const router = new Router({
         },
         {
           path: ':pid',
-          component: ProblemContentRoute,
+          component: routeTemplate('ProblemContentRoute'),
           children: [
             {
               path: 'edit/testcase',
@@ -118,7 +130,7 @@ const router = new Router({
     },
     {
       path: '/account',
-      component: User,
+      component: routeTemplate('UserRoute'),
       children: [
         {
           path: '',
@@ -154,7 +166,7 @@ const router = new Router({
     },
     {
       path: '/contests',
-      component: ContestRoute,
+      component: routeTemplate('ContestRoute'),
       children: [
         {
           path: '',
@@ -167,6 +179,43 @@ const router = new Router({
           name: 'CreateContest',
           component: CreateContest,
           meta: { title: 'Contests | Create', auth: true, role: 'admin' }
+        },
+        {
+          path: ':cid',
+          component: routeTemplate('contestIdRoute'),
+          children: [
+            {
+              path: 'edit',
+              component: EditCRoute,
+              children: [
+                {
+                  path: '',
+                  name: 'EditContest',
+                  component: EditContest,
+                  meta: { title: 'Edit Contest', auth: true, role: 'admin' }
+                },
+                {
+                  path: 'problems',
+                  name: 'EditContestProblems',
+                  component: EditCProblem,
+                  meta: { title: 'Edit Contest | Problem', auth: true, role: 'admin' }
+                },
+                {
+                  path: 'contestants',
+                  name: 'EditContestants',
+                  component: EditContestant,
+                  meta: { title: 'Edit Contest | Contestants', auth: true, role: 'admin' }
+                }
+              ]
+            }
+            // ,
+            // {
+            //   path: ':slug',
+            //   name: 'CreateContest',
+            //   component: ContestArena,
+            //   meta: { title: 'Contests | Create', auth: true, role: 'admin' }
+            // }
+          ]
         }
       ]
     },
@@ -218,6 +267,8 @@ router.beforeEach((to, from, next) => {
     return next();
   }
 
+
+  //just check the localstorage insted of calling api everytime?
   authRole(to.meta.role)
     .then(response => {
       return next();

@@ -441,7 +441,7 @@ User.save = function(user, fn){
       var now = moment();
       var created = moment(now).format('YYYY-MM-DD HH:mm:ss');
       var expire = moment(now)
-        .add(24, 'hours')
+        .add(72, 'hours')
         .format('YYYY-MM-DD HH:mm:ss');
 
       data = assign(data,{

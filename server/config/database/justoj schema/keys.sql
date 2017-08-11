@@ -1,28 +1,22 @@
 ALTER TABLE `problems`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `problem_tags`
-ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `user_problem_status`
+ALTER TABLE `tags`
 ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `submissions`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `submission_case`
+ALTER TABLE `runs`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `c_submission_case`
+ALTER TABLE `contest_runs`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `submission_code`
+ALTER TABLE `source_code`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `c_submission_code`
-ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `temp_user`
+ALTER TABLE `contest_source`
 ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `users`
@@ -31,21 +25,16 @@ ADD PRIMARY KEY (`id`);
 ALTER TABLE `contest`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `contest_participants`
+ALTER TABLE `participants`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `contest_problems`
-ADD PRIMARY KEY (`pname`);
-
-ALTER TABLE `contest_rank`
+ALTER TABLE `rank`
 ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `contest_submissions`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `contest_clarifications`
+ALTER TABLE `clar`
 ADD PRIMARY KEY (`id`);
-
-
 
 

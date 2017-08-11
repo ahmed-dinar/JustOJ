@@ -169,7 +169,11 @@ var runTestCase = function(opts,testCase,cb){
     function(callback) {
       runCode(opts,testCase, caseId, callback);
     },
-    function(callback){
+    function(ignore, callback){
+      logger.debug('ignore = ' + ignore);
+      if(ignore !== false){
+        return callback(null, ignore);
+      }
       checkResult(opts, caseId, callback);
     },
     function(resultObj,callback){
@@ -193,7 +197,7 @@ var runTestCase = function(opts,testCase,cb){
  * @param testCase
  * @param cb
  */
-var runCode = function (opts,testCase, caseId, cb) {
+var runCode = function (opts, testCase, caseId, cb) {
   Compiler.run(opts, testCase, function (err,stdout, stderr) {
     if(err){
       return cb(err);
@@ -203,7 +207,7 @@ var runCode = function (opts,testCase, caseId, cb) {
       logger.debug('stderr occured!', stderr);
       return checkResult(opts, caseId, cb);
     }
-    cb();
+    cb(null, false);
   });
 };
 
@@ -211,21 +215,20 @@ var runCode = function (opts,testCase, caseId, cb) {
 /**
  * Check result file in chroot directory
  * @param opts
- * @param cb
  */
-var checkResult = function (opts, caseId, cb) {
+var checkResult = function (opts, caseId, fn) {
 
   var resDir = opts.runDir +'/result.txt';
   logger.debug( chalk.yellow('Checking ' + resDir + ' for run result'));
 
   fs.readFile(resDir, 'utf8', function (error,data) {
     if (error ){
-      return cb(error);
+      return fn(error);
     }
 
     if( data.length === 0 ) {
       logger.debug( chalk.red('Why result file empty?'));
-      return cb('no result in file');
+      return fn('no result in file');
     }
 
 
@@ -233,8 +236,8 @@ var checkResult = function (opts, caseId, cb) {
     //serial index
     resultObj.id = caseId;
 
-    var runCode = parseInt(resultObj.code);
-    switch(runCode) {
+    var runResCode = parseInt(resultObj.code);
+    switch(runResCode) {
       case 0:
         resultObj['result'] = 'OK';
         break;
@@ -259,11 +262,11 @@ var checkResult = function (opts, caseId, cb) {
 
     logger.debug( chalk.magenta(data), resultObj);
 
-    if( runCode !== 0 ){
-      return cb(resultObj.result, resultObj);
+    if( runResCode !== 0 ){
+      return fn(resultObj.result, resultObj);
     }
 
-    return cb(null, resultObj);
+    return fn(null, resultObj);
   });
 };
 

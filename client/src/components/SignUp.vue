@@ -162,7 +162,7 @@
                 this.formDone();
                 this.resetForm();
                 this.flash({
-                  message: `Successfully registerd. A varification link sent to ${credentials.email}. Please follow the link to verify your account within 24 hours.`,
+                  message: `Successfully registerd. A varification link sent to ${credentials.email}. Please follow the link to verify your account within 72 hours.`,
                   variant: 'success'
                 });
                 this.$router.replace('/login');

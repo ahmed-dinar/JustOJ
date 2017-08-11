@@ -47,7 +47,7 @@ Submission.prototype.solved = function(pid, fn){
 
 Submission.prototype.saveCase = function(columns, fn){
   var sql = Query.insert(columns)
-    .into('submission_case')
+    .into('runs')
     .toString();
 
   DB.execute(sql, fn);

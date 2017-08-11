@@ -37,8 +37,12 @@ router.get('/verify',function(req, res, next) {
   var thishost = config.get('HOST');
   var requestedhost = req.protocol + '://' + req.get('host');
 
-  if( thishost !== requestedhost || !has(req.query,'verification') || !req.query.verification )
+  logger.debug(requestedhost + ' == '+ thishost);
+  logger.debug(req.query.verification);
+
+  if( thishost !== requestedhost || !has(req.query,'verification') || !req.query.verification ){
     return res.status(400).json({ error: 'Bad Request' });
+  }
 
   User.verify(req.query.verification, function(err, verified){
     if(err){
