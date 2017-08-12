@@ -11,9 +11,6 @@
           <smooth-alert variant="danger" :show="!!submitError" dismissible @dismissed="submitError=null">
             {{ submitError }}
           </smooth-alert>
-          <smooth-alert :show="!!success" dismissible>
-            {{ success }}
-          </smooth-alert>
         </div>
 
         <div class="col-md-12 mb-5">
@@ -194,7 +191,6 @@
       return {
         finalLimit: null,
         loading: false,
-        success: null,
         submitError: null,
         submitting: false,
         error: null,
@@ -272,7 +268,6 @@
             postData.append('source', sourceFile[0]);
 
             this.finalResult = null;
-            this.success = null;
             this.submitting = true;
             this.submitError = null;
             this.error = null;
@@ -312,8 +307,9 @@
                 cpu: this.finalLimit
               })
               .then(response => {
-                this.success = 'Limit Saved';
+                this.$noty.success('Limit Saved Successfully');
                 this.formDone();
+                this.$router.replace({ path: '/problems' });
               })
               .catch(this.handleError);
           });
@@ -364,14 +360,14 @@
       },
       handleError(err){
         let errors = this.getApiError(err);
-
+        this.formDone();
         switch (err.response.status) {
           case 401:
             this.$store.commit(LOG_OUT);
             this.$router.replace({ path: '/login' });
             break;
           case 303:
-            this.flash({ message: errors, variant: 'danger' });
+            this.$noty.error(errors.toString(), { timeout: false });
             this.$router.replace({ path: `/problems/${this.$store.state.route.params.pid}/edit/testcase` });
             break;
           case 400:
@@ -381,7 +377,6 @@
           default:
             this.error = errors;
         }
-        this.formDone();
       }
     },
 

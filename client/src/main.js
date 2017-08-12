@@ -17,14 +17,17 @@ import has from 'has';
 import config from './config';
 import Mixins from './mixins/Mixins';
 import { GlobalComponents } from './components/common';
+import VueNoty from './components/custom/VueNoty';
 
 import App from './App';
 import router from './router';
 import store from './store';
 
-
+//particles instance
 import 'particles.js';
+
 //sylesheets
+import 'flatpickr/dist/themes/dark.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'nprogress/nprogress.css';
@@ -34,7 +37,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 import 'highlight.js/styles/github-gist.css';
 import 'katex/dist/katex.min.css';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import 'flatpickr/dist/themes/dark.css';
+import './assets/noty.css';
 import './assets/style.css';
 
 
@@ -86,6 +89,7 @@ VeeValidate.Validator.extend('fileRequired', {
 });
 
 
+Vue.use(VueNoty);
 Vue.use(VueHighlightJS);
 Vue.use(ToggleButton);
 Vue.use(VueQuillEditor);

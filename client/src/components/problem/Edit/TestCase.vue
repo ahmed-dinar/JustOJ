@@ -1,10 +1,6 @@
 <template>
   <div class="edit-testcase">
 
-      <div class="col-md-12">
-        <flash-message variant="danger"></flash-message>
-      </div>
-
       <div class="col-md-12" v-if="!!error">
         <smooth-alert variant="danger" :show="!!error">{{ error }}</smooth-alert>
       </div>
@@ -14,9 +10,6 @@
         <div class="col-md-12">
           <smooth-alert variant="danger" :show="!!submitError" dismissible @dismissed="submitError=null">
             {{ submitError }}
-          </smooth-alert>
-          <smooth-alert :show="!!success" dismissible autoHide>
-            {{ success }}
           </smooth-alert>
         </div>
 
@@ -140,7 +133,6 @@
 
     data () {
       return {
-        success: null,
         submitError: null,
         submitting: false,
         error: null,
@@ -199,7 +191,6 @@
     methods: {
       submit(){
 
-        this.success = null;
         this.submitting = true;
         this.submitError = null;
         progressbar.start();
@@ -235,7 +226,7 @@
             }
           })
           .then(response => {
-            this.success = 'Test Case Added';
+            this.$noty.success('Test Case Added');
             this.fetchTestCases(true);
           })
           .catch(err => {
@@ -280,8 +271,6 @@
           caseId = caseId.hash;
           console.log(caseId);
 
-          this.success = null;
-          //this.submitting = true;
           this.submitError = null;
           progressbar.start();
 
@@ -293,17 +282,11 @@
               case: caseId
             })
             .then(response => {
-              //this.success = 'Test Case Removed';
-
-              swal({
-                title: 'Deleted',
-                text: 'Test Case has been deleted.',
-                type: 'success'
-              }).then(() => {
-                this.fetchTestCases(true);
-              });
-
-
+              progressbar.done();
+              progressbar.remove();
+              swal.close();
+              this.$noty.success('Test Case Removed');
+              this.fetchTestCases(true);
             })
             .catch(err => {
               this.formDone();

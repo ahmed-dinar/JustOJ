@@ -13,9 +13,6 @@
         <smooth-alert variant="danger" :show="!!submitError" dismissible @dismissed="submitError=null">
           {{ submitError }}
         </smooth-alert>
-        <smooth-alert :show="!!success" dismissible autoHide>
-          {{ success }}
-        </smooth-alert>
       </div>
 
       <div class="col-md-12">
@@ -220,7 +217,6 @@
         problem: null,
         error: null,
         submitError: null,
-        success: null,
         submitting: false,
         language: 'c',
         ranks: null,
@@ -298,7 +294,6 @@
         postData.append('language', this.language);
         postData.append('source', sourceFile[0]);
 
-        this.success = null;
         this.submitting = true;
         this.submitError = null;
         this.error = null;
@@ -311,7 +306,7 @@
             }
           })
           .then(response => {
-            this.success = 'Submitted';
+            this.$noty.success('solution submitted');
             this.formDone();
             this.resetForm();
             this.fetchSubmissions();
