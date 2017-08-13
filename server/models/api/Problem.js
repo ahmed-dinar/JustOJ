@@ -1,14 +1,11 @@
 'use strict';
 
-var forEach = require('lodash/forEach');
-var some = require('lodash/some');
-var entities = require('entities');
+
 var async = require('async');
 var logger = require('winston');
 var Hashids = require('hashids');
 var config = require('nconf');
 
-var myutil = appRequire('lib/myutil');
 var Paginate = appRequire('lib/pagination/paginate');
 var DB = appRequire('config/database/knex/DB');
 var Query = appRequire('config/database/knex/query');

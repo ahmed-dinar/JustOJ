@@ -7,7 +7,11 @@
       </smooth-alert>
     </div>
 
-    <template v-else>
+    <div class="row" v-else>
+
+
+      <div class="col-md-9">
+
       <h6 class="p-0 mb-3 btn-iconic">
         <i class="material-icons mr-1">schedule</i> Submissions
       </h6>
@@ -71,7 +75,9 @@
         ></b-pagination>
       </template>
 
-    </template>
+      </div>
+
+    </div>
 
   </div>
 </template>
@@ -153,7 +159,7 @@
           case 0:
             return 'success';
           case 5:
-            return 'default';
+            return 'secondary';
           case 6:
             return 'info';
           case 8:

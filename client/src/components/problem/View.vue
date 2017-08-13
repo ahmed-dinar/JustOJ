@@ -139,7 +139,7 @@
                     <div class="d-flex justify-content-between">
                       <span></span>
                       <router-link :to="`/submissions?problem=${params.pid}&user=${getUser.username}`"
-                      class="btn btn-secondary btn-xs pull-right"
+                      class="btn btn-outline-secondary btn-xs pull-right"
                       >view all</router-link>
                     </div>
 
@@ -410,7 +410,7 @@
           case 0:
             return 'success';
           case 5:
-            return 'default';
+            return 'secondary';
           case 6:
             return 'info';
           case 8:

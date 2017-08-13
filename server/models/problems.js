@@ -44,25 +44,6 @@ exports.findById = function (pid, columns,callback) {
 
 
 
-//
-//
-//
-exports.findByHash = function (hashId, attr, callback) {
-
-  var sql = Query.select();
-
-  if( attr && attr.length ){
-    sql = Query.select(attr);
-  }
-
-  sql = sql
-    .from('problems')
-    .where({ 'hash_id': hashId })
-    .limit(1)
-    .toString();
-
-  DB.execute(sql, callback);
-};
 
 
 //
@@ -73,7 +54,7 @@ exports.findProblems = function (uid, cur_page, URL, cb) {
   var sql;
   if (!uid || uid < 0) {
     sql = Query
-      .select(['pb.id', 'pb.hash_id', 'pb.slug', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
+      .select(['pb.id', 'pb.slug', 'pb.title', 'pb.submissions', 'pb.solved', 'pb.difficulty',
         Query.raw('IFNULL(pbtry.triedBy,0) AS triedBy'),
         Query.raw('IFNULL(pbs.solvedBy,0) AS solvedBy')
       ])

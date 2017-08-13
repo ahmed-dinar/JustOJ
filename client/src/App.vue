@@ -25,6 +25,7 @@
 
             <template v-if="isLoggedIn">
               <b-nav-item exact><i class="material-icons">email</i></b-nav-item>
+
               <b-nav-item-dropdown right>
 
                 <!-- Using text slot -->
@@ -45,7 +46,10 @@
                 <b-dropdown-item @click="logOut(true)">
                   <i class="material-icons">settings_power</i> Signout
                 </b-dropdown-item>
+
               </b-nav-item-dropdown>
+
+
             </template>
 
             <template v-else>

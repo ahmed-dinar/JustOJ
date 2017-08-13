@@ -104,6 +104,11 @@ a{
   transition: all 200ms ease;
 }
 
+
+.navbar-inverse .dropdown-divider{
+  border-top: 1px solid #404040;
+}
+
 .main-wraper{
   margin-top: 20px;
 }
@@ -174,6 +179,10 @@ footer{
   border-color: #f79483;
 }
 
+.has-danger .form-control-feedback{
+  color: #f79483;
+}
+
 .card-no-border{
   border: none;
 }
@@ -217,9 +226,7 @@ button, input, optgroup, select, textarea{
   box-shadow: 0 2px 2px 0 rgba(53,70,92,.14), 0 3px 1px -2px rgba(53,70,92,.2), 0 1px 5px 0 rgba(53,70,92,.12);
 }
 
-.btn-secondary{
-  background-color: #fff;
-}
+
 
 .btn-secondary.router-link-exact-active{
   border-color: #35465c;
@@ -409,13 +416,13 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
 
 .navbar-inverse .dropdown-item:hover,
 .navbar-inverse .dropdown-item:focus{
-  background-color: #34434c;
+  background-color: #404040;
   border-color: transparent;
 }
 
 .dropdown-item.active,
 .dropdown-item:active {
-  background-color: #34434c;
+  background-color: #404040;
   border-color: transparent;
 }
 
@@ -425,7 +432,7 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
 }
 
 .navbar-inverse .dropdown-menu{
-  background-color: #263238;
+  background-color: #222;
   margin-top: 0;
   border-color: transparent;
   box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
@@ -732,7 +739,7 @@ form{
   display: flex;
   align-items: center;
   padding:5px 8px;
-  color: #4d4d4d;
+  /* color: #4d4d4d; */
 }
 
 .btn-iconic-right{
@@ -845,8 +852,8 @@ h6 .material-icons {
 }
 
 .submission-table td a{
-  color: #333;
-  font-weight: bold;
+  color: #08c;
+  /* font-weight: bold; */
 }
 
 
@@ -962,3 +969,5 @@ h6 .material-icons {
 .noty_theme__bootstrap-v4.noty_bar .noty_body {
   padding: 12px 20px 12px 35px;
 }
+
+

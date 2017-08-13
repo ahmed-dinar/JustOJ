@@ -31,7 +31,6 @@ import 'flatpickr/dist/themes/dark.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'nprogress/nprogress.css';
-import 'bootstrap-social/bootstrap-social.css';
 import 'animate.css/animate.min.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import 'highlight.js/styles/github-gist.css';
