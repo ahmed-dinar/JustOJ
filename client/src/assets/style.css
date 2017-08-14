@@ -460,14 +460,20 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
 .table-no-margin{
   margin-bottom: 0;
 }
-/* 
+
 .table td{
-  font-size:  13px;
-} */
+  vertical-align: middle;
+}
+
 
 .table thead th{
   border-bottom: none;
   color: rgba(0,0,0,0.65);
+}
+
+.table-gray th{
+  color: rgba(0,0,0,.54) !important;
+  font-size: 13px;
 }
 
 .w-5 {
@@ -706,6 +712,7 @@ code, kbd, pre, samp{
   font-size: 15px;
 }
 
+
 .custom-file-input,
 .custom-file-control{
   height: 30px;
@@ -732,7 +739,7 @@ form{
   display: flex;
   align-items: center;
   padding:5px 8px;
-  color: #666666;
+
 }
 
 .btn-material{
@@ -776,7 +783,7 @@ form{
 }
 
 .btn:focus{
-  border-color: transparent;
+  /* border-color: transparent; */
   box-shadow: none;
 }
 
@@ -822,7 +829,10 @@ h6 .material-icons {
   border-radius: 3px;
   padding: 4px 6px;
   border: none;
+}
 
+.badge-bold{
+  padding: 7px 7px;
 }
 
 .badge-danger{
@@ -837,7 +847,6 @@ h6 .material-icons {
 
 .submission-table td{
   font-weight: 400;
-  
   color: #404040;
   padding: 10px;
 }
@@ -933,6 +942,17 @@ h6 .material-icons {
 }
 
 /********** Swall2 **********/
+
+.swal2-modal {
+  padding: 5px 10px 10px 10px !important;
+  min-height: 50px !important;
+  border-radius: 3px;
+}
+
+.swal2-modal .swal2-buttonswrapper{
+  margin-top: 8px !important;
+}
+
 .swal2-modal .swal2-input{
   height: 30px;
   padding: 0 6px;
@@ -943,11 +963,40 @@ h6 .material-icons {
 .swal2-modal .swal2-styled{
   font-size: 14px;
   padding: 5px 15px;
+  margin: 0px 10px 0 0;
 }
 
 
-.bold{
-  font-weight: 600;
+.swal-confirm{
+
+  text-align: left;
+  padding-left: 55px;
+  border-bottom: 1px solid #e6e6e6;
+  padding-bottom: 10px;
+
+  background-color: #fff;
+  background-position: 5px center !important;
+  background-repeat: no-repeat !important;
+  background-image: url('data:image/svg+xml;utf-8,<svg fill="#dd4979" height="50" viewBox="0 0 30 30" width="50" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>') !important;
+}
+
+.swal-confirm h6{
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.swal-confirm p{
+  margin: 0;
+  color: #808080;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.swal-confirm .swal-confirm-input{
+  width: 90%;
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.20);
 }
 
 
@@ -971,3 +1020,45 @@ h6 .material-icons {
 }
 
 
+/*****************************************/
+/***************** tooltip ***************/
+/*****************************************/
+.tooltip {
+  display: block;
+  padding: 3px;
+  z-index: 10000;
+  font-size: 12px;
+}
+
+.tooltip .tooltip-inner {
+  background: #222;
+  color: #fff;
+  border-radius: 3px;
+}
+
+
+.tooltip[aria-hidden='true'] {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .15s, visibility .15s;
+}
+
+.tooltip[aria-hidden='false'] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .15s;
+}
+
+
+.list-group-cell{
+  padding: 0;
+  border-color: transparent;
+}
+
+.small-text{
+  font-size: 13px;
+}
+
+.bold{
+  font-weight: 600;
+}

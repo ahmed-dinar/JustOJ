@@ -1,7 +1,9 @@
 <template>
-  <div class="text-center">
+  <div class="text-center home-page pt-4 pb-4">
 
-    <button @click="notifyMe" class="btn btn-primary btn-md">Normal</button>
+    <h1>Welcome To JUST Online Judge</h1>
+
+    <img src="homebanner.jpg" class="mb-4" style="max-width: 100%;">
 
   </div>
 </template>
@@ -29,3 +31,14 @@
 
   };
 </script>
+
+<style type="text/css">
+  .home-page{
+    background-color: #6AA3B6;
+    color: #fff;
+  }
+
+  .home-page h1{
+    font-family:  'Ubuntu', sans-serif;
+  }
+</style>

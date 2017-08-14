@@ -41,6 +41,17 @@ exports.findById = function (pid, columns,callback) {
 
 
 
+//
+// delete a problem
+//
+exports.delete = function(pid, fn){
+  var sql = Query('problems')
+    .where('id', pid)
+    .del()
+    .toString();
+
+  DB.execute(sql, fn);
+};
 
 
 
@@ -96,7 +107,8 @@ exports.findProblems = function (uid, cur_page, URL, cb) {
       'WHERE ss.`status` = 0 ' +
       'GROUP BY ss.pid ' +
       ') as pbs ON pb.id = pbs.pid ')
-    .where('pb.status', 'public');
+    .where('pb.status', 'public')
+    .andWhere('pb.cid', null);
 
 
   Paginate.paginate({
@@ -431,7 +443,7 @@ exports.updateContestProblem = function(req,fn){
 // check if a problem at lest has one test case
 //
 exports.hasTestCase = function(pid, fn){
-  var rootDir = path.normalize(process.cwd() + '/files/tc/p/' + pid);
+  var rootDir = path.join(process.cwd(), '..', 'judger', 'testcase', pid.toString());
 
   fs.readdir(rootDir, function(err, files) {
     if( err ){

@@ -13,6 +13,7 @@ import screenfull from 'screenfull';
 import VueHighlightJS from 'vue-highlightjs';
 import NProgress from 'nprogress';
 import has from 'has';
+import VTooltip from 'v-tooltip';
 
 import config from './config';
 import Mixins from './mixins/Mixins';
@@ -88,6 +89,7 @@ VeeValidate.Validator.extend('fileRequired', {
 });
 
 
+Vue.use(VTooltip);
 Vue.use(VueNoty);
 Vue.use(VueHighlightJS);
 Vue.use(ToggleButton);

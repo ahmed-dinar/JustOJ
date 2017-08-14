@@ -364,10 +364,9 @@
             this.$http
               .post('/api/problem/create', prob)
               .then(response => {
+                this.$noty.success('Problem Successfully Created');
                 this.formDone();
-                let pid = response.data.id;
-                //let slug = response.data.slug;
-                this.$router.replace(`/problems/${pid}/edit/testcase`);
+                this.$router.replace(`/problems/${response.data.id}/edit/testcase`);
               })
               .catch(err => {
                 this.formDone();

@@ -63,8 +63,21 @@
       </div>
     </b-navbar>
 
-    <div class="main-wraper" v-if="showNavBar">
-      <div class="content container main-height" >
+
+    <div v-if="$store.state.route.name === 'Home'">
+      <router-view></router-view>
+      <div class="main-footer">
+        <footer class="container" >
+          <div>
+            &copy; 2016 CSE, JUST
+            <div class="pull-right"><a href="mailto:madinar.cse@gmail.com">Developer: Ahmed Dinar</a></div>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <div class="main-wraper" v-else-if="showNavBar">
+      <div class="content container main-height">
         <transition
           name="custom-classes-transition"
           enter-active-class="animated fadeIn"
@@ -82,6 +95,7 @@
         </footer>
       </div>
     </div>
+
     <div class="no-nav-body" v-else>
       <router-view></router-view>
     </div>
@@ -140,6 +154,10 @@
       ...mapActions([
         'logOut'
       ])
+    },
+
+    mounted(){
+      console.log(this.$store.state.route.name);
     }
 
   };

@@ -12,6 +12,7 @@ var async = require('async');
 var logger = require('winston');
 var has = require('has');
 var chalk = require('chalk');
+var path = require('path');
 
 var AppError = appRequire('lib/custom-error');
 var MyUtil = appRequire('lib/myutil');
@@ -44,7 +45,7 @@ module.exports = function(req, res, next) {
       opts['runName'] = uploadName;
       opts['runDir'] = uploadFile;
       opts['pID'] = pID;
-      opts['tcDir'] = MyUtil.TC_DIR + '/' + pID;
+      opts['tcDir'] = path.join(process.cwd(), '..', 'judger', 'testcase', pID.toString());
       opts['codeDir'] = uploadFile;
 
       logger.debug(chalk.green('calling Judge runner..........'));

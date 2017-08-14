@@ -29,9 +29,9 @@
               </router-link>
             </template>
             <template slot="submittime" scope="sub">
-              <b-popover placement="top" triggers="hover" :content="sub.value">
+              <div v-tooltip="sub.value">
                 {{ fromWhen(sub.value) }}
-              </b-popover>
+              </div>
             </template>
             <template slot="username" scope="sub">
               <router-link :to="`/user/${sub.value}`" >
@@ -39,11 +39,9 @@
               </router-link>
             </template>
             <template slot="title" scope="sub">
-              <b-popover placement="top" triggers="hover" :content="sub.value">
-                <router-link :to="`/problems/${sub.item.pid}/${sub.item.slug}`" >
-                  {{ sub.value }}
-                </router-link>
-              </b-popover>
+              <router-link v-tooltip="sub.value" :to="`/problems/${sub.item.pid}/${sub.item.slug}`" >
+                {{ sub.value }}
+              </router-link>
             </template>
             <template slot="language" scope="sub">
               {{ getRunLang(sub.value) }}

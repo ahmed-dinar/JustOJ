@@ -15,6 +15,7 @@ import VerifyAccount from '@/components/user/VerifyAccount';
 
 import Contests from '@/components/contest/Contests';
 import EditCRoute from '@/components/contest/edit/Route';
+import ContestAdmin from '@/components/contest/edit/Admin';
 import CreateContest from '@/components/contest/edit/CreateContest';
 import EditContest from '@/components/contest/edit/EditContest';
 import EditContestant from '@/components/contest/edit/Contestants';
@@ -25,6 +26,7 @@ import CreateProblem from '@/components/problem/Create';
 import ViewProblem from '@/components/problem/View';
 import ViewTestCase from '@/components/problem/ViewTestCase';
 import Submissions from '@/components/Submissions';
+import EditProblem from '@/components/problem/Edit/Statement';
 import EditProblemCases from '@/components/problem/Edit/TestCase';
 import EditProblemLimits from '@/components/problem/Edit/Limits';
 
@@ -100,6 +102,12 @@ const router = new Router({
           path: ':pid',
           component: routeTemplate('ProblemContentRoute'),
           children: [
+            {
+              path: 'edit/statement',
+              name: 'EditProblem',
+              component: EditProblem,
+              meta: { title: 'Edit Problem' }
+            },
             {
               path: 'edit/testcase',
               name: 'EditProblemCases',
@@ -179,6 +187,12 @@ const router = new Router({
           name: 'CreateContest',
           component: CreateContest,
           meta: { title: 'Contests | Create', auth: true, role: 'admin' }
+        },
+        {
+          path: 'admin',
+          name: 'ContestAdmin',
+          component: ContestAdmin,
+          meta: { title: 'Contests | Admin', auth: true, role: 'admin' }
         },
         {
           path: ':cid',

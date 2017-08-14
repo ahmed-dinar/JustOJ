@@ -259,13 +259,12 @@
       removeCase(caseId){
 
         swal({
-          title: 'Are you sure?',
-          text: 'You won\'t be able to revert this.',
-          type: 'warning',
+          html: `
+            <i class="material-icons">warning</i> Are You Sure?
+          `,
           showCancelButton: true,
           confirmButtonText: 'Remove',
-          animation: false,
-          customClass: 'animated fadeIn'
+          confirmButtonColor: '#d33'
         }).then(() => {
 
           caseId = caseId.hash;
@@ -298,10 +297,7 @@
               );
             });
 
-        });
-        return;
-
-
+        }).catch(swal.noop);
       },
       showCase(caseId, caseType){
         let caseURL = `/problems/testcase/${this.$store.state.route.params.pid}/${caseId.hash}?type=${caseType}`;

@@ -14,6 +14,7 @@ var slug = require('slug');
 var Hashids = require('hashids');
 var config = require('nconf');
 
+var Problems = appRequire('models/problems');
 var Contest = appRequire('models/contest');
 var AppError = appRequire('lib/custom-error');
 var Schema = appRequire('config/validator-schema');
@@ -29,8 +30,40 @@ slug.defaults.mode ='pretty';
 
 
 
-router.get('/',function(req, res, next) {
-  res.status(200).json('hello contests api!');
+router.get('/list',function(req, res, next) {
+
+
+  //past contests
+  if( has(req.query,'past') ){
+
+    Contest.past(function(err, data){
+      if(err){
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+
+      logger.debug('past = ', data);
+
+      res.status(200).json(data);
+    });
+    return;
+  }
+
+
+  async.parallel({
+    running: Contest.running,
+    future: Contest.future
+  },
+  function(err, data){
+    if(err){
+      logger.error(err);
+      return res.sendStatus(500);
+    }
+
+    logger.debug('contests = ', data);
+
+    res.status(200).json(data);
+  });
 });
 
 
@@ -68,6 +101,47 @@ router.post('/create', authJwt, roles('admin'), function(req, res, next){
   });
 });
 
+
+router
+  .route('/admin')
+  .all(authJwt, roles('admin'), OK())
+  .get(function(req, res){
+
+    Contest.editable(function(err, rows){
+      if(err){
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+
+      _.forEach(rows, function(c, i){
+        rows[i].id = contestHash.encode(rows[i].id);
+        rows[i].title = entities.decodeHTML(rows[i].title);
+      });
+
+      logger.debug(rows);
+
+      res.status(200).json(rows);
+    });
+  })
+  .delete(function(req, res){
+
+    var cid = has(req.query,'contest')
+      ? contestHash.decode(req.query.contest)
+      : null;
+
+    if(!cid || !cid.length){
+      return res.sendStatus(400);
+    }
+
+    Contest.delete(cid[0], function(err, rows){
+      if(err){
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+      logger.debug(rows);
+      return res.sendStatus(200);
+    });
+  });
 
 
 //
@@ -143,28 +217,50 @@ router
 //
 //
 //
-router.get('/edit/:cid/problems', authJwt, roles('admin'), function(req, res){
-  var cid = contestHash.decode(req.params.cid);
+router
+  .route('/edit/:cid/problems')
+  .all(authJwt, roles('admin'), OK())
+  .get(function(req, res){
+    var cid = contestHash.decode(req.params.cid);
 
-  if(!cid || !cid.length){
-    return res.sendStatus(404);
-  }
-
-  Contest.findProblems(cid, ['id','title','status'], function(err, rows){
-    if(err){
-      logger.error(err);
-      return res.sendStatus(500);
+    if(!cid || !cid.length){
+      return res.sendStatus(404);
     }
 
-    _.forEach(rows, function(element, index) {
-      rows[index].id = problemHash.encode(rows[index].id);
+    Contest.findProblems(cid, ['id','title','status'], function(err, rows){
+      if(err){
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+
+      _.forEach(rows, function(element, index) {
+        rows[index].id = problemHash.encode(rows[index].id);
+      });
+
+      logger.debug(rows);
+
+      res.status(200).json(rows);
     });
+  })
+  .delete(function(req, res){
 
-    logger.debug(rows);
+    var pid = has(req.query,'problem')
+      ? problemHash.decode(req.query.problem)
+      : null;
 
-    res.status(200).json(rows);
+    if(!pid || !pid.length){
+      return res.sendStatus(404);
+    }
+
+    Problems.delete(pid, function(err, rows){
+      if(err){
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+      logger.debug(rows);
+      return res.sendStatus(200);
+    });
   });
-});
 
 
 

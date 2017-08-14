@@ -92,6 +92,8 @@ exports.findProblems = function(cid, columns, fn){
 };
 
 
+
+
 /**
  *
  * @param cid
@@ -273,23 +275,23 @@ exports.save = function(columns, cb){
 
 
 
-/**
- *
- * @param cb
- */
-exports.getPublic = function(cb){
-  async.waterfall([
-    function(callback) {
-      getRunning(callback);
-    },
-    function(running,callback){
-      getFuture(running,callback);
-    },
-    function(running,future,callback){
-      getEnded(running,future,callback);
-    }
-  ], cb);
-};
+// /**
+//  *
+//  * @param cb
+//  */
+// exports.getPublic = function(cb){
+//   async.waterfall([
+//     function(callback) {
+//       getRunning(callback);
+//     },
+//     function(running,callback){
+//       getFuture(running,callback);
+//     },
+//     function(running,future,callback){
+//       getEnded(running,future,callback);
+//     }
+//   ], cb);
+// };
 
 
 /**
@@ -463,93 +465,76 @@ exports.removealluser = function (cid, cb) {
 };
 
 
-/**
- *  Get running contest list [pagination not yet added]
- * @param cb
- */
-var getRunning = function(cb){
 
-  var sql = Query.select(['cnts.*'])
-         .count('usr.id as users')
-         .from('contest as cnts')
-         .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
-         .where(
-         Query.raw('`cnts`.`status` = 2 AND `cnts`.`begin`<=NOW() AND `cnts`.`end` > NOW()')
-        )
-            .groupBy('cnts.id')
-            .orderBy('cnts.begin','desc');
+//
+//
+//
+exports.running = function(fn){
 
-  DB.execute(sql.toString(),cb);
+  var sql = Query
+    .select(['cnts.*'])
+    .count('usr.id as users')
+    .from('contest as cnts')
+    .leftJoin('participants as usr', 'usr.cid', 'cnts.id')
+    .where(Query.raw('`cnts`.`status` = 2 AND `cnts`.`begin` <= NOW() AND `cnts`.`end` > NOW()'))
+    .groupBy('cnts.id')
+    .orderBy('cnts.begin','desc')
+    .toString();
+
+  DB.execute(sql, fn);
 };
 
 
-/**
- * Get scheduled contest list [pagination not yet added]
- * @param running
- * @param cb
- */
-var getFuture = function(running,cb){
+//
+//
+//
+exports.future = function(fn){
 
   var sql = Query.select(['cnts.*'])
-        .count('usr.id as users')
-        .from('contest as cnts')
-        .leftJoin('contest_participants as usr', 'cnts.id', 'usr.cid')
-       // .joinRaw('LEFT JOIN `contest_participants` as `cp` ON cnts.id = cp.cid AND cp.uid = ?',[uid]) //if a user already resistered
-        .where(
-        Query.raw('`status` = 2 AND `begin` > NOW()')
-    )
-        .groupBy('cnts.id')
-        .orderBy('cnts.begin');
+    .count('usr.id as users')
+    .from('contest as cnts')
+    .leftJoin('participants as usr', 'cnts.id', 'usr.cid')
+    .where(Query.raw('`cnts`.`status` = 2 AND `cnts`.`begin` > NOW()'))
+    .groupBy('cnts.id')
+    .orderBy('cnts.begin')
+    .toString();
 
-  DB.execute(
-        sql.toString()
-        ,function(err,rows){
-          if(err){ return cb(err); }
-
-          cb(null,running,rows);
-        });
+  DB.execute(sql, fn);
 };
 
 
-/**
- * Get past contest list [pagination not yet added]
- * @param running
- * @param future
- * @param cb
- */
-var getEnded = function(running,future,cb){
+
+//
+//
+//
+exports.past = function(running,future,cb){
 
   var sql = Query.select(['cnts.*'])
-        .count('usr.id as users')
-        .from('contest as cnts')
-        .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
-        .where(
-        Query.raw('`status` = 2 AND `end` <= NOW()')
-    )
-        .groupBy('cnts.id')
-        .orderBy('cnts.begin','desc')
-        .limit(10);
+    .count('usr.id as users')
+    .from('contest as cnts')
+    .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
+    .where(Query.raw('`status` = 2 AND `end` <= NOW()'))
+    .groupBy('cnts.id')
+    .orderBy('cnts.begin','desc')
+    .limit(10)
+    .toString();
 
-  DB.execute(
-        sql.toString()
-        ,function(err,rows){
-          if(err){ return cb(err); }
-
-          cb(null,running,future,rows);
-        });
+  DB.execute(sql, fn);
 };
 
 
-/**
- * Get contest that is still running or not yet started for edit by admin/moderator
- * TODO: should change the logic, make it more dynamic
- * @param cb
- */
-exports.getEditable = function(cb){
 
-  var sql = Query.select().from('contest').where(Query.raw('`end` > NOW()'));
+//
+// Get contest that is still running or not yet started for edit by admin/moderator
+//
+exports.editable = function(fn){
+  var sql = Query
+    .select()
+    .from('contest')
+    .where(Query.raw('`end` > NOW()'))
+    .toString();
 
-  DB.execute(sql.toString(),cb);
+  DB.execute(sql, fn);
 };
 
 
@@ -835,48 +820,16 @@ exports.getSubmissions = function(cid,cur_page,URL,cb){
 };
 
 
-/**
- * Delete everything of a contest
- * @param cid
- * @param cb
- */
-exports.delete = function (cid,cb) {
+//
+//
+//
+exports.delete = function (cid, fn) {
+  var sql = Query('contest')
+  .where('id', cid)
+  .del()
+  .toString();
 
-  async.waterfall([
-    function (callback) {
-
-      var sql = Query('problems')
-                .whereIn('id', function() {
-                  this.select('pid').from('contest_problems').where('cid', cid);
-                })
-                .del();
-
-      console.log('deleting problems......');
-      DB.execute(sql.toString(),callback);
-    },
-    function (ignorepls, callback) {
-
-      var sql = Query('users')
-                .whereIn('id', function() {
-                  this.select('uid').from('contest_participants').where('cid', cid);
-                })
-                .del();
-
-      console.log('problems deleted!');
-      console.log('deleting users......');
-      DB.execute(sql.toString(),callback);
-    },
-    function (ignorepls, callback) {
-
-      var sql = Query('contest')
-                .where('id', cid)
-                .del();
-
-      console.log('users deleted!');
-      console.log('deleting contest......');
-      DB.execute(sql.toString(),callback);
-    }
-  ], cb);
+  DB.execute(sql, fn);
 };
 
 

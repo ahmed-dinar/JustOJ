@@ -243,6 +243,7 @@
                 console.log(response.data);
                 progressbar.done();
                 progressbar.remove();
+                this.$noty.success('Contest Successfully Created');
                 this.$router.replace({
                   path: `/contests/${response.data}/edit`
                 });

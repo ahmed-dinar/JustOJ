@@ -12,37 +12,40 @@
 
     <template v-else>
 
-      <router-link :to="addLink">Add Problem</router-link>
+      <div class="d-flex mb-2">
+        <a class="btn-iconic btn btn-outline-primary btn-xs" :href="addLink" target="_blank">
+          <i class="material-icons mr-1">add</i> Add Problem
+        </a>
+      </div>
 
       <loading-data :loading="loading">
         <m-table
+        show-empty
+        empty-text="No Problem Added"
         :items="problems"
         :fields="fields"
-        keyIdentifier="id"
+        class="table-gray"
         >
-        <template slot="id" scope="prob">
-          {{ prob.value }}
+        <template slot="index" scope="prob">
+          {{ prob.index + 1 }}
         </template>
         <template slot="title" scope="prob">
           {{ prob.value }}
         </template>
         <template slot="status" scope="prob">
-          {{ prob.value }}
+          <span :class="['badge', 'badge-bold', prob.value === 'incomplete' ? 'badge-secondary' : 'badge-success' ]">
+          {{ prob.value | capitalize }}
+          </span>
         </template>
-        <template slot="preview" scope="prob">
-          <button class="btn btn-iconic-sm btn-primary">
-            <i class="material-icons">remove_red_eye</i>
-          </button>
-        </template>
-        <template slot="edit" scope="prob">
-          <button class="btn btn-iconic-sm btn-primary">
-            <i class="material-icons">mode_edit</i>
-          </button>
-        </template>
-        <template slot="delete" scope="prob">
-          <button class="btn btn-iconic-sm btn-primary">
-            <i class="material-icons">delete_forever</i>
-          </button>
+        <template slot="actions" scope="prob">
+          <div class="d-flex">
+            <a v-tooltip="'Edit'" :href="`/problems/${prob.item.id}/edit/statement`" class="btn btn-sm btn-iconic btn-outline-primary mr-1" target="_blank">
+              <i class="material-icons">mode_edit</i>
+            </a>
+            <button v-tooltip="'Remove'" class="btn btn-sm btn-iconic btn-outline-danger" @click="removeIt(prob.item.id)">
+              <i class="material-icons">delete</i>
+            </button>
+          </div>
         </template>
       </m-table>
     </loading-data>
@@ -51,6 +54,9 @@
 </template>
 
 <script type="text/javascript">
+
+  import swal from 'sweetalert2';
+
   export default {
     name: 'EditContestProblems',
 
@@ -58,24 +64,20 @@
       return {
         problems: null,
         fields: {
-          id: {
+          index: {
             label: '#',
-            tdClass: ['ellipsis','subs-index-cell']
+            thStyle: { width: '5%' }
           },
           title: {
             label: 'Title'
           },
           status: {
-            label: 'Status'
+            label: 'Status',
+            thStyle: { width: '10%' }
           },
-          preview: {
-            label: 'Preview'
-          },
-          edit: {
-            label: 'Edit'
-          },
-          delete: {
-            label: 'Delete'
+          actions: {
+            label: 'Action',
+            thStyle: { width: '10%' }
           }
         },
         loading: true,
@@ -92,8 +94,7 @@
 
     methods: {
       fetchProblems(){
-        progressbar.done();
-        progressbar.remove();
+        progressbar.start();
         this.loading = true;
 
         this.$http
@@ -123,6 +124,35 @@
           default:
             this.error = errors;
         };
+      },
+      removeIt(pid){
+
+        swal({
+          html: `
+            <i class="material-icons">warning</i> Are You Sure?
+          `,
+          showCancelButton: true
+        }).then(() => {
+
+          progressbar.start();
+          this.error = null;
+
+          this.$http
+            .delete(`/api/contest/edit/${this.$store.state.route.params.cid}/problems?problem=${pid}`)
+            .then(response => {
+              progressbar.done();
+              progressbar.remove();
+              this.$noty.success('problem successfully removed');
+              this.fetchProblems();
+            })
+            .catch(this.handleError);
+        }).catch(swal.noop);
+      }
+    },
+
+    filters: {
+      capitalize(val){
+        return val.charAt(0).toUpperCase() + val.slice(1);
       }
     },
 
