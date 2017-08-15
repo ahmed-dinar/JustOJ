@@ -367,7 +367,25 @@ router
 router
   .route('/edit/limits/:pid')
   .all(authJwt, roles('admin'), decodeHash(true, ['id']), OK())
-  .get(OK('ok'))
+  .get(function(req, res){
+
+    var pid = req.body.problem.id;
+
+    logger.debug(pid);
+
+    Problems.hasTestCase(pid, function(err, hasTc){
+      if(err){
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+
+      if(!hasTc){
+        return res.status(303).json({ error: 'Add some test case first' });
+      }
+
+      return res.sendStatus(200);
+    });
+  })
   .post(function(req, res, next){
 
     if(

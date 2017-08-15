@@ -26,7 +26,8 @@ router.post('/', function(req, res, next) {
 
       logger.debug('validatin inputs..');
 
-      req.getValidationResult()
+      req
+        .getValidationResult()
         .then(function(result) {
           if (!result.isEmpty()){
             var e = result.array()[0];

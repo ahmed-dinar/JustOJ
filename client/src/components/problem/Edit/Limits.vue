@@ -381,7 +381,10 @@
     },
 
     mounted(){
-      console.log(this.$store.state.route.params);
+      this.$http
+        .get(`/api/problem/edit/limits/${this.$store.state.route.params.pid}`)
+        .then(()=>{})
+        .catch(this.handleError);
     }
   };
 </script>

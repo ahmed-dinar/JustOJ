@@ -72,6 +72,13 @@ REFERENCES `contest`(`id`)
 ON DELETE CASCADE;
 
 
+ALTER TABLE `participants`
+ADD CONSTRAINT `fk_user_participants`
+FOREIGN KEY(`uid`)
+REFERENCES `users`(`id`)
+ON DELETE CASCADE;
+
+
 ALTER TABLE `rank`
 ADD CONSTRAINT `fk_rank`
 FOREIGN KEY(`cid`)

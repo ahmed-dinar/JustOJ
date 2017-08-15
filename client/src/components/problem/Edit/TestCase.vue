@@ -126,7 +126,7 @@
 <script>
 
   import { LOG_OUT } from '@/store/mutation-types';
-  import swal from 'sweetalert2';
+  import Confirm from '@/lib/ConfirmSwal';
 
   export default {
     name: 'ProblemsEditCases',
@@ -258,46 +258,34 @@
       },
       removeCase(caseId){
 
-        swal({
-          html: `
-            <i class="material-icons">warning</i> Are You Sure?
-          `,
-          showCancelButton: true,
-          confirmButtonText: 'Remove',
-          confirmButtonColor: '#d33'
-        }).then(() => {
+        let self = this;
 
-          caseId = caseId.hash;
-          console.log(caseId);
+        Confirm('DELETE TESTCASE', 'This action CANNOT be undone.', 'I understand, DELETE')
+          .then(() => {
 
-          this.submitError = null;
-          progressbar.start();
+            caseId = caseId.hash;
+            console.log(caseId);
 
-          swal('Please Wait');
-          swal.showLoading();
+            self.submitError = null;
+            progressbar.start();
 
-          this.$http
-            .post(`/api/problem/edit/testcase/${this.$store.state.route.params.pid}?action=remove`, {
-              case: caseId
-            })
-            .then(response => {
-              progressbar.done();
-              progressbar.remove();
-              swal.close();
-              this.$noty.success('Test Case Removed');
-              this.fetchTestCases(true);
-            })
-            .catch(err => {
-              this.formDone();
-              this.handleError(err);
-              swal(
-                'Error!',
-                this.submitError || this.error,
-                'error'
-              );
-            });
+            self.$http
+              .post(`/api/problem/edit/testcase/${self.$store.state.route.params.pid}?action=remove`, {
+                case: caseId
+              })
+              .then(response => {
+                progressbar.done();
+                progressbar.remove();
+                self.$noty.success('Test Case Removed');
+                self.fetchTestCases(true);
+              })
+              .catch(err => {
+                self.formDone();
+                self.handleError(err);
+                self.$noty.error(self.submitError || self.error);
+              });
 
-        }).catch(swal.noop);
+          }).catch(()=>{});
       },
       showCase(caseId, caseType){
         let caseURL = `/problems/testcase/${this.$store.state.route.params.pid}/${caseId.hash}?type=${caseType}`;

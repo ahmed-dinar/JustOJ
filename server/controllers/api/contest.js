@@ -13,7 +13,9 @@ var moment = require('moment');
 var slug = require('slug');
 var Hashids = require('hashids');
 var config = require('nconf');
+var json2csv = require('json2csv');
 
+var User = require('./user');
 var Problems = appRequire('models/problems');
 var Contest = appRequire('models/contest');
 var AppError = appRequire('lib/custom-error');
@@ -21,6 +23,7 @@ var Schema = appRequire('config/validator-schema');
 var OK = appRequire('middlewares/OK');
 var authJwt = appRequire('middlewares/authJwt');
 var roles = appRequire('middlewares/roles');
+var getPage = appRequire('middlewares/page');
 
 
 var problemHash = new Hashids(config.get('HASHID:PROBLEM'), 11);
@@ -141,6 +144,52 @@ router
       logger.debug(rows);
       return res.sendStatus(200);
     });
+  })
+  .put(function(req, res){
+
+    var cid = has(req.query,'contest')
+     ? contestHash.decode(req.query.contest)
+     : null;
+
+    var visible = has(req.body, 'visible')
+     ? parseInt(req.body.visible)
+     : null;
+
+    if(!cid || !cid.length || !visible || !_.inRange(visible, 1, 3) ){
+      return res.sendStatus(400);
+    }
+
+    async.waterfall([
+      function(callback){
+        Contest.find(cid, ['status'], function(err, rows){
+          if(err){
+            return callback(err);
+          }
+          if( !rows.length ){
+            return callback(new AppError('No Contest Found', '404'));
+          }
+          if( parseInt(rows[0].status) === 0 && visible === 2 ){
+            return callback(new AppError('Incomplete contest cannot be public.', '400'));
+          }
+          return callback();
+        });
+      },
+      function(callback){
+        Contest.put(cid,{ status: visible }, callback);
+      }
+    ],
+    function(err, rows){
+      if(err){
+        if( err.name === '400' || err.name === '404' ){
+          return res.status(err.name).json({ error: err.message });
+        }
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+      logger.debug(rows);
+      return res.sendStatus(200);
+    });
+
   });
 
 
@@ -214,6 +263,233 @@ router
   });
 
 
+
+//
+// download participants list
+//
+router.get('/edit/:cid/users/download', authJwt, roles('admin'), function(req, res){
+
+  var cid = contestHash.decode(req.params.cid);
+  if(!cid || !cid.length){
+    return res.sendStatus(404);
+  }
+
+  async.waterfall([
+    function(callback){
+      Contest.find(cid[0], ['id'], function(err, rows){
+        if(err){
+          return callback(err);
+        }
+        if(!rows.length){
+          return callback(new AppError('No Contest Found', '404'));
+        }
+        return callback();
+      });
+    },
+    function (callback) {
+      Contest.download(cid[0], callback);
+    },
+    function (participants,callback) {
+      json2csv({ data: participants, fields: ['username','password'], fieldNames: ['USERNAME', 'PASSWORD'] }, callback);
+    }
+  ],
+  function (err, csvData) {
+    if(err){
+      if(err.name === '404'){
+        return res.status(404).json({ error: err.message });
+      }
+      logger.error(err);
+      return res.sendStatus(500);
+    }
+
+    res.attachment('participantsList.csv');
+    res.status(200).send(csvData);
+  });
+});
+
+
+
+//
+// delet multuple users
+//
+router.post('/edit/:cid/users/delete', authJwt, roles('admin'), function(req, res){
+
+  var cid = contestHash.decode(req.params.cid);
+  if(!cid || !cid.length || !has(req.body,'users') ){
+    return res.sendStatus(404);
+  }
+
+  logger.debug('uids  =  ', req.body.users);
+
+  Contest.deleteUser(cid[0], req.body.users, function(err, rows){
+    if(err){
+      logger.error(err);
+      return res.sendStatus(500);
+    }
+    logger.debug(rows);
+    return res.sendStatus(200);
+  });
+});
+
+
+
+//
+// edit participants
+//
+router
+  .route('/edit/:cid/users')
+  .all(authJwt, roles('admin'), OK())
+  .get(getPage, function(req, res){
+    var cid = contestHash.decode(req.params.cid);
+
+    if(!cid || !cid.length){
+      logger.debug('what!');
+      return res.sendStatus(404);
+    }
+
+    logger.debug('cur page = ', req.page);
+
+    Contest.users(cid, req.page, function(err, rows, pagination){
+      if(err){
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+
+      logger.debug('contestants = ', rows);
+      logger.debug(typeof rows);
+      logger.debug(pagination);
+
+      res.status(200).json({
+        users: rows,
+        pagination: pagination
+      });
+    });
+  })
+  .post(function(req, res){
+
+    var cid = contestHash.decode(req.params.cid);
+    if(!cid || !cid.length){
+      return res.sendStatus(404);
+    }
+    cid = cid[0];
+
+    logger.debug(req.body);
+
+    async.waterfall([
+      function(callback){
+        validateUserBody(req, callback);
+      },
+      function(callback){
+        Contest.find(cid, ['id'], function(err, rows){
+          if(err){
+            return callback(err);
+          }
+          if(!rows.length){
+            return callback(new AppError('No Contest Found', '404'));
+          }
+          return callback();
+        });
+      },
+      function(callback){
+        Contest.insertUser(cid, {
+          username: req.body.username,
+          name: req.body.name,
+          institute: has(req.body, 'institute') ? req.body.institute : '',
+          password: has(req.body, 'password') ? req.body.password : null,
+          website : '',
+          role: 'gen'
+        }, callback);
+      }
+    ],
+    function(err, rows){
+      if(err){
+        if(err.name === 'input'){
+          return res.status(400).json({ error: err.message });
+        }
+        if(err.name === '404'){
+          return res.status(404).json({ error: err.message });
+        }
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+      return res.sendStatus(200);
+    });
+  })
+  .put(function(req, res){
+
+    var cid = contestHash.decode(req.params.cid);
+    if(!cid || !cid.length){
+      return res.sendStatus(404);
+    }
+    cid = cid[0];
+
+    if( !has(req.body,'uid') ){
+      return res.sendStatus(400);
+    }
+
+    async.waterfall([
+      function(callback){
+        validateUserBody(req, callback);
+      },
+      function(callback){
+        Contest.find(cid, ['id'], function(err, rows){
+          if(err){
+            return callback(err);
+          }
+          if(!rows.length){
+            return callback(new AppError('No Contest Found', '404'));
+          }
+          return callback();
+        });
+      },
+      function(callback){
+        Contest.putUser(req.body.uid, {
+          username: req.body.username,
+          name: req.body.name,
+          institute: req.body.institute,
+          password: has(req.body, 'password') ? req.body.password : null
+        }, callback);
+      }
+    ],
+    function(err){
+      if(err){
+        if(err.name === 'input'){
+          return res.status(400).json({ error: err.message });
+        }
+        if(err.name === '404'){
+          return res.status(404).json({ error: err.message });
+        }
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+      return res.sendStatus(200);
+    });
+  })
+  .delete(function(req, res){
+
+    var cid = contestHash.decode(req.params.cid);
+    if(!cid || !cid.length || !has(req.query,'user') ){
+      return res.sendStatus(404);
+    }
+
+    var uid = req.query.user === 'all'
+      ? req.query.user
+      : [ req.query.user ];
+
+    logger.debug('uid  =  ', uid);
+    console.log(uid);
+
+    Contest.deleteUser(cid[0], uid, function(err, rows){
+      if(err){
+        logger.error(err);
+        return res.sendStatus(500);
+      }
+      logger.debug(rows);
+      return res.sendStatus(200);
+    });
+  });
+
+
 //
 //
 //
@@ -261,6 +537,30 @@ router
       return res.sendStatus(200);
     });
   });
+
+
+
+//
+// validate insert user data
+//
+function validateUserBody(req, fn){
+  req.checkBody(Schema.randomuser);
+  req.checkBody('username','already taken').userExists();
+
+  logger.debug('validating inputs..');
+
+  req
+    .getValidationResult()
+    .then(function(result) {
+      if (!result.isEmpty()){
+        var e = result.array()[0];
+        logger.debug(e);
+        return fn(new AppError(e.param + ' ' + e.msg,'input'));
+      }
+
+      return fn();
+    });
+};
 
 
 

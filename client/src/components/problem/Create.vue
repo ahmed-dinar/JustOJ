@@ -277,8 +277,8 @@
     data () {
       return {
         error: null,
-        sampleInput: problem.create.options.sampleInput,
-        sampleOutput: problem.create.options.sampleOutput,
+        sampleInput: null,
+        sampleOutput: null,
         createError: null,
         isFullscreen: false,
         preview: false,
@@ -424,6 +424,10 @@
               this.error = `${err.response.status} ${err.response.statusText}`;
           }
         });
+    },
+    mounted(){
+      this.sampleInput = problem.create.options.sampleInput;
+      this.sampleOutput = problem.create.options.sampleOutput;
     }
   };
 </script>

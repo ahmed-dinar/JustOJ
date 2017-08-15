@@ -1,10 +1,6 @@
 <template>
   <div class="row mt-4">
 
-    <div class="col-md-12">
-      <flash-message variant="success"></flash-message>
-    </div>
-
     <div class="col-md-12" v-if="!!error">
       <smooth-alert :show="!!error" variant="danger">
         {{ error }}
@@ -252,8 +248,8 @@
               .then(response => {
                 progressbar.done();
                 progressbar.remove();
-                this.flash({ message: 'contest updated', variant: 'success' });
-                window.location.reload();
+                this.$noty.success('Contest updated');
+                // window.location.reload();
               })
               .catch(this.handleError);
           });
@@ -277,7 +273,7 @@
         let errors = this.getApiError(err);
         switch (err.response.status) {
           case 401:
-            this.$store.commit(LOG_OUT);
+            this.$store.commit('LOG_OUT');
             this.$router.replace({ path: '/login' });
             break;
           case 400:

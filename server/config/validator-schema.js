@@ -218,5 +218,37 @@ module.exports = {
         errorMessage: 'must be between 0 and 21000 chars long'
       }
     }
+  },
+  'randomuser': {
+    'username': {
+      notEmpty: true,
+      errorMessage: 'required',
+      isLength: {
+        options: [{ min: 6, max: 20 }],
+        errorMessage: 'Must be between 6 and 20 chars long'
+      }
+    },
+    'password': {
+      optional: true,
+      isLength: {
+        options: [{min: 6, max: 30}],
+        errorMessage: 'Must be between 6 and 30 chars long'
+      }
+    },
+    'name': {
+      notEmpty: true,
+      errorMessage: 'required',
+      isLength: {
+        options: [{ min: 3, max: 250 }],
+        errorMessage: 'Must be between 3 and 250 chars long'
+      }
+    },
+    'institute': {
+      optional: true,
+      isLength: {
+        options: [{ min: 0, max: 50 }],
+        errorMessage: 'should not contains more than 50 chars'
+      }
+    }
   }
 };

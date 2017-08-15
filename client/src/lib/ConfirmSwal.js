@@ -1,7 +1,11 @@
 import swal from 'sweetalert2';
 
 
-export default function(title, text){
+export default function(
+  title = 'DELETE',
+  text = 'This action CANNOT be undone.',
+  confirmButtonText = 'I understand the consequences, delete this'
+){
   return swal({
     html: `
       <div class="swal-confirm">
@@ -9,7 +13,9 @@ export default function(title, text){
         <p>${text}</p>
       </div>
     `,
-    showCancelButton: true
+    showCancelButton: true,
+    confirmButtonColor: '#dc3545',
+    confirmButtonText: confirmButtonText
   });
 };
 

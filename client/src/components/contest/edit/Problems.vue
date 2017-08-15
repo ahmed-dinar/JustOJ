@@ -55,7 +55,7 @@
 
 <script type="text/javascript">
 
-  import swal from 'sweetalert2';
+  import Confirm from '@/lib/ConfirmSwal';
 
   export default {
     name: 'EditContestProblems',
@@ -127,12 +127,9 @@
       },
       removeIt(pid){
 
-        swal({
-          html: `
-            <i class="material-icons">warning</i> Are You Sure?
-          `,
-          showCancelButton: true
-        }).then(() => {
+        Confirm(
+        'DLETE PROBLEM'
+        ).then(() => {
 
           progressbar.start();
           this.error = null;
@@ -146,7 +143,7 @@
               this.fetchProblems();
             })
             .catch(this.handleError);
-        }).catch(swal.noop);
+        }).catch(()=>{});
       }
     },
 

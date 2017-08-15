@@ -7,6 +7,7 @@ var _ = require('lodash');
 var async = require('async');
 var bcrypt = require('bcryptjs');
 var rndm = require('rndm');
+var has = require('has');
 var Hashids = require('hashids');
 
 var DB = require('../config/database/knex/DB');
@@ -22,7 +23,7 @@ var User = require('./user');
  * @param indx
  * @param cb
  */
-exports.generateUser = function (cid,indx, cb) {
+exports.generateUser = function (cid, indx, cb) {
 
   var password = rndm(10);
   async.waterfall([
@@ -81,6 +82,33 @@ exports.generateUser = function (cid,indx, cb) {
 //
 //
 //
+exports.users = function(cid, cur_page, fn){
+
+  var sql = Query
+    .select(['usr.id','usr.username','usr.website as password','usr.institute','usr.name'])
+    .from('participants as p')
+    .leftJoin('users as usr', 'p.uid', 'usr.id')
+    .where('p.cid', cid)
+    .andWhere('usr.role', 'gen');
+
+  var sqlCount = Query
+    .count('* as count')
+    .from('participants')
+    .where('cid', cid);
+
+  Paginate.paginate({
+    cur_page: cur_page,
+    sql: sql,
+    limit: 50,
+    sqlCount: sqlCount,
+    url: ''
+  }, fn);
+};
+
+
+//
+//
+//
 exports.findProblems = function(cid, columns, fn){
   var sql = Query
     .select(columns)
@@ -92,128 +120,136 @@ exports.findProblems = function(cid, columns, fn){
 };
 
 
+//
+// update contest
+//
+exports.put = function(cid, columns, fn){
+  var sql = Query('contest')
+    .update(columns)
+    .where('id', cid)
+    .toString();
 
-
-/**
- *
- * @param cid
- * @param random_password
- * @param insertObj
- * @param cb
- */
-exports.insertUser = function (cid, random_password, insertObj, cb) {
-
-  async.waterfall([
-    function (callback) {
-      findById(cid,function (err,rows) {
-        if(err) return callback(err);
-
-        if(!rows || rows.length === 0) return callback('404');
-
-        callback();
-      });
-    },
-    function (callback) {
-      User.available(insertObj.username, null,function(err,rows){
-        if(err) return callback(err);
-
-        if( rows.length ) return callback('username not available' , 'username already taken by someone');
-
-        callback();
-      });
-    },
-    function(callback) {
-      bcrypt.genSalt(10, function (err, salt) {
-        if (err) return callback('salt error');
-
-        callback(null, salt);
-      });
-    },
-    function(salt,callback) {
-
-      if(random_password)
-        insertObj.password = rndm(10);
-
-      insertObj.email = insertObj.password;
-
-      bcrypt.hash(insertObj.password, salt, function (err, hash) {
-        if (err) return callback('hash error');
-
-        callback(null, hash);
-      });
-    },
-    function(hash,callback) {
-      insertObj.password = hash;
-      var sql = Query.insert(insertObj).into('users');
-      DB.execute(sql.toString(), callback);
-    },
-    function (urow ,callback) {
-      var sql = Query.insert({ cid: cid, uid: urow.insertId }).into('contest_participants');
-      DB.execute(sql.toString(), callback);
-    }
-  ], cb);
+  DB.execute(sql, fn);
 };
 
 
-/**
- *
- * @param cid
- * @param uid
- * @param insertObj
- * @param cb
- */
-exports.editUser = function (cid, uid, insertObj, cb) {
+
+//
+// find contest by id
+//
+exports.find = function(cid, columns, fn){
+  var sql = Query('contest')
+    .select(columns)
+    .where('id', cid)
+    .limit(1)
+    .toString();
+
+  DB.execute(sql, fn);
+};
+
+
+
+//
+//
+//
+exports.insertUser = function (cid, insertObj, fn) {
 
   async.waterfall([
-    function (callback) {
-      findById(cid,function (err,rows) {
-        if(err)
-          return callback(err);
-
-        if(!rows || rows.length === 0)
-          return callback('404','404');
-
-        callback();
-      });
-    },
-    function (callback) {
-      User.available(insertObj.username, null,function(err,rows){
-        if(err)
-          return callback(err);
-
-        if( rows.length )
-          return callback('username not available' , 'username already taken');
-
-        callback();
-      });
-    },
     function(callback) {
       bcrypt.genSalt(10, function (err, salt) {
-        if (err)
-          return callback('salt error');
-
+        if (err){
+          return callback(new Error('salt error'));
+        }
         callback(null, salt);
       });
     },
     function(salt,callback) {
 
-      insertObj.email = insertObj.password;
-      bcrypt.hash(insertObj.password, salt, function (err, hash) {
-        if (err)
-          return callback('hash error');
+      //random password
+      if( !insertObj.password ){
+        insertObj.password = rndm(10);
+      }
 
+      //save non hashed password for priting by admin
+      insertObj.website = insertObj.password;
+
+      bcrypt.hash(insertObj.password, salt, function (err, hash) {
+        if (err){
+          return callback(new Error('hash error'));
+        }
         callback(null, hash);
       });
     },
-    function(hash,callback) {
+    function(hash, callback) {
+      insertObj.password = hash;
+
+      var sql = Query
+        .insert(insertObj)
+        .into('users')
+        .toString();
+
+      DB.execute(sql, callback);
+    },
+    function (urow ,callback) {
+      var sql = Query
+      .insert({ cid: cid, uid: urow.insertId })
+      .into('participants')
+      .toString();
+
+      DB.execute(sql, callback);
+    }
+  ], fn);
+};
+
+
+
+//
+// update a user data
+//
+exports.putUser = function (uid, insertObj, fn) {
+
+  //no password update
+  if( !insertObj.password ){
+    var sql = Query('users')
+      .update(insertObj)
+      .where('id', uid)
+      .toString();
+
+    return DB.execute(sql, fn);
+  }
+
+  async.waterfall([
+    function(callback) {
+      bcrypt.genSalt(10, function (err, salt) {
+        if (err){
+          return callback(new Error('salt error'));
+        }
+        callback(null, salt);
+      });
+    },
+    function(salt,callback) {
+
+      //save non hashed password for priting by admin
+      insertObj.website = insertObj.password;
+
+      bcrypt.hash(insertObj.password, salt, function (err, hash) {
+        if (err){
+          return callback(new Error('hash error'));
+        }
+        callback(null, hash);
+      });
+    },
+    function(hash, callback) {
       insertObj.password = hash;
 
       var sql = Query('users')
-                .update(insertObj)
-                .where({ 'id': uid });
-      DB.execute(sql.toString(), callback);
+        .update(insertObj)
+        .where('id', uid)
+        .toString();
+
+      DB.execute(sql, callback);
     }
-  ], cb);
+  ], fn);
 };
 
 
@@ -235,7 +271,9 @@ function findById(cid,cb){
 exports.findById = findById;
 
 
-
+//
+//
+//
 exports.fetch = function (cid, columns, cb){
   var sql = Query
     .select(columns)
@@ -275,160 +313,52 @@ exports.save = function(columns, cb){
 
 
 
-// /**
-//  *
-//  * @param cb
-//  */
-// exports.getPublic = function(cb){
-//   async.waterfall([
-//     function(callback) {
-//       getRunning(callback);
-//     },
-//     function(running,callback){
-//       getFuture(running,callback);
-//     },
-//     function(running,future,callback){
-//       getEnded(running,future,callback);
-//     }
-//   ], cb);
-// };
 
 
-/**
- *
- * @param cur_page
- * @param URL
- * @param cb
- */
-exports.getPastContests = function (cur_page,URL,cb) {
+//
+// all user list of a contest
+//
+exports.download = function (cid,cb) {
 
-  var sql = Query.select(['cnts.*'])
-        .count('usr.id as users')
-        .from('contest as cnts')
-        .leftJoin('contest_participants as usr', 'usr.cid', 'cnts.id')
-        .where(
-            Query.raw('`status` = 2 AND `end` <= NOW()')
-        )
-        .groupBy('cnts.id')
-        .orderBy('cnts.begin','desc');
+  var sql = Query
+    .select(['usr.username','usr.website as password'])
+    .from('participants as cp')
+    .leftJoin('users as usr', 'cp.uid', 'usr.id')
+    .where('cp.cid', cid)
+    .orderBy('usr.username', 'desc')
+    .toString();
 
-  var sqlCount = Query.count('* as count')
-        .from('contest')
-        .where(
-            Query.raw('`status` = 2 AND `end` <= NOW()')
-        );
-
-  Paginate.paginate({
-    cur_page: cur_page,
-    sql: sql,
-    limit: 20,
-    sqlCount: sqlCount,
-    url: URL
-  }, cb);
-};
-
-
-/**
- *  get Participants list of a contest
- * @param cid
- * @param cur_page
- * @param URL
- * @param LIMIT
- * @param cb
- */
-exports.getParticipants = function (cid,cur_page,URL,LIMIT,cb) {
-
-  var sql = Query.select(['cp.*','usr.username','usr.email as password','usr.name','usr.institute'])
-        .from('contest_participants as cp')
-        .leftJoin('users as usr', 'cp.uid', 'usr.id')
-        .where('cp.cid', cid)
-        .orderBy('usr.username','desc');
-
-  var sqlCount = Query.count('* as count')
-        .from('contest_participants')
-        .where('cid', cid);
-
-  if( LIMIT < 50 || LIMIT > 200 )
-    LIMIT = 100;
-
-  Paginate.paginate({
-    cur_page: cur_page,
-    sql: sql,
-    limit: LIMIT,
-    sqlCount: sqlCount,
-    url: URL
-  }, cb);
-};
-
-
-/**
- *
- * @param cid
- * @param cb
- */
-exports.downloadParticipants = function (cid,cb) {
-
-  var sql = Query.select(['usr.username','usr.email as password'])
-        .from('contest_participants as cp')
-        .leftJoin('users as usr', 'cp.uid', 'usr.id')
-        .where('cp.cid', cid)
-        .orderBy('usr.username','desc');
-
-  DB.execute( sql.toString(), cb);
+  DB.execute(sql, cb);
 };
 
 
 
 
+//
+//
+//
+exports.deleteUser = function (cid, uids, fn) {
 
-/**
- *
- * @param cid
- * @param userid
- * @param cb
- */
-exports.removeUser = function (cid, userid, cb) {
+  var sql;
 
-  var isMulti = _.isArray(userid);
-  async.waterfall([
-    function (callback) {
-      findById(cid,function (err,rows) {
-        if(err) return callback(err);
+  if( _.isArray(uids) ){
+    //remove one or multiple
+    sql = Query('users')
+      .whereIn('id', uids)
+      .del()
+      .toString();
+  }
+  else{
+    //remove all users
+    sql = Query('users')
+      .where(
+        Query.raw('`id` IN ( SELECT `uid` FROM `participants` WHERE `cid` = ? )' , [cid])
+      )
+      .del()
+      .toString();
+  }
 
-        if(!rows || rows.length === 0) return callback('404');
-
-        callback();
-      });
-    },
-    function(callback) {
-
-      var sql;
-
-      if( isMulti ){
-        sql = Query('contest_participants')
-                    .whereIn('uid', userid)
-                    .andWhere('cid',cid)
-                    .del();
-      }else {
-        sql = Query('contest_participants').where(
-                    Query.raw('cid = ? AND uid = ?', [cid, userid.userid])
-                ).del();
-      }
-
-      DB.execute(sql.toString(), callback);
-    },
-    function (urow,callback) {
-
-      var sql;
-
-      if( isMulti )
-        sql = Query('users').whereIn('id',userid).del();
-      else
-        sql = Query('users').where('id',userid.userid).del();
-
-      DB.execute(sql.toString(), callback);
-    }
-  ], cb);
+  DB.execute(sql, fn);
 };
 
 

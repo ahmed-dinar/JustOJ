@@ -15,7 +15,7 @@
         <b-table
         :items="contests"
         :fields="fields"
-        class="table-gray"
+        class="table-gray table-admin"
         >
           <template slot="index" scope="contest">{{ contest.index + 1 }}</template>
           <template slot="title" scope="contest">
@@ -25,10 +25,17 @@
             </div>
           </template>
 
-          <template slot="status" scope="contest">
-            <span :class="['badge', 'badge-bold', contest.value === 0 ? 'badge-secondary' : 'badge-success' ]">
-              {{ getVisibility(contest.value) }}
+          <template slot="state" scope="contest">
+            <span :class="['badge', 'badge-bold', contest.item.status === 0 ? 'badge-secondary' : 'badge-success' ]">
+              {{ contest.item.status === 0 ? 'Incomplete' : 'Ready' }}
             </span>
+          </template>
+
+          <template slot="status" scope="contest">
+            <select v-model="visible" @change="onChange(contest.value, contest.item.id)" class="form-control form-control-xs">
+              <option value="2">Public</option>
+              <option value="1">Hidden</option>
+            </select>
           </template>
 
           <template slot="action" scope="contest">
@@ -59,6 +66,7 @@
     data(){
       return {
         contests: null,
+        visible: '1',
         fields: {
           index: {
             label: '#',
@@ -66,6 +74,10 @@
           },
           title: {
             label: 'Title'
+          },
+          state: {
+            label: 'Status',
+            thStyle: { width: '8%' }
           },
           status: {
             label: 'Visibility',
@@ -142,19 +154,41 @@
         }
         return `Started ${moment().from(contest.begin)}, Ends ${moment().to(contest.end)}`;
       },
-      getVisibility(code){
-        switch(code){
-          case 0:
-            return 'Incomplete';
-          case 1:
-            return 'Hidden';
-          case 2:
-            return 'Public';
-          default:
-            return 'Unknown';
+      onChange(val, cid){
+
+        let visibility = parseInt(this.visible);
+
+        if( parseInt(val) === 0 && visibility === 2 ){
+          this.visible = '1';
+          this.$noty.error('Incomplete contest cannot be public.');
+          return;
         }
+
+        this.error = null;
+        progressbar.start();
+
+        this.$http
+          .put(`/api/contest/admin?contest=${cid}`,{ visible: visibility })
+          .then(response => {
+            progressbar.done();
+            progressbar.remove();
+            this.$noty.success('Contest visibility changed.');
+          })
+          .catch(err => {
+            progressbar.done();
+            progressbar.remove();
+            this.visible = '1';
+
+            if( err.response.status === 400 ){
+              this.$noty.error(this.getApiError(err));
+              return;
+            }
+
+            this.error = this.getApiError(err);
+          });
       }
     },
+
 
     mounted(){
       this.fetchContest();

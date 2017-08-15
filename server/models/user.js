@@ -467,10 +467,6 @@ User.save = function(user, fn){
 };
 
 
-
-
-
-
 module.exports = User;
 
 
