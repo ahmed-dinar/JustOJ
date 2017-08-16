@@ -14,8 +14,9 @@ var slug = require('slug');
 var Hashids = require('hashids');
 var config = require('nconf');
 var json2csv = require('json2csv');
+var typeis = require('type-is');
 
-var User = require('./user');
+var csvUser = require('./contest/csvUser');
 var Problems = appRequire('models/problems');
 var Contest = appRequire('models/contest');
 var AppError = appRequire('lib/custom-error');
@@ -105,6 +106,10 @@ router.post('/create', authJwt, roles('admin'), function(req, res, next){
 });
 
 
+
+//
+//
+//
 router
   .route('/admin')
   .all(authJwt, roles('admin'), OK())
@@ -332,6 +337,26 @@ router.post('/edit/:cid/users/delete', authJwt, roles('admin'), function(req, re
 });
 
 
+//
+// generate participants
+//
+router.post('/edit/:cid/users/gen', authJwt, roles('admin'), function(req, res){
+  var cid = contestHash.decode(req.params.cid);
+
+  if(!cid || !cid.length){
+    logger.debug('what!');
+    return res.sendStatus(404);
+  }
+
+  //from csv
+  if( typeis(req, ['multipart']) ){
+    return csvUser(req, res);
+  }
+
+  return res.sendStatus(200);
+});
+
+
 
 //
 // edit participants
@@ -377,7 +402,7 @@ router
 
     async.waterfall([
       function(callback){
-        validateUserBody(req, callback);
+        validateUserBody(req, false, callback);
       },
       function(callback){
         Contest.find(cid, ['id'], function(err, rows){
@@ -419,17 +444,21 @@ router
 
     var cid = contestHash.decode(req.params.cid);
     if(!cid || !cid.length){
+      logger.debug('decode error');
       return res.sendStatus(404);
     }
     cid = cid[0];
 
-    if( !has(req.body,'uid') ){
+    if( !has(req.body,'id') ){
+      logger.debug('no id');
       return res.sendStatus(400);
     }
 
+    logger.debug(req.body);
+
     async.waterfall([
       function(callback){
-        validateUserBody(req, callback);
+        validateUserBody(req, true, callback);
       },
       function(callback){
         Contest.find(cid, ['id'], function(err, rows){
@@ -443,7 +472,7 @@ router
         });
       },
       function(callback){
-        Contest.putUser(req.body.uid, {
+        Contest.putUser(req.body.id, {
           username: req.body.username,
           name: req.body.name,
           institute: req.body.institute,
@@ -543,7 +572,7 @@ router
 //
 // validate insert user data
 //
-function validateUserBody(req, fn){
+function validateUserBody(req, skip, fn){
   req.checkBody(Schema.randomuser);
   req.checkBody('username','already taken').userExists();
 
@@ -554,7 +583,12 @@ function validateUserBody(req, fn){
     .then(function(result) {
       if (!result.isEmpty()){
         var e = result.array()[0];
-        logger.debug(e);
+        logger.debug('validation error: ',e);
+
+        if( e.param === 'username' && e.msg === 'required' && skip ){
+          return fn();
+        }
+
         return fn(new AppError(e.param + ' ' + e.msg,'input'));
       }
 

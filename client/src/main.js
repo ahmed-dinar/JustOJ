@@ -62,7 +62,7 @@ if(!window.progressbar){
 
 VeeValidate.Validator.extend('verify_exists', {
   getMessage: field => `This ${field} is not available.`,
-  validate: value => new Promise(resolve => {
+  validate: (value) => new Promise(resolve => {
     if( !value ){
       resolve({ valid: true });
       return;

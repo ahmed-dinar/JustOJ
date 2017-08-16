@@ -175,13 +175,7 @@ footer{
   color: #fff;
 }
 
-.has-danger .form-control{
-  border-color: #f79483;
-}
 
-.has-danger .form-control-feedback{
-  color: #f79483;
-}
 
 .card-no-border{
   border: none;
@@ -629,6 +623,20 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
   box-shadow: none;
 }
 
+.form-control.is-invalid {
+  border-color: #f79483;
+}
+
+.invalid-feedback, .feedback-danger{
+  color: #ff3860;
+  font-size: 11px;
+}
+
+.feedback-danger{
+  display: block;
+  margin-top: .25rem;
+}
+
 .form-bundle{
   width: 100%;
 }
@@ -753,7 +761,6 @@ form{
   display: flex;
   align-items: center;
   padding:5px 8px;
-
 }
 
 .btn-material{
@@ -1102,3 +1109,14 @@ h6 .material-icons {
   border: none;
 }
 
+.icon-hash{
+  display: flex;
+  align-items: center;
+  padding: 0;
+  height: 100%;
+}
+
+.icon-hash .material-icons{
+  font-weight: 700;
+  margin-top: 50px;
+}
