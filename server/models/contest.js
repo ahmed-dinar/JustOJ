@@ -7,89 +7,27 @@ var _ = require('lodash');
 var async = require('async');
 var bcrypt = require('bcryptjs');
 var rndm = require('rndm');
-var has = require('has');
 var Hashids = require('hashids');
 
 var DB = require('../config/database/knex/DB');
 var Query = require('../config/database/knex/query');
 var Paginate = require('../lib/pagination/paginate');
 var MyUtil = require('../lib/myutil');
-var User = require('./user');
 
-
-/**
- *
- * @param cid
- * @param indx
- * @param cb
- */
-exports.generateUser = function (cid, indx, cb) {
-
-  var password = rndm(10);
-  async.waterfall([
-    function(callback) {
-      bcrypt.genSalt(10, function (err, salt) {
-        if (err) return callback('salt error');
-
-        callback(null, salt);
-      });
-    },
-    function(salt,callback) {
-      bcrypt.hash(password, salt, function (err, hash) {
-        if (err) return callback('hash error');
-
-        callback(null, hash);
-      });
-    },
-    function(hash,callback) {
-
-      var sql = Query.insert({
-        username: password,   // we will change it
-        name: 'randomUser_' + cid + '_' + indx,
-        institute: '',
-        password: hash,
-        email   : password,  //we need password for download
-        role    : 'randuser'
-      })
-                .into('users');
-
-      DB.execute(sql.toString(), callback);
-    },
-    function(rows, callback) {
-
-      var hashids = new Hashids('randomuser' , 15);
-      var username = hashids.encode(rows.insertId);
-      console.log('user inserted id: ' + rows.insertId + ' and username: ' + username + ' and password: ' + password);
-
-      var sql = Query('users')
-                        .update({ username: username })
-                        .where({ 'id': rows.insertId });
-      DB.execute(sql.toString(), function (err,row2) {
-        if(err) return callback(err);
-
-        callback(null,rows.insertId);
-      });
-    },
-    function (uid ,callback) {
-      var sql = Query.insert({ cid: cid, uid: uid }).into('contest_participants');
-
-      DB.execute(sql.toString(), callback);
-    }
-  ], cb);
-};
 
 
 //
 //
 //
-exports.users = function(cid, cur_page, fn){
+exports.users = function(cid, orderby, cur_page, fn){
 
   var sql = Query
     .select(['usr.id','usr.username','usr.website as password','usr.institute','usr.name'])
     .from('participants as p')
     .leftJoin('users as usr', 'p.uid', 'usr.id')
     .where('p.cid', cid)
-    .andWhere('usr.role', 'gen');
+    .andWhere('usr.role', 'gen')
+    .orderByRaw(orderby);
 
   var sqlCount = Query
     .count('* as count')
@@ -148,7 +86,6 @@ exports.find = function(cid, columns, fn){
 };
 
 
-
 //
 //
 //
@@ -182,6 +119,7 @@ exports.insertUser = function (cid, insertObj, fn) {
     },
     function(hash, callback) {
       insertObj.password = hash;
+      insertObj.verified = 1;
 
       var sql = Query
         .insert(insertObj)
@@ -196,7 +134,12 @@ exports.insertUser = function (cid, insertObj, fn) {
       .into('participants')
       .toString();
 
-      DB.execute(sql, callback);
+      DB.execute(sql, function(err){
+        if(err){
+          return callback(err);
+        }
+        return callback(null, urow.insertId);
+      });
     }
   ], fn);
 };
@@ -321,12 +264,14 @@ exports.save = function(columns, cb){
 exports.download = function (cid,cb) {
 
   var sql = Query
-    .select(['usr.username','usr.website as password'])
+    .select(['usr.username','usr.website as password','usr.institute'])
     .from('participants as cp')
     .leftJoin('users as usr', 'cp.uid', 'usr.id')
     .where('cp.cid', cid)
-    .orderBy('usr.username', 'desc')
+    .orderByRaw('`usr`.`institute` ASC, `usr`.`username` ASC')
     .toString();
+
+  console.log(sql);
 
   DB.execute(sql, cb);
 };

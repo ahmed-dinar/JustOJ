@@ -274,7 +274,8 @@
             break;
           case 400:
           case 404:
-            this.submitError = errors;
+           // this.submitError = errors;
+            this.$noty.error(errors, { timeout: false });
             break;
           default:
             this.error = errors;

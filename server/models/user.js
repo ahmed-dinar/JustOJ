@@ -1,8 +1,5 @@
 'use strict';
 
-/**
-* Module dependencies.
-*/
 var async = require('async');
 var bcrypt = require('bcryptjs');
 var moment = require('moment');
@@ -163,6 +160,37 @@ User.getResetToken = function (token, callback) {
 };
 
 
+
+//
+// find user with LIKE
+//
+User.findMatch = function(columns, like, fn){
+
+  //too raw? lodash? huh? nope :)
+  var pat = '';
+  for(var i=0; i<like.pattern.length; i++) {
+    if ( like.pattern.charAt(i) === '_' ){
+      pat += '\\';
+    }
+    pat += like.pattern.charAt(i);
+  }
+
+  var sql = Query
+  .select(columns)
+  .from('users')
+  .where(like.column, 'like', pat)
+  .limit(1)
+  .toString();
+
+  console.log(sql);
+
+  DB.execute(sql, fn);
+};
+
+
+
+
+
 /**
  * Login process
  * @param username
@@ -254,6 +282,17 @@ User.problemStatus = function(id,callback){
   DB.execute(sql.toString(), callback);
 };
 
+//
+//
+//
+User.put = function(uid, colums, fn){
+  var sql = Query('users')
+  .update(colums)
+  .where('id', uid)
+  .toString();
+
+  return DB.execute(sql, fn);
+};
 
 
 User.updateProfile = function(credentials,callback){

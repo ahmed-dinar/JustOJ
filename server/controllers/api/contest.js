@@ -295,7 +295,7 @@ router.get('/edit/:cid/users/download', authJwt, roles('admin'), function(req, r
       Contest.download(cid[0], callback);
     },
     function (participants,callback) {
-      json2csv({ data: participants, fields: ['username','password'], fieldNames: ['USERNAME', 'PASSWORD'] }, callback);
+      json2csv({ data: participants, fields: ['username','password','institute'], fieldNames: ['USERNAME', 'PASSWORD','INSTITUTE'] }, callback);
     }
   ],
   function (err, csvData) {
@@ -340,7 +340,7 @@ router.post('/edit/:cid/users/delete', authJwt, roles('admin'), function(req, re
 //
 // generate participants
 //
-router.post('/edit/:cid/users/gen', authJwt, roles('admin'), function(req, res){
+router.post('/edit/:cid/users/gen', /*authJwt, roles('admin'),*/ function(req, res){
   var cid = contestHash.decode(req.params.cid);
 
   if(!cid || !cid.length){
@@ -350,7 +350,7 @@ router.post('/edit/:cid/users/gen', authJwt, roles('admin'), function(req, res){
 
   //from csv
   if( typeis(req, ['multipart']) ){
-    return csvUser(req, res);
+    return csvUser(req, res, cid[0]);
   }
 
   return res.sendStatus(200);
@@ -372,9 +372,27 @@ router
       return res.sendStatus(404);
     }
 
-    logger.debug('cur page = ', req.page);
+    req.query.orderby = has(req.query,'orderby')
+      ? req.query.orderby
+      : ['institute', 'name'];
 
-    Contest.users(cid, req.page, function(err, rows, pagination){
+    var orderby = _
+      .chain(req.query.orderby)
+      .split(',', 3)
+      .filter(function userOrderFilter(column){
+        return (column == 'institute' || column === 'name' || column === 'username');
+      })
+      .map(function(elem) {
+        return '`usr`.`'+ elem +'` ASC';
+      })
+      .join(',')
+      .value();
+
+    if( !orderby.length ){
+      orderby = 'institute';
+    }
+
+    Contest.users(cid, orderby, req.page, function(err, rows, pagination){
       if(err){
         logger.error(err);
         return res.sendStatus(500);
@@ -383,6 +401,11 @@ router
       logger.debug('contestants = ', rows);
       logger.debug(typeof rows);
       logger.debug(pagination);
+
+      _.forEach(rows, function(c, i){
+        rows[i].institute = entities.decodeHTML(rows[i].institute);
+        rows[i].name = entities.decodeHTML(rows[i].name);
+      });
 
       res.status(200).json({
         users: rows,
@@ -517,6 +540,15 @@ router
       return res.sendStatus(200);
     });
   });
+
+
+
+//
+//
+//
+function userOrderFilter(column){
+  return (column == 'institute' || column === 'name' || column === 'username');
+}
 
 
 //

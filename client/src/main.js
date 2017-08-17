@@ -77,16 +77,11 @@ VeeValidate.Validator.extend('verify_exists', {
 });
 
 
-VeeValidate.Validator.extend('fileRequired', {
-  getMessage: field => `This ${field} is not lalal.`,
-  validate: value => new Promise(resolve => {
-    if( !value ){
-      resolve({ valid: false });
-      return;
-    }
-    resolve({ valid: true });
-  })
+VeeValidate.Validator.extend('username', {
+  getMessage: field => `${field} may contain alpha-numeric characters and underscores.`,
+  validate: (value) => /^[a-zA-Z0-9_]+$/.test(value)
 });
+
 
 
 Vue.use(VTooltip);

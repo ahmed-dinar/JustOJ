@@ -152,7 +152,7 @@
         if( moment().isBefore(contest.begin) ){
           return `Starts ${moment().to(contest.begin)}`;
         }
-        return `Started ${moment().from(contest.begin)}, Ends ${moment().to(contest.end)}`;
+        return `Started ${moment(contest.begin).from(moment())}, Ends ${moment().to(contest.end)}`;
       },
       onChange(val, cid){
 

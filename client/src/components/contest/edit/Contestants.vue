@@ -305,50 +305,54 @@
 
         <div class="form-bundle mb-4">
           <label>Username</label>
+          <toggle-button
+          data-toggle="tooltip" data-placement="bottom" title="suffix"
+          @change="randomgen.random = $event.value"
+          :value="true"
+          :width="80"
+          :height="23"
+          :color="{ checked: '#447DF7', unchecked: '#ccc' }"
+          :labels="{ checked: 'RANDOM', unchecked: 'RANDOM' }"
+          />
 
-          <div class="row mb-1">
+          <template v-if="!randomgen.random">
+            <div class="row mb-1">
 
-            <div class="col-md-4 pr-1">
-              <label>Prefix</label>
-              <input
-              type="text" v-model="randomgen.prefix" placeholder="prefix"
-              :class="[ 'form-control', formError.has('random-form.prefix') ? 'is-invalid' : '' ]"
-              data-vv-name="prefix"
-              v-validate="'required|min:4|max:12'"
-              >
-              <span v-show="formError.has('random-form.prefix')" class="invalid-feedback">{{ formError.first('random-form.prefix') }}</span>
+              <div class="col-md-4 pr-1">
+                <label>Prefix</label>
+                <input
+                type="text" v-model="randomgen.prefix" placeholder="prefix"
+                :class="[ 'form-control', formError.has('random-form.prefix') ? 'is-invalid' : '' ]"
+                data-vv-name="prefix"
+                v-validate="'required|min:4|max:20|username'"
+                >
+                <span v-show="formError.has('random-form.prefix')" class="invalid-feedback">{{ formError.first('random-form.prefix') }}</span>
+              </div>
+
+              <div>
+                <div class="icon-hash"><i class="material-icons">remove</i></div>
+              </div>
+
+              <div class="col-md-4 pl-1">
+                <label class="mr-2">Suffix</label>
+                <input
+                type="text" v-model="randomgen.suffix" placeholder="starting from"
+                :class="[ 'form-control', formError.has('random-form.suffix') ? 'is-invalid' : '' ]"
+                data-vv-name="suffix"
+                v-validate="'required|numeric|min_value:1|max_value:1000'"
+                >
+                <span v-show="formError.has('random-form.suffix')" class="invalid-feedback">{{ formError.first('random-form.suffix') }}</span>
+              </div>
+
             </div>
+            <p class="m-0 small-text">* Username will be: <strong>prefix_suffix</strong></p>
+            <p class="m-0 small-text">* Prefix is a string no more han <strong>20</strong> characters.</p>
+            <p class="m-0 small-text">* Sufix is a number and auto incremental.</p>
+            <p class="small-text">* Example: icpc2017_team_1, icpc2017_team_2, where icpc2017_team is prefix.</p>
+          </template>
+          <p class="mt-1 small-text" v-else>* Random unique username will be generate.</p>
 
-            <div>
-              <div class="icon-hash"><i class="material-icons">remove</i></div>
-            </div>
 
-            <div class="col-md-4 pl-1">
-              <label class="mr-2">Suffix</label>
-              <toggle-button
-              data-toggle="tooltip" data-placement="bottom" title="suffix"
-              @change="randomgen.suffix.number = $event.value"
-              :value="true"
-              :width="80"
-              :height="23"
-              :color="toggleColor"
-              :labels="{ checked: 'NUMBER', unchecked: 'RANDOM' }"
-              />
-
-              <input v-if="randomgen.suffix.number"
-              type="text" v-model="randomgen.suffix.from" placeholder="starting from"
-              :class="[ 'form-control', formError.has('random-form.suffix') ? 'is-invalid' : '' ]"
-              data-vv-name="suffix"
-              v-validate="'required|numeric|min_value:1|max_value:1000000'"
-              >
-              <span v-show="formError.has('random-form.suffix')" class="invalid-feedback">{{ formError.first('random-form.suffix') }}</span>
-
-            </div>
-
-          </div>
-          <p class="m-0 small-text">* Username will be: <strong>prefix_suffix</strong></p>
-          <p class="m-0 small-text">* If sufix is number, then it will be auto incremental</p>
-          <p class="small-text">* Example: icpc2017_team_1, icpc2017_team_2, where icpc2017_team is prefix.</p>
         </div>
 
 
@@ -385,14 +389,12 @@
         random: true,
         randcount: null,
         randomgen: {
+          random: true,
           total: null,
           file: false,
           csv: null,
           prefix: null,
-          suffix: {
-            number: true,
-            from: null
-          }
+          suffix: null
         },
         genuser: {
           random: false
@@ -445,13 +447,20 @@
         return has(this.$store.state.route.query,'page')
           ? parseInt(this.$store.state.route.query.page)
           : 1;
+      },
+      orderBy(){
+        if( !has(this.$store.state.route.query,'sortby') ){
+          return 'institute,name';
+        }
+        return this.$store.state.route.query.sortby;
       }
     },
 
     methods: {
       fetchUsers(){
+
         this.$http
-          .get(`/api/contest/edit/${this.contestId}/users?page=${this.cur_page}`)
+          .get(`/api/contest/edit/${this.contestId}/users?page=${this.cur_page}&orderby=${this.orderBy}`)
           .then(response => {
             this.users = response.data.users;
             this.pagination = response.data.pagination;
@@ -509,9 +518,9 @@
       randomSubmit(scope){
         this.formError.items = [];
 
-        // if( this.randomgen.file && !this.validateFile(this.randomgen.csv, scope) ){
-        //   return;
-        // }
+        if( this.randomgen.file && !this.validateFile(this.randomgen.csv, scope) ){
+          return;
+        }
 
         this.$validator
           .validateAll(scope)
@@ -520,7 +529,6 @@
               return;
             }
 
-            console.log(this.randomgen);
 
             let postData;
             let api;
@@ -529,10 +537,11 @@
               //csv file uploaded
               postData = new FormData();
               postData.append('csv', this.randomgen.csv);
-              postData.append('prefix', this.randomgen.prefix);
+              postData.append('random', this.randomgen.random);
 
-              if( this.randomgen.suffix.number ){
-                postData.append('suffix', this.randomgen.suffix.from);
+              if( !this.randomgen.random ){
+                postData.append('prefix', this.randomgen.prefix);
+                postData.append('suffix', this.randomgen.suffix);
               }
 
               console.log(postData);
@@ -546,23 +555,29 @@
             else{
               //json request
               postData = {
-                prefix: this.randomgen.prefix,
+                random: this.randomgen.random,
                 total: this.randomgen.total
               };
 
-              if( this.randomgen.suffix.number ){
-                postData.suffix = this.randomgen.suffix.from;
+              if( !this.randomgen.random ){
+                postData.prefix = this.randomgen.prefix;
+                postData.suffix = this.randomgen.suffix;
               }
 
               api = this.$http.post(`/api/contest/edit/${this.contestId}/users/gen`, postData);
             }
 
+            this.submitting = true;
+
             api
               .then(response => {
                 this.$noty.success('yo');
+                this.closeModal(false);
+                this.fetchUsers();
               })
               .catch(err => {
-                this.$noty.error(this.getApiError(err));
+                this.$noty.error(this.getApiError(err), { timeout: false });
+                this.closeModal(false);
               });
           });
       },
@@ -680,6 +695,7 @@
 
 
       console.log(this.$store.state.route.params);
+      console.log(this.$store.state.route.query);
     }
   };
 </script>

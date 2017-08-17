@@ -9,6 +9,15 @@ var logger = require('winston');
 
 
 //
+// username may alpha numeric and underscore
+//
+function isUsername(value){
+  return /^[a-zA-Z0-9_]+$/.test(value);
+}
+
+
+
+//
 // Check if a username already exists
 //
 function userExists(username){
@@ -117,5 +126,6 @@ module.exports = {
   emailExists: emailExists,
   isDuration: isDuration,
   isDatetime: isDatetime,
-  minDuration: minDuration
+  minDuration: minDuration,
+  isUsername: isUsername
 };
