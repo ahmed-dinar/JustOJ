@@ -38,11 +38,12 @@ router.post('/',function(req, res, next) {
 
     payLoad.expires = sessionExpiresIn;
 
+    //TODO: add sameSite: 'Strict'
     res
       .cookie('access_token', token, {
         domain: config.get('domain') || 'localhost',
         expires: jwtExpiresIn,
-        HttpOnly: true,
+        httpOnly: true,
         secure: true
       })
       .status(200)

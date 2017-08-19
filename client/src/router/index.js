@@ -13,6 +13,15 @@ import Account from '@/components/user/Account';
 import ForgotPassword from '@/components/user/ForgotPassword';
 import VerifyAccount from '@/components/user/VerifyAccount';
 
+import Announcement from '@/components/contest/Announcement';
+import Dashboard from '@/components/contest/Dashboard';
+import ContestSub from '@/components/contest/ContestSub';
+import Standings from '@/components/contest/Standings';
+import ContestProblem from '@/components/contest/ContestProblem';
+import Clarifications from '@/components/contest/Clarifications';
+import ClarRequest from '@/components/contest/ClarRequest';
+import ClarView from '@/components/contest/ClarView';
+
 import Contests from '@/components/contest/Contests';
 import EditCRoute from '@/components/contest/edit/Route';
 import ContestAdmin from '@/components/contest/edit/Admin';
@@ -221,14 +230,68 @@ const router = new Router({
                   meta: { title: 'Edit Contest | Contestants', auth: true, role: 'admin' }
                 }
               ]
+            },
+            {
+              path: ':slug',
+              component: routeTemplate('ContestArena'),
+              children: [
+                {
+                  path: '',
+                  name: 'Announcement',
+                  component: Announcement,
+                  meta: { title: 'Edit Contest | Contestants' }
+                },
+                {
+                  path: 'dashboard',
+                  name: 'Dashboard',
+                  component: Dashboard,
+                  meta: { title: 'Edit Contest | Contestants' }
+                },
+                {
+                  path: 'submissions',
+                  name: 'ContestSub',
+                  component: ContestSub,
+                  meta: { title: 'Edit Contest | Contestants' }
+                },
+                {
+                  path: 'standings',
+                  name: 'Standings',
+                  component: Standings,
+                  meta: { title: 'Edit Contest | Contestants' }
+                },
+                {
+                  path: 'p/:pid',
+                  name: 'ContestProblem',
+                  component: ContestProblem,
+                  meta: { title: 'Edit Contest | Contestants' }
+                },
+                {
+                  path: 'clar',
+                  component: routeTemplate('ClarificationsRoute'),
+                  children: [
+                    {
+                      path: '',
+                      name: 'Clarifications',
+                      component: Clarifications,
+                      meta: { title: 'Edit Contest | Contestants' }
+                    },
+                    {
+                      path: 'request',
+                      name: 'ClarRequest',
+                      component: ClarRequest,
+                      meta: { title: 'Edit Contest | Contestants' }
+                    },
+                    {
+                      path: ':clarid',
+                      name: 'ClarView',
+                      component: ClarView,
+                      meta: { title: 'Edit Contest | Contestants' }
+                    }
+                  ]
+                },
+
+              ]
             }
-            // ,
-            // {
-            //   path: ':slug',
-            //   name: 'CreateContest',
-            //   component: ContestArena,
-            //   meta: { title: 'Contests | Create', auth: true, role: 'admin' }
-            // }
           ]
         }
       ]

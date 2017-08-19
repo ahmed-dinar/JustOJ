@@ -8,7 +8,7 @@ var logger = require('winston');
 
 exports.execute = function(sql,cb){
 
-  //logger.debug('[SQL-QUERY]: ' + sql);
+  logger.debug('[SQL-QUERY]: ' + sql);
 
   async.waterfall([
     function(callback) {

@@ -73,6 +73,25 @@ ContestValidator.prototype.isScheduled = function(){
 };
 
 
+
+ContestValidator.prototype.isReady = function(){
+  var self = this;
+  return new Promise(function(resolve, reject){
+    ContestModel.ready(self.cid, function(err, contest){
+      if(err){
+        return reject(err);
+      }
+      console.log(contest);
+      if( !contest.length || !contest[0].id || contest[0].id === 'null' ){
+        return reject(new AppError('No Contest Found', 'NOT_FOUND'));
+      }
+      return resolve( parseInt(contest[0].ready) === 1 );
+    });
+  });
+};
+
+
+
 ContestValidator.prototype.isIncomplete = function(){
   var self = this;
   return new Promise(function(resolve, reject){

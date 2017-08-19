@@ -11,15 +11,10 @@ var Hashids = require('hashids');
 var entities = require('entities');
 
 var Submission = appRequire('models/submission');
-// var OK = appRequire('middlewares/OK');
-// var authJwt = appRequire('middlewares/authJwt');
-// var roles = appRequire('middlewares/roles');
-// var authUser = appRequire('middlewares/authUser');
 var getPage = appRequire('middlewares/page');
 
 var problemHash = new Hashids(config.get('HASHID:PROBLEM'), 11);
 var subHash = new Hashids(config.get('HASHID:SUB'), 11);
-
 
 router.get('/', getPage, function(req, res, next) {
 
@@ -65,8 +60,8 @@ router.get('/', getPage, function(req, res, next) {
         pagination: pagination
       });
   });
-
 });
+
 
 
 router.get('/:sid', function(req, res, next) {

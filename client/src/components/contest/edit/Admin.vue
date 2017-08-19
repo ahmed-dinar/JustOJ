@@ -25,16 +25,16 @@
             </div>
           </template>
 
-          <template slot="state" scope="contest">
-            <span :class="['badge', 'badge-bold', contest.item.status === 0 ? 'badge-secondary' : 'badge-success' ]">
-              {{ contest.item.status === 0 ? 'Incomplete' : 'Ready' }}
+          <template slot="ready" scope="contest">
+            <span :class="['badge', 'badge-bold', parseInt(contest.value) === 0 ? 'badge-secondary' : 'badge-success' ]">
+              {{ parseInt(contest.value) === 0 ? 'Incomplete' : 'Ready' }}
             </span>
           </template>
 
           <template slot="status" scope="contest">
-            <select v-model="visible" @change="onChange(contest.value, contest.item.id)" class="form-control form-control-xs">
-              <option value="2">Public</option>
-              <option value="1">Hidden</option>
+            <select @change="onChange(contest.item.ready, $event.target.value, contest.item.id)" class="form-control form-control-xs">
+              <option value="2" :selected="parseInt(contest.value) === 2 ? 'selected' : ''">Public</option>
+              <option value="1" :selected="parseInt(contest.value) !== 2 ? 'selected' : ''">Hidden</option>
             </select>
           </template>
 
@@ -75,7 +75,7 @@
           title: {
             label: 'Title'
           },
-          state: {
+          ready: {
             label: 'Status',
             thStyle: { width: '8%' }
           },
@@ -106,6 +106,7 @@
             progressbar.done();
             progressbar.remove();
             this.contests = response.data;
+            console.log(this.contests);
           })
           .catch(err => {
             this.loading = false;
@@ -154,9 +155,9 @@
         }
         return `Started ${moment(contest.begin).from(moment())}, Ends ${moment().to(contest.end)}`;
       },
-      onChange(val, cid){
+      onChange(val, e, cid){
 
-        let visibility = parseInt(this.visible);
+        let visibility = parseInt(e);
 
         if( parseInt(val) === 0 && visibility === 2 ){
           this.visible = '1';
@@ -173,6 +174,7 @@
             progressbar.done();
             progressbar.remove();
             this.$noty.success('Contest visibility changed.');
+            this.fetchContest();
           })
           .catch(err => {
             progressbar.done();

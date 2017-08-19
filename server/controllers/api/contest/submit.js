@@ -8,31 +8,54 @@ var chalk = require('chalk');
 var path = require('path');
 var has = require('has');
 
-
-var AppError = appRequire('lib/custom-error');
-var Problems = appRequire('models/problems');
-var Submission = appRequire('models/api/Submission');
-var upload = appRequire('middlewares/sourceUpload').single('source');
 var Judge = appRequire('worker/Judge');
-//var handleError = appRequire('lib/handle-error');
+var Contest = appRequire('models/contest');
+var Problems = appRequire('models/problems');
+var handleError = appRequire('lib/handle-error');
+var upload = appRequire('middlewares/sourceUpload').single('source');
+
+const baseSourcePath = path.join(process.cwd(), '..', 'judger', 'source');
 
 
+function Submit(req, res){
 
-module.exports = function(req, res, next) {
-
-  var problemId = req.body.problemId;
-  var userId = req.user.id;
-  var sourcePath = null;
+  var problemId = problemHash.decode(req.params.pid);
+  if(!problemId || !problemId.length){
+    return res.status(404).json({ error: 'No Problem Found' });
+  }
 
   async.waterfall([
-    function(callback){
+    function validateContest(callback){
+      Contest.announcement(cid, uid, function(err, data){
+        if(err){
+          return callback(err);
+        }
+        if(!data.length){
+          return callback(new AppError('No Contest Found', 'NOT_FOUND'));
+        }
+        data = data[0];
+
+        //contest is not public
+        if( parseInt(data.status) !== 2 ){
+          return callback(new AppError('Conest is not public', 'FORBIDDEN'));
+        }
+
+        //contest is not running, no more submission
+        if( !moment().isBetween(data.begin, data.end) ){
+          return callback(new AppError('Contest Is not running','FORBIDDEN'));
+        }
+
+        return callback();
+      });
+    },
+    function validateProblem(callback){
       Problems.findById(problemId, ['cpu','memory'], function(err,rows){
         if(err){
           return callback(err);
         }
 
         if(!rows || !rows.length){
-          return callback(new AppError('No Problem Found','404'));
+          return callback(new AppError('No Problem Found','NOT_FOUND'));
         }
 
         if(!rows[0].cpu || rows[0].cpu === undefined || !rows[0].memory || rows[0].memory === undefined){
@@ -40,7 +63,8 @@ module.exports = function(req, res, next) {
         }
 
         return callback(null, {
-          userId: userId,
+          contestId: req.contestId,
+          userId: req.user.id,
           problemId: problemId
         });
       });
@@ -52,12 +76,12 @@ module.exports = function(req, res, next) {
         }
 
         if( !has(req,'file') || !req.file ){
-          return callback(new AppError('Source Required','input'));
+          return callback(new AppError('Source Required','BAD_REQUEST'));
         }
         sourcePath = req.file.path;
 
         if( !has(req.body,'language') ){
-          return callback(new AppError('Language Required','input'));
+          return callback(new AppError('Language Required','BAD_REQUEST'));
         }
 
         submission.source = sourcePath;
@@ -67,11 +91,10 @@ module.exports = function(req, res, next) {
         return callback(null, submission);
       });
     },
-    saveSubmission,
-    incrementSubmission,
-    renameSource
+    saveAndRename
   ],
-  function (error, submissionId) {
+  function(error, submissionId){
+
     if( error ){
       if( !sourcePath ){
         return handleError(error, res);
@@ -84,10 +107,11 @@ module.exports = function(req, res, next) {
         return handleError(error, res);
       });
     }
+
     logger.debug(chalk.green('Successfully Submitted'));
 
     //push the submission into judge queue
-    Judge.push({ id: submissionId }, 'submission', function(err){
+    Judge.push({ id: submissionId }, 'contest', function(err){
       if(err){
         logger.error('judge push submission error', err);
       }else{
@@ -97,52 +121,19 @@ module.exports = function(req, res, next) {
       res.status(200).json(submissionId);
     });
   });
-};
-
-
-//
-//
-//
-function handleError(error, res){
-
-  logger.debug(error);
-
-  if(error.name === '404'){
-    return res.status(404).json({ error: error.message });
-  }
-
-  if(error.name === 'input'){
-    return res.status(400).json({ error: error.message });
-  }
-
-
-  var uploadErrors = {
-    'LIMIT_PART_COUNT': 'Too many parts',
-    'LIMIT_FILE_SIZE': 'Source size limit exceeded',
-    'LIMIT_FILE_COUNT': 'Only one source allowed',
-    'LIMIT_FIELD_KEY': 'Field name too long',
-    'LIMIT_FIELD_VALUE': 'Language value too long',
-    'LIMIT_FIELD_COUNT': 'Only language allowed',
-    'LIMIT_UNEXPECTED_FILE': 'Unexpected input'
-  };
-
-  if( has(uploadErrors, error.code) ){
-    return res.status(400).json({ error: uploadErrors[error.code] });
-  }
-
-  logger.error(error);
-  return res.sendStatus(500);
 }
+
 
 
 //
 // save source code into database
 //
-function saveSubmission(submission, fn){
+function saveAndRename(submission, fn){
 
   async.waterfall([
     function(callback){
-      Submission.save({
+      Contest.saveSubmission({
+        cid: submission.contestId,
         pid: submission.problemId,
         uid: submission.userId,
         language: submission.language,
@@ -170,7 +161,7 @@ function saveSubmission(submission, fn){
       });
     },
     function(sourceCode, callback){
-      Submission.saveSource({
+      Contest.saveSource({
         sid: submission.id,
         code: entities.encodeHTML(sourceCode)
       },
@@ -179,49 +170,37 @@ function saveSubmission(submission, fn){
           logger.debug(chalk.red('error inserting source code'));
           return callback(err);
         }
-        return callback(null, submission);
+        return callback();
+      });
+    },
+    function(callback){
+
+      var newName = path.join(baseSourcePath, ('contest_'+submission.id+'.'+submission.language).toString());
+
+      fs.rename(submission.source, newName, function(err) {
+        if ( err ) {
+
+          //set the submission status as system error
+          return Contest.putSubmission(submission.id, { status: '8' }, function(error){
+
+            //damn man!
+            if(error){
+              logger.debug('update submission status error');
+              logger.error(error);
+            }
+
+            logger.debug('Error Renaming Source');
+            return callback(err);
+          });
+        }
+
+        return callback(null, submission.id);
       });
     }
   ], fn);
 }
 
 
-//
-// increment Submission count of this problem
-//
-var incrementSubmission = function (submission, callback) {
-  Problems.updateSubmission(submission.problemId, 'submissions', function(err){
-    if( err ){
-      logger.debug(chalk.red('Updating submission error'));
-      return callback(err);
-    }
-    callback(null, submission);
-  });
-};
 
 
-//
-// rename source using languge extension
-//
-var renameSource = function(submission, fn) {
-
-  //should be edited
-  var newName = path.join(process.cwd(), '..', 'judger', 'source', (submission.id+'.'+submission.language));
-
-  fs.rename(submission.source, newName, function(err) {
-    if ( err ) {
-      //set the submission status as system error
-      return Submission.put(submission.id, { status: '8' }, function(error){
-        //damn man!
-        if(error){
-          logger.debug('update submission status error');
-          logger.error(error);
-        }
-        logger.debug('Error Renaming Source');
-        return fn(err);
-      });
-    }
-
-    return fn(null, submission.id);
-  });
-};
+module.exports = Submit;

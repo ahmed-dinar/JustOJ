@@ -17,9 +17,12 @@ queue.on('error', function(err) {
 });
 
 
-function queueSubmission(data, cb){
+//
+// name = submission or contest
+//
+function queueSubmission(data, name, cb){
   queue
-    .create('submission', data)
+    .create(name, data)
     .ttl(TTL)
     .events(false)
     .priority('high')

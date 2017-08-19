@@ -24,6 +24,7 @@ if( !fs.existsSync(configPath) ){
 require('./config/judge-logger');
 
 var Judge = require('./judge');
+var ContestJudge = require('./contestJudge');
 var shuttingDowning = false;
 var queue = kue.createQueue();
 
@@ -46,7 +47,7 @@ queue.activeCount('submission',function( err, total ) {
 queue
   .on('job enqueue', function(id, type){
     //something went wrong?
-    if( type !== 'submission' ){
+    if( type !== 'submission' || type !== 'contest' ){
       logger.error('Unknown job %s of type %s', id, type);
       return;
     }
@@ -77,6 +78,9 @@ queue
 
 // queue.process('submission', Judge);
 queue.process('submission', Judge);
+
+//contest submission
+queue.process('contest', ContestJudge);
 
 
 //

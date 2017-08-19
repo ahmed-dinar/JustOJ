@@ -220,13 +220,10 @@
 
     watch: {
       '$route': 'fetchSubmissions',
-      //watch page change in route
       cur_page: function (page) {
-        let query = Object.assign({}, this.$store.state.route.query);
-        query.page = page;
         this.$router.push({
           path: this.$store.state.route.path,
-          query: query
+          query: Object.assign({}, this.$store.state.route.query, { page })
         });
       }
     },

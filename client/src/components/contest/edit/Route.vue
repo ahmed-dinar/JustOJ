@@ -10,12 +10,9 @@
       <router-link :to="`/contests/${id}/edit/problems`" class="btn-material btn btn-sm btn-secondary bold">
         <i class="material-icons mr-1">extension</i> Problems
       </router-link>
-      <router-link :to="`/contests/${id}/edit/contestants`" class="btn-material btn btn-sm btn-secondary bold">
+      <router-link :to="`/contests/${id}/edit/contestants`" class="btn-material btn btn-sm btn-secondary bold" exact>
         <i class="material-icons mr-1">people</i> Contestants
       </router-link>
-      <!-- <button @click="removeContest()" class="btn-material btn btn-sm btn-secondary bold">
-        <i class="material-icons mr-1">people</i> Delete
-      </button> -->
     </div>
     <router-view></router-view>
   </div>
@@ -27,15 +24,6 @@
     computed: {
       id(){
         return this.$store.state.route.params.cid;
-      }
-    },
-    mounted(){
-      console.log(this.$store.state.route);
-    },
-
-    methods: {
-      removeContest(){
-        alert(this.id);
       }
     }
   };

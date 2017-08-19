@@ -1,6 +1,47 @@
 
 
 /*
+if contest is ready to be public
+conditions:
+  1. if there no problem added, contest if not ready
+  2. if any of the problems if incomplete, contest not ready
+
+ */
+SELECT
+(
+CASE
+  WHEN COUNT(`p`.`id`) < 1 THEN 0
+  WHEN COUNT(CASE WHEN `p`.`status` = 'incomplete' THEN 1 END) > 0 THEN 0
+  ELSE 1
+END
+) as ready
+FROM `contest` as `c`
+LEFT JOIN `problems` as `p`
+ON `c`.id = `p`.`cid`
+WHERE `c`.id = 3
+
+
+/*
+not ended contest list with if ready
+ */
+SELECT
+`c`.`title`,
+(
+CASE
+  WHEN COUNT(`p`.`id`) < 1 THEN 0
+  WHEN COUNT(CASE WHEN `p`.`status` = 'incomplete' THEN 1 END) > 0 THEN 0
+  ELSE 1
+END
+) as ready
+FROM `contest` as `c`
+LEFT JOIN `problems` as `p`
+ON `c`.id = `p`.`cid`
+WHERE `c`.`end` > NOW()
+GROUP BY `c`.`id`
+
+
+
+/*
 User submission history with solvedList , total solved, total ac etc verdict count
 */
 SELECT
@@ -294,9 +335,9 @@ ORDER BY `r`.`solved` DESC,`r`.`penalty`
 
 
 
-
-
-//problem list and ac user count final!!!!!!!!
+/*
+ contest problem list and ac user count (for production )
+*/
 select `cp`.`pid`, `cp`.`pname`, `prob`.`title`,COUNT(DISTINCT `solved`.`uac`)
 from `contest_problems` as `cp`
   left join `problems` as `prob` on `cp`.`pid` = `prob`.`id`

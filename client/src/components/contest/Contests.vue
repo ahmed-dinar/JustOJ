@@ -14,22 +14,14 @@
           <i class="material-icons mr-1">alarm</i> Running Contests
         </h6>
         <template v-if="running && running.length">
-          <b-table
-          :items="running"
-          :fields="runningFields"
-          >
-            <template slot="title" scope="contest">
-              <div class="list-group">
-                <router-link :to="`/contests/${contest.item.id}/${contest.item.slug}`" class="list-group-item list-group-item-action list-group-item-light">
-                  <h5>{{ contest.value }}</h5>
-                  <small class="text-muted">{{ contestTime(contest.item.begin) }}</small>
-                </router-link>
-              </div>
-            </template>
-            <template slot="users" scope="contest">
-              {{ contest.value }}
-            </template>
-          </b-table>
+
+          <table class="table">
+            <tbody>
+              <tr>
+              </tr>
+            </tbody>
+          </table>
+
         </template>
         <div class="text-muted small-text text-center">
           There is No Running Contest
@@ -41,19 +33,25 @@
           <i class="material-icons mr-1">alarm_on</i> Upcoming Contests
         </h6>
         <template v-if="upcoming && upcoming.length">
-          <b-table
-          :items="upcoming"
-          :fields="runningFields"
-          >
-            <template slot="title" scope="contest">
-              <div class="list-group">
-                <router-link :to="`/contests/${contest.item.id}/${contest.item.slug}`" class="list-group-item list-group-item-action list-group-item-light">
-                  <h5>{{ contest.value }}</h5>
-                  <small class="text-muted">{{ contestTime(contest.item.end) }}</small>
-                </router-link>
-              </div>
-            </template>
-          </b-table>
+
+          <table class="table">
+            <tbody>
+              <tr v-for="contest in upcoming">
+
+                <td>
+                  <div class="list-group">
+                    <router-link :to="`/contests/${contest.id}/${contest.slug}`" class="list-group-item list-group-item-action list-group-item-light">
+                      <h5>{{ contest.title }}</h5>
+                      <small class="text-muted">{{ contestTime(contest.end) }}</small>
+                    </router-link>
+                  </div>
+                </td>
+
+
+              </tr>
+            </tbody>
+          </table>
+
         </template>
         <div class="text-muted  small-text text-center">
           No Upcoming Contest Found
@@ -85,7 +83,6 @@
 
       </div>
 
-
       <div class="col-md-3">
         <div class="card">
           <div class="card-body">
@@ -93,8 +90,6 @@
           </div>
         </div>
       </div>
-
-
 
     </div>
   </div>
@@ -112,19 +107,6 @@
         running: null,
         upcoming: null,
         past: null,
-        runningFuture: {
-          title: {
-            label: 'Title'
-          },
-          users: {
-            label: ''
-          }
-        },
-        pastFields: {
-          title: {
-            label: 'Title'
-          }
-        },
         error: null
       };
     },
@@ -142,7 +124,8 @@
             progressbar.remove();
             if( status === 'running' ){
               this.running = response.data.running;
-              this.future = response.data.future;
+              this.upcoming = response.data.future;
+              console.log(this.future);
             }else{
               this.past = response.data.past;
             }
@@ -160,6 +143,7 @@
 
     mounted(){
       this.fetchContests();
+      this.fetchContests('past');
     }
   };
 </script>

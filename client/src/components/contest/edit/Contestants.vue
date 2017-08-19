@@ -28,10 +28,29 @@
         <b-table
         :items="users"
         :fields="fields"
-        class="table-gray mb-3"
+        show-empty
+        class="table-gray mb-4 table-md"
         >
 
-          <template slot="index" scope="participant">{{ participant.index + 1 }}</template>
+          <template slot="HEAD_name" scope="participant">
+            <div class="pointer" @click.stop="sortTable(participant.column)">
+              <i class="material-icons md-18 mr-1" >swap_vert</i>Name
+            </div>
+          </template>
+          <template slot="HEAD_institute" scope="participant">
+            <div class="pointer" @click.stop="sortTable(participant.column)">
+              <i class="material-icons md-18 mr-1" >swap_vert</i>University
+            </div>
+          </template>
+          <template slot="HEAD_username" scope="participant">
+            <div class="pointer" @click.stop="sortTable(participant.column)">
+              <i class="material-icons md-18 mr-1" >swap_vert</i>Username
+            </div>
+          </template>
+
+          <template slot="index" scope="participant">
+            {{ participant.index + 1 + ( (cur_page-1)*pagination.page_limit ) }}
+          </template>
           <template slot="username" scope="participant">
             {{ participant.value }}
           </template>
@@ -47,10 +66,10 @@
 
           <template slot="action" scope="participant">
             <div class="d-flex">
-              <button v-tooltip="'Edit'" @click="editIt(participant.item)" class="btn btn-sm btn-iconic btn-outline-primary mr-1">
+              <button v-tooltip="'Edit'" @click="editIt(participant.item)" class="btn btn-sm btn-iconic hover-primary mr-1">
                 <i class="material-icons">mode_edit</i>
               </button>
-              <button v-tooltip="'Remove'" @click="removeIt(participant.item)" class="btn btn-sm btn-iconic btn-outline-danger">
+              <button v-tooltip="'Remove'" @click="removeIt(participant.item)" class="btn btn-sm btn-iconic hover-danger">
                 <i class="material-icons">delete</i>
               </button>
             </div>
@@ -58,22 +77,28 @@
 
         </b-table>
 
-        <template v-if="pagination && pagination.total !== null">
+        <div class="d-flex justify-content-between" v-if="users && users.length && pagination && pagination.total !== null">
+
+          <small>Showing {{ users ? users.length : '0' }} of {{ pagination.total }} entries</small>
+
           <b-pagination
           size="sm"
           :total-rows="pagination.total"
           v-model="cur_page"
           :per-page="pagination.page_limit"
+          :next-text="pg.next"
+          :prev-text="pg.prev"
+          :first-text="pg.first"
+          :last-text="pg.last"
           ></b-pagination>
-        </template>
+
+        </div>
 
       </loading-data>
 
 
 
 
-
-  
 
   <!-- edit modal -->
   <b-modal
@@ -396,13 +421,21 @@
           prefix: null,
           suffix: null
         },
+        pg: {
+          next: '<i class="material-icons md-18">keyboard_arrow_right</i>',
+          prev: '<i class="material-icons md-18">keyboard_arrow_left</i>',
+          first: '<i class="material-icons md-18">first_page</i>',
+          last: '<i class="material-icons md-18">last_page</i>'
+        },
         genuser: {
           random: false
         },
         edituser: {},
         currentUsename: null,
         users: null,
+        cur_page: 1,
         pagination: null,
+        sortDesc: false,
         fields: {
           index: {
             label: '#',
@@ -410,23 +443,23 @@
           },
           username: {
             label: 'Username',
-            thStyle: { width: '10%' }
+            thStyle: { width: '20%' }
           },
           name: {
             label: 'Name',
-            thStyle: { width: '10%' }
+            thStyle: { width: '20%' }
           },
           password: {
             label: 'Password',
-            thStyle: { width: '10%' }
+            thStyle: { width: '20%' }
           },
           institute: {
             label: 'Institute',
-            thStyle: { width: '10%' }
+            thStyle: { width: '36%' }
           },
           action: {
             label: 'Action',
-            thStyle: { width: '3%' }
+            thStyle: { width: '2%' }
           }
         },
         toggleColor: {
@@ -443,25 +476,32 @@
       contestId(){
         return this.$store.state.route.params.cid;
       },
-      cur_page(){
-        return has(this.$store.state.route.query,'page')
-          ? parseInt(this.$store.state.route.query.page)
-          : 1;
-      },
       orderBy(){
-        if( !has(this.$store.state.route.query,'sortby') ){
-          return 'institute,name';
-        }
-        return this.$store.state.route.query.sortby;
+        return !has(this.$store.state.route.query,'sortby')
+          ? null
+          : this.$store.state.route.query.sortby;
       }
     },
 
     methods: {
-      fetchUsers(){
+      sortTable(sortby){
 
+        if( this.sortDesc ){
+          sortby = `-${sortby}`;
+        }
+
+        this.sortDesc = !this.sortDesc;
+        this.$router.push({
+          path: this.$store.state.route.path,
+          query: Object.assign({}, this.$store.state.route.query, { sortby })
+        });
+      },
+      fetchUsers(){
+        this.loading = true;
         this.$http
-          .get(`/api/contest/edit/${this.contestId}/users?page=${this.cur_page}&orderby=${this.orderBy}`)
+          .get(`/api/contest/edit/${this.contestId}/users?page=${this.cur_page}${this.orderBy ? '&orderby='+this.orderBy : ''}`)
           .then(response => {
+            this.loading = false;
             this.users = response.data.users;
             this.pagination = response.data.pagination;
           })
@@ -642,6 +682,7 @@
           });
       },
       handleError(err){
+        this.loading = false;
         switch (err.response.status) {
           case 401:
             this.$store.commit('LOG_OUT');
@@ -684,12 +725,15 @@
       cur_page: function (page) {
         this.$router.push({
           path: this.$store.state.route.path,
-          query: { page: page }
+          query: Object.assign({}, this.$store.state.route.query, { page })
         });
       }
     },
 
     mounted(){
+      this.cur_page = has(this.$store.state.route.query,'page')
+        ? parseInt(this.$store.state.route.query.page)
+        : 1;
       this.genuser.random = true;
       this.fetchUsers();
 

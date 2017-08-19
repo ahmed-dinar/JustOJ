@@ -74,7 +74,7 @@ CREATE TABLE `users` (
   `website` VARCHAR(512) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `country` VARCHAR(3) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `city` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `institute` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `institute` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `github_token` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `stack_token` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `fb_id` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE `clar` (
   `id` INT(11) NOT NULL,
   `cid` INT(11) NOT NULL,
   `uid` INT(11) NOT NULL,
-  `pid` INT(11) NOT NULL,
+  `pid` INT(11) DEFAULT NULL,
   `status` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `request` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `response` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
