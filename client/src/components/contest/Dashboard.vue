@@ -21,8 +21,9 @@
             <tr v-for="problem in problems">
 
               <template v-if="joined">
-                <td style="width: 9%">
-                  {{ problem.ac }} | {{ problem.wa }}
+                <td style="width: 1%; padding: 0.75rem 0">
+                  <i v-if="problem.ac != -1" title="solved" class="material-icons text-success md-18">done</i>
+                  <i v-else-if="problem.wa != -1" title="tried" class="material-icons text-danger md-18">clear</i>
                 </td>
               </template>
 
@@ -35,7 +36,7 @@
                   {{ problem.title }}
                 </router-link>
               </td>
-              <td style="width: 9%">
+              <td style="width: 9%" :title="`solved by ${problem.accepted}`">
                 <div class="btn-iconic btn-xs">
                   <i class="material-icons">person</i> x {{ problem.accepted }}
                 </div>

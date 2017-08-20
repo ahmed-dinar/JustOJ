@@ -109,7 +109,15 @@ function Judge(job, fn){
         switch(error.code.toString()){
           case 'COMPILATION_ERROR':
             //logger.debug('COMPILATION_ERROR');
-            return submission.put({ status: '7' }, fn);
+            return async.series([
+              function(callback) {
+                return submission.put({ status: '7' }, callback);
+              },
+              function(callback) {
+                return submission.putRank(judge.cid, judge.uid, judge.pid, 7, callback);
+              }
+            ], fn);
+            return;
           case 'SOLUTION_FAILED':
             //logger.debug('SOLUTION_FAILED');
             return makeFinalStatus(runs, submission, judge, fn);

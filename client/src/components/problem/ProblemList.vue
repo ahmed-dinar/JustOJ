@@ -16,7 +16,7 @@
         <loading-data :loading="loading">
 
           <div v-if="problemList && problemList.problems.length">
-            <div class="table-responsive">
+            <div class="table-responsive mb-5">
 
               <m-table show-empty
               :items="problemList.problems"
@@ -67,15 +67,18 @@
           </m-table>
         </div>
 
-        <div>
-          <p class="text-muted text-center pull-left">Showing </p>
+        <div class="d-flex justify-content-between">
+          <!-- <p class="text-muted text-center pull-left">Showing </p> -->
+          <span></span>
+
           <b-pagination
           size="sm"
           :total-rows="problemList.pagination.total"
           v-model="problemList.pagination.cur_page"
           :per-page="problemList.pagination.page_limit"
-          class="pull-right"
           ></b-pagination>
+
+          <span></span>
         </div>
       </div>
     </loading-data>
@@ -190,7 +193,17 @@
         'fetchProblems',
         'updateProblems'
       ])
-    }
+    },
+
+    watch: {
+      '$route': 'fetchProblems',
+      cur_page: function (page) {
+        this.$router.push({
+          path: this.$store.state.route.path,
+          query: Object.assign({}, this.$store.state.route.query, { page })
+        });
+      }
+    },
   };
 </script>
 

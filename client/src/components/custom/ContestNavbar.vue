@@ -8,20 +8,28 @@
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
 
-          <li class="nav-item">
-            <router-link :to="`/contests/${id}/${contest.slug}/dashboard`" class="nav-link">DASHBOARD</router-link>
+          <li class="nav-item mr-3">
+            <router-link :to="`/contests/${id}/${contest.slug}/dashboard`" class="nav-link">
+              <i class="material-icons md-18">dashboard</i> DASHBOARD
+            </router-link>
+          </li>
+
+          <li class="nav-item mr-3">
+            <router-link :to="`/contests/${id}/${contest.slug}/clar`" class="nav-link">
+              <i class="material-icons md-18">forum</i> CLARIFICATIONS
+            </router-link>
+          </li>
+
+          <li class="nav-item mr-3">
+            <router-link :to="`/contests/${id}/${contest.slug}/standings`" class="nav-link">
+              <i class="material-icons md-18">group</i> STANDINGS
+            </router-link>
           </li>
 
           <li class="nav-item">
-            <router-link :to="`/contests/${id}/${contest.slug}/clar`" class="nav-link">CLARIFICATIONS</router-link>
-          </li>
-
-          <li class="nav-item">
-            <router-link :to="`/contests/${id}/${contest.slug}/standings`" class="nav-link">STANDINGS</router-link>
-          </li>
-
-          <li class="nav-item">
-            <router-link :to="`/contests/${id}/${contest.slug}/submissions`" class="nav-link">SUBMISSIONS</router-link>
+            <router-link :to="`/contests/${id}/${contest.slug}/submissions`" class="nav-link">
+              <i class="material-icons md-18">assessment</i> SUBMISSIONS
+            </router-link>
           </li>
 
         </ul>

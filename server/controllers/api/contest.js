@@ -91,7 +91,10 @@ router.get('/list',function(req, res, next) {
 
     logger.debug('contests = ', data);
 
-    res.status(200).json(data);
+    res.status(200).json({
+      running: data.running,
+      future: data.future
+    });
   });
 });
 
@@ -691,17 +694,21 @@ router.get('/:cid/rank', getContestId, getPage, function(req, res){
     }
 
     _.forEach(rank, function(c,i){
+      if( !c.problems ){
+        rank[i].problems = [];
+        return;
+      }
       var p = JSON.parse('{' + c.problems + '}');
       var newp = [];
-      _.forEach(p, function(prob, probId){
-        prob.pid = problemHash.encode(probId);
-        newp.push(prob);
+      _.forEach(stats, function(prob, probId){
+        newp.push(p[prob.id] === undefined ? null : p[prob.id]);
       });
       rank[i].problems = newp;
     });
 
     _.forEach(stats, function(c,i){
       stats[i].id = problemHash.encode(stats[i].id);
+      stats[i].name = alphabet.charAt(i);
       stats[i].title = entities.decodeHTML(stats[i].title);
     });
 
@@ -809,7 +816,7 @@ router.get('/:cid/submissions', getContestId, getPage, authUser, function(req, r
   }
 
   //total submission to show
-  var total = 10;
+  var total = 50;
   if( has(req.query,'limit') && _.inRange(parseInt(req.query.limit), 1, 101) ){
     total = parseInt(req.query.limit);
   }

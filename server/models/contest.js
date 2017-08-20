@@ -899,6 +899,7 @@ exports.rankStats = function(cid, withTried, fn){
     .select([
       'prob.id',
       'prob.title',
+      'prob.slug',
       Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`'),
       Query.raw('ifnull(`wa`.`tried`,0) as `triedBy`')
     ])
@@ -915,6 +916,7 @@ exports.rankStats = function(cid, withTried, fn){
     sql = Query.select([
       'prob.pid',
       'prob.title',
+      'prob.slug',
       Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`')
     ])
     .from('problems as prob');

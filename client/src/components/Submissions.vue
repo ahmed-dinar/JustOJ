@@ -10,12 +10,12 @@
     <div class="row" v-else>
 
 
-      <div class="col-md-9">
+      <div class="col-md-12">
 
       <h6 class="p-0 mb-3 btn-iconic">
         <i class="material-icons mr-1">schedule</i> Submissions
       </h6>
-      <div class="card">
+      <div class="card mb-5">
         <loading-data :loading="loading">
           <m-table
             :items="submissions"
@@ -64,14 +64,17 @@
         </loading-data>
       </div>
 
-      <template v-if="!loading && pagination && pagination.total !== null">
+  
+      <div class="d-flex justify-content-between" v-if="!loading && pagination && pagination.total !== null">
+        <span></span>
         <b-pagination
         size="sm"
         :total-rows="pagination.total"
         v-model="cur_page"
         :per-page="pagination.page_limit"
         ></b-pagination>
-      </template>
+        <span></span>
+      </div>
 
       </div>
 
@@ -83,12 +86,11 @@
 <script type="text/javascript">
 
   import has from 'has';
-  import moment from 'moment';
-  import runStatus from '@/lib/runStatus';
-  import runLanguage from '@/lib/runLanguage';
+  import submissionMixin from '@/mixins/submission';
 
   export default {
     name: 'ProblemSubmissions',
+    mixins: [ submissionMixin ],
 
     data(){
       return {
@@ -129,48 +131,7 @@
 
       };
     },
-
-    computed: {
-
-    },
-
     methods: {
-      roundTo(num) {
-        if( !num || num === undefined ){
-          return '0.00';
-        }
-        num = parseFloat(parseInt(num)/1000.0);
-        num = num.toString();
-        return (num.indexOf('.') > -1 ? num+'00' : num+'.00').match(/^-?\d+(?:\.\d{0,2})?/)[0];
-      },
-      getRunStatus(status){
-        return runStatus[parseInt(status)];
-      },
-
-      getRunLang(lang){
-        return runLanguage[lang];
-      },
-
-      statusVariant(code){
-        code = parseInt(code);
-        switch(code){
-          case 0:
-            return 'success';
-          case 5:
-            return 'secondary';
-          case 6:
-            return 'info';
-          case 8:
-            return 'warning';
-          default:
-            return 'danger';
-        }
-      },
-
-      fromWhen(time){
-        return moment(time).from();
-      },
-
       fetchSubmissions(){
         this.loading = true;
         progressbar.start();

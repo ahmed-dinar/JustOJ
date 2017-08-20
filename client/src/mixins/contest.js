@@ -14,6 +14,9 @@ const contestMixins = {
       return !this.contest
         ? false
         : has(this.contest,'joined') && parseInt(this.contest.joined) === 1;
+    },
+    contestLink(){
+      return `/contests/${this.params.cid}/${this.params.slug}`;
     }
   }
 };

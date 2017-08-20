@@ -1184,3 +1184,61 @@ h6 .material-icons {
   color: #46535e;
   font-weight: 600;
 }
+
+/* .contest-navbar .nav-link > .material-icons{
+
+  align-items: center;
+}
+ */
+/* standings */
+
+.rank-table tbody{
+  border-bottom: 1px solid #e9ecef;
+}
+
+.rank-table .cell{
+  max-width: 55px;
+  width: 55px;
+}
+
+.rank-table > tbody > tr > td{
+  padding: 5px 2px;
+}
+
+.rank-table .cell > .badge {
+  padding: 5px 4px;
+}
+
+.rank-table .cell > .badge-success {
+  background-color: #73bf73;
+}
+
+.rank-table .cell > .badge-danger {
+  background-color: #F67B51;
+}
+
+.rank-table .cell > .badge-info {
+  background-color: #31b0d5;
+}
+
+.rank-table .cell > button > p {
+  margin: 0;
+}
+
+.rank-table .cell > button > p:first-child {
+  margin-bottom: 6px;
+
+}
+
+/* List Group */
+.cell-list h6{
+  color: #333;
+}
+
+.cell-list{
+  padding: 0.5rem 0.80rem;
+}
+
+.rich-text p{
+  margin: 0;
+}

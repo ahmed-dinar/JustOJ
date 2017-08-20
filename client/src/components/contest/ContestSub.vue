@@ -10,10 +10,10 @@
       <contest-navbar :contest="contest" :id="this.params.cid" class="mb-4"></contest-navbar>
 
       <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-12">
 
-          <h6 class="p-0 mb-3 btn-iconic">
-            <i class="material-icons mr-1">schedule</i> Submissions
+          <h6 class="p-0 mb-3 btn-iconic text-secondary">
+            <i class="material-icons mr-1">assessment</i> Submissions
           </h6>
 
           <m-table
@@ -21,7 +21,7 @@
           :fields="fields"
           keyIdentifier="submittime"
           show-empty
-          class="submission-table table-gray mb-4 table-md"
+          class="submission-table table-gray mb-5 table-md"
           >
             <template slot="id" scope="sub">
               <router-link :to="`/contests/${params.cid}/${params.slug}/submissions/${sub.value}`" >
@@ -60,7 +60,7 @@
           </m-table>
 
           <div class="d-flex justify-content-between" v-if="submissions && submissions.length && pagination && pagination.total !== null">
-            <small>Showing {{ submissions ? submissions.length : '0' }} of {{ pagination.total }} entries</small>
+            <small><!-- Showing {{ submissions ? submissions.length : '0' }} of {{ pagination.total }} entries --></small>
             <b-pagination
             size="sm"
             :total-rows="pagination.total"
@@ -71,6 +71,7 @@
             :first-text="pg.first"
             :last-text="pg.last"
             ></b-pagination>
+            <small></small>
           </div>
 
       </div>
@@ -84,14 +85,12 @@
 <script>
 
   import contestMixin from '@/mixins/contest';
+  import submissionMixin from '@/mixins/submission';
   import has from 'has';
-  import moment from 'moment';
-  import runStatus from '@/lib/runStatus';
-  import runLanguage from '@/lib/runLanguage';
 
   export default {
     name: 'ContestSub',
-    mixins: [ contestMixin ],
+    mixins: [ contestMixin, submissionMixin ],
 
     data () {
       return {
@@ -144,10 +143,8 @@
         this.loading = true;
         progressbar.start();
 
-        console.log(this.$store.state.route.query);
-
         this.$http
-          .get(`/api/contest/${this.params.cid}/submissions`)
+          .get(`/api/contest/${this.params.cid}/submissions`,{ params: this.$store.state.route.query })
           .then(response => {
             console.log(response.data);
             this.contest = response.data.contest;
@@ -169,38 +166,6 @@
         progressbar.remove();
         this.error = err;
         this.loading = false;
-      },
-      roundTo(num) {
-        if( !num || num === undefined ){
-          return '0.00';
-        }
-        num = parseFloat(parseInt(num)/1000.0);
-        num = num.toString();
-        return (num.indexOf('.') > -1 ? num+'00' : num+'.00').match(/^-?\d+(?:\.\d{0,2})?/)[0];
-      },
-      getRunStatus(status){
-        return runStatus[parseInt(status)];
-      },
-      getRunLang(lang){
-        return runLanguage[lang];
-      },
-      statusVariant(code){
-        code = parseInt(code);
-        switch(code){
-          case 0:
-            return 'success';
-          case 5:
-            return 'secondary';
-          case 6:
-            return 'info';
-          case 8:
-            return 'warning';
-          default:
-            return 'danger';
-        }
-      },
-      fromWhen(time){
-        return moment(time).from();
       }
     },
 
