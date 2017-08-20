@@ -887,50 +887,50 @@ exports.saveClar = function (columns, fn){
 
 
 
-/**
- *
- * @param cid
- * @param withTried
- * @param cb
- */
-// function getProblemStats(cid,withTried,cb){
 
-//   var sql;
+exports.rankStats = function(cid, withTried, fn){
 
-//     //with tried team count
-//   if(withTried){
-//     sql = Query.select([
-//       'cp.pid',
-//       'prob.title',
-//       Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`'),
-//       Query.raw('ifnull(`wa`.`tried`,0) as `triedBy`')
-//     ])
-//             .leftJoin('problems as prob', 'cp.pid', 'prob.id')
-//             .joinRaw('  LEFT JOIN( ' +
-//                         'SELECT COUNT(DISTINCT `cs2`.`uid`) as `tried`,`cs2`.`pid` ' +
-//                         'FROM `contest_submissions` as `cs2` ' +
-//                         'WHERE `cs2`.`cid`=? ' +
-//                         'GROUP BY `cs2`.`pid` ' +
-//                      ') as `wa` on `cp`.`pid` = `wa`.`pid`',[cid]);
-//   }else{
-//     sql = Query.select([
-//       'cp.pid',
-//       'prob.title',
-//       Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`')
-//     ])
-//             .leftJoin('problems as prob', 'cp.pid', 'prob.id');
-//   }
+  var sql;
 
-//   sql = sql.from('contest_problems as cp')
-//         .joinRaw('  LEFT JOIN( ' +
-//                         'SELECT COUNT(DISTINCT `cs`.`uid`) as `solved`,`cs`.`pid` ' +
-//                         'FROM `contest_submissions` as `cs` ' +
-//                         'WHERE `cs`.`status` = 0 AND `cs`.`cid`=? ' +
-//                         'GROUP BY `cs`.`pid` ' +
-//                     ') as `ac` on `cp`.`pid` = `ac`.`pid`',[cid])
-//         .where('cp.cid', cid)
-//         .groupBy('cp.pid')
-//         .as('ignored_alias');
+  //with tried team count
+  if(withTried){
 
-//   DB.execute(sql.toString(),cb);
-// }
+    sql = Query
+    .select([
+      'prob.id',
+      'prob.title',
+      Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`'),
+      Query.raw('ifnull(`wa`.`tried`,0) as `triedBy`')
+    ])
+    .from('problems as prob')
+    .joinRaw('  LEFT JOIN( ' +
+      'SELECT COUNT(DISTINCT `cs2`.`uid`) as `tried`,`cs2`.`pid` ' +
+      'FROM `contest_submissions` as `cs2` ' +
+      'WHERE `cs2`.`cid`=? ' +
+      'GROUP BY `cs2`.`pid` ' +
+      ') as `wa` on `prob`.`id` = `wa`.`pid`',[cid]);
+
+  }
+  else{
+    sql = Query.select([
+      'prob.pid',
+      'prob.title',
+      Query.raw('ifnull(`ac`.`solved`,0) as `solvedBy`')
+    ])
+    .from('problems as prob');
+  }
+
+  sql = sql
+  .joinRaw('  LEFT JOIN( ' +
+    'SELECT COUNT(DISTINCT `cs`.`uid`) as `solved`,`cs`.`pid` ' +
+    'FROM `contest_submissions` as `cs` ' +
+    'WHERE `cs`.`status` = 0 AND `cs`.`cid`=? ' +
+    'GROUP BY `cs`.`pid` ' +
+    ') as `ac` on `prob`.`id` = `ac`.`pid`',[cid])
+  .where('prob.cid', cid)
+  .groupBy('prob.id')
+  .as('ignored_alias')
+  .toString();
+
+  DB.execute(sql, fn);
+};

@@ -260,7 +260,7 @@ const router = new Router({
                   meta: { title: 'Edit Contest | Contestants' }
                 },
                 {
-                  path: 'p/:pid',
+                  path: 'p/:pid/:pslug',
                   name: 'ContestProblem',
                   component: ContestProblem,
                   meta: { title: 'Edit Contest | Contestants' }

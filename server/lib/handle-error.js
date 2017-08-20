@@ -7,7 +7,8 @@ var errorcode = {
   'BAD_REQUEST': 400,
   'UNAUTHORIZED': 401,
   'FORBIDDEN': 403,
-  'NOT_FOUND': 404
+  'NOT_FOUND': 404,
+  'NOT_AVAILABLE_YET': 302
 };
 
 var uploadErrors = {
@@ -30,15 +31,23 @@ function handleError(err, res){
     return res.status(400).json({ error: uploadErrors[err.code] });
   }
 
-  switch (err.name) {
-    case 'NOT_FOUND':
-    case 'BAD_REQUEST':
-    case 'FORBIDDEN':
-      return res.status(errorcode[err.name]).json({ error: err.message });
-    default:
-      logger.error(err);
-      return res.sendStatus(500);
+  if( has(errorcode, err.name) ){
+    return res.status(errorcode[err.name]).json({ error: err.message });
   }
+
+  logger.error(err);
+  return res.sendStatus(500);
+
+  // switch (err.name) {
+  //   case 'NOT_FOUND':
+  //   case 'BAD_REQUEST':
+  //   case 'FORBIDDEN':
+  //   case 'NO_ACCESS_YET':
+  //     return res.status(errorcode[err.name]).json({ error: err.message });
+  //   default:
+  //     logger.error(err);
+  //     return res.sendStatus(500);
+  // }
 }
 
 

@@ -2,6 +2,7 @@
 
 var Query = require('../config/db/query');
 var DB = require('../config/db/DB');
+var async = require('async');
 
 function Contest(id){
   this.id = id;
@@ -70,7 +71,7 @@ Contest.prototype.putRank = function(cid, uid, pid, finalCode, fn){
 
         //first time submission for this problem
         if(!rows.length){
-          return callback(null, -2);
+          return callback(null, -2, -1);
         }
 
         return callback(null, parseInt(rows[0].status), rows[0].id);
@@ -117,4 +118,4 @@ Contest.prototype.putRank = function(cid, uid, pid, finalCode, fn){
 
 
 
-module.exports = Submission;
+module.exports = Contest;

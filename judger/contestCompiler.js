@@ -20,7 +20,7 @@ function Compiler(options){
   this.source = options.source;
   this.cpu = options.cpu;
   this.memory = options.memory;
-  this.sandbox = './sandbox/safejudge ';
+  this.sandbox = './sandbox/contest/safejudge ';
 }
 
 

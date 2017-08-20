@@ -1,6 +1,6 @@
 <template>
   <div>
-    <contest-navbar></contest-navbar>
+    
   </div>
 </template>
 

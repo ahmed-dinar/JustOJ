@@ -23,6 +23,7 @@ body {
 
 a{
   color: #337ab7;
+  text-decoration: none !important;
 }
 
 .navbar-brand{
@@ -44,6 +45,7 @@ a{
 .navbar-brand p{
   margin: 0;
 }
+
 .navbar-brand p:first-child{
   padding-left: 3px;
 }
@@ -446,11 +448,14 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
   box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
 }
 
+
+
+
 .card{
 /*   border: none;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15); */
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,.12);
-  border-color: #fff; /*rgb(230, 233, 237);*/
+  /* box-shadow: 0 1px 3px 0 rgba(0,0,0,.12); */
+  border-color: #e7ecf1; /*rgb(230, 233, 237);*/
   border-radius: 4px;
 }
 
@@ -463,6 +468,11 @@ input[type="text"], input[type="password"], input[type="nubmer"]{
   font-weight: normal;
   padding: 20px;
   padding-bottom: 0;
+}
+
+.card-header{
+  background-color: transparent;
+  border-bottom: none;
 }
 
 .table-no-margin{
@@ -774,6 +784,11 @@ form{
   padding:5px 8px;
 }
 
+.btn-iconic-default{
+  color: rgb(117, 117, 117);
+}
+
+
 .btn-material{
   display: flex;
   align-items: center;
@@ -797,6 +812,7 @@ form{
 .btn-sm .material-icons{
   font-size: 16px;
 }
+
 
 .btn-sm.btn-loading{
   padding-top: 8px;
@@ -837,6 +853,7 @@ h6 .material-icons {
 
 .limit-text{
   font-size: 13px;
+  font-weight: 600;
 }
 
 .limit-text span{
@@ -1158,3 +1175,12 @@ h6 .material-icons {
 }
 
 
+.contest-navbar .navbar{
+  border-top: 1px solid #e5e7e8;
+  border-bottom: 1px solid #e5e7e8;
+}
+
+.contest-navbar .nav-link{
+  color: #46535e;
+  font-weight: 600;
+}

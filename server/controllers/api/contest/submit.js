@@ -7,6 +7,9 @@ var logger = require('winston');
 var chalk = require('chalk');
 var path = require('path');
 var has = require('has');
+var Hashids = require('hashids');
+var config = require('nconf');
+var moment = require('moment');
 
 var Judge = appRequire('worker/Judge');
 var Contest = appRequire('models/contest');
@@ -14,6 +17,7 @@ var Problems = appRequire('models/problems');
 var handleError = appRequire('lib/handle-error');
 var upload = appRequire('middlewares/sourceUpload').single('source');
 
+var problemHash = new Hashids(config.get('HASHID:PROBLEM'), 11);
 const baseSourcePath = path.join(process.cwd(), '..', 'judger', 'source');
 
 
@@ -24,9 +28,11 @@ function Submit(req, res){
     return res.status(404).json({ error: 'No Problem Found' });
   }
 
+  var sourcePath = null;
+
   async.waterfall([
     function validateContest(callback){
-      Contest.announcement(cid, uid, function(err, data){
+      Contest.announcement(req.contestId, req.user.id, function(err, data){
         if(err){
           return callback(err);
         }

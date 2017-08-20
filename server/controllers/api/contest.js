@@ -592,6 +592,11 @@ router.get('/:cid/dashboard', getContestId, authUser, function(req, res){
       getInfo(req.contestId, uid, callback);
     },
     function(data, callback){
+      //contest not yet started
+      if( moment().isBefore(data.begin) ){
+        return callback(new AppError('Contest is not started yet', 'NOT_AVAILABLE_YET'));
+      }
+
       var isuser = uid && parseInt(data.joined) === 1 ? uid : null;
 
       Contest.dashboard(req.contestId, isuser, function(err, probs){
@@ -625,18 +630,13 @@ router.get('/:cid/dashboard', getContestId, authUser, function(req, res){
   ],
   function(err, data, probs){
     if(err){
-      if( err.name === 'NOT_FOUND' ){
-        return res.status(404).json({ error: err.message });
-      }
-      if( err.name === 'FORBIDDEN' ){
-        return res.sendStatus(403);
-      }
-      logger.error(err);
-      return res.sendStatus(500);
+      return handleError(err, res);
     }
 
     console.log(probs);
     console.log(data);
+
+
 
     res.status(200).json({
       contest: data,
@@ -662,6 +662,14 @@ router.get('/:cid/rank', getContestId, getPage, function(req, res){
         return callback(new AppError('Contest Not Yet Started','FORBIDDEN'));
       }
 
+      Contest.rankStats(req.contestId, true, function(err, stats){
+        if(err){
+          return callback(err);
+        }
+        return callback(null, data, stats);
+      });
+    },
+    function(data, stats, callback){
       Contest.rank({
         id: req.contestId,
         time: data.begin,
@@ -669,28 +677,42 @@ router.get('/:cid/rank', getContestId, getPage, function(req, res){
         limit: 10,
         penalty: 20
       },
-      function(err, ranks){
+      function(err, ranks, pagination){
         if(err){
           return callback(err);
         }
-        return callback(null, data, ranks);
+        return callback(null, data, stats, ranks, pagination);
       });
     }
   ],
-  function(err, data, rank){
+  function(err, data, stats, rank, pagination){
     if(err){
-      if( err.name === 'NOT_FOUND' || err.name === 'FORBIDDEN' ){
-        return res.status(errorcode[err.name]).json({ error: err.message });
-      }
-      logger.error(err);
-      return res.sendStatus(500);
+      return handleError(err, res);
     }
 
-    console.log(rank);
+    _.forEach(rank, function(c,i){
+      var p = JSON.parse('{' + c.problems + '}');
+      var newp = [];
+      _.forEach(p, function(prob, probId){
+        prob.pid = problemHash.encode(probId);
+        newp.push(prob);
+      });
+      rank[i].problems = newp;
+    });
+
+    _.forEach(stats, function(c,i){
+      stats[i].id = problemHash.encode(stats[i].id);
+      stats[i].title = entities.decodeHTML(stats[i].title);
+    });
+
+    logger.debug(stats);
+    logger.debug(rank);
 
     res.status(200).json({
       contest: data,
-      rank: rank
+      rank: rank,
+      stats: stats,
+      pagination: pagination
     });
   });
 });
@@ -894,6 +916,12 @@ router
       }
 
       logger.debug(clars, pagination);
+
+      _.forEach(clars, function(c,i){
+        clars[i].id = clarHash.encode(clars[i].id);
+        clars[i].request = clarHash.encode(clars[i].request);
+        clars[i].title = problemHash.encode(clars[i].title);
+      });
 
       res.status(200).json({
         contest: data,
