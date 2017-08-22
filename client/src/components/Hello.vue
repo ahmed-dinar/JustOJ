@@ -2,6 +2,7 @@
   <div class="text-center home-page pt-4 pb-4">
 
     <h1>Welcome To JUST Online Judge</h1>
+    <h3 class="m-0">Improve programming skill</h3>
 
     <img src="homebanner.jpg" class="mb-4" style="max-width: 100%;">
 

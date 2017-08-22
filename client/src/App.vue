@@ -8,7 +8,7 @@
 
         <b-link class="navbar-brand" :to="{ path: '/' }">
           <!-- <img src="img/brand-logo.png"  width="35" height="32" /> -->
-          J
+          JUST OJ
         </b-link>
 
         <b-collapse is-nav id="nav_collapse">
@@ -16,7 +16,7 @@
           <b-nav is-nav-bar>
             <b-nav-item :to="{ path: '/' }" exact>Home</b-nav-item>
             <b-nav-item :to="{ path: '/problems' }" exact>Problems</b-nav-item>
-            <b-nav-item :to="{ path: '/ranks' }" exact>Ranks</b-nav-item>
+            <!-- <b-nav-item :to="{ path: '/ranks' }" exact>Ranks</b-nav-item> -->
             <b-nav-item :to="{ path: '/submissions' }" exact>Submissions</b-nav-item>
             <b-nav-item :to="{ path: '/contests' }" exact>Contests</b-nav-item>
           </b-nav>
@@ -69,8 +69,8 @@
       <div class="main-footer">
         <footer class="container" >
           <div>
-            &copy; 2016 CSE, JUST
-            <div class="pull-right"><a href="mailto:madinar.cse@gmail.com">Developer: Ahmed Dinar</a></div>
+            &copy; 2017 CSE, JUST
+            <!-- <div class="pull-right"><a href="mailto:madinar.cse@gmail.com">Developer: Ahmed Dinar</a></div> -->
           </div>
         </footer>
       </div>
@@ -89,8 +89,8 @@
       <div class="main-footer mt-4">
         <footer class="container" >
           <div>
-            &copy; 2016 CSE, JUST
-            <div class="pull-right"><a href="mailto:madinar.cse@gmail.com">Developer: Ahmed Dinar</a></div>
+            &copy; 2017 CSE, JUST
+            <!-- <div class="pull-right"><a href="mailto:madinar.cse@gmail.com">Developer: Ahmed Dinar</a></div> -->
           </div>
         </footer>
       </div>

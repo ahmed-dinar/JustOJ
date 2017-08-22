@@ -35,7 +35,7 @@ function Judge(job, fn){
   var judge = {
     id: subId,
     path: path.join('/var/SECURITY/JAIL/home/runs', subId), // path.join(config.get('PATH'), job.data.id)
-    comparer: './sandbox/comparer '
+    comparer: './sandbox/comparator '
   };
 
   judgeFiles = ['output.txt','error.txt','result.txt'];
@@ -289,6 +289,8 @@ function checkStatus(resultPath, fn) {
     var statusObj = _.zipObject(['code', 'msg','cpu','memory','error'], _.split(data,'$',5));
     var statusCode = parseInt(statusObj.code);
 
+    console.log(statusObj);
+
     var crashed = (statusCode < 0 || statusCode > 4);
     if( crashed ){
       logger.error('code:  ' + statusObj.code + ' || msg: ' + statusObj.msg + ' || error: ' + statusObj.error);
@@ -314,10 +316,11 @@ function checkStatus(resultPath, fn) {
 //
 function compareResult(comparer, outputFile, testCase, statusObj, fn) {
 
-  return fn(null, statusObj);
 
   var judgeOutput = path.join(testCase, 'o.txt');
   var command = comparer + judgeOutput + ' ' + outputFile;
+
+  console.log('starting comparing...');
 
   exec(command, {
     env: process.env,
@@ -325,9 +328,6 @@ function compareResult(comparer, outputFile, testCase, statusObj, fn) {
     maxBuffer: 1000*1024
   },
   function(err, stdout, stderr) {
-
-   // logger.debug('comparer stdout ' + stdout);
-
     if (err) {
       logger.debug( chalk.red('Comparer Error') );
       return fn(err);
@@ -341,11 +341,13 @@ function compareResult(comparer, outputFile, testCase, statusObj, fn) {
       return fn(null, statusObj);
     }
 
-    if( statusCode === 3 || statusCode === 2 ){
-      logger.debug('Wrong ans code ' + stdout);
+    if( statusCode === 9 ){
+      logger.debug( chalk.red('Wrong ans code ' + stdout));
+      logger.debug( chalk.red(stderr) );
 
       statusObj.code = '9';
       statusObj.status = 'Wrong Answer';
+      statusObj.error = stderr;
       return fn(new JudgeError(statusObj,'SOLUTION_FAILED'));
     }
 

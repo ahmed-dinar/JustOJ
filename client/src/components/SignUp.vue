@@ -7,7 +7,7 @@
     {{ signupError }}
   </b-alert>
 
-  <div class="card-block text-center form-header">
+  <div class="card-block text-center form-header p-3">
     <router-link :to="{ path: '/' }" exact>
       <h3 class="web-title">Just<br>Online Judge</h3>
     </router-link>
@@ -22,7 +22,7 @@
    <form @submit.prevent="submit('signup-form')" name="signup-form" data-vv-scope="signup-form">
 
 
-    <div :class="{ 'form-group': true, 'input-icon': true, 'has-danger': formError.has('signup-form.name')} ">
+    <div :class="{ 'form-group': true, 'input-icon': true, 'is-invalid': formError.has('signup-form.name')} ">
       <i class="material-icons md-20">person</i>
       <b-form-input
       name="name" type="text" placeholder="Name"
@@ -33,7 +33,7 @@
     </div>
 
 
-    <div :class="{ 'form-group': true, 'input-icon': true, 'has-danger': formError.has('signup-form.username')} ">
+    <div :class="{ 'form-group': true, 'input-icon': true, 'is-invalid': formError.has('signup-form.username')} ">
       <i class="material-icons md-20">person</i>
       <b-form-input
       name="username" type="text" placeholder="Username"
@@ -44,7 +44,7 @@
       <span v-show="formError.has('signup-form.username')" class="help form-control-feedback">{{ formError.first('signup-form.username') }}</span>
     </div>
 
-    <div :class="{ 'form-group': true, 'input-icon': true, 'has-danger': formError.has('signup-form.email')} ">
+    <div :class="{ 'form-group': true, 'input-icon': true, 'is-invalid': formError.has('signup-form.email')} ">
       <i class="material-icons md-20">email</i>
       <b-form-input
       name="email" type="text" placeholder="Email"
@@ -55,7 +55,7 @@
       <span v-show="formError.has('signup-form.email')" class="help form-control-feedback">{{ formError.first('signup-form.email') }}</span>
     </div>
 
-    <div :class="{ 'form-group': true, 'input-icon': true, 'has-danger': formError.has('signup-form.password')} ">
+    <div :class="{ 'form-group': true, 'input-icon': true, 'is-invalid': formError.has('signup-form.password')} ">
       <i class="material-icons md-20">lock</i>
       <b-form-input
       name="password" type="password" placeholder="Password"
@@ -64,7 +64,7 @@
       <span v-show="formError.has('signup-form.password')" class="help form-control-feedback">{{ formError.first('signup-form.password') }}</span>
     </div>
 
-    <div :class="{ 'form-group': true, 'input-icon': true, 'has-danger': formError.has('signup-form.confirmPassword')} ">
+    <div :class="{ 'form-group': true, 'input-icon': true, 'is-invalid': formError.has('signup-form.confirmPassword')} ">
       <i class="material-icons md-20">lock</i>
       <b-form-input
       name="confirmPassword" type="password" placeholder="Confirm Password"

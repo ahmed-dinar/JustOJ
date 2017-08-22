@@ -10,7 +10,7 @@
     </b-alert>
 
 
-    <div class="card-block text-center form-header">
+    <div class="card-block text-center form-header p-3">
       <router-link :to="{ path: '/' }" exact>
         <h3 class="web-title">Just<br>Online Judge</h3>
       </router-link>
@@ -66,16 +66,16 @@
       <span>Or</span>
     </div>
 
-    <div class="text-center">
+<!--     <div class="text-center">
       <a class="btn btn-social btn-md btn-google" href="#">
         <span class="fa fa-google"></span> Google
       </a>
       <a class="btn btn-social btn-md btn-dark" href="#">
         <span class="fa fa-github"></span> Github
       </a>
-    </div>
+    </div> -->
 
-    <hr>
+    <!-- <hr> -->
 
     <div class="text-center">
       <router-link class="btn btn-outline-primary" to="/signup">

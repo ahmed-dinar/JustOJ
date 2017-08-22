@@ -466,6 +466,23 @@ exports.problem = function(cid, pid, fn){
 };
 
 
+//
+// gte a specific problem
+//
+exports.problems = function(cid, fn){
+  var sql = Query
+    .select([
+      'cp.id','cp.title','cp.slug','cp.status'
+    ])
+    .from('problems as cp')
+    .where('cp.cid', cid)
+    .groupBy('cp.id')
+    .toString();
+
+  DB.execute(sql, fn);
+};
+
+
 
 //
 // get contest details and if user registered

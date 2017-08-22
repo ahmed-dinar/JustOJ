@@ -21,7 +21,7 @@
             </router-link>
           </div>
 
-          <div class="card">
+          <div class="card mb-5">
             <div class="list-group" v-if="clars && clars.length">
               <router-link v-for="clar in clars" :key="clar.id" :to="`/contests/${params.cid}/${params.slug}/clar/${clar.id}`" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
@@ -37,7 +37,7 @@
           </div>
 
           <div class="d-flex justify-content-between" v-if="clars && clars.length && pagination && pagination.total !== null">
-            <small>Showing {{ clars ? clars.length : '0' }} of {{ pagination.total }} entries</small>
+            <small><!-- Showing {{ clars ? clars.length : '0' }} of {{ pagination.total }} entries --></small>
             <b-pagination
             size="sm"
             :total-rows="pagination.total"
@@ -48,6 +48,7 @@
             :first-text="pg.first"
             :last-text="pg.last"
             ></b-pagination>
+            <span></span>
           </div>
 
       </div>
@@ -55,9 +56,14 @@
       <div class="col-md-3 pr-0 mt-4">
         <div class="form-bundle">
         <label for="inputLanguage">Problem</label>
-          <b-form-select
-          v-model="selected" id="inputLanguage" :options="problems" class="mb-3"
-          ></b-form-select>
+
+          <select class="form-control mb-4 form-control-sm" v-model="selected">
+            <option value="">Select a problem</option>
+            <option v-for="problem in problems" :key="problem.id" :value="problem.id">
+              {{ problem.name }}. {{ problem.title }}
+            </option>
+          </select>
+
         </div>
       </div>
 
@@ -84,17 +90,8 @@
         loading: true,
         cur_page: 1,
         error: null,
-        selected: null,
-        problems: [
-          {
-            text: 'C',
-            value: 'c'
-          },
-          {
-            text: 'C++',
-            value: 'cpp'
-          }
-        ],
+        selected: '',
+        problems: null,
         pg: {
           next: '<i class="material-icons md-18">keyboard_arrow_right</i>',
           prev: '<i class="material-icons md-18">keyboard_arrow_left</i>',
@@ -112,11 +109,14 @@
         console.log(this.$store.state.route.query);
 
         this.$http
-          .get(`/api/contest/${this.params.cid}/clars`)
+          .get(`/api/contest/${this.params.cid}/clars`, {
+            params: this.$store.state.route.query
+          })
           .then(response => {
             console.log(response.data);
             this.contest = response.data.contest;
             this.contest.id = this.params.cid;
+            this.problems = response.data.problems;
             this.clars = response.data.clars;
             this.pagination = response.data.pagination;
             this.done(null);
@@ -143,6 +143,15 @@
         this.$router.push({
           path: this.$store.state.route.path,
           query: Object.assign({}, this.$store.state.route.query, { page })
+        });
+      },
+      selected(val){
+        if(!val || val==''){
+          return;
+        }
+        this.$router.push({
+          path: this.$store.state.route.path,
+          query: Object.assign({}, this.$store.state.route.query, { problem: val })
         });
       }
     },

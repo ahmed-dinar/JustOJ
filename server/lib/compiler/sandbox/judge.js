@@ -311,7 +311,7 @@ var compareResult = function (opts,testCase,resultObj,cb) {
 
   var judgeOutput = testCase + '/o.txt';
   var userOutput = opts.runDir +'/output.txt';
-  var command = './lib/compiler/sandbox/compare ' + judgeOutput + ' ' + userOutput;
+  var command = './lib/compiler/sandbox/comparator ' + judgeOutput + ' ' + userOutput;
 
   exec(command, {
     env: process.env,
@@ -328,23 +328,24 @@ var compareResult = function (opts,testCase,resultObj,cb) {
     }
 
 
-    var resCode = parseInt(stdout);
+    var statusCode = parseInt(stdout);
 
-    if( resCode === 0 ){
+    if( statusCode === 0 ){
       logger.debug( chalk.green('Compare OK'));
-      resultObj['result'] = 'Accepted';
-      cb(null,resultObj);
+      statusObj.status = 'Accepted';
+      return fn(null, statusObj);
     }
 
+    if( statusCode === 9 ){
+      logger.debug( chalk.red('Wrong ans code ' + stdout));
+      logger.debug( chalk.red(stderr) );
 
-    if( resCode === 3 || resCode === 2 ){
-
-      logger.debug('Wrong ans code ' + stdout);
-
-      resultObj.code = '9';
-      resultObj['result'] = 'Wrong Answer';
-      return cb(resultObj.result,resultObj);
+      statusObj.code = '9';
+      statusObj.status = 'Wrong Answer';
+      statusObj.error = stderr;
+      return fn(new JudgeError(statusObj,'SOLUTION_FAILED'));
     }
+
 
 
     return cb(stderr);

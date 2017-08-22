@@ -902,6 +902,35 @@ router
           return callback(new AppError('Contest Not Yet Started','FORBIDDEN'));
         }
 
+        Contest.problems(req.contestId, function(err, probs){
+          if(err){
+            return callback(err);
+          }
+
+          var notReady = 0;
+
+          _.forEach(probs, function(c, i){
+            //check if any of the problems is incomplete
+            if( probs[i].status !== 'public' ){
+              notReady++;
+              return;
+            }
+            probs[i].name = alphabet.charAt(i);
+            probs[i].id = problemHash.encode(probs[i].id);
+            probs[i].title = entities.decodeHTML(probs[i].title);
+            probs[i].slug = entities.decodeHTML(probs[i].slug);
+          });
+
+          //if any of the problems is incomplete, deny access
+          if( notReady > 0 ){
+            //logger.error('contest ' + req.contestId + '\'s ' + notReady + ' of + ' + probs.length + ' problem(s) is not ready but contest is public ');
+            return callback(new AppError('Some problem is not ready', 'FORBIDDEN'));
+          }
+
+          return callback(null, data, probs);
+        });
+      },
+      function(data, probs, callback){
         Contest.clars({
           id: req.contestId,
           cur_page: req.page,
@@ -913,11 +942,11 @@ router
             return callback(err);
           }
 
-          return callback(null, data, clar, pagination);
+          return callback(null, data, probs, clar, pagination);
         });
       }
     ],
-    function(err, data, clars, pagination){
+    function(err, data, probs, clars, pagination){
       if(err){
         return handleError(err, res);
       }
@@ -926,13 +955,15 @@ router
 
       _.forEach(clars, function(c,i){
         clars[i].id = clarHash.encode(clars[i].id);
-        clars[i].request = clarHash.encode(clars[i].request);
-        clars[i].title = problemHash.encode(clars[i].title);
+        clars[i].request = entities.decodeHTML(clars[i].request);
+        clars[i].response = entities.decodeHTML(clars[i].response);
+        clars[i].title = entities.decodeHTML(clars[i].title);
       });
 
       res.status(200).json({
         contest: data,
         clars: clars,
+        problems: probs,
         pagination: pagination
       });
     });
@@ -1127,6 +1158,137 @@ router
       return res.sendStatus(200);
     });
   });
+
+
+router
+  .route('/:cid/clar/request')
+  .all(getContestId, authJwt)
+  .get(function(req, res){
+    var uid = req.user.id;
+
+    async.waterfall([
+      function(callback){
+        getInfo(req.contestId, uid, callback);
+      },
+      function(data, callback){
+        //contest is not running, no more request
+        if( !moment().isBetween(data.begin, data.end) ){
+          return callback(new AppError('Contest Is not running','FORBIDDEN'));
+        }
+
+        if( parseInt(data.joined) === 0 ){
+          return callback(new AppError('You are not participant in this contest', 'FORBIDDEN'));
+        }
+
+        Contest.problems(req.contestId, function(err, probs){
+          if(err){
+            return callback(err);
+          }
+
+          var notReady = 0;
+
+          _.forEach(probs, function(c, i){
+            //check if any of the problems is incomplete
+            if( probs[i].status !== 'public' ){
+              notReady++;
+              return;
+            }
+            probs[i].name = alphabet.charAt(i);
+            probs[i].id = problemHash.encode(probs[i].id);
+            probs[i].title = entities.decodeHTML(probs[i].title);
+            probs[i].slug = entities.decodeHTML(probs[i].slug);
+          });
+
+          //if any of the problems is incomplete, deny access
+          if( notReady > 0 ){
+            //logger.error('contest ' + req.contestId + '\'s ' + notReady + ' of + ' + probs.length + ' problem(s) is not ready but contest is public ');
+            return callback(new AppError('Some problem is not ready', 'FORBIDDEN'));
+          }
+
+          return callback(null, data, probs);
+        });
+      }
+    ],
+    function(err, data, probs){
+      if(err){
+        return handleError(err, res);
+      }
+
+      console.log(probs);
+      console.log(data);
+
+      res.status(200).json({
+        contest: data,
+        problems: probs
+      });
+    });
+  })
+  .post(function(req, res){
+    var uid = req.user.id;
+
+    async.waterfall([
+      function(callback){
+        getInfo(req.contestId, uid, callback);
+      },
+      function(data, callback){
+        //contest is not running, no more request
+        if( !moment().isBetween(data.begin, data.end) ){
+          return callback(new AppError('Contest Is not running','FORBIDDEN'));
+        }
+
+        if( parseInt(data.joined) === 0 ){
+          return callback(new AppError('You are not participant in this contest', 'FORBIDDEN'));
+        }
+
+        req
+          .checkBody('problem', 'Invalid problem')
+          .notEmpty().withMessage('problem required');
+
+        req
+          .checkBody('request', 'Invalid request text.')
+          .notEmpty().withMessage('request text required')
+          .isLength({ min: 2, max: 1500 }).withMessage('request must be in range 2 and 1500 characters long.');
+
+        req
+          .getValidationResult()
+          .then(function(result) {
+
+            if (!result.isEmpty()){
+              var e = result.array()[0];
+              logger.debug('validation error: ', e);
+              return callback(new AppError(e.msg, 'INVALID_INPUT'));
+            }
+
+            var pid = problemHash.decode(req.body.problem);
+            if(!pid || !pid.length){
+              return callback(new AppError('Invalid Problem', 'INVALID_INPUT'));
+            }
+
+            return callback(null, pid[0]);
+          });
+      },
+      function(pid, callback){
+        logger.debug(req.body.request);
+        logger.debug(entities.encodeHTML(req.body.request));
+        Contest.saveClar({
+          cid: req.contestId,
+          uid: uid,
+          pid: pid,
+          status: 'queued',
+          request: entities.encodeHTML(req.body.request),
+          response: ''
+        }, callback);
+      }
+    ],
+    function(err, data){
+      if(err){
+        return handleError(err, res);
+      }
+      res.sendStatus(200);
+    });
+  });
+
+
 
 
 //
