@@ -1,0 +1,6 @@
+'''
+/usr/bin/python -c 'import py_compile; py_compile.compile("hellome.py")'
+/usr/bin/python hellome.pyc
+sudo cp hellome.pyc /var/SECURITY/JAIL/home/runs/
+sudo ./safejudge hellome -i ../sampleProblem/input.txt -o /home/runs/out.txt -e /home/runs/err.txt -r /var/SECURITY/JAIL/home/runs/result.txt -m 255 -t 3
+'''
