@@ -1,6 +1,6 @@
 # JustOJ
 
-[![Travis branch](https://img.shields.io/travis/ahmed-dinar/JustOJ/master.svg?style=flat-square)](https://travis-ci.org/ahmed-dinar/JustOJ) [![Coveralls branch](https://img.shields.io/coveralls/ahmed-dinar/JustOJ/master.svg?style=flat-square)](https://coveralls.io/github/ahmed-dinar/JustOJ) [![David](https://img.shields.io/david/ahmed-dinar/JustOJ.svg?style=flat-square)](https://david-dm.org/ahmed-dinar/JustOJ) [![David](https://img.shields.io/david/dev/ahmed-dinar/JustOJ.svg?style=flat-square)](https://david-dm.org/ahmed-dinar/JustOJ?type=dev) [![Known Vulnerabilities](https://snyk.io/test/github/ahmed-dinar/JustOJ/badge.svg?style=flat-square)](https://snyk.io/org/ahmed-dinar/test/github/ahmed-dinar/justoj)
+<a href="https://www.codacy.com/app/ahmed-dinar/JustOJ/dashboard"><img src="https://img.shields.io/codacy/grade/8515c14218ec49c384b276fba758f983.svg?style=flat-square&label=codacy" alt="code quality"></a>
 
 ## Work in progress
 
