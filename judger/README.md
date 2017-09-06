@@ -1,4 +1,13 @@
-### Setup Chroot
+### Run Test
+
+```javascript
+sudo npm run test-sandbox
+```
+
+
+### Before Test
+
+#### Setup Chroot
  - https://www.digitalocean.com/community/tutorials/how-to-configure-chroot-environments-for-testing-on-an-ubuntu-12-04-vps
  - http://gernotklingler.com/blog/use-chroot-jail-software-development/
  - https://www.youtube.com/watch?v=XTyY3in5r6Q

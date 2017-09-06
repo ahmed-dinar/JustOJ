@@ -145,8 +145,8 @@ void parseArgs(int argc, char *argv[]){
 				break;
 			case 't':
 				tmpT = atoi(optarg);
-				if( tmpT>cpuLimit ){
-					writeResult(SYSTEM_ERROR,"maximum cpu limit is 5 seconds (5000 ms)",0,0,"maximum cpu limit is 5 seconds");
+				if( tmpT>15000 ){
+					writeResult(SYSTEM_ERROR,"maximum cpu limit is 15 seconds (15000 ms)",0,0,"maximum cpu limit is 15 seconds");
 				}
 				else if( tmpT < 0 ){
 					writeResult(SYSTEM_ERROR,"cpu limit can't be negative",0,0,"cpu limit can't be negative");
