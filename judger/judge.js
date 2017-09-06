@@ -26,6 +26,12 @@ var judgeFiles;
 
 
 /**
+ *
+ * judge.path = `{pathToChrootRuns}/submissionid` (will create the folder before compile)
+ * judge.id   = submission id
+ * judge.source = the source code full path
+ *
+ *
  * @param opts
  * @param cb
  */

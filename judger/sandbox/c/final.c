@@ -1,12 +1,12 @@
 /*
  *
  * Author: Ahmed Dinar
- * Last Modified: 21 Aug,2017 
+ * Last Modified: 21 Aug,2017
  * 			- write frbidden system calls name
  *
  *
  * TO COMPILE: gcc myutil.c -o safejudge final.c
- * 
+ *
  * sudo cp -i safejudge /home/ahmed-dinar/JustOJ/helpers/compiler/sandbox
  *
  */
@@ -14,7 +14,6 @@
 #include <sys/ptrace.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/user.h>
 #include <sys/user.h>
 #include <sys/resource.h>
 #include <sys/time.h>

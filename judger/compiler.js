@@ -11,6 +11,9 @@ var JudgeError = require('./config/judge-error.js');
 
 
 //
+// `id` = submissionid
+// `language` = language , used for source extension,  i,e .c or .cpp
+// `source` = source code folder
 // `sandbox` = the path of sandbox executable to run the code which written in C
 //
 function Compiler(options){
@@ -20,7 +23,7 @@ function Compiler(options){
   this.source = options.source;
   this.cpu = options.cpu;
   this.memory = options.memory;
-  this.sandbox = './sandbox/safejudge ';
+  this.sandbox = options.sandbox || './sandbox/safejudge ';
 }
 
 
@@ -30,7 +33,7 @@ Compiler.prototype.compile = function(fn){
   var command = null;
   var _this = this;
 
-  switch(_this.language) {
+  switch(_this.language.toLowerCase()) {
     case 'c':
       command = 'gcc -Wall -Wno-unused-result -O2 -fomit-frame-pointer -lm -o ' + _this.path +'/code ' + _this.id + '.' + _this.language;
       break;
@@ -45,7 +48,7 @@ Compiler.prototype.compile = function(fn){
 
   var options = {
     env: process.env,
-    timeout: 0,
+    timeout: 5000,
     maxBuffer: 1000*1024,
     cwd: _this.source
   };

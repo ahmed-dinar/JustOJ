@@ -13,7 +13,7 @@ const int allowed_syscall[] = {
 -1,//11-sys_munmap //always allowed
 -1,//12-sys_brk  //always allowed
 -1,//13-sys_rt_sigaction //always allowed
-0,//14-sys_rt_sigprocmask
+-1,//14-sys_rt_sigprocmask // for SIGABRT
 0,//15-stub_rt_sigreturn
 0,//16-sys_ioctl
 0,//17-sys_pread
@@ -88,7 +88,7 @@ const int allowed_syscall[] = {
 0,//86-sys_link
 0,//87-sys_unlink
 0,//88-sys_symlink
-2,//89-sys_readlink
+0,//89-sys_readlink
 0,//90-sys_chmod
 0,//91-sys_fchmod
 0,//92-sys_chown
@@ -185,7 +185,7 @@ const int allowed_syscall[] = {
 0,//183-NOT IMPLEMENTED
 0,//184-NOT IMPLEMENTED
 0,//185-NOT IMPLEMENTED
-0,//186-sys_gettid  //always allowed
+-1,//186-sys_gettid  //always allowed for SIGABRT
 0,//187-sys_readahead
 0,//188-sys_setxattr
 0,//189-sys_lsetxattr
