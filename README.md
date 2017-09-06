@@ -9,8 +9,8 @@
 - [x] C
 - [x] C++
 - [x] JAVA 8
-- [ ] C++11
-- [ ] C++14
+- [x] C++11
+- [x] C++14
 - [ ] Python2 & Python3
 
 ### Future Works
