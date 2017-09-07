@@ -14,6 +14,7 @@ var JudgeError = require('./config/judge-error.js');
 // `id` = submissionid
 // `language` = language , used for source extension,  i,e .c or .cpp
 // `source` = source code folder
+// `code` = source code file name with extentsion, ex: a.c , 12.cpp or Main.java
 // `sandbox` = the path of sandbox executable to run the code which written in C
 //
 function Compiler(options){
@@ -23,7 +24,8 @@ function Compiler(options){
   this.source = options.source;
   this.cpu = options.cpu;
   this.memory = options.memory;
-  this.sandbox = options.sandbox || './sandbox/safejudge ';
+  this.code = options.code;
+  this.sandbox = options.sandbox || './executor/safec ';
 }
 
 
@@ -35,10 +37,19 @@ Compiler.prototype.compile = function(fn){
 
   switch(_this.language.toLowerCase()) {
     case 'c':
-      command = 'gcc -Wall -Wno-unused-result -O2 -fomit-frame-pointer -lm -o ' + _this.path +'/code ' + _this.id + '.' + _this.language;
+      command = 'gcc -Wall -Wno-unused-result -O2 -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
       break;
     case 'cpp':
-      command = 'g++ -w -O2 -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.id + '.' + _this.language;
+      command = 'g++ -w -O2 '+ _this.cpp +' -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
+      break;
+    case 'cpp11':
+      command = 'g++ -w -O2 -std=c++11 '+ _this.cpp +' -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
+      break;
+    case 'cpp14':
+      command = 'g++ -w -O2 -std=c++14 '+ _this.cpp +' -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
+      break;
+    case 'java':
+      command = 'javac -d ' + _this.path + ' ' + _this.code;
       break;
     default:
       return fn(new JudgeError('Unknown Language ' + _this.language, 'INVALID_LANGUAGE'));
@@ -65,18 +76,21 @@ Compiler.prototype.compile = function(fn){
 // `/home/runs/{id}` = run directory inside chroot jail
 // `testCase` = testCase directory
 //
-Compiler.prototype.execute = function run(testCase, fn){
+Compiler.prototype.execute = function run(testCase, chrootDir, runDir, fn){
 
   var _this = this;
+  var execName = _this.language === 'java' ? 'Main' : 'code';
 
   var command = _this.sandbox;
-  command += _this.id + '/code ';
+  command += execName + ' ';
   command += '-i ' + testCase + '/i.txt ';
-  command += '-o ' + '/home/runs/' + _this.id + '/output.txt ';
-  command += '-e ' + '/home/runs/' + _this.id + '/error.txt ';
+  command += '-o ' + runDir + 'output.txt ';
+  command += '-e ' + runDir + 'error.txt ';
   command += '-r ' + _this.path + '/result.txt ';
   command += '-t ' + String(_this.cpu) + ' ';
-  command += '-m ' + String(_this.memory);
+  command += '-m ' + String(_this.memory) + ' ';
+  command += '-c ' + chrootDir + ' ';
+  command += '-d ' + runDir + ' ';
 
   logger.debug( chalk.red('[CODE-RUN]: ') + chalk.cyan(command) );
 

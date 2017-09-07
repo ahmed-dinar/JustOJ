@@ -64,7 +64,7 @@ int main(){
 	//doFloatingPointException();
 	//doSegmentFault();
 	//doOpenFile();
-	doFork();
+//	doFork();
 
 	//const char *filename = "/tmp/myfile";
 

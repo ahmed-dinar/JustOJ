@@ -38,9 +38,6 @@
 #include "myutil.h"
 
 
-#define CHROOT_DIR "/var/SECURITY/JAIL/"
-#define RUN_DIR "/home/runs/"
-
 #define SYSTEM_ERROR   -1
 #define OK              0
 #define RE              1
@@ -48,8 +45,9 @@
 #define MLE             3
 #define OLE             4
 
-//#define DEBUG 1000
 
+char *CHROOT_DIR = "/var/SECURITY/JAIL/";
+char *RUN_DIR = "/home/runs/";
 char *programFile;
 char *inputFile;
 char *outputFile;
@@ -110,6 +108,8 @@ void showUsage(){
     fprintf(stderr ,"-o <stdout file>\n");
     fprintf(stderr ,"-e <stderr file>\n");
     fprintf(stderr ,"-r <result file>\n");
+    fprintf(stderr ,"-c <chroot directory>\n");
+    fprintf(stderr ,"-d <code run directory inside chroot>\n");
 #endif
 
 	writeResult(SYSTEM_ERROR,"error while parsing arguments with '?' case",0,0,"null");
@@ -126,7 +126,7 @@ void parseArgs(int argc, char *argv[]){
 	extern int optind;
 	int isIn = 0, isOut = 0, isRes = 0 , isChroot = 0, c , tmpT, tmpM;
 
-	while ((c = getopt(argc, argv, "p:i:o:e:r:t:m:n:")) != -1){
+	while ((c = getopt(argc, argv, "p:i:o:e:r:t:m:c:d:n:")) != -1){
 		switch (c) {
 			case 'i':
 				isIn = 1;
@@ -142,6 +142,12 @@ void parseArgs(int argc, char *argv[]){
 			case 'r':
 				isRes = 1;
 				resultFile = optarg;
+				break;
+			case 'c':
+				CHROOT_DIR = optarg;
+				break;
+			case 'd':
+				RUN_DIR = optarg;
 				break;
 			case 't':
 				tmpT = atoi(optarg);

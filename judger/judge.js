@@ -41,7 +41,7 @@ function Judge(job, fn){
   var judge = {
     id: subId,
     path: path.join('/var/SECURITY/JAIL/home/runs', subId), // path.join(config.get('PATH'), job.data.id)
-    comparer: './sandbox/comparator '
+    comparer: './executor/comparator '
   };
 
   judgeFiles = ['output.txt','error.txt','result.txt'];

@@ -6,6 +6,7 @@
  *
  *
  * TO COMPILE: gcc myutil.c -o safejudge final.c -lm
+ * TO DEBUG: gcc myutil.c -o safejudge final.c -lm -DDEBUG=1
  *
  * sudo cp -i safejudge /home/ahmed-dinar/JustOJ/helpers/compiler/sandbox
  *
@@ -35,12 +36,7 @@
 #include <string.h>
 
 #include "allSignals.h"
-
 #include "myutil.h"
-
-
-#define CHROOT_DIR "/var/SECURITY/JAIL/"
-#define RUN_DIR "/home/runs/"
 
 #define SYSTEM_ERROR   -1
 #define OK              0
@@ -49,15 +45,17 @@
 #define MLE             3
 #define OLE             4
 
-//#define DEBUG 1000
 
+char *CHROOT_DIR = "/var/SECURITY/JAIL/";
+char *RUN_DIR = "/home/runs/";
+char *POLICY = "-Djava.security.policy=/justojPolicy.policy";
 char *programFile;
 char *inputFile;
 char *outputFile;
 char *stderrFile;
 char *resultFile;
-int cpuLimit = 5000;   //default 5 seconds
-int memoryLimit = 512; //default 256 MegaByte
+int cpuLimit = 15000;   //max and default 15 seconds
+int memoryLimit = 512; //max and default 512 MegaByte
 
 int callCount[340] = {};
 int memoryUsed  = 0;
@@ -73,7 +71,6 @@ pid_t pid;
  *
  * */
 void writeResult(int resCode,char *res,double cpuUsage,int memUsage,char *whyError) {
-
 
     if(pid > 0) kill(pid, SIGKILL);
 
@@ -106,20 +103,36 @@ void showUsage(){
 #ifdef DEBUG
     fprintf(stderr ,"./safejudge <executable file> [options]");
     fprintf(stderr ,"options:\n");
-    fprintf(stderr ,"-t <cpu limit> [default: 5s]\n");
-    fprintf(stderr ,"-m <memory limit> [default: 256 mb]\n");
+    fprintf(stderr ,"-t <cpu limit> [max & default: 15s]\n");
+    fprintf(stderr ,"-m <memory limit> [max & default: 512 mb]\n");
     fprintf(stderr ,"-i <stdin test case file>\n");
     fprintf(stderr ,"-o <stdout file>\n");
     fprintf(stderr ,"-e <stderr file>\n");
     fprintf(stderr ,"-r <result file>\n");
+    fprintf(stderr ,"-s <java security policy file path>\n");
+    fprintf(stderr ,"-c <chroot directory>\n");
+    fprintf(stderr ,"-d <code run directory inside chroot>\n");
 #endif
 
 	writeResult(SYSTEM_ERROR,"error while parsing arguments with '?' case",0,0,"null");
 }
 
 
+
 /*
- *
+ * 
+ * */
+void setPolicy(char *policyPath){
+	char *policyArg = "-Djava.security.policy=";
+	POLICY = (char *) malloc(1 + strlen(policyArg)+strlen(policyPath));
+	strcpy(POLICY, policyArg);
+	strcat(POLICY, policyPath);
+}
+
+
+
+/*
+ * parse command line arguments
  *
  * */
 void parseArgs(int argc, char *argv[]){
@@ -128,7 +141,7 @@ void parseArgs(int argc, char *argv[]){
 	extern int optind;
 	int isIn = 0, isOut = 0, isRes = 0 , isChroot = 0, c , tmpT, tmpM;
 
-	while ((c = getopt(argc, argv, "p:i:o:e:r:t:m:n:")) != -1){
+	while ((c = getopt(argc, argv, "p:i:o:e:r:t:m:c:d:s:n:")) != -1){
 		switch (c) {
 			case 'i':
 				isIn = 1;
@@ -145,10 +158,19 @@ void parseArgs(int argc, char *argv[]){
 				isRes = 1;
 				resultFile = optarg;
 				break;
+			case 'c':
+				CHROOT_DIR = optarg;
+				break;
+			case 'd':
+				RUN_DIR = optarg;
+				break;
+			case 's':
+				setPolicy(optarg);
+				break;
 			case 't':
 				tmpT = atoi(optarg);
 				if( tmpT>cpuLimit ){
-					writeResult(SYSTEM_ERROR,"maximum cpu limit is 5 seconds (5000 ms)",0,0,"maximum cpu limit is 5 seconds");
+					writeResult(SYSTEM_ERROR,"maximum cpu limit is 15 seconds (15000 ms)",0,0,"maximum cpu limit is 15 seconds");
 				}
 				else if( tmpT < 0 ){
 					writeResult(SYSTEM_ERROR,"cpu limit can't be negative",0,0,"cpu limit can't be negative");
@@ -303,6 +325,7 @@ void setFileDescriptor(){
 }
 
 
+
 /*
  *
  *
@@ -339,10 +362,10 @@ void handleChild(){
 
 
 #ifdef DEBUG
-    fprintf(stderr,"Executing file %s, under user id: %d , errno = %s\n",programFile,getuid(),strerror(errno));
+    fprintf(stderr,"Executing file %s/%s, under user id: %d , errno = %s\n",RUN_DIR,programFile,getuid(),strerror(errno));
 #endif
 
-    execl("/usr/bin/java", "java", "-Xmx512m", "-Xms128m", "-Djava.security.manager", "-Djava.security.policy=/justojPolicy.policy", "-cp", RUN_DIR,programFile, NULL);
+    execl("/usr/bin/java", "java", "-Xmx512m", "-Xms128m", "-Djava.security.manager", POLICY, "-cp", RUN_DIR, programFile, NULL);
 
 
 	fprintf(stderr ,"execl error occured! reason:  %s\n",strerror(errno));
@@ -383,10 +406,10 @@ void handleParent(){
         int timenow = (int) (rused.ru_utime.tv_sec + rused.ru_stime.tv_sec) * 1000 + (rused.ru_utime.tv_usec + rused.ru_stime.tv_usec) / 1000; //in miliseconds
 
 #ifdef DEBUG
-        //fprintf(stderr ,  "CPU Used = %lf , limit = %d\n" ,MStoSecondDouble(timenow), cpuLimit);
+       // fprintf(stderr ,  "CPU Used = %lf (%d), limit = %d\n" ,MStoSecondDouble(timenow), timenow, cpuLimit);
 #endif
 
-        if( MStoSecondDouble(timenow) > cpuLimit ){
+        if( timenow > cpuLimit ){
             writeResult(TLE,"TLE (Rused) [timenow > cpuLimit]",MStoSecondDouble(cpuLimit),memoryUsed,"null");
         }
 
@@ -479,7 +502,7 @@ void handleParent(){
 int main(int argc, char *argv[]){
 
     parseArgs(argc,argv); 
-    
+  
     managePermissions();  
 
     pid = fork();

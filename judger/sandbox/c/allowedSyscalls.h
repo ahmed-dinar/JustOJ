@@ -7,7 +7,7 @@ const int allowed_syscall[] = {
 -1,//5-sys_newfstat //always allowed
 -1,//6-sys_newlstat //always allowed
 0,//7-sys_poll
-0,//8-sys_lseek
+-1,//8-sys_lseek
 -1,//9-sys_mmap //always allowed
 -1,//10-sys_mprotect //always allowed
 -1,//11-sys_munmap //always allowed

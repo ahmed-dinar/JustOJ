@@ -4,7 +4,7 @@
 
 ## Work in progress
 
-### Language Support
+#### Language Support
 
 - [x] C
 - [x] C++
@@ -13,7 +13,29 @@
 - [x] C++14
 - [ ] Python2 & Python3
 
-### Future Works
+
+#### Executor Usage
+```javascript
+$ ./safec <executable file> [options]
+```
+
+```javascript
+$ ./safejava <executable file> [options]
+```
+##### options
+```javascript
+  -t <cpu limit> (in milliseconds, max: 15s)
+  -m <memory limit> (in MB, max: 512 MB)
+  -i <stdin test case file>
+  -o <stdout file>
+  -e <stderr file>
+  -r <result file>
+  -s <java security policy file path> (for safejava)
+  -c <chroot directory>
+  -d <code run directory inside chroot>
+```
+
+##### Future Works
 
 - [ ] Integrate [MOSS](https://theory.stanford.edu/~aiken/moss/) like tool for Detecting Plagiarism.
 - [ ] Different language for different problem
