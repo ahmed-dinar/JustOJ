@@ -4,10 +4,12 @@ language: node_js
 node_js:
   - "6"
 before_install:
+  - sudo ln -s $(type -P node) /usr/bin/node
   - cd judger
   - sudo chmod +x install-chroot.sh
   - sudo ./install-chroot.sh
 install:
-  - sudo npm install
+  - sudo $(which npm) --version
+  - sudo $(which npm) install
 script:
-  - sudo npm run test-sandbox
+  - sudo $(which npm) run test-sandbox
