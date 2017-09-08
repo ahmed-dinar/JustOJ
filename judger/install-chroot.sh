@@ -1,6 +1,9 @@
 #!/bin/bash
 
 ls
+lsb_release -a
+gcc --version
+java -version
 
 # install debootstrap
 sudo apt-get update
@@ -12,7 +15,7 @@ sudo chmod 777 /etc/schroot/schroot.conf
 sudo cat schroot.conf >> /etc/schroot/schroot.conf
 
 # install chroot
-sudo debootstrap --variant=buildd --arch amd64 xenial /var/SECURITY/JAIL/ http://mirror.math.princeton.edu/pub/ubuntu/
+sudo debootstrap --variant=buildd --arch amd64 trusty /var/SECURITY/JAIL/ http://mirror.math.princeton.edu/pub/ubuntu/
 
 # mount proc to chroot
 sudo mount proc /var/SECURITY/JAIL/proc -t proc

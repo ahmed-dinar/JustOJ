@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ls
+lsb_release -a
 
 # check if gcc exists
 gcc --version
