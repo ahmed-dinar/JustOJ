@@ -127,7 +127,7 @@ int main(){
 //FI;
 //FO;
 	
-	doMLE();
+	//doMLE();
 
 	//int n;
 	//scanf("%d",&n);
@@ -135,7 +135,7 @@ int main(){
 
    // doSegmentFault();
    // doFloatingPointException();
-   // doTimeLimit();
+    doTimeLimit();
   // doAlarmTLE();
   // doFork();
    //FI;

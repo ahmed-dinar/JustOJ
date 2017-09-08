@@ -1,13 +1,9 @@
 /*
  *
  * Author: Ahmed Dinar
- * Last Modified: 21 Aug,2017
- * 			- write frbidden system calls name
  *
- *
- * TO COMPILE: gcc myutil.c -o safejudge final.c
- *
- * sudo cp -i safejudge /home/ahmed-dinar/JustOJ/helpers/compiler/sandbox
+ * gcc myutil.c -o ../../executor/safec final.c
+ * gcc myutil.c -o ../../executor/safec final.c -DDEBUG=1
  *
  */
 
@@ -282,8 +278,8 @@ void setLimits(){
     setLimit(RLIMIT_FSIZE, MBtoByte(memoryLimit));
 
     setLimit(RLIMIT_NOFILE,4); //maximum file descriptor
-    setLimit(RLIMIT_NPROC,2);
-    setLimit(RLIMIT_CORE,0);
+    setLimit(RLIMIT_NPROC, 10);
+    setLimit(RLIMIT_CORE, 0);
  
 #ifdef DEBUG
     fprintf(stderr , "Done Resource Limit Set\n");
@@ -304,15 +300,6 @@ void setFileDescriptor(){
     }
     dup2(fd,1);
     close(fd);
-
-
-	/*
-    int fder = open(stderrFile, O_WRONLY);
-    if( fder < 0 ){
-        writeResult(SYSTEM_ERROR,"Problem opening stderr file",0,0,"null");
-    }
-    dup2(fder,STDERR_FILENO);
-    close(fder);*/
 }
 
 
@@ -555,11 +542,9 @@ void handleParent(){
 int main(int argc, char *argv[]){
 
     parseArgs(argc,argv); 
-    
     managePermissions();  
 
     pid = fork();
-    //fprintf(stderr ,"fork with pid:  %d, status(errno): %s\n",pid,strerror(errno));
     switch(pid){
        case -1:
           writeResult(SYSTEM_ERROR,"FORK ERROR",0,0,"null");

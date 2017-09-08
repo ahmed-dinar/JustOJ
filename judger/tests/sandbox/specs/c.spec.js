@@ -20,7 +20,7 @@ var sandboxPath = './executor/safec ';
 var judgeFiles = ['output.txt','error.txt','result.txt'];
 var TIME_LIMIT = 2500;
 var MEMORY_LIMIT = 255;
-var CHROOT_DIR = '/var/SECURITY/JAIL/';
+var CHROOT_DIR = '/var/SECURITY/JAIL2/';
 var RUN_DIR = '/home/runs/';
 var cppver = '';
 
@@ -396,7 +396,7 @@ describe("C/C++", function () {
     _.forEach(files, function(file){
 
       var sampleName = file.split('.')[0];
-      var pth = path.join('/var/SECURITY/JAIL/home/runs', sampleName);
+      var pth = path.join(CHROOT_DIR + 'home/runs', sampleName);
 
       describe(sampleName, function () {
 

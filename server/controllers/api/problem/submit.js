@@ -7,15 +7,15 @@ var logger = require('winston');
 var chalk = require('chalk');
 var path = require('path');
 var has = require('has');
+var rimraf = require('rimraf');
 
-
+var extensions = appRequire('lib/extensions');
 var AppError = appRequire('lib/custom-error');
 var Problems = appRequire('models/problems');
 var Submission = appRequire('models/api/Submission');
 var upload = appRequire('middlewares/sourceUpload').single('source');
 var Judge = appRequire('worker/Judge');
 //var handleError = appRequire('lib/handle-error');
-
 
 
 module.exports = function(req, res, next) {
@@ -54,22 +54,40 @@ module.exports = function(req, res, next) {
         if( !has(req,'file') || !req.file ){
           return callback(new AppError('Source Required','input'));
         }
-        sourcePath = req.file.path;
+
+        sourcePath = req.file.destination;
 
         if( !has(req.body,'language') ){
           return callback(new AppError('Language Required','input'));
         }
 
-        submission.source = sourcePath;
         submission.language = req.body.language;
         submission.status = '5';
 
         return callback(null, submission);
       });
     },
+    function(submission, callback){
+      var newName = path.join(sourcePath, 'code' + extensions[submission.language]);
+      fs.rename(req.file.path, newName, function(err) {
+        if ( err ) {
+          return callback(err);
+        }
+        submission.source = newName;
+        return callback(null, submission);
+      });
+    },
     saveSubmission,
-    incrementSubmission,
-    renameSource
+    function(submission, callback){
+      var newName = path.join(process.cwd(), '..', 'judger', 'source', submission.id.toString());
+      fs.rename(sourcePath, newName, function(err) {
+        if ( err ) {
+          return callback(err);
+        }
+        sourcePath = newName;
+        return callback(null, submission.id);
+      });
+    }
   ],
   function (error, submissionId) {
     if( error ){
@@ -77,7 +95,7 @@ module.exports = function(req, res, next) {
         return handleError(error, res);
       }
 
-      return fs.unlink(sourcePath, function(err){
+      return rimraf(sourcePath, function(err){
         if(err){
           logger.error(err);
         }
@@ -85,6 +103,7 @@ module.exports = function(req, res, next) {
       });
     }
     logger.debug(chalk.green('Successfully Submitted'));
+
 
     //push the submission into judge queue
     Judge.push({ id: submissionId }, 'submission', function(err){
@@ -181,47 +200,17 @@ function saveSubmission(submission, fn){
         }
         return callback(null, submission);
       });
+    },
+    //increment Submission count of this problem
+    function(submission, callback){
+      Problems.updateSubmission(submission.problemId, 'submissions', function(err){
+        if( err ){
+          logger.debug(chalk.red('Updating submission error'));
+          return callback(err);
+        }
+        return callback(null, submission);
+      });
     }
   ], fn);
 }
 
-
-//
-// increment Submission count of this problem
-//
-var incrementSubmission = function (submission, callback) {
-  Problems.updateSubmission(submission.problemId, 'submissions', function(err){
-    if( err ){
-      logger.debug(chalk.red('Updating submission error'));
-      return callback(err);
-    }
-    callback(null, submission);
-  });
-};
-
-
-//
-// rename source using languge extension
-//
-var renameSource = function(submission, fn) {
-
-  //should be edited
-  var newName = path.join(process.cwd(), '..', 'judger', 'source', (submission.id+'.'+submission.language));
-
-  fs.rename(submission.source, newName, function(err) {
-    if ( err ) {
-      //set the submission status as system error
-      return Submission.put(submission.id, { status: '8' }, function(error){
-        //damn man!
-        if(error){
-          logger.debug('update submission status error');
-          logger.error(error);
-        }
-        logger.debug('Error Renaming Source');
-        return fn(err);
-      });
-    }
-
-    return fn(null, submission.id);
-  });
-};

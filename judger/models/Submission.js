@@ -48,8 +48,8 @@ Submission.prototype.solved = function(pid, fn){
 Submission.prototype.saveCase = function(columns, fn){
 
 
-  console.log('in saveCase');
-  console.log(columns);
+  //console.log('in saveCase');
+ // console.log(columns);
 
   var sql = Query.insert(columns)
     .into('runs')

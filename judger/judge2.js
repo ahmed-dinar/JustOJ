@@ -23,9 +23,6 @@ var judgeStatus = require('./config/judge-status');
 var extensions = require('./lib/extensions');
 var executors = require('./lib/executors');
 
-var CHROOT_DIR = '/var/SECURITY/JAIL/';
-var judgeFiles;
-
 
 /**
  *
@@ -37,31 +34,31 @@ var judgeFiles;
  * @param opts
  * @param cb
  */
-function Judge(job, fn){
+function Judge(subId){
 
-  var subId = job.data.id.toString();
-
-  var judge = {
+  this.judge = {
     id: subId,
-    path: path.join(CHROOT_DIR + 'home/runs', subId),
+    CHROOT_DIR: '/var/SECURITY/JAIL/',
+    path: path.join('/var/SECURITY/JAIL/home/runs', subId),
     comparer: './executor/comparator '
   };
+  this.submission = new Submission(subId);
 
-  judgeFiles = ['output.txt','error.txt','result.txt'];
+  logger.debug(chalk.green('################# Starting judge submission id ' + subId+ '######################'));
+};
 
-  _.forEach(judgeFiles, function(file, indx) {
-    judgeFiles[indx] = path.join(judge.path, file);
-  });
 
-  var submission = new Submission(judge.id);
 
-  logger.debug(chalk.green('---------------Starting judge submission id ' + judge.id+ '-----------------'));
+Judge.prototype.run = function(fn){
 
-  // logger.debug(
-  //   chalk.green('............Starting judge.............\n'),
-  //   'path: ' + judge.path + '\n',
-  //   'judgeFiles: ' + judgeFiles + '\n'
-  // );
+  var judge = this.judge;
+  var submission = this.submission;
+
+  judge.judgeFiles = [
+    path.join(judge.path, 'output.txt'),
+    path.join(judge.path, 'error.txt'),
+    path.join(judge.path, 'result.txt'),
+  ];
 
   async.waterfall([
     function(callback){
@@ -73,9 +70,9 @@ function Judge(job, fn){
           return callback(new JudgeError('No Submission Found','NOT_FOUND'));
         }
         judge = _.assign(judge, rows[0]);
-        judge.source = path.join(__dirname,'source');
+        judge.source = path.join(__dirname, 'source', judge.id);
 
-        logger.debug('submission: ', judge);
+      //  logger.debug('submission: ', judge);
 
         return callback();
       });
@@ -141,14 +138,13 @@ function Judge(job, fn){
 
 
 
-
 //
 // compiler source code
 //
 function compile(judge, ignore, fn) {
 
   var options = _.pick(judge, ['id','language','path','source','cpu','memory']);
-  options.code = options.id + extensions[options.language];
+  options.code = 'code' + extensions[options.language];
   options.executor = './executor/' + executors[options.language];
 
 
@@ -180,15 +176,14 @@ function compile(judge, ignore, fn) {
 //  Create additional files for saving the run status
 //
 function makeFiles(judge, compiler, fn){
-
-  async.eachSeries(judgeFiles, function(file, callback) {
+  async.eachSeries(judge.judgeFiles, function(file, callback) {
     fs.open(file, 'w', function(err, fd){
       if( err ){
         logger.debug( chalk.red(file + ' creation error'));
         logger.error(err);
         return callback(err);
       }
-      logger.debug( chalk.green(file + ' created') );
+     // logger.debug( chalk.green(file + ' created') );
       return callback();
     });
   },
@@ -209,7 +204,7 @@ function execute(submission, judge, compiler, fn){
   //loop through every test cases
   async.mapSeries(judge.testcases, function(testCase, cb){
     //execute source with this test case
-    compiler.execute(testCase.value, CHROOT_DIR, '/home/runs/' + judge.id + '/', function(err, stdout, stderr){
+    compiler.execute(testCase.value, judge.CHROOT_DIR, '/home/runs/' + judge.id + '/', function(err, stdout, stderr){
       if(err){
         return cb(err);
       }
@@ -221,7 +216,8 @@ function execute(submission, judge, compiler, fn){
       //1. while not using sudo , getting 'chroot error:  Operation not permitted`
       //
       if(stderr) {
-        logger.debug('stderr while executing:: ', stderr);
+        logger.debug( chalk.red('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  stderr while executing @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n') );
+        logger.debug(stderr);
         return checkStatus(judge.resultFile, cb);
       }
 
@@ -274,7 +270,7 @@ function getStatus(submission, judge, testCase, fn){
 
       return hasError
         ? fn(error, statusObj)
-        : clearRun(statusObj, fn);
+        : clearRun(statusObj, judge.judgeFiles, fn);
     });
   });
 }
@@ -301,8 +297,8 @@ function checkStatus(resultPath, fn) {
     var statusObj = _.zipObject(['code', 'msg','cpu','memory','error'], _.split(data,'$',5));
     var statusCode = parseInt(statusObj.code);
 
-    console.log('statusObj == ');
-    console.log(statusObj);
+   // console.log('statusObj == ');
+   // console.log(statusObj);
 
     var crashed = (statusCode < 0 || statusCode > 4);
     if( crashed ){
@@ -333,7 +329,7 @@ function compareResult(comparer, outputFile, testCase, statusObj, fn) {
   var judgeOutput = path.join(testCase, 'o.txt');
   var command = comparer + judgeOutput + ' ' + outputFile;
 
-  console.log('starting comparing...');
+ // console.log('starting comparing...');
 
   exec(command, {
     env: process.env,
@@ -372,7 +368,7 @@ function compareResult(comparer, outputFile, testCase, statusObj, fn) {
 //
 // truncate files for next test case
 //
-function clearRun(statusObj, fn){
+function clearRun(statusObj, judgeFiles, fn){
   async.eachSeries(judgeFiles, function(file, callback) {
     fs.truncate(file, 0, function(err){
       if(err){
@@ -398,8 +394,8 @@ function makeFinalStatus(runs, submission, pid, fn){
   if( typeof runs === 'object' )
     runs = [runs];
 
-  console.log('makeFinalStatus');
-  console.log(runs);
+ // console.log('makeFinalStatus');
+  //console.log(runs);
 
   var status = '8';
   var cpu = 0.0;

@@ -229,6 +229,10 @@
           {
             text: 'C++',
             value: 'cpp'
+          },
+          {
+            text: 'JAVA 8',
+            value: 'java'
           }
         ],
         subsFields: {

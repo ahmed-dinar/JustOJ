@@ -8,7 +8,7 @@
 
         <b-link class="navbar-brand" :to="{ path: '/' }">
           <!-- <img src="img/brand-logo.png"  width="35" height="32" /> -->
-          JUST OJ
+          JUST OJ<sup>&#946;</sup>
         </b-link>
 
         <b-collapse is-nav id="nav_collapse">

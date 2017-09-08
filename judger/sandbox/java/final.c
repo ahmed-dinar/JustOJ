@@ -1,14 +1,9 @@
 /*
  *
  * Author: Ahmed Dinar
- * Last Modified: 21 Aug,2017
- * 			- write frbidden system calls name
  *
- *
- * TO COMPILE: gcc myutil.c -o safejudge final.c -lm
- * TO DEBUG: gcc myutil.c -o safejudge final.c -lm -DDEBUG=1
- *
- * sudo cp -i safejudge /home/ahmed-dinar/JustOJ/helpers/compiler/sandbox
+ * gcc myutil.c -o ../../executor/safejava final.c
+ * gcc myutil.c -o ../../executor/safejava final.c -DDEBUG=1
  *
  */
 
@@ -501,12 +496,10 @@ void handleParent(){
 
 int main(int argc, char *argv[]){
 
-    parseArgs(argc,argv); 
-  
+    parseArgs(argc,argv);
     managePermissions();  
 
     pid = fork();
-    //fprintf(stderr ,"fork with pid:  %d, status(errno): %s\n",pid,strerror(errno));
     switch(pid){
        case -1:
           writeResult(SYSTEM_ERROR,"FORK ERROR",0,0,"null");

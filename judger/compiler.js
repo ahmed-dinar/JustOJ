@@ -8,14 +8,13 @@ var JudgeError = require('./config/judge-error.js');
 
 //command = 'gcc -w -O2 -fomit-frame-pointer -lm -o ' + judge.runDir +'/code code.c';
 
-                                                                                                                                      
 
 //
 // `id` = submissionid
 // `language` = language , used for source extension,  i,e .c or .cpp
 // `source` = source code folder
 // `code` = source code file name with extentsion, ex: a.c , 12.cpp or Main.java
-// `sandbox` = the path of sandbox executable to run the code which written in C
+// `executor` = the path of sandbox executable to run the code which written in C
 //
 function Compiler(options){
   this.id = options.id;
@@ -25,7 +24,7 @@ function Compiler(options){
   this.cpu = options.cpu;
   this.memory = options.memory;
   this.code = options.code;
-  this.sandbox = options.sandbox || './executor/safec ';
+  this.executor = options.executor || './executor/safec ';
 }
 
 
@@ -40,13 +39,13 @@ Compiler.prototype.compile = function(fn){
       command = 'gcc -Wall -Wno-unused-result -O2 -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
       break;
     case 'cpp':
-      command = 'g++ -w -O2 '+ _this.cpp +' -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
+      command = 'g++ -w -O2 -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
       break;
     case 'cpp11':
-      command = 'g++ -w -O2 -std=c++11 '+ _this.cpp +' -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
+      command = 'g++ -w -O2 -std=c++11 -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
       break;
     case 'cpp14':
-      command = 'g++ -w -O2 -std=c++14 '+ _this.cpp +' -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
+      command = 'g++ -w -O2 -std=c++14 -fomit-frame-pointer -lm -o ' + _this.path + '/code ' + _this.code;
       break;
     case 'java':
       command = 'javac -d ' + _this.path + ' ' + _this.code;
@@ -81,7 +80,7 @@ Compiler.prototype.execute = function run(testCase, chrootDir, runDir, fn){
   var _this = this;
   var execName = _this.language === 'java' ? 'Main' : 'code';
 
-  var command = _this.sandbox;
+  var command = _this.executor;
   command += execName + ' ';
   command += '-i ' + testCase + '/i.txt ';
   command += '-o ' + runDir + 'output.txt ';
