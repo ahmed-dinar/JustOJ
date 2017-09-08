@@ -20,6 +20,8 @@ var sandboxPath = './executor/safec ';
 var judgeFiles = ['output.txt','error.txt','result.txt'];
 var TIME_LIMIT = 2500;
 var MEMORY_LIMIT = 255;
+var CHROOT_DIR = '/var/SECURITY/JAIL/';
+var RUN_DIR = '/home/runs/';
 var cppver = '';
 
 
@@ -30,7 +32,7 @@ describe("C++11", function () {
     this.timeout(5000);
 
     var file = 'cpp11.cpp';
-    var pth = '/var/SECURITY/JAIL/home/runs/cpp11';
+    var pth = CHROOT_DIR + 'home/runs/cpp11';
 
     after(function(done){
       rimraf(pth, done);
@@ -50,7 +52,7 @@ describe("C++11", function () {
     this.timeout(5000);
 
     var file = 'cpp11.cpp';
-    var pth = '/var/SECURITY/JAIL/home/runs/cpp11';
+    var pth = CHROOT_DIR + 'home/runs/cpp11';
 
     before(function(done){
       cppver = '-std=c++11';
@@ -79,7 +81,7 @@ describe("C++14", function () {
     this.timeout(5000);
 
     var file = 'cpp14.cpp';
-    var pth = '/var/SECURITY/JAIL/home/runs/cpp14';
+    var pth = CHROOT_DIR + 'home/runs/cpp14';
 
     after(function(done){
       rimraf(pth, done);
@@ -99,7 +101,7 @@ describe("C++14", function () {
     this.timeout(5000);
 
     var file = 'cpp14.cpp';
-    var pth = '/var/SECURITY/JAIL/home/runs/cpp14';
+    var pth = CHROOT_DIR + 'home/runs/cpp14';
 
     before(function(done){
       cppver = '-std=c++14';
@@ -131,7 +133,7 @@ describe("C/C++", function () {
       this.timeout(5000);
 
       var file = 'compilation_error.cpp';
-      var pth = '/var/SECURITY/JAIL/home/runs/compilation_error';
+      var pth = CHROOT_DIR + 'home/runs/compilation_error';
 
       after(function(done){
         rimraf(pth, done);
@@ -152,7 +154,7 @@ describe("C/C++", function () {
       this.timeout(9000);
 
       var file = 'floating_point.c';
-      var pth = '/var/SECURITY/JAIL/home/runs/floating_point';
+      var pth = CHROOT_DIR + 'home/runs/floating_point';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -190,7 +192,7 @@ describe("C/C++", function () {
       this.timeout(9000);
 
       var file = 'segment_fault.c';
-      var pth = '/var/SECURITY/JAIL/home/runs/segment_fault';
+      var pth = CHROOT_DIR + 'home/runs/segment_fault';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -228,7 +230,7 @@ describe("C/C++", function () {
       this.timeout(9000);
 
       var file = 'memory_limit.c';
-      var pth = '/var/SECURITY/JAIL/home/runs/memory_limit';
+      var pth = CHROOT_DIR + 'home/runs/memory_limit';
 
       before(function(done){
         MEMORY_LIMIT = 10;
@@ -268,7 +270,7 @@ describe("C/C++", function () {
       this.timeout(9000);
 
       var file = 'SIGABRT.cpp';
-      var pth = '/var/SECURITY/JAIL/home/runs/SIGABRT';
+      var pth = CHROOT_DIR + 'home/runs/SIGABRT';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -307,7 +309,7 @@ describe("C/C++", function () {
       this.timeout(9000);
 
       var file = 'time_limit.c';
-      var pth = '/var/SECURITY/JAIL/home/runs/time_limit';
+      var pth = CHROOT_DIR + 'home/runs/time_limit';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -345,7 +347,7 @@ describe("C/C++", function () {
       this.timeout(9000);
 
       var file = 'tle_alarm.c';
-      var pth = '/var/SECURITY/JAIL/home/runs/tle_alarm';
+      var pth = CHROOT_DIR + 'home/runs/tle_alarm';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -471,6 +473,7 @@ function executeCode(pth, sampleName, cb){
   command += '-r ' + pth + '/result.txt ';
   command += '-t ' + String(TIME_LIMIT) + ' ';
   command += '-m ' + String(MEMORY_LIMIT) + ' ';
+  command += '-c ' + CHROOT_DIR + ' ';
 
  // console.log( chalk.red('[CODE-RUN]: ') + chalk.cyan(command) );
 

@@ -17,6 +17,8 @@ var exec = require('child_process').exec;
 var testCase = path.resolve(__dirname, '../samples/io/normal');
 var sandboxPath = './executor/safejava ';
 var judgeFiles = ['output.txt','error.txt','result.txt'];
+var CHROOT_DIR = '/var/SECURITY/JAIL/';
+var RUN_DIR = '/home/runs/';
 var TIME_LIMIT = 2500;
 var MEMORY_LIMIT = 512;
 
@@ -34,7 +36,7 @@ describe("JAVA 8", function () {
 
       var testName = 'CompilationError';
       var file = testName + '.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/' + testName;
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
 
       after(function(done){
         rimraf(pth, done);
@@ -56,7 +58,7 @@ describe("JAVA 8", function () {
 
       var testName = 'ClassNotFound';
       var file = testName + '.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/' + testName;
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
 
       after(function(done){
         rimraf(pth, done);
@@ -78,7 +80,7 @@ describe("JAVA 8", function () {
 
       var testName = 'FloatingPoint';
       var file = testName + '.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/' + testName;
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -109,7 +111,7 @@ describe("JAVA 8", function () {
 
       var testName = 'OutOfIndex';
       var file = testName + '.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/' + testName;
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -140,7 +142,7 @@ describe("JAVA 8", function () {
 
       var testName = 'OutOfMemory';
       var file = testName + '.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/' + testName;
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -171,7 +173,7 @@ describe("JAVA 8", function () {
 
       var testName = 'MemoryLimit';
       var file = testName + '.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/' + testName;
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
 
       before(function(done){
         MEMORY_LIMIT = 40;
@@ -211,7 +213,7 @@ describe("JAVA 8", function () {
 
       var testName = 'TimeLimit';
       var file = testName + '.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/' + testName;
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -255,7 +257,7 @@ describe("JAVA 8", function () {
       this.timeout(9000);
 
       var file = 'Readfile.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/Readfile';
+      var pth = CHROOT_DIR + 'home/runs/Readfile';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -288,7 +290,7 @@ describe("JAVA 8", function () {
       this.timeout(9000);
 
       var file = 'Fork.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/Fork';
+      var pth = CHROOT_DIR + 'home/runs/Fork';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -320,7 +322,7 @@ describe("JAVA 8", function () {
       this.timeout(9000);
 
       var file = 'ListDir.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/ListDir';
+      var pth = CHROOT_DIR + 'home/runs/ListDir';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -353,7 +355,7 @@ describe("JAVA 8", function () {
       this.timeout(9000);
 
       var file = 'Writefile.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/Writefile';
+      var pth = CHROOT_DIR + 'home/runs/Writefile';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -386,7 +388,7 @@ describe("JAVA 8", function () {
       this.timeout(9000);
 
       var file = 'Mkdir.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/Mkdir';
+      var pth = CHROOT_DIR + 'home/runs/Mkdir';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -419,7 +421,7 @@ describe("JAVA 8", function () {
       this.timeout(9000);
 
       var file = 'Socket.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/Socket';
+      var pth = CHROOT_DIR + 'home/runs/Socket';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -452,7 +454,7 @@ describe("JAVA 8", function () {
       this.timeout(9000);
 
       var file = 'SystemProperty.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/SystemProperty';
+      var pth = CHROOT_DIR + 'home/runs/SystemProperty';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -485,7 +487,7 @@ describe("JAVA 8", function () {
       this.timeout(9000);
 
       var file = 'LoadLibrary.java';
-      var pth = '/var/SECURITY/JAIL/home/runs/LoadLibrary';
+      var pth = CHROOT_DIR + 'home/runs/LoadLibrary';
 
       before(function(done){
         compileCode(file, pth, source, function(err){
@@ -529,6 +531,7 @@ function executeCode(pth, sampleName, cb){
   command += '-r ' + pth + '/result.txt ';
   command += '-t ' + String(TIME_LIMIT) + ' ';
   command += '-m ' + String(MEMORY_LIMIT) + ' ';
+  command += '-c ' + CHROOT_DIR + ' ';
   command += '-d /home/runs/' + sampleName + ' ';
 
  // console.log( chalk.red('[CODE-RUN]: ') + chalk.cyan(command) );
@@ -542,6 +545,7 @@ function executeCode(pth, sampleName, cb){
 function compileCode(file, pth, source, fn){
 
   var language = file.split('.').pop();
+
 
   async.waterfall([
     function(callback){
@@ -573,7 +577,7 @@ function compileCode(file, pth, source, fn){
           return callback(new Error('Unknown Language'));
       }
 
-      //console.log(chalk.red('[CODE-COMPILE]: ') + chalk.yellow(command));
+    //  console.log(chalk.red('[CODE-COMPILE]: ') + chalk.yellow(command));
 
       exec(command, {
         env: process.env,

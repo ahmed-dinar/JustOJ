@@ -1,6 +1,13 @@
+dist: xenial
+sudo: required
 language: node_js
 node_js:
   - "6"
-env:
-  - TEST_DIR=server
-script: cd $TEST_DIR && npm install && npm test
+before_install:
+  - cd judger
+  - sudo chmod +x install-chroot.sh
+  - sudo ./install-chroot.sh
+install:
+  - sudo npm install
+script:
+  - sudo npm run test-sandbox
