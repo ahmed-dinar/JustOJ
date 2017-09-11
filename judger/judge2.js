@@ -20,7 +20,6 @@ var Compiler = require('./compiler');
 var Submission = require('./models/Submission');
 var JudgeError = require('./config/judge-error');
 var judgeStatus = require('./config/judge-status');
-var extensions = require('./lib/extensions');
 var executors = require('./lib/executors');
 
 
@@ -34,10 +33,11 @@ var executors = require('./lib/executors');
  * @param opts
  * @param cb
  */
-function Judge(subId){
+function Judge(subId, sourceName){
 
   this.judge = {
     id: subId,
+    code: sourceName,
     CHROOT_DIR: '/var/SECURITY/JAIL/',
     path: path.join('/var/SECURITY/JAIL/home/runs', subId),
     comparer: './executor/comparator '
@@ -131,6 +131,7 @@ Judge.prototype.run = function(fn){
         }
       }
 
+
       return makeFinalStatus(runs, submission, judge.pid, fn);
     });
   });
@@ -144,7 +145,7 @@ Judge.prototype.run = function(fn){
 function compile(judge, ignore, fn) {
 
   var options = _.pick(judge, ['id','language','path','source','cpu','memory']);
-  options.code = 'code' + extensions[options.language];
+  options.code = judge.code;
   options.executor = './executor/' + executors[options.language];
 
 
@@ -218,10 +219,15 @@ function execute(submission, judge, compiler, fn){
       if(stderr) {
         logger.debug( chalk.red('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  stderr while executing @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n') );
         logger.debug(stderr);
-        return checkStatus(judge.resultFile, cb);
+
+        if( judge.language === 'java' ){
+          return getStatus(submission, judge, testCase, stderr, cb);
+        }
+
+        return checkStatus(judge.resultFile, null, cb);
       }
 
-      return getStatus(submission, judge, testCase, cb);
+      return getStatus(submission, judge, testCase, null, cb);
     });
   }, fn);
 }
@@ -230,11 +236,11 @@ function execute(submission, judge, compiler, fn){
 
 //
 //
-function getStatus(submission, judge, testCase, fn){
+function getStatus(submission, judge, testCase, runError, fn){
 
   async.waterfall([
     function(callback){
-      checkStatus(judge.resultFile, callback);
+      checkStatus(judge.resultFile, runError, callback);
     },
     function(statusObj, callback){
       compareResult(judge.comparer, judge.outputFile, testCase.value, statusObj, callback);
@@ -280,8 +286,9 @@ function getStatus(submission, judge, testCase, fn){
 //
 // Check a test case run result
 //
-function checkStatus(resultPath, fn) {
+function checkStatus(resultPath, runError, fn) {
   //logger.debug(chalk.yellow('Checking ' + resultPath + ' for run result'));
+
 
   fs.readFile(resultPath, 'utf8', function (error, data) {
     if (error){
@@ -295,6 +302,18 @@ function checkStatus(resultPath, fn) {
    // logger.debug( chalk.magenta(data));
 
     var statusObj = _.zipObject(['code', 'msg','cpu','memory','error'], _.split(data,'$',5));
+
+    if(runError){
+      statusObj.error = runError.substring(0, runError.indexOf('at'));
+      if( runError.indexOf('OutOfMemoryError') > -1 ){
+        statusObj.code = 3;
+       // statusObj.error = runError.substring(0, runError.indexOf('at'));
+      }
+      // else if( runError.indexOf('AccessControlException') > -1 ){
+      //   //statusObj.error = runError.substring(0, runError.indexOf('at'));
+      // }
+    }
+
     var statusCode = parseInt(statusObj.code);
 
    // console.log('statusObj == ');
@@ -391,7 +410,7 @@ function clearRun(statusObj, judgeFiles, fn){
 //
 function makeFinalStatus(runs, submission, pid, fn){
 
-  if( typeof runs === 'object' )
+  if( typeof runs === 'object' && !Array.isArray(runs) )
     runs = [runs];
 
  // console.log('makeFinalStatus');

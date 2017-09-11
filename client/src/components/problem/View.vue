@@ -233,6 +233,14 @@
           {
             text: 'JAVA 8',
             value: 'java'
+          },
+          {
+            text: 'C++11',
+            value: 'cpp11'
+          },
+          {
+            text: 'C++14',
+            value: 'cpp14'
           }
         ],
         subsFields: {
@@ -380,6 +388,7 @@
           case 400:
           case 404:
             this.submitError = errors;
+            this.$noty.error(this.submitError, { timeout: 0 });
             break;
           default:
             this.error = errors;

@@ -12,4 +12,4 @@ install:
   - sudo $(which npm) --version
   - sudo $(which npm) install
 script:
-  - sudo $(which npm) run test-sandbox
+  - sudo $(which npm) run test

@@ -10,5 +10,7 @@ gcc --version
 apt-get -y install default-jdk
 java -version
 
+echo "java installed inside chroot"
+
 # exit from chroot
 exit

@@ -58,7 +58,7 @@ CREATE TABLE `runs` (
   `status` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `cpu` INT(11) NOT NULL,
   `memory` INT(11) NOT NULL,
-  `errortype` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+  `errortype` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
 
 
@@ -145,7 +145,7 @@ CREATE TABLE `contest_runs` (
   `status` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `cpu` INT(11) NOT NULL,
   `memory` INT(11) NOT NULL,
-  `errortype` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+  `errortype` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB;
 
 

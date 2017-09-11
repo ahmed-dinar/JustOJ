@@ -11,7 +11,7 @@ int main(){
 
   for (;;)
   {
-    p = (char *) malloc (1024);
+    p = (char *) malloc (1024 * 1024);
     for (k = 0; k < 1024; k ++)
       p [k] = rand () % 256;
     cnt++;

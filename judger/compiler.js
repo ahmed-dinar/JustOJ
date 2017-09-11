@@ -58,7 +58,7 @@ Compiler.prototype.compile = function(fn){
 
   var options = {
     env: process.env,
-    timeout: 5000,
+    timeout: 15000,
     maxBuffer: 1000*1024,
     cwd: _this.source
   };
@@ -78,7 +78,7 @@ Compiler.prototype.compile = function(fn){
 Compiler.prototype.execute = function run(testCase, chrootDir, runDir, fn){
 
   var _this = this;
-  var execName = _this.language === 'java' ? 'Main' : 'code';
+  var execName = _this.code.split('.')[0];;
 
   var command = _this.executor;
   command += execName + ' ';

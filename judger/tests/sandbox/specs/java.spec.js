@@ -53,6 +53,28 @@ describe("JAVA 8", function () {
     });
 
 
+    describe("Compilation Error Not Static Method", function () {
+      this.timeout(9000);
+
+      var testName = 'NonStaticMethod';
+      var file = testName + '.java';
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
+
+      after(function(done){
+        rimraf(pth, done);
+      });
+
+      it("should throw Compilation Error when define a non static method", function (done){
+        compileCode(file, pth, source, function(err){
+          expect(err).to.not.be.undefined;
+          expect(err).to.not.be.null;
+          expect(err).to.have.string('non-static method sayHello() cannot be referenced from a static context');
+          done();
+        });
+      });
+    });
+
+
     describe("Class Not Found", function () {
       this.timeout(9000);
 
@@ -69,6 +91,70 @@ describe("JAVA 8", function () {
           expect(err).to.not.be.undefined;
           expect(err).to.not.be.null;
           expect(err).to.have.string('should be declared in a file named UnknownClass.java');
+          done();
+        });
+      });
+    });
+
+
+    describe("No Main Method", function () {
+      this.timeout(9000);
+
+      var testName = 'NoMain';
+      var file = testName + '.java';
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
+
+      before(function(done){
+        compileCode(file, pth, source, function(err){
+          if(err){
+            return done(err);
+          }
+          done();
+        });
+      });
+
+      after(function(done){
+        rimraf(pth, done);
+      });
+
+      it("should throw Main method not found error", function (done){
+        executeCode(pth, testName, function(err, stdout, stderr){
+          expect(err).to.be.null;
+          expect(stdout).to.be.empty;
+          expect(stderr).to.not.be.empty;
+          expect(stderr).to.have.string('Main method not found in class NoMain');
+          done();
+        });
+      });
+    });
+
+
+    describe("Main Not Static", function () {
+      this.timeout(9000);
+
+      var testName = 'MainNotStatic';
+      var file = testName + '.java';
+      var pth = CHROOT_DIR + 'home/runs/' + testName;
+
+      before(function(done){
+        compileCode(file, pth, source, function(err){
+          if(err){
+            return done(err);
+          }
+          done();
+        });
+      });
+
+      after(function(done){
+        rimraf(pth, done);
+      });
+
+      it("should throw Main method not found error", function (done){
+        executeCode(pth, testName, function(err, stdout, stderr){
+          expect(err).to.be.null;
+          expect(stdout).to.be.empty;
+          expect(stderr).to.not.be.empty;
+          expect(stderr).to.have.string('Main method is not static in class MainNotStatic');
           done();
         });
       });

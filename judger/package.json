@@ -6,7 +6,8 @@
   "main": "judger.js",
   "scripts": {
     "start": "sudo node judger.js",
-    "test": "./node_modules/.bin/mocha --reporter spec $(find tests/**/* -name '*.js')",
+    "test": "./node_modules/.bin/mocha --reporter spec $(find tests/**/* -name '*.spec.js')",
+    "test-lib": "./node_modules/.bin/mocha --reporter spec $(find tests/lib -name '*.spec.js')",
     "test-sandbox": "./node_modules/.bin/mocha --reporter spec $(find tests/sandbox/specs -name '*.js')",
     "test-javasandbox": "./node_modules/.bin/mocha --reporter spec $(find tests/sandbox/specs -name 'java.spec.js')",
     "test-comparator": "./node_modules/.bin/mocha --reporter spec $(find tests/comparator -name '*.spec.js')",

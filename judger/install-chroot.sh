@@ -10,12 +10,16 @@ sudo apt-get update
 sudo apt-get install dchroot debootstrap
 sudo mkdir -p /var/SECURITY/JAIL/
 
+echo "chroot directory created & debootstrap insalled"
+
 # setup schroot config
 sudo chmod 777 /etc/schroot/schroot.conf
 sudo cat schroot.conf >> /etc/schroot/schroot.conf
 
 # install chroot
-sudo debootstrap --variant=buildd --arch amd64 trusty /var/SECURITY/JAIL/ http://mirror.math.princeton.edu/pub/ubuntu/
+sudo debootstrap --variant=buildd --arch amd64 xenial /var/SECURITY/JAIL/ http://mirror.math.princeton.edu/pub/ubuntu/
+
+echo "chroot jail successfully created"
 
 # mount proc to chroot
 sudo mount proc /var/SECURITY/JAIL/proc -t proc
@@ -27,6 +31,10 @@ sudo cat /var/SECURITY/JAIL/setup-chroot.sh
 sudo chmod +x /var/SECURITY/JAIL/setup-chroot.sh
 sudo chroot /var/SECURITY/JAIL/ ./setup-chroot.sh
 
+echo "chroot setup completed"
+
 # make programm run directory inside chroot
 sudo mkdir -p /var/SECURITY/JAIL/home/runs
 ls /var/SECURITY/JAIL/home/runs
+
+echo "code execution directory created"

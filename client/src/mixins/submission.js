@@ -20,6 +20,12 @@ const submissionMixin = {
     getRunLang(lang){
       return runLanguage[lang];
     },
+    toMB(mem){
+      if(mem >= 1000){
+        return `${(mem / 1000).toFixed()} MB`;
+      }
+      return `${mem} KB`;
+    },
     statusVariant(code){
       code = parseInt(code);
       switch(code){

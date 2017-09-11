@@ -9,6 +9,7 @@ var path = require('path');
 var has = require('has');
 var rimraf = require('rimraf');
 
+var ClassChecker = appRequire('lib/java-class-checker');
 var extensions = appRequire('lib/extensions');
 var AppError = appRequire('lib/custom-error');
 var Problems = appRequire('models/problems');
@@ -23,6 +24,7 @@ module.exports = function(req, res, next) {
   var problemId = req.body.problemId;
   var userId = req.user.id;
   var sourcePath = null;
+  var sourceName = 'code';
 
   async.waterfall([
     function(callback){
@@ -68,13 +70,37 @@ module.exports = function(req, res, next) {
       });
     },
     function(submission, callback){
-      var newName = path.join(sourcePath, 'code' + extensions[submission.language]);
+      fs.readFile(req.file.path, 'utf8', function(err, sourceCode) {
+        if (err){
+          logger.debug(chalk.red('error reading source file code'));
+          return callback(err);
+        }
+
+        if( submission.language === 'java' ){
+          sourceName = ClassChecker(sourceCode);
+          if(!sourceName){
+            return callback(new AppError('class should be \'public class {Name}\' format','input'));
+          }
+          sourceName = sourceName[1] + extensions[submission.language];
+        }
+        else{
+          sourceName = 'code' + extensions[submission.language];
+        }
+
+        logger.debug('source name = ' + sourceName);
+
+        //logger.debug(sourceCode);
+        return callback(null, sourceCode, submission);
+      });
+    },
+    function(sourceCode, submission, callback){
+      var newName = path.join(sourcePath, sourceName);
       fs.rename(req.file.path, newName, function(err) {
         if ( err ) {
           return callback(err);
         }
         submission.source = newName;
-        return callback(null, submission);
+        return callback(null, sourceCode, submission);
       });
     },
     saveSubmission,
@@ -106,7 +132,7 @@ module.exports = function(req, res, next) {
 
 
     //push the submission into judge queue
-    Judge.push({ id: submissionId }, 'submission', function(err){
+    Judge.push({ id: submissionId, code: sourceName }, 'submission', function(err){
       if(err){
         logger.error('judge push submission error', err);
       }else{
@@ -157,7 +183,7 @@ function handleError(error, res){
 //
 // save source code into database
 //
-function saveSubmission(submission, fn){
+function saveSubmission(sourceCode, submission, fn){
 
   async.waterfall([
     function(callback){
@@ -179,16 +205,6 @@ function saveSubmission(submission, fn){
       });
     },
     function(callback){
-      fs.readFile(submission.source, 'utf8', function(err, sourceCode) {
-        if (err){
-          logger.debug(chalk.red('error reading source file code'));
-          return callback(err);
-        }
-        //logger.debug(sourceCode);
-        return callback(null, sourceCode);
-      });
-    },
-    function(sourceCode, callback){
       Submission.saveSource({
         sid: submission.id,
         code: entities.encodeHTML(sourceCode)

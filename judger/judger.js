@@ -79,7 +79,7 @@ queue
 // queue.process('submission', Judge);
 //queue.process('submission', 2, Judge);
 queue.process('submission', 2, function(job, fn){
-  var jg = new Judge2(job.data.id.toString());
+  var jg = new Judge2(job.data.id.toString(), job.data.code.toString());
   jg.run(fn);
 });
 

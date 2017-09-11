@@ -50,7 +50,7 @@
               {{ roundTo(sub.value) }}s
             </template>
             <template slot="memory" scope="sub">
-              {{ sub.value }} KB
+              {{ toMB(sub.value) }}
             </template>
             <template slot="status" scope="sub">
               <b-badge :variant="statusVariant(sub.value)">
