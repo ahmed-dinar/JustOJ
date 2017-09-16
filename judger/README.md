@@ -1,7 +1,7 @@
 ### Run Test
 
 ```javascript
-sudo npm run test-sandbox
+sudo npm run test
 ```
 
 

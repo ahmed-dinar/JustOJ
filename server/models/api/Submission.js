@@ -55,6 +55,17 @@ exports.put = function(id, cols, fn){
 };
 
 
+//
+// save test case run for a submission
+//
+exports.saveCase = function(columns, fn){
+  var sql = Query.insert(columns)
+    .into('runs')
+    .toString();
+
+  DB.execute(sql, fn);
+};
+
 
 //
 //

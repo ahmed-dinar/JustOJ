@@ -59,6 +59,14 @@ exports.find = function(cur_page, where, pageLimit, fn){
 };
 
 
+exports.saveCase = function(columns, fn){
+  var sql = Query.insert(columns)
+    .into('runs')
+    .toString();
+
+  DB.execute(sql, fn);
+};
+
 
 //
 //
@@ -180,8 +188,8 @@ exports.getPublicTestCase = function(opts,cb){
 
   var isContest = has(opts,'contestId');
   var subTable = isContest ? 'contest_submissions as sub' : 'submissions as sub';
-  var caseTable = isContest ? 'c_submission_case' : 'submission_case';
-  var codeTable = isContest ? 'c_submission_code' : 'submission_code';
+  var caseTable = isContest ? 'contest_runs' : 'runs';
+  var codeTable = isContest ? 'contest_source' : 'source_code';
 
   var sql = Query.select(['sub.*','prob.title','cas.cases','usr.username','subcode.code'])
     .from(subTable)

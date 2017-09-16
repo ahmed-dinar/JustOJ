@@ -35,6 +35,7 @@ import CreateProblem from '@/components/problem/Create';
 import ViewProblem from '@/components/problem/View';
 import ViewTestCase from '@/components/problem/ViewTestCase';
 import Submissions from '@/components/Submissions';
+import SubView from '@/components/SubView';
 import EditProblem from '@/components/problem/Edit/Statement';
 import EditProblemCases from '@/components/problem/Edit/TestCase';
 import EditProblemLimits from '@/components/problem/Edit/Limits';
@@ -81,9 +82,19 @@ const router = new Router({
     },
     {
       path: '/submissions',
-      name: 'Submissions',
-      component: Submissions,
-      meta: { title: 'Submissions' }
+      component: routeTemplate('SubmissionsRoute'),
+      children: [
+        {
+          path: '',
+          component: Submissions,
+          meta: { title: 'Submissions' }
+        },
+        {
+          path: ':sid',
+          component: SubView,
+          meta: { title: 'Submissions' }
+        }
+      ]
     },
     {
       path: '/problems',

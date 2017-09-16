@@ -1,5 +1,6 @@
 'use strict';
 
+var map = require('lodash/map');
 var fs = require('fs');
 var async = require('async');
 var entities = require('entities');
@@ -111,7 +112,41 @@ module.exports = function(req, res, next) {
           return callback(err);
         }
         sourcePath = newName;
-        return callback(null, submission.id);
+        return callback(null, submission);
+      });
+    },
+    function(submission, callback){
+      var casePath = path.join(process.cwd(), '..', 'judger', 'testcase', problemId.toString());
+
+      fs.readdir(casePath, function(err, files) {
+        if( err ){
+          return callback(err);
+        }
+        //no test case found. System error?
+        if( !files.length ){
+          return callback(null, submission.id);
+        }
+
+        var allCase = map(files, function(caseName){
+          return {
+            sid: submission.id,
+            name: caseName,
+            status: '5',
+            cpu: 0,
+            memory: 0,
+            errortype: 'null'
+          };
+        });
+
+        console.log('all case ================== ');
+        console.log(allCase);
+
+        Submission.saveCase(allCase, function (errs) {
+          if(errs){
+            return callback(errs);
+          }
+          return callback(null, submission.id);
+        });
       });
     }
   ],

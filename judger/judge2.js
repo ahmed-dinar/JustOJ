@@ -15,6 +15,7 @@ var _ = require('lodash');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 var has = require('has');
+var entities = require('entities');
 
 var Compiler = require('./compiler');
 var Submission = require('./models/Submission');
@@ -78,26 +79,46 @@ Judge.prototype.run = function(fn){
       });
     },
     function(callback){
-      judge.testcasePath = path.join(process.cwd(), 'testcase', judge.pid.toString());
-      //logger.debug('testcase path = ', judge.testcasePath);
 
-      fs.readdir(judge.testcasePath, function(err, files) {
-        if( err ){
+      submission.findCase(['id','name'], function(err, testcases){
+        if(err){
           return callback(err);
         }
 
-        if( !files.length ){
+        if( !testcases.length ){
           return callback(new JudgeError('No Test Case Found','NO_TESTCASE'));
         }
-       // logger.debug( chalk.green('Total Test Cases: ' + files.length) );
 
-        //make the file list object with full path
-        judge.testcases = _.map(files, function makeIndex(value, index){
-          return { index: index+1, value: path.join(judge.testcasePath, value.toString()) };
+        judge.testcasePath = path.join(process.cwd(), 'testcase', judge.pid.toString());
+        judge.testcases = _.map(testcases, function(value, index){
+          return { id: value.id, value: path.join(judge.testcasePath, value.name.toString()) };
         });
 
         return callback();
       });
+
+      // judge.testcvalueasePath = path.join(process.cwd(), 'testcase', judge.pid.toString());
+      // //logger.debug('testcase path = ', judge.testcasePath);
+
+      // fs.readdir(judge.testcasePath, function(err, files) {
+      //   if( err ){
+      //     return callback(err);
+      //   }
+
+      //   if( !files.length ){
+      //     return callback(new JudgeError('No Test Case Found','NO_TESTCASE'));
+      //   }
+      //  // logger.debug( chalk.green('Total Test Cases: ' + files.length) );
+
+
+
+      //   //make the file list object with full path
+      //   // judge.testcases = _.map(files, function makeIndex(value, index){
+      //   //   return { index: index+1, value: path.join(judge.testcasePath, value.toString()) };
+      //   // });
+
+      //   return callback();
+      // });
     },
     function(callback){
       submission.put({ status: '6' }, callback);
@@ -262,18 +283,15 @@ function getStatus(submission, judge, testCase, runError, fn){
     //
     // TODO: testCase.value = fullpath, make it only name
     //
-    submission.saveCase({
-      sid: judge.id,
-      name: 'adl;ad',
+    submission.putCase({
       status: statusObj.code,
       cpu: parseInt(parseFloat(statusObj.cpu) * 1000),
       memory: statusObj.memory,
-      errortype: statusObj.error
-    }, function (err) {
+      errortype: entities.encodeHTML(statusObj.error)
+    }, testCase.id, function (err) {
       if(err){
         logger.error(err);
       }
-
       return hasError
         ? fn(error, statusObj)
         : clearRun(statusObj, judge.judgeFiles, fn);

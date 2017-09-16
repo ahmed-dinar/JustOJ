@@ -8,7 +8,7 @@
 
         <b-link class="navbar-brand" :to="{ path: '/' }">
           <!-- <img src="img/brand-logo.png"  width="35" height="32" /> -->
-          JUST OJ<sup>&#946;</sup>
+          just oj<sup>&#946;eta</sup>
         </b-link>
 
         <b-collapse is-nav id="nav_collapse">
@@ -136,7 +136,7 @@
         return {
           profile: '/user/' + this.getUser.username,
           settings: '/user/settings/profile/',
-          submissions: '/status/u/' + this.getUser.username
+          submissions: '/submissions?user=' + this.getUser.username
         };
       },
 

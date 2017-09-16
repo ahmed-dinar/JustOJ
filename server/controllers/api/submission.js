@@ -82,6 +82,8 @@ router.get('/:sid', function(req, res, next) {
       return res.status(404).json({ error: 'No Submission Found' });
     }
 
+    logger.debug(runs[0]);
+
     runs = runs[0];
     runs.pid = problemHash.encode(runs.pid);
     runs.id = req.params.sid;

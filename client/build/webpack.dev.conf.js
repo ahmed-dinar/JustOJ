@@ -30,7 +30,9 @@ module.exports = merge(baseWebpackConfig, {
         { family: 'Open Sans', variants: [ '400', '600', '700' ] },
         { family: 'Source Sans Pro', variants: [ '400', '600', '700' ] },
         { family: 'Niconne', variants: [ '400' ] },
-        { family: 'Roboto', variants: [ '400','500','700','900' ] }
+        { family: 'Roboto', variants: [ '400','500','700','900' ] },
+        { family: 'Noto Sans', variants: [ '400','700' ] },
+        { family: 'Berkshire Swash', variants: [ '400' ] }
       ],
       local: false
     }),

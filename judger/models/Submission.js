@@ -42,7 +42,15 @@ Submission.prototype.solved = function(pid, fn){
 };
 
 
+Submission.prototype.findCase = function(columns, fn){
+  var sql = Query
+    .select(columns)
+    .from('runs')
+    .where('sid', this.id)
+    .toString();
 
+  DB.execute(sql, fn);
+};
 
 
 Submission.prototype.saveCase = function(columns, fn){
@@ -53,6 +61,17 @@ Submission.prototype.saveCase = function(columns, fn){
 
   var sql = Query.insert(columns)
     .into('runs')
+    .toString();
+
+  DB.execute(sql, fn);
+};
+
+
+
+Submission.prototype.putCase = function(columns, caseId, fn){
+  var sql = Query('runs')
+    .update(columns)
+    .where('id', caseId)
     .toString();
 
   DB.execute(sql, fn);

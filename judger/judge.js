@@ -15,6 +15,7 @@ var _ = require('lodash');
 var rimraf = require('rimraf');
 var mkdirp = require('mkdirp');
 var has = require('has');
+var entities = require('entities');
 
 var Compiler = require('./compiler');
 var Submission = require('./models/Submission');
@@ -257,6 +258,11 @@ function getStatus(submission, judge, testCase, fn){
     //  logger.debug('SOLUTION_FAILED but error.message = ', statusObj);
     }
 
+    console.log('statusObj.error == ');
+    console.log(statusObj.error);
+    console.log('edncoded statusObj.error == ');
+    console.log(entities.encodeHTML(statusObj.error));
+
     //
     // TODO: testCase.value = fullpath, make it only name
     //
@@ -266,7 +272,7 @@ function getStatus(submission, judge, testCase, fn){
       status: statusObj.code,
       cpu: parseInt(parseFloat(statusObj.cpu) * 1000),
       memory: statusObj.memory,
-      errortype: statusObj.error
+      errortype: entities.encodeHTML(statusObj.error)
     }, function (err) {
       if(err){
         logger.error(err);
