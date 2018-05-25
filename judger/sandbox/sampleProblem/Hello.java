@@ -2,7 +2,7 @@
 //
 // sudo javac -d /var/SECURITY/JAIL/home/runs Hello.java
 //
-//sudo ./safejudge Hello -i ../sampleProblem/input.txt -o /home/runs/out.txt -e /home/runs/err.txt -r /var/SECURITY/JAIL/home/runs/result.txt -m 500 -t 32
+//sudo ./safejudge Hello -i ../sampleProblem/input.txt -o /home/runs/out.txt -e /home/runs/err.txt -r /var/SECURITY/JAIL/home/runs/result.txt -m 500 -t 3
 //https://stackoverflow.com/questions/4339611/exploitable-java-functions
 
 import java.util.*;
@@ -18,7 +18,7 @@ public class Hello {
 	  
 	//  outOfMRE();
 	  //hugeMemory();
-		readAFile();
+		//readAFile();
 		//writeAFile();
 		//processFork();
 		//listDir();

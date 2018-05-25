@@ -8,7 +8,7 @@ var configObj = {
 
     return {
       algorithm: 'HS256',
-      expiresIn: 60*60,
+      expiresIn: 12*60*60,
       issuer: 'https://justoj.com/api/',
       jwtid: uniqid(),
       subject: 'Auth',

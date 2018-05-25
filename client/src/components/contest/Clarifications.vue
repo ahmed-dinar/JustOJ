@@ -26,7 +26,7 @@
               <router-link v-for="clar in clars" :key="clar.id" :to="`/contests/${params.cid}/${params.slug}/clar/${clar.id}`" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1">{{ clar.title }}</h5>
-                  <small>{{ clar.status }}</small>
+                  <small><span class="badge badge-secondary">{{ clar.status }}</span></small>
                 </div>
                 <p class="mb-1">{{ clar.request }}</p>
               </router-link>

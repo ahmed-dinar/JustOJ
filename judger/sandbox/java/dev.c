@@ -34,10 +34,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "allSignals.h"
-#include "allSyscalls.h"
-#include "allowedSyscalls.h"
-#include "myutil.h"
+#include "../allSignals.h"
+#include "../myutil.h"
 
 
 #define CHROOT_DIR "/var/SECURITY/JAIL/"
@@ -406,7 +404,7 @@ int getHeapMemory(char * s){
 	
 	if( lowmemory > -1 && highMemmory > -1 ){
 		printf("\nlowmemory = %d, highMemmory = %d\n", lowmemory, highMemmory);
-		return KBtoMB( abs(highMemmory - lowmemory)  );
+		return KBtoMB( abs((highMemmory/4096) - lowmemory)  );
 	} 
 	
 	return -1;
@@ -441,6 +439,8 @@ void get_smaps() {
 		
 		vm = strstr(pch, "heap");
 		if (vm) {
+			int pages = (int)(getpagesize() / 1024);
+			printf ("\n%s || page = %d\n\n\n",pch,pages);
 			int hhp = getHeapMemory(pch);
 			if( hhp > heap_size ){
 				heap_size = hhp;
@@ -554,38 +554,7 @@ void handleChild(){
  *  */
 void handleTrap(pid_t pid){
 	
-    int orig_eax = ptrace(PTRACE_PEEKUSER,pid, 8*ORIG_RAX, NULL);
 
-    if( orig_eax == -1 )
-        writeResult(SYSTEM_ERROR,"Error peeking user",0,0,"null");
-
-#ifdef DEBUG
-   // fprintf(stderr ,"Calling   %-16s\t(id:%4d)\t\n", syscall_list[orig_eax], orig_eax);
-#endif
-
-
-	/* 
-	 * TODO: Please check all of these white listing carefully!
-	 *
-	 * */
-    //if( allowed_syscall[orig_eax] == -1  ) return;
-    return;
-
-
-    callCount[orig_eax]++;
-
-    if( callCount[orig_eax]>allowed_syscall[orig_eax] ){
-        ptrace(PTRACE_KILL, pid, NULL, NULL);
-
-#ifdef DEBUG
-        fprintf(stderr ,"%s not allowed!\n", syscall_list[orig_eax]);
-#endif
-
-        char frbdnErr[] = "RE (Forbidden System Call [";
-		strcat(frbdnErr,syscall_list[orig_eax]);
-		strcat(frbdnErr,"])");
-        writeResult(RE, frbdnErr,0,memoryUsed,frbdnErr);
-    }
 }
 
 

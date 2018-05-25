@@ -122,7 +122,7 @@
             console.log(err);
             this.loading = false;
             progressbar.done();
-            progressbar.remove();
+            progressbar.remove(); 
           });
       }
     },

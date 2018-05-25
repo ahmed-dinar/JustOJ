@@ -21,7 +21,7 @@
           <div class="col-md-9 pl-0 mb-2 problem-content-wrapper">
             <loading-data :loading="loading">
               <template v-if="problem">
-                <h5 class="pt-3 mb-0">{{ problem.title }}</h5>
+                <h4 class="pt-3 mb-1">{{ problem.title }}</h4>
                 <p class="mb-4 limit-text">Limits: <span>{{ roundTo(problem.cpu) }}s, {{ problem.memory }} MB</span></p>
 
                 <div class="problem-content" v-html="problem.statement"></div>
@@ -117,7 +117,7 @@
                 <loading-pulse :loading="subsLoading" css="" size="7px">
                   <template v-if="submissions && submissions.length">
 
-                    <m-table striped
+                    <m-table
                     :items="submissions"
                     :fields="subsFields"
                     class="runs-table-sm"
@@ -125,9 +125,6 @@
                     >
                       <template slot="submittime" scope="sub">
                         {{ fromWhen(sub.value) }}
-                      </template>
-                      <template slot="language" scope="sub">
-                        {{ getRunLang(sub.value) }}
                       </template>
                       <template slot="status" scope="sub">
                           <b-badge :variant="statusVariant(sub.value)" :title="getRunStatus(sub.value)">
@@ -161,7 +158,7 @@
                 <loading-pulse :loading="rankLoading" css="" size="7px">
                   <template v-if="ranks && ranks.length">
 
-                    <m-table striped
+                    <m-table
                     :items="ranks"
                     :fields="rankFields"
                     class="runs-table-sm"
@@ -246,14 +243,11 @@
         subsFields: {
           submittime: {
             label: 'when',
-            tdClass: ['ellipsis','view-sub-cell']
-          },
-          language: {
-            label: 'lang'
+            tdClass: []
           },
           status: {
             label: 'status',
-            tdClass: ['ellipsis','view-sub-cell']
+            tdClass: ['view-sub-cell']
           }
         },
         rankFields: {

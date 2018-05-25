@@ -10,12 +10,12 @@
     <div class="row" v-else>
 
 
-      <div class="col-md-12">
+      <div class="col-md-9">
 
       <h6 class="p-0 mb-3 btn-iconic">
         <i class="material-icons mr-1">schedule</i> Submissions
       </h6>
-      <div class="card mb-5">
+      <div class=" mb-5">
         <loading-data :loading="loading">
           <m-table
             :items="submissions"
@@ -78,6 +78,10 @@
 
       </div>
 
+      <div class="col-md-3">
+      adad
+      </div>
+
     </div>
 
   </div>
@@ -105,7 +109,8 @@
             tdClass: ['ellipsis','subs-index-cell']
           },
           submittime: {
-            label: 'When'
+            label: 'When',
+            tdClass: ['cell-when']
           },
           username: {
             label: 'Who',

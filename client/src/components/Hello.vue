@@ -46,7 +46,7 @@
 <style type="text/css">
   .home-page{
  /*    background-color: #0099e5;*/
-    color: #fff; 
+    color: #fff;
     min-height: 600px;
   }
 

@@ -76,7 +76,7 @@ module.exports.loadViewEngine = function (app) {
  */
 module.exports.loadMiddleware = function (app) {
 
-  app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+  // app.use(favicon(path.join(__dirname, 'public/static', 'favicon.ico')));
 
     //stream morgan logger to winston logger
   app.use( morgan('dev', { stream: {

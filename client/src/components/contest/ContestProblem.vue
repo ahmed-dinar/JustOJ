@@ -75,7 +75,7 @@
               <loading-pulse :loading="subsLoading" css="" size="7px">
                 <template v-if="submissions && submissions.length">
 
-                  <m-table striped
+                  <m-table
                   :items="submissions"
                   :fields="subsFields"
                   class="runs-table-sm"
@@ -83,9 +83,6 @@
                   >
                     <template slot="submittime" scope="sub">
                       {{ fromWhen(sub.value) }}
-                    </template>
-                    <template slot="language" scope="sub">
-                      {{ getRunLang(sub.value) }}
                     </template>
                     <template slot="status" scope="sub">
                       <b-badge :variant="statusVariant(sub.value)" :title="getRunStatus(sub.value)">
@@ -158,12 +155,9 @@
             label: 'when',
             tdClass: ['ellipsis','view-sub-cell']
           },
-          language: {
-            label: 'lang'
-          },
           status: {
             label: 'status',
-            tdClass: ['ellipsis','view-sub-cell']
+            tdClass: ['view-sub-cell']
           }
         }
       };

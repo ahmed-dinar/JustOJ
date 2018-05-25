@@ -10,7 +10,7 @@
       <contest-navbar :contest="contest" :id="this.params.cid" class="mb-4"></contest-navbar>
 
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-9">
 
           <h6 class="p-0 mb-3 btn-iconic text-secondary">
             <i class="material-icons mr-1">assessment</i> Submissions
@@ -21,7 +21,7 @@
           :fields="fields"
           keyIdentifier="submittime"
           show-empty
-          class="submission-table table-gray mb-5 table-md"
+          class="submission-table table-gray mb-5"
           >
             <template slot="id" scope="sub">
               <router-link :to="`/contests/${params.cid}/${params.slug}/submissions/${sub.value}`" >
@@ -50,7 +50,7 @@
               {{ roundTo(sub.value) }}s
             </template>
             <template slot="memory" scope="sub">
-              {{ sub.value }} KB
+              {{ toMB(sub.value) }}
             </template>
             <template slot="status" scope="sub">
               <b-badge :variant="statusVariant(sub.value)">
@@ -74,6 +74,8 @@
             <small></small>
           </div>
 
+      </div>
+      <div class="col-md-3">
       </div>
 
     </div>
@@ -106,7 +108,8 @@
             tdClass: ['ellipsis','subs-index-cell']
           },
           submittime: {
-            label: 'When'
+            label: 'When',
+            tdClass:['cell-when']
           },
           username: {
             label: 'Who',

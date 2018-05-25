@@ -9,7 +9,7 @@
 
   <div class="card-block text-center form-header p-3">
     <router-link :to="{ path: '/' }" exact>
-      <h3 class="web-title">Just<br>Online Judge</h3>
+      <h3 class="web-title">just oj<sup>&#946;eta</sup></h3>
     </router-link>
   </div>
 
